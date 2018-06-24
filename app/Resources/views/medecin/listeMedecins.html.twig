@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des Médecins - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des Médecins
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+{# Body Class #}
+	{% block body_class %}arcoffice-liste arcoffice-liste-medecins{% endblock %}
+
+
+{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Médecins' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    {# Ajouter un medecin #}
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addMedecin') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ medecins.getTotalItemCount }} médecin(s) trouvé(s)
+
+                        </div>
+
+                        <input class="search liste-medecins-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un médecin / Filtrer"
+                               aria-label="Rechercher un médecin / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des médecins</h4>
+
+                    {# Liste des medecins #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+                        {# Titre #}
+                        <thead>
+
+                        <tr>
+
+                            <th class="{% if medecins.isSorted('m.nom') %}sorted{% endif %}" data-sort="patient">
+
+                                {{ knp_pagination_sortable(medecins, 'Médecin', ['m.nom','m.prenom']) }}
+
+                            </th>
+
+                            <th class="{% if medecins.isSorted('s.nom') %}sorted{% endif %}" data-sort="statut">
+
+                                {{ knp_pagination_sortable(medecins, 'Service', 's.nom') }}
+
+                            </th>
+
+                            <th class="{% if medecins.isSorted('m.dect') %}sorted{% endif %}" data-sort="datInc">
+
+                                {{ knp_pagination_sortable(medecins, 'DECT', 'm.dect') }}
+
+                            </th>
+
+                            <th class='{% if medecins.isSorted('m.email') %}sorted{% endif %}' data-sort="numInc">
+
+                                {{ knp_pagination_sortable(medecins, 'Adresse Email', 'm.email') }}
+
+                            </th>
+
+                            <th class="{% if medecins.isSorted('m.portable') %}sorted{% endif %}" data-sort="essai">
+
+                                {{ knp_pagination_sortable(medecins, 'Téléphone', 'm.portable') }}
+
+                            </th>
+
+                            <th class='{% if medecins.isSorted('m.secTel') %}sorted{% endif %}' data-sort="secTel">
+
+                                {{ knp_pagination_sortable(medecins, 'Téléphone Sec.', 'm.secTel') }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+                        {# Corps #}
+                        <tbody class="list">
+
+                        {% for medecin in medecins %}
+
+                            <tr>
+
+                                <td class="medecin">
+
+                                    <a href="{{ path('editMedecin', { id : medecin.id }) }}">
+
+                                        {{ medecin.nom }} {{ medecin.prenom }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="service">
+
+                                    {{ medecin.service.nom|default('') }}
+
+                                </td>
+
+                                <td class="dect">
+
+                                    {{ medecin.dect }}
+
+                                </td>
+
+                                <td class="email">
+
+                                    <a href="mailto:{{ medecin.email }}" target="_blank">{{ medecin.email }}</a>
+
+                                </td>
+
+                                <td class="portable">
+
+                                    <a href="tel:+{{ medecin.portable }}">{{ medecin.portable }}</a>
+
+                                </td>
+
+                                <td class="secTel">
+
+                                    <a href="tel:+{{ medecin.secTel }}">{{ medecin.secTel }}</a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(medecins) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

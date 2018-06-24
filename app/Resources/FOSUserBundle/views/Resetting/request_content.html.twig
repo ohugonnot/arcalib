@@ -1,0 +1,30 @@
+
+	{# Réinitialisation du mot de passe #}
+	{% trans_default_domain 'FOSUserBundle' %}
+
+	<div class="arcoffice-fosuser-sub">
+
+		<p class="lead text-center">Réinitialiser votre mot de passe</p>
+
+		<form action="{{ path('fos_user_resetting_send_email') }}" method="POST">
+
+		   	<div class="form-group mb-3">
+
+		        {# <label for="username">{{ 'resetting.request.username'|trans }}</label> #}
+		        <label for="username">Adresse email</label>
+
+		        <input class="form-control" type="text" id="username" name="username" required placeholder="mon-adresse@email.com">
+
+		    </div>
+
+		    <div class="form-group">
+
+		        <input class="w-100 btn btn-primary" type="submit" value="{{ 'resetting.request.submit'|trans }}">
+
+		    </div>
+
+		    <a class="d-flex small" href="{{ path('fos_user_security_login') }}">← Connexion</a>
+
+		</form>
+
+	</div>

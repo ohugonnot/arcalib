@@ -1,0 +1,53 @@
+<!-- Embed Footer -->
+
+<div class="container">
+
+    <div class="d-flex small">
+
+        <p class="mb-0">© Arcoffice - 2018</p>
+
+        <a class="mx-1 ml-2" href="{{ path('mentionsLegales') }}">Mentions Légales</a> |
+
+        <a class="mx-1" href="{{ path('support') }}">Support</a>
+
+        {# Liens #}
+
+        <div class="footer-liens ml-auto">
+
+            {% if app.user %}
+
+                <a href="{{ path('listeAnnuaires') }}" class="mx-1">
+
+                    <i class="fa fa-address-card-o mr-1"></i>Contacts</a>
+
+
+                <a href="{{ path('analyseGraphique') }}" class="mx-1">
+
+                    <i class="fa fa-bar-chart mr-1"></i> Graphiques</a>
+
+
+                <a href="{{ path('listeMedecins') }}" class="mx-1">
+
+                    <i class="fa fa-stethoscope mr-1"></i> Médecins</a>
+
+            {% endif %}
+
+
+            <a href="http://arceraa.forumactif.com/" target="_blank" class="mx-1">
+
+                <i class="fa fa-comments-o mr-1" aria-hidden="true"></i> Forum</a>
+
+            <a href="https://www.arcenregion.net/" target="_blank" class="mx-1">
+
+                <i class="fa fa-stethoscope mr-1"></i> ARCERA</a>
+
+            <a href="https://pacs.norimagerie.com/" target="_blank" class="mx-1">
+
+                <img src="{{ asset('/dist/img/icones/radiologie.svg') }}" alt="Contacts"> Radiologie</a>
+
+        </div>
+
+    </div>
+
+</div>
+

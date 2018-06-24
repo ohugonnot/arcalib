@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addService' %}
+
+        {% set title_page = "Ajouter un nouveau service" %}
+        {% set description_page = "Création d'un nouveau service" %}
+
+    {% elseif app.request.get("_route") == 'editService' %}
+
+        {% set title_page = "Modifier le service " ~ form.vars.value.nom %}
+        {% set description_page = "Édition de le service " ~ form.vars.value.nom %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                {{ title_page }} - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('listeServices') }}">Services</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'une facture #}
+                    <div class="col col-arcoffice col-arc-editer">
+
+                        {{ form_start(form) }}
+
+                        {% form_theme form 'form/submit.html.twig' %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                {% if form.vars.value.id %}
+
+                                    {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                        title : "Supprimer le service",
+                                        route_delete : 'deleteService',
+                                        route_liste : 'listeServices',
+                                        message: "Le service a bien été supprimé.",
+                                        id: form.vars.value.id
+
+                                    } %}
+
+                                {% endif %}
+
+                                {# Enregistrer #}
+                                {{ form_widget(form.envoyer, {
+                                    'fa' : 'fa-check',
+                                    'right' : true,
+                                    'label' : ' ',
+                                    'attr': {
+                                        'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                        'title': "Enregistrer le service"
+                                    }
+                                }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# nom #}
+                            <div class="col">
+
+                                {{ form_label(form.nom) }}
+
+                                {{ form_errors(form.nom) }}
+
+                                {{ form_widget(form.nom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    {# Colonne Information #}
+                    {% if app.request.get('_route') == 'editService' %}
+
+                        <div class="col-5 col-arcoffice col-arc-editer">
+
+                            {# Titre + Boutons #}
+                            <div class="form-title d-flex align-items-center">Informations</div>
+
+                            {% if form.vars.value.medecins is defined and form.vars.value.medecins|length %}
+
+                                <p>Médecin(s) dans ce service</p>
+
+                                <ul>
+
+                                    {% for medecin in form.vars.value.medecins %}
+
+                                        <li>
+
+                                            <a href="{{ path("editMedecin", {id: medecin.id }) }}">
+
+                                                Dr. {{ medecin.nom }} {{ medecin.prenom }}
+
+                                            </a>
+
+                                        </li>
+
+                                    {% endfor %}
+
+                                </ul>
+
+                            {% else %}
+
+                                <p>Aucun médecin dans ce service.</p>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

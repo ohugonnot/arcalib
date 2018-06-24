@@ -1,0 +1,29 @@
+# Desc: /profile/change-password
+fos_user_change_password: /arcalib/profil/changement-mot-de-passe   # FIXME
+
+# Desc: /profile/edit
+fos_user_profile_edit: /arcalib/profil/modification   # FIXME
+
+# Desc: /profile/
+fos_user_profile_show: /arcalib/profil/   # FIXME
+
+# Desc: /register/check-email
+fos_user_registration_check_email: /inscription/verification-email   # FIXME
+
+# Desc: /register/confirm/{token}
+fos_user_registration_confirm: '/inscription/confirmation/{token}'   # FIXME
+
+# Desc: /register/confirmed
+fos_user_registration_confirmed: /inscription/confirmation   # FIXME
+
+# Desc: /register/
+fos_user_registration_register: /inscription/   # FIXME
+
+# Desc: /login_check
+fos_user_security_check: /verification-connexion   # FIXME
+
+# Desc: /login
+fos_user_security_login: /   # FIXME
+
+# Desc: /logout
+fos_user_security_logout: /deconnexion   # FIXME

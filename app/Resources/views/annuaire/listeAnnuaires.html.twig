@@ -1,0 +1,240 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Annuaires des contacts - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion de l'annuaire des contacts
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste arcoffice-liste-annuaire{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Annuaire' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    {# Ajouter un annuaire #}
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addAnnuaire') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ annuaires.getTotalItemCount }} contact(s) trouvé(s)
+
+                        </div>
+
+                        <input class="search liste-annuaires-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un contact / Filtrer"
+                               aria-label="Rechercher dans l' annuaire / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+
+                <div class="row">
+
+                    <h4 class="text-center">Annuaire des contacts</h4>
+
+                    {# Liste des annuaires #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class="{% if annuaires.isSorted('a.nom') %}sorted{% endif %}" data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Nom', ['a.nom', 'a.prenom']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.fonction') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Fonction', ['a.fonction']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.societe') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Société', ['a.societe']) }}
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.mail') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Adresse email', ['a.mail']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.telephone') %}sorted{% endif %}'
+                                data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Téléphone', ['a.telephone']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.portable') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Portable', ['a.portable']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.fax') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Fax', ['a.fax']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('e.nom') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Protocole', ['e.nom']) }}
+
+                            </th>
+
+                            <th class='{% if annuaires.isSorted('a.autre') %}sorted{% endif %}' data-sort="annuaire">
+
+                                {{ knp_pagination_sortable(annuaires, 'Autre', ['a.autre']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% for annuaire in annuaires %}
+
+                            <tr>
+
+                                <td class="annuaire">
+
+                                    <a href="{{ path('editAnnuaire', { id : annuaire.id }) }}">
+
+                                        {{ annuaire.nom }}  {{ annuaire.prenom }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="fonction">
+
+                                    {{ annuaire.fonction }}
+
+                                </td>
+
+                                <td class="societe">
+
+                                    {{ annuaire.societe }}
+
+                                </td>
+
+                                <td class="mail">
+
+                                    <a target="_blank" href="mailto:{{ annuaire.mail }}">{{ annuaire.mail }}</a>
+
+                                </td>
+
+                                <td class="telephone">
+
+                                    {{ annuaire.telephone }}
+
+                                </td>
+
+                                <td class="portable">
+
+                                    {{ annuaire.portable }}
+
+                                </td>
+
+                                <td class="fax">
+
+                                    {{ annuaire.fax }}
+
+                                </td>
+
+                                <td class="essai">
+
+                                    {% if annuaire.essai != null %}
+
+                                        <a href="{{ path("protocole", { id: annuaire.essai.id } ) }}">
+
+                                            {{ annuaire.essai.nom|default() }}
+
+                                        </a>
+
+                                    {% endif %}
+
+                                <td class="autre">
+
+                                    {{ annuaire.autre }}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(annuaires) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+    {% import _self as slef %}
+	{% macro addProtocole(protocole, statuts) %}
+
+        {% if protocole.statut not in [constant('AppBundle\\Entity\\Essais::AUTRE'), constant('AppBundle\\Entity\\Essais::REFUS'), constant('AppBundle\\Entity\\Essais::ARCHIVE')] %}
+
+            <tr>
+
+                {% for    id, statut in statuts %}
+
+                    <td>
+
+                        {% if statut == protocole.statut %}
+
+                            <a
+                                    class='title-tooltip'
+                                    data-toggle="tooltip" data-html="true"
+                                    title="{{ protocole.titre|raw|nl2br }}"
+                                    href="{{ path("protocole", {id: protocole.id}) }}">{{ protocole.nom }}
+                            </a> ({{ protocole.inclusions|length }})
+
+                        {% endif %}
+
+                    </td>
+
+                {% endfor %}
+
+            </tr>
+
+        {% endif %}
+
+    {% endmacro %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Tableau Protocoles - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Tableau Protocoles
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste arcoffice-tableau{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Analyse des Protocoles' } %}{% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center mb-0 border-bottom-0">Pipeline des protocoles en date
+                        du {{ "now"|date("d/m/Y") }}</h4>
+
+                    <table class='table table-sm table-condensed table-striped table-anaylyse-protocole'>
+
+                        <thead>
+
+                        <tr>
+
+                            {% for    id, statut in statuts %}
+
+                                <th>{{ statut }} ({{ essaisStatistique[statut] }})</td>
+
+                            {% endfor %}
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for  protocole in essais %}
+
+                            {{ slef.addProtocole(protocole, statuts) }}
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

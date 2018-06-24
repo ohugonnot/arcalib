@@ -1,0 +1,16 @@
+
+	<a {% for attr, value in options %}{{ attr }}="{% if attr == 'title' %}Classer par {% endif %}{% if attr == 'class' %}title-tooltip {% endif %}{{ value }}{% if attr == 'href' and anchor is defined %}{{ anchor }}{% endif %}" {% endfor %}>
+
+		{{ title }}
+
+		{% if options.class == 'asc' %}
+
+			<i class="fa fa-caret-down"></i>
+
+		{% elseif options.class == 'desc' %}
+
+			<i class="fa fa-caret-up"></i>
+
+		{% endif %}
+
+	</a>

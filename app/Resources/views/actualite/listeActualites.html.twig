@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Actualites - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des actualites
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Actualites' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addActualite') }}">Ajouter <i
+                                class="fa fa-plus mr-1"></i></a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ actualites.getTotalItemCount }} actualités trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-actualites-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher une actualité / Filtrer"
+                               aria-label="Rechercher un actualité / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+                    <h4 class="text-center">Liste des actualités</h4>
+
+                    {# Liste des actualites #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        {# Titre- #}
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if actualites.isSorted('a.date') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(actualites, 'Date', ['a.date']) }}
+
+                            </th>
+
+                            <th class='actualites-titre {% if actualites.isSorted('a.titre') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(actualites, 'Titre', ['a.titre']) }}
+
+                            </th>
+
+                            <th class='{% if actualites.isSorted('a.text') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(actualites, 'Texte', ['a.text']) }}
+
+                            </th>
+
+                            <th class='{% if actualites.isSorted('a.enabled') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(actualites, 'Activée', ['a.enabled']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        {# corps de liste #}
+                        <tbody>
+
+                        {% for actualite in actualites %}
+
+                            <tr>
+
+                                <td>
+
+                                    {{ actualite.date is empty ? "" : actualite.date|date('d/m/Y') }}
+
+                                </td>
+
+                                <td>
+
+                                    <a href="{{ path('editActualite', { id : actualite.id }) }}">
+
+                                        {{ actualite.titre }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+
+                                    {{ actualite.text|raw }}
+
+                                </td>
+
+                                <td>
+
+                                    {% if actualite.enabled %}
+
+                                        <i class="fa fa-circle actualite-ok"></i>
+
+                                    {% else %}
+
+                                        <i class="fa fa-circle actualite-ko"></i>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+
+                    <div class="navigation">
+
+                        {{ knp_pagination_render(actualites) }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

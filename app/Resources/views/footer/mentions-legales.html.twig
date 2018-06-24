@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}Mentions Légales - ArcOffice{% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}{% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-pages{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Mentions Légales' } %}{% endembed %}
+
+    {% endblock fil_ariane %}
+			    
+	{# Contenu #}
+	{% block content %}
+
+        {# Section Principale #}
+        <section id='protocole' class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <p>Mentions légales à définir ici.</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

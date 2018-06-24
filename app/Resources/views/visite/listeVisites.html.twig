@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des visites - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des visites
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Visites' } %}
+
+            {% block fil_ariane_more %}
+
+                {# Barre de recherche #}
+                <form id="recherche" class="form-inline ml-auto">
+
+                    <div class="arcoffice-count">
+
+                        {{ visites.getTotalItemCount }} visites trouvée(s)
+
+                    </div>
+
+                    <input class="search liste-visites-recherche form-control form-control-sm mr-2" autocomplete="off"
+                           type="text" id='input-recherche' value='{{ app.request.get("recherche") }}' name="recherche"
+                           placeholder="Rechercher une visite / Filtrer" aria-label="Rechercher un visite / Filtrer">
+
+                    <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                    </button>
+
+                </form>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+
+	
+	
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des visites</h4>
+
+                    {# Liste des visites #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+                            <th class='{% if visites.isSorted('v.id') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Id', 'v.id') }}
+
+                            </th>
+
+                            <th class='{% if visites.isSorted('e.nom') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Protocole', ['e.nom', "p.nom"]) }}
+
+                            </th>
+
+                            <th class='{% if visites.isSorted('p.nom') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Patient', ['p.nom', 'p.prenom', 'e.nom']) }}
+
+                            </th>
+
+                            <th class='{% if visites.isSorted('v.date') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Date', 'v.date') }}
+
+                            </th>
+
+                            <th class='{% if visites.isSorted('v.statut') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Statut', 'v.statut') }}
+
+                            </th>
+
+                            <th class='{% if visites.isSorted('v.type') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Type', 'v.type') }}
+
+                            </th>
+
+                            <th class='{% if visites.isSorted('v.calendar') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Flowchart', 'v.calendar') }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% for visite in visites %}
+
+                            <tr class="{{ visite|visiteClass }}">
+
+                                <td class="statut">
+
+                                    {{ visite.id }}
+
+                                </td>
+
+                                <td class="visite">
+
+                                    {% set archive = visite.inclusion.essai.statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') or visite.inclusion.essai.statut == constant('AppBundle\\Entity\\Essais::REFUS') %}
+
+                                    <a {% if visite.inclusion != null %}href="{{ path("protocole", {id: visite.inclusion.essai.id, archive: archive}) }}"{% endif %}>
+
+                                        {{ visite.inclusion.essai.nom|default("") }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="visite">
+
+                                    <a {% if visite.inclusion != null %}href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: visite.inclusion.id }) }}"{% endif %}>
+
+                                        {{ visite.inclusion.patient.nom|default("") }} {{ visite.inclusion.patient.prenom|default("") }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="date">
+
+                                    {{ visite.date is empty ? "" : visite.date|date('d/m/Y') }}
+
+                                </td>
+
+                                <td class="statut">
+
+                                    {{ visite.statut }}
+
+                                </td>
+
+                                <td class="type">
+
+                                    {{ visite.type }}
+
+                                </td>
+
+                                <td class="calendar">
+
+                                    {{ visite.calendar }}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(visites) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

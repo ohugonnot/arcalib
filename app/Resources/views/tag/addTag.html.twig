@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addTag' %}
+
+        {% set title_page = "Ajouter un nouveau tag" %}
+        {% set description_page = "Création d'un nouveau tag" %}
+
+    {% elseif app.request.get("_route") == 'editTag' %}
+
+        {% set title_page = "Modifier le tag " ~ form.vars.value.nom %}
+        {% set description_page = "Édition du tag : " ~ form.vars.value.nom %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                ArcOffice - {{ title_page }}
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('listeTags') }}">Tags</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'un tag #}
+                    <div class="col col-arcoffice col-tag-editer">
+
+                        {{ form_start(form) }}
+
+                        {% form_theme form 'form/submit.html.twig' %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                {% if form.vars.value.id and is_granted('ROLE_ARC') %}
+
+                                    {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                        title : "Supprimer le tag",
+                                        route_delete : 'deleteTag',
+                                        route_liste : 'listeTags',
+                                        message: "Le tag a bien été supprimé.",
+                                        id: form.vars.value.id
+
+                                    } %}
+
+                                {% endif %}
+
+                                {# Enregistrer #}
+                                {{ form_widget(form.envoyer, {
+                                    'fa' : 'fa-check',
+                                    'right' : true,
+                                    'label' : ' ',
+                                    'attr': {
+                                        'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                        'title': "Enregistrer le tag"
+                                    }
+                                }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# Nom #}
+                            <div class="col">
+
+                                {{ form_label(form.nom) }}
+
+                                {{ form_errors(form.nom) }}
+
+                                {{ form_widget(form.nom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Classe #}
+                            <div class="col">
+
+                                {{ form_label(form.classe) }}
+
+                                {{ form_errors(form.classe) }}
+
+                                {{ form_widget(form.classe, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Essai #}
+                            {# <div class="col">
+
+                                {{ form_label(form.essai) }}
+
+                                {{ form_errors(form.essai) }}
+
+                                {{ form_widget(form.essai, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div> #}
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    {# Colonne Information #}
+                    {% if app.request.get('_route') == 'editTag' %}
+
+                        <div class="col-5 col-arcoffice col-tag-editer">
+
+                            {# Titre + Boutons #}
+                            <div class="form-title d-flex align-items-center">Informations</div>
+
+                                Il y a {{ essais|length }} protocole(s) avec ce tag
+                            <ul>
+                                {% for essai in essais %}
+                                    <li><a href="{{ path("protocole", {id: essai.id}) }}">{{ essai.nom }}</a>
+                                        - {{ essai.inclusions|length }} inclusion(s)
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

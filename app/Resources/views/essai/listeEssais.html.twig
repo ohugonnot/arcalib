@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des Protocoles - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des Protocoles
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste arcoffice-liste-essais{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Protocoles' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    {% if is_granted('ROLE_ARC') %}
+
+                        <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportEssais') }}">
+
+                            Exporter <i class="fa fa-file-excel-o ml-1"></i>
+
+                        </a>
+
+                    {% endif %}
+                    {# Ajouter un essai #}
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('protocole') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ essais.getTotalItemCount }} protocole(s) trouvé(s)
+
+                        </div>
+
+                        <input class="search liste-essais-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un protocole/ Filtrer"
+                               aria-label="Rechercher un protocole / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des protocoles</h4>
+
+                    {# Liste des essais #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+                        {# Entete' #}
+                        <thead>
+
+                        <tr>
+
+                            <th class="{% if essais.isSorted('e.nom') %}sorted{% endif %}" data-sort="essais">
+
+                                {{ knp_pagination_sortable(essais, 'Protocole', ['e.nom']) }}
+
+                            </th>
+
+                            <th class='{% if essais.isSorted('e.numeroInterne') %}sorted{% endif %}'
+                                data-sort="numeroInterne">
+
+                                {{ knp_pagination_sortable(essais, 'Numero Interne', 'e.numeroInterne') }}
+
+                            </th>
+                            <th class='{% if essais.isSorted('e.statut') %}sorted{% endif %}' data-sort="statut">
+
+                                {{ knp_pagination_sortable(essais, 'Statut', 'e.statut') }}
+
+                            </th>
+                            <th class='{% if essais.isSorted('e.dateOuv') %}sorted{% endif %}' data-sort="dateOuv">
+
+                                {{ knp_pagination_sortable(essais, 'Date ouverture', 'e.dateOuv') }}
+
+                            </th>
+                            <th class='{% if essais.isSorted('e.dateClose') %}sorted{% endif %}' data-sort="dateClose">
+
+                                {{ knp_pagination_sortable(essais, 'Date clôture', 'e.dateClose') }}
+
+                            </th>
+                            <th class='{% if essais.isSorted('e.typeEssai') %}sorted{% endif %}' data-sort="typeEssai">
+
+                                {{ knp_pagination_sortable(essais, 'Type essai', 'e.typeEssai') }}
+
+                            </th>
+                            <th class='{% if essais.isSorted('e.typeProm') %}sorted{% endif %}' data-sort="typeProm">
+
+                                {{ knp_pagination_sortable(essais, 'Type promoteur', 'e.typeProm') }}
+
+                            </th>
+
+                            <th class='{% if essais.isSorted('nb') %}sorted{% endif %}' data-sort="typeProm">
+
+                                {{ knp_pagination_sortable(essais, 'Nbr inclusion', 'nb') }}
+
+                            </th>
+
+                        </tr>
+                        {# Liste' #}
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% for essai in essais %}
+
+                            <tr>
+
+                                <td class="essai">
+
+                                    {% set archive = essai.statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') or essai.statut == constant('AppBundle\\Entity\\Essais::REFUS') %}
+
+                                    <a href="{{ path('protocole', { id : essai.id, archive: archive }) }}">
+                                        {{ essai.nom }}
+                                    </a>
+
+                                </td>
+                                <td class="numeroInterne">{{ essai.numeroInterne }}</td>
+                                <td class="statut">{{ essai.statut }}</td>
+                                <td class="dateOuv">{{ essai.dateOuv is empty ? "" : essai.dateOuv|date('d/m/Y') }}</td>
+                                <td class="dateClose">{{ essai.dateClose is empty ? "" : essai.dateClose|date('d/m/Y') }}</td>
+                                <td class="typeEssai">{{ essai.typeEssai }}</td>
+                                <td class="typeProm">{{ essai.typeProm }}</td>
+                                <td><span v-if='essai.inclusions != null'>{{ essai.inclusions|length }}</span></td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(essais) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

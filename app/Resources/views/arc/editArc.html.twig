@@ -1,0 +1,250 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addArc' %}
+
+        {% set title_page = "Ajouter un nouvel ARC" %}
+        {% set description_page = "Création d'un nouvel ARC" %}
+
+    {% elseif app.request.get("_route") == 'editArc' %}
+
+        {% set title_page = "Modifier l'ARC " ~ form.vars.value.nomArc %}
+        {% set description_page = "Édition de l'ARC " ~ form.vars.value.nomArc %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                {{ title_page }} - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('listeArcs') }}">Arcs</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'un arc #}
+                    <div class="col col-arcoffice col-arc-editer">
+
+                        {{ form_start(form) }}
+
+                        {% form_theme form 'form/submit.html.twig' %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                {% if form.vars.value.id %}
+
+                                    {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                        title : "Supprimer l'ARC",
+                                        route_delete : 'deleteArc',
+                                        route_liste : 'listeArcs',
+                                        message: "L'arc a bien été supprimé.",
+                                        id: form.vars.value.id
+
+                                    } %}
+
+                                {% endif %}
+
+                                {# Enregistrer #}
+                                {{ form_widget(form.envoyer, {
+                                    'fa' : 'fa-check',
+                                    'right' : true,
+                                    'label' : ' ',
+                                    'attr': {
+                                        'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                        'title': "Enregistrer l'arc"
+                                    }
+                                }) }}
+
+                            </div>
+
+                        </div>
+
+                        {# Corps edition #}
+                        <div class="form-row form-group">
+
+                            {# nomArc #}
+                            <div class="col-8">
+
+                                {{ form_label(form.nomArc) }}
+
+                                {{ form_errors(form.nomArc) }}
+
+                                {{ form_widget(form.nomArc, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# iniArc #}
+                            <div class="col">
+
+                                {{ form_label(form.iniArc) }}
+
+                                {{ form_errors(form.iniArc) }}
+
+                                {{ form_widget(form.iniArc, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# datIn #}
+                            <div class="col">
+
+                                {{ form_label(form.datIn) }}
+
+                                {{ form_errors(form.datIn) }}
+
+                                {{ form_widget(form.datIn, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+
+                            {# datOut #}
+                            <div class="col">
+
+                                {{ form_label(form.datOut) }}
+
+                                {{ form_errors(form.datOut) }}
+
+                                {{ form_widget(form.datOut, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+
+                            {# service #}
+                            <div class="col">
+
+                                {{ form_label(form.service) }}
+
+                                {{ form_errors(form.service) }}
+
+                                {{ form_widget(form.service, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-row form-group">
+
+                            {# dect #}
+                            <div class="col">
+
+                                {{ form_label(form.dect) }}
+
+                                {{ form_errors(form.dect) }}
+
+                                {{ form_widget(form.dect, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# tel #}
+                            <div class="col">
+
+                                {{ form_label(form.tel) }}
+
+                                {{ form_errors(form.tel) }}
+
+                                {{ form_widget(form.tel, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Adresse Email #}
+                            <div class="col">
+
+                                {{ form_label(form.mail) }}
+
+                                {{ form_errors(form.mail) }}
+
+                                {{ form_widget(form.mail, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    {# Colonne Information #}
+                    {% if app.request.get('_route') == 'editArc' %}
+
+                        <div class="col-5 col-arcoffice col-arc-editer">
+
+                            {# Titre + Boutons #}
+                            <div class="form-title d-flex align-items-center">Informations</div>
+
+                            <p>Liste des protocoles dont cet arc est référent</p>
+
+                            <ul>
+
+                                {% for essai in form.vars.value.essais %}
+
+                                    <li><a href="{{ path("protocole",{id: essai.id }) }}">{{ essai.nom }}</a></li>
+
+                                {% endfor %}
+
+                            </ul>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

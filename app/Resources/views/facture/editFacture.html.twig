@@ -1,0 +1,482 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addFacture' %}
+
+        {% set title_page = "Ajouter une nouvelle facture" %}
+        {% set description_page = "Création d'une nouvelle facture" %}
+
+    {% elseif app.request.get("_route") == 'editFacture' %}
+
+        {% set title_page = "Modifier la facture " ~ form.vars.value.numero %}
+        {% set description_page = "Édition de la facture " ~ form.vars.value.numero %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                {{ title_page }} - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('listeFactures') }}">Factures</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'une facture #}
+                    <div class="col col-arcoffice col-arc-editer">
+
+                        {{ form_start(form) }}
+
+                        {% form_theme form 'form/submit.html.twig' %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                {% if form.vars.value.id %}
+
+                                    {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                        title : "Supprimer la facture",
+                                        route_delete : 'deleteFacture',
+                                        route_liste : 'listeFactures',
+                                        message: "La facture a été supprimée.",
+                                        id: form.vars.value.id
+
+                                    } %}
+
+                                {% endif %}
+
+                                {% if app.request.get('_route') == 'editFacture' %}
+
+                                    {# Bouton 'Ajouter/Consulter le PDF' #}
+                                    <button type="button" data-id='{{ form.vars.value.id }}'
+                                            class="btn btn-sm btn-outline-info title-tooltip facture-modal-button"
+                                            title='Ajouter/Consulter les PDF'>
+
+                                        <i class="fa fa-file-text" aria-hidden="true"></i>
+
+                                    </button>
+
+                                {% endif %}
+
+                                {# Enregistrer #}
+                                {{ form_widget(form.envoyer, {
+                                    'fa' : 'fa-check',
+                                    'right' : true,
+                                    'label' : ' ',
+                                    'attr': {
+                                        'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                        'title': "Enregistrer la facture"
+                                    }
+                                }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# numero facture #}
+                            <div class="col-5">
+
+                                {{ form_label(form.numero) }}
+
+                                {{ form_errors(form.numero) }}
+
+                                {{ form_widget(form.numero, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# numero Interne #}
+                            <div class="col-4">
+
+                                {{ form_label(form.numInterne) }}
+
+                                {{ form_errors(form.numInterne) }}
+
+                                {{ form_widget(form.numInterne, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# date #}
+                            <div class="col-3">
+
+                                {{ form_label(form.date) }}
+
+                                {{ form_errors(form.date) }}
+
+                                {{ form_widget(form.date, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# creditDebit #}
+                            <div class="col-3">
+
+                                {{ form_label(form.creditDebit) }}
+
+                                {{ form_errors(form.creditDebit) }}
+
+                                {{ form_widget(form.creditDebit, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-row form-group">
+
+                            {# essai #}
+                            <div class="col-3">
+
+                                {{ form_label(form.essai) }}
+
+                                {{ form_errors(form.essai) }}
+
+                                {{ form_widget(form.essai, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# projet #}
+                            <div class="col">
+
+                                {{ form_label(form.projet) }}
+
+                                {{ form_errors(form.projet) }}
+
+                                {{ form_widget(form.projet, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# payeur #}
+                            <div class="col-4">
+
+                                {{ form_label(form.payeur) }}
+
+                                {{ form_errors(form.payeur) }}
+
+                                {{ form_widget(form.payeur, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# receveur #}
+                            <div class="col-4">
+
+                                {{ form_label(form.receveur) }}
+
+                                {{ form_errors(form.receveur) }}
+
+                                {{ form_widget(form.receveur, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# responsable #}
+                            <div class="col">
+
+                                {{ form_label(form.responsable) }}
+
+                                {{ form_errors(form.responsable) }}
+
+                                {{ form_widget(form.responsable, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# montantHt #}
+                            <div class="col-3">
+
+                                {{ form_label(form.montantHt) }}
+
+                                {{ form_errors(form.montantHt) }}
+
+                                {{ form_widget(form.montantHt, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+
+                            {# taux TVA #}
+                            <div class="col-2">
+
+                                {{ form_label(form.taxTVA) }}
+
+                                {{ form_errors(form.taxTVA) }}
+
+                                {{ form_widget(form.taxTVA, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# type #}
+                            <div class="col-2">
+
+                                {{ form_label(form.type) }}
+
+                                {{ form_errors(form.type) }}
+
+                                {{ form_widget(form.type, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# mTVA #}
+                            <div class="col-2">
+
+                                {{ form_label(form.TVA) }}
+
+                                {{ form_errors(form.TVA) }}
+
+                                {{ form_widget(form.TVA, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+
+                            {# montantTtc #}
+                            <div class="col-3">
+
+                                {{ form_label(form.montantTtc) }}
+
+                                {{ form_errors(form.montantTtc) }}
+
+                                {{ form_widget(form.montantTtc, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# statut #}
+                            <div class="col">
+
+                                {{ form_label(form.statut) }}
+
+                                {{ form_errors(form.statut) }}
+
+                                {{ form_widget(form.statut, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# date encaissable le... #}
+                            <div class="col">
+
+                                {{ form_label(form.dateEncaissement) }}
+
+                                {{ form_errors(form.dateEncaissement) }}
+
+                                {{ form_widget(form.dateEncaissement, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+
+                            {# dateCaisse #}
+                            <div class="col">
+
+                                {{ form_label(form.dateCaisse) }}
+
+                                {{ form_errors(form.dateCaisse) }}
+
+                                {{ form_widget(form.dateCaisse, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        {# note #}
+                        <div class="form-row form-group">
+
+                            {# note #}
+                            <div class="col">
+
+                                {{ form_label(form.note) }}
+
+                                {{ form_errors(form.note) }}
+
+                                {{ form_widget(form.note, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    {# Colonne Information #}
+                    {% if app.request.get('_route') == 'editFacture' %}
+
+                        <div class="col-5 col-arcoffice col-arc-editer">
+
+                            {# Titre + Boutons #}
+                            <div class="form-title d-flex align-items-center">Facture(s) du protocole</div>
+
+                            <ul>
+                                {% for facture in facturesSoeurs %}
+
+                                    <li>Facture <a
+                                                href="{{ path("editFacture",{id: facture.id}) }}">{{ facture.numero }}</a>
+                                        le {{ facture.date|date("d/m/Y") }} Montant Ht: {{ facture.montantHt }} €
+                                    </li>
+
+                                {% endfor %}
+                            </ul>
+
+                        </div>
+
+                    {% endif %}
+
+                    {# Modal - Ajouter/Éditer une facture PDF #}
+
+                    <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-facture-pdf" tabindex="-1"
+                         role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+
+                        <div class="modal-dialog modal-md" role="document">
+
+                            <div class="modal-content">
+
+                                {# Entête #}
+                                <div class="modal-header modal-header-violet">
+
+                                    <p class="modal-title">Ajouter / Consulter le PDF de la facture</p>
+
+                                    <button @click='cancel' type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+
+                                        <span aria-hidden="true">&times;</span>
+
+                                    </button>
+
+                                </div>
+
+                                {# Contenu #}
+                                <div class="modal-body">
+
+                                    <form>
+
+                                        {# Liste des 5 PDFs #}
+
+                                        {# PDF N°1 #}
+                                        <div id='facture-input' class="form-row form-group">
+
+                                            {# Input File #}
+                                            <label class="col-2 col-form-label">Facture</label>
+
+                                            <label class="custom-file">
+
+                                                <span id='facture-file' style='width:260px'
+                                                      class="custom-file-control"></span>
+                                                <span id='facture-loader' class="loader ml-2" style='display:none'></span>
+                                            </label>
+
+                                        </div>
+
+                                        <div id='facture-download' class="form-row form-group">
+
+                                            <label for="facture-pdf" class="col-2 col-form-label">Facture</label>
+
+                                            <div class="col d-flex align-items-center">
+
+                                                {# Voir le PDF #}
+                                                <a href="" target="_blank" class="btn btn-sm btn-info">
+
+                                                    <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                </a>
+
+                                                {# Supprimer le PDF #}
+                                                <button type="button"
+                                                        class="ml-2 btn btn-sm btn-outline-danger remove-facture-button">
+                                                    <i aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                {# Loader #}
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                                {# Pied de page #}
+                                <div class="modal-footer">
+
+                                    <div class="ml-auto">
+
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                data-dismiss="modal">Fermer
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

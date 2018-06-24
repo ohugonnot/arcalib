@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des codes CIM10 - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des codes CIM10
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Libcim10s' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addLibCim10') }}">Ajouter <i
+                                class="fa fa-plus mr-1"></i></a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ libcim10s.getTotalItemCount }} libcim10s trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-libcim10s-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher une libcim10 / Filtrer"
+                               aria-label="Rechercher une libcim10 / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+	
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des codes CIM10 ( Utile/ Complète)</h4>
+
+                    {# Liste des libcim10s #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if libcim10s.isSorted('p.utile') %}sorted{% endif %}' data-sort="libcim10">
+
+                                {{ knp_pagination_sortable(libcim10s, 'Utile', ['p.utile']) }}
+
+                            </th>
+
+                            <th class='{% if libcim10s.isSorted('p.cim10code') %}sorted{% endif %}'
+                                data-sort="libcim10">
+
+                                {{ knp_pagination_sortable(libcim10s, 'Code', ['p.cim10code']) }}
+
+                            </th>
+
+                            <th class='{% if libcim10s.isSorted('p.libCourt') %}sorted{% endif %}' data-sort="libcim10">
+
+                                {{ knp_pagination_sortable(libcim10s, 'Libcim10', ['p.libCourt']) }}
+
+                            </th>
+
+                            <th class='{% if libcim10s.isSorted('p.libLong') %}sorted{% endif %}' data-sort="libcim10">
+
+                                {{ knp_pagination_sortable(libcim10s, 'Détail', ['p.libLong']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for libcim10 in libcim10s %}
+
+                            <tr>
+
+                                <td class="libcim10-checkbox">
+
+                                    <label>
+
+                                        <input class='libcim10-utile' data-id='{{ libcim10.id }}' type="checkbox"
+                                               {% if libcim10.utile == 1 %}checked="checked"{% endif %}>
+
+                                    </label>
+
+                                </td>
+
+                                <td>{{ libcim10.cim10code }}</td>
+
+                                <td class="libcim10">
+
+                                    <a href="{{ path('editLibCim10', { id : libcim10.id }) }}">
+
+                                        {{ libcim10.libCourt }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>{{ libcim10.libLong }}</td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(libcim10s) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}
