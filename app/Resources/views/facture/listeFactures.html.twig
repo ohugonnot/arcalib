@@ -1,0 +1,369 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des Factures - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des factures
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Factures' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportFactures') }}">
+
+                        Exporter <i class="fa fa-file-excel-o ml-1"></i>
+
+                    </a>
+
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addFacture') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ factures.getTotalItemCount }} facture(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-factures-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher une facture / Filtrer"
+                               aria-label="Rechercher une facture / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des factures</h4>
+
+                    {# Liste des factures #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if factures.isSorted('f.numero') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Numéro', ['f.numero']) }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.date') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Date', 'f.date') }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('Protocole') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Protocole', 'e.nom') }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.projet') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, '...ou Projet', ['f.projet']) }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.payeur') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Payeur', ['f.payeur']) }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.creditDebit') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Crédit/Débit', ['f.creditDebit']) }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.receveur') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Receveur', ['f.receveur']) }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.montantHt') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Montant HT', 'f.montantHt') }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('f.montantTtc') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Montant TTC', 'f.montantTtc') }}
+
+                            </th>
+
+
+                            <th class='{% if factures.isSorted('f.statut') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Statut', 'f.statut') }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('dateEncaissement') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Date Theorique', 'f.dateEncaissement') }}
+
+                            </th>
+
+                            <th class='{% if factures.isSorted('dateCaisse') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(factures, 'Date Caisse', 'f.dateCaisse') }}
+
+                            </th>
+                            <th> PDF
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for facture in factures %}
+
+                            <tr
+                                    {% if facture.statut == constant('AppBundle\\Entity\\Facture::EN_ATTENTE') and facture.dateEncaissement != null and facture.dateEncaissement < date() %}
+                                class="past"
+                                    {% endif %}>
+
+                                <td class="facture">
+
+                                    <a href="{{ path('editFacture', { id : facture.id }) }}">
+
+                                        {{ facture.numero }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+
+                                    {{ facture.date is empty ? "" : facture.date|date('d/m/Y') }}
+
+                                </td>
+
+                                <td>
+
+                                    <a {% if facture.essai != null %}href="{{ path("protocole", {id: facture.essai.id}) }}"{% endif %}>
+
+                                        {{ facture.essai.nom|default("") }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>{{ facture.projet }}</td>
+
+                                <td>{{ facture.payeur }}</td>
+
+                                <td class="{% if facture.CreditDebit == constant('AppBundle\\Entity\\Facture::DEBIT') %}facture-debit{% else %}facture-credit{% endif %}">{{ facture.CreditDebit }}</td>
+
+                                <td>{{ facture.receveur }} </td>
+
+                                <td>{{ facture.montantHt|default(0)|round(1, 'floor') }} €</td>
+
+                                <td>{{ facture.montantTtc|default(0)|round(1, 'floor') }} €</td>
+
+                                <td>{{ facture.statut }}</td>
+
+
+                                <td class="date">
+
+                                    {{ facture.dateEncaissement is empty ? "" : facture.dateEncaissement|date('d/m/Y') }}
+
+                                </td>
+
+                                <td class="date">
+
+                                    {{ facture.dateCaisse is empty ? "" : facture.dateCaisse|date('d/m/Y') }}
+
+                                </td>
+                                {# PDFs #}
+                                <td>
+                                    <button type="button" data-id='{{ facture.id }}'
+                                            class="btn btn-sm btn-outline-info title-tooltip facture-modal-button"
+                                            title='Ajouter/Consulter les PDF'>
+
+                                        {% if facture.facture != null %}
+
+                                            <i class="fa fa-file-text" aria-hidden="true"></i>
+
+                                        {% else %}
+
+                                            <i class="fa fa-upload" aria-hidden="true"></i>
+
+                                        {% endif %}
+
+
+                                    </button>
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(factures) }}
+
+                </div>
+
+            </div>
+
+
+            <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-facture-pdf" tabindex="-1" role="dialog"
+                 aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+
+                <div class="modal-dialog modal-md" role="document">
+
+                    <div class="modal-content">
+
+                        {# Entête #}
+                        <div class="modal-header modal-header-violet">
+
+                            <p class="modal-title">Ajouter / Consulter le PDF de la facture</p>
+
+                            <button @click='cancel' type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                                <span aria-hidden="true">&times;</span>
+
+                            </button>
+
+                        </div>
+
+                        {# Contenu #}
+                        <div class="modal-body">
+
+                            <form>
+
+                                {# Liste des 5 PDFs #}
+
+                                {# PDF N°1 #}
+                                <div id='facture-input' class="form-row form-group">
+
+                                    {# Input File #}
+                                    <label class="col-2 col-form-label">Facture</label>
+
+                                    <label class="custom-file">
+
+                                        <span id='facture-file' style='width:260px' class="custom-file-control"></span>
+                                        <span id='facture-loader' class="loader ml-2" style='display:none'></span>
+                                    </label>
+
+                                </div>
+
+                                <div id='facture-download' class="form-row form-group">
+
+                                    <label for="facture-pdf" class="col-2 col-form-label">Facture</label>
+
+                                    <div class="col d-flex align-items-center">
+
+                                        {# Voir le PDF #}
+                                        <a href="" target="_blank" class="btn btn-sm btn-info">
+
+                                            <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                        </a>
+
+                                        {# Supprimer le PDF #}
+                                        <button type="button"
+                                                class="ml-2 btn btn-sm btn-outline-danger remove-facture-button"><i
+                                                    aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                        {# Loader #}
+
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        {# Pied de page #}
+                        <div class="modal-footer">
+
+                            <div class="ml-auto">
+
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+                                    Fermer
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    {% endblock content %}

@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des inclusions - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des inclusions
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Inclusions' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+
+                    {% if is_granted('ROLE_ADMIN') %}
+
+                        <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportInclusionsProtocole') }}">
+
+                            Exporter (avec protocole) <i class="fa fa-file-excel-o ml-1"></i>
+
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportInclusions') }}">
+
+                            Exporter <i class="fa fa-file-excel-o ml-1"></i>
+
+                        </a>
+
+                    {% endif %}
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ inclusions.getTotalItemCount }} inclusion(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-inclusions-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher une inclusion/ Filtrer" aria-label="Rechercher une inclusion">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+	
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des inclusions (patient-protocole)</h4>
+
+                    {# Liste des inclusions #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if inclusions.isSorted('i.id') %}sorted{% endif %}' data-sort="id">
+
+                                {{ knp_pagination_sortable(inclusions, 'Id', 'i.id') }}
+
+                            </th>
+
+                            <th class='{% if inclusions.isSorted('p.nom') %}sorted{% endif %}' data-sort="patient">
+
+                                {{ knp_pagination_sortable(inclusions, 'Patient', ['p.nom', 'p.prenom']) }}
+
+                            </th>
+
+                            <th class='{% if inclusions.isSorted('i.statut') %}sorted{% endif %}' data-sort="statut">
+
+                                {{ knp_pagination_sortable(inclusions, 'Statut', 'i.statut') }}
+
+                            </th>
+
+                            <th class='{% if inclusions.isSorted('i.datInc') %}sorted{% endif %}' data-sort="datInc">
+
+                                {{ knp_pagination_sortable(inclusions, 'Date', 'i.datInc') }}
+
+                            </th>
+
+                            <th class='{% if inclusions.isSorted('e.nom') %}sorted{% endif %}' data-sort="essai">
+
+                                {{ knp_pagination_sortable(inclusions, 'Protocole', ['e.nom','i.numInc']) }}
+
+                            </th>
+
+                            <th class='{% if inclusions.isSorted('i.numInc') %}sorted{% endif %}' data-sort="numInc">
+
+                                {{ knp_pagination_sortable(inclusions, 'N° Inclusion', 'i.numInc') }}
+
+                            </th>
+
+                            <th style="max-width: 100px;">
+
+                                Documents / Traitements
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% for inclusion in inclusions %}
+
+                            <tr>
+
+                                <td class="id">{{ inclusion.id }}</a></td>
+
+                                <td class="patient">
+
+                                    <a {% if inclusion.patient != null %}href="{{ path("patient", {id: inclusion.patient.id }) }}"{% endif %}>
+
+                                        {{ inclusion.patient.nom|default('') }} {{ inclusion.patient.prenom|default('') }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="statut">{{ inclusion.statut }}</td>
+
+                                <td class="datInc">{{ inclusion.datInc is empty ? "" : inclusion.datInc|date('d/m/Y') }}</td>
+
+                                <td class="essai">
+
+                                    {% if inclusion.essai != null %}
+                                        <a href="{{ path("protocole", {id: inclusion.essai.id }) }}">{{ inclusion.essai.nom }}</a>
+                                    {% endif %}
+
+                                </td>
+
+                                <td class="numInc">
+                                    <a {% if inclusion.patient != null %}href="{{ path("patient", {id: inclusion.patient.id, id_inclusion: inclusion.id }) }}"{% endif %}>
+                                        {{ inclusion.numInc }}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    {% if inclusion.documents|length > 0 %}
+                                        <a target="_blank" href="{{ path("inclusion_list_documents", {id : inclusion.id}) }}" type="" title="" class="btn btn-sm btn-outline-primary title-tooltip" data-original-title="Liste des documents">
+                                            <i aria-hidden="true" class="fa fa-list"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if inclusion.traitements|length > 0 %}
+                                        <a target="_blank" href="{{ path("listeTraitements", {id : inclusion.id}) }}" type="" title="" class="btn btn-sm btn-outline-primary title-tooltip" data-original-title="Liste des traitements">
+                                            <i aria-hidden="true" class="fa fa-medkit"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(inclusions) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

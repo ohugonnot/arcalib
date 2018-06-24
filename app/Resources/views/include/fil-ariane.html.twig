@@ -1,0 +1,53 @@
+
+{# Section Sub Header #}
+<section class="sub-header">
+
+    <div class="container">
+
+        <div class="row d-flex">
+
+            {# Fil d'ariane #}
+            <ol class="breadcrumb d-flex">
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('recherche') }}">Accueil</a>
+
+                </li>
+
+                {% block fil_ariane_link %}{% endblock %}
+
+                {% if page_name is defined and page_name is not empty %}
+
+                    <li class="breadcrumb-item d-flex align-items-center active">
+
+                        {{ page_name }}
+
+                    </li>
+
+                {% endif %}
+
+                {% block fil_ariane_after_link %}
+
+                    {% if filter is defined and filter is not empty %}
+
+                        <li class="breadcrumb-item d-flex align-items-center active">
+
+                            {{ filter }}
+
+                        </li>
+
+                    {% endif %}
+
+                {% endblock %}
+
+            </ol>
+
+            {# Block supplémentaire #}
+            {% block fil_ariane_more %}{% endblock %}
+
+        </div>
+
+    </div>
+
+</section>

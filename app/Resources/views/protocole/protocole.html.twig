@@ -1,0 +1,1482 @@
+{% extends 'base.html.twig' %}
+	
+	{% set couleur = {
+        "Faisabilité en attente": "violet-fonce",
+        "Convention signature": "bleu",
+        "Inclusions ouvertes": "vert",
+        "Inclusions closes, suivi": "vert-fonce",
+        "Queries et finalisation" : "jaune",
+        "Clos, en attente payement":"orange",
+        "Archivé": "rouge",
+        "Autre": "blanc",
+        "Refus": "noir",
+        "Attente de MEP" : "vert-bleu",
+    } %}
+
+	{% set  archive = app.request.query.get("archive") == true ? false : true %}
+	{% set  archiveLabel =  app.request.query.get("archive") == true ? constant('AppBundle\\Entity\\Essais::ARCHIVE') : "" %}
+
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Protocole - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des protocoles
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-protocole{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Protocole', filter: archiveLabel } %}
+
+            {% block fil_ariane_more %}
+
+                {# <h4><center>Protocole</center></h4> #}
+
+                {# Barre de recherche #}
+                <form id="protocole-recherche" class="form-inline ml-auto">
+
+                    <input class="protocole-recherche form-control form-control-sm mr-2" autocomplete="off" type="text"
+                           id='input-recherche' v-model="recherche" name="recherche"
+                           placeholder="Rechercher un protocole" aria-label="Rechercher un protocole">
+
+                    <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                    </button>
+
+                </form>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+			    
+	{# Contenu #}
+	{% block content %}
+
+        {# Section Principale #}
+        <section id='protocole' class="section-main" v-cloak>
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne 1-: Liste des protocoles----------------------------------------------------------------------------------------------------------------------------------------------------------- #}
+
+                    {# Colonne Liste des Protocoles #}
+                    <div class="col-2 col-arcoffice col-liste-protocole">
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            Protocoles
+
+                            <div class="ml-auto mr-1">
+
+                                {# Archivés #}
+                                <a href='?archive={{ archive }}'
+                                   class="btn btn-sm btn-outline-danger title-tooltip {% if not archive %}is-selected{% endif %}"
+                                   title="Afficher les protocoles archivés">
+
+                                    <i class="fa fa-database" aria-hidden="true"></i>
+
+                                </a>
+
+                                {# Nouveau #}
+                                <button @click='newProtocole' type="button"
+                                        class="btn btn-sm btn-outline-primary title-tooltip"
+                                        title="Ajouter un protocole">
+
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-liste-sub">
+
+                            {% for essai in essais %}
+
+                                <a href="#" data-placement="left"
+                                   class="select-protocole title-tooltip {% if couleur[essai.statut] is defined %}{{ 'arcoffice-' ~ couleur[essai.statut] }}{% endif %} d-flex"
+                                   data-id="{{ essai.id }}" title="{{ essai.statut }}">{{ essai.nom }}</a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    {# Colonne 2---: détail du protocole--------------------------------------------------------------------------------------------------------------------------------------------------------- #}
+
+                    {# Colonne Détail du Protocole #}
+                    <div v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }'
+                         class="col-6 col-arcoffice col-detail-protocole pb-0">
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            Détails du protocole : [[ protocole.nom ]]
+
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                <button v-if='protocole.id' type="button" @click='deleteEssai'
+                                        class="btn btn-sm btn-outline-danger title-tooltip" data-html="true"
+                                        title='Supprimer le protocole<br> Attention !' v-cloak>
+
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+
+                                </button>
+
+                                {# PDFs #}
+                                <button v-if='protocole.id' type="button"
+                                        class="btn btn-sm btn-outline-info title-tooltip" data-html="true"
+                                        title='Ajouter/Consulter les PDF' data-toggle="modal"
+                                        data-target="#arcoffice-protocole-pdf">
+
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>
+
+                                </button>
+
+                                {# Enregistrer #}
+                                <button v-if='!disabled' type="button" id='saveEssai' @click.prevent='saveEssai'
+                                        class="btn btn-sm btn-outline-success title-tooltip"
+                                        title='Enregistrer le protocole' v-cloak>
+
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+
+                                </button>
+
+                                {# Nouveau #}
+                                {# <button @click='newProtocole' type="button" class="btn btn-sm btn-outline-primary" title='Ajouter un protocole'>
+
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                </button> #}
+
+                            </div>
+
+                        </div>
+
+                        {# Modal - Ajouter/Consulter les PDFs du protocole #}
+
+                        {# La gestion des messages error/success se fera par toaster.js #}
+
+                        {# Le fichier a bien été ajouté #}
+                        {# Le type de fichier n'est pas conforme (PDF) #}
+                        {# Le fichier est trop volumineux (6 Mb max.) #}
+                        {# Une erreure est survenue. Veuillez réssayer plus tard. #}
+
+                        <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-protocole-pdf" tabindex="-1"
+                             role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+
+                            <div class="modal-dialog modal-md" role="document">
+
+                                <div class="modal-content">
+
+                                    {# Entête #}
+                                    <div class="modal-header modal-header-violet">
+
+                                        <p class="modal-title">Ajouter / Consulter les PDF du protocole</p>
+
+                                        <button @click='cancel' type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+
+                                            <span aria-hidden="true">&times;</span>
+
+                                        </button>
+
+                                    </div>
+
+                                    {# Contenu #}
+                                    <div class="modal-body">
+
+                                        <form>
+
+                                            {# Liste des 5 PDFs #}
+
+                                            {# PDF N°1 #}
+                                            <div v-show="protocole.synopsis == null" id='synopsis-input'
+                                                 class="form-row form-group">
+
+                                                {# Input File #}
+                                                <label class="col-2 col-form-label">Synopsis</label>
+
+                                                <label class="custom-file">
+
+                                                    <span id='synopsis-file' style='width:260px'
+                                                          class="custom-file-control"></span>
+                                                    <span id='synopsis-loader' class="loader ml-2"
+                                                         style='display:none'></span>
+                                                </label>
+
+                                            </div>
+
+                                            <div v-show="protocole.synopsis != null" id='synopsis-download'
+                                                 class="form-row form-group">
+
+                                                <label for="protocole-pdf-1"
+                                                       class="col-2 col-form-label">Synopsis</label>
+
+                                                <div class="col d-flex align-items-center">
+
+                                                    {# Voir le PDF #}
+                                                    <a :href="downloadPDF() + protocole.synopsis" target="_blank"
+                                                       class="btn btn-sm btn-info">
+
+                                                        <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                    </a>
+
+                                                    {# Supprimer le PDF #}
+                                                    <button @click='deletePDF("synopsis")' type="button"
+                                                            class="ml-2 btn btn-sm btn-outline-danger"><i
+                                                                aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                    {# Loader #}
+
+
+                                                </div>
+
+                                            </div>
+
+                                            <div v-show="protocole.protocole == null" id='protocole-input'
+                                                 class="form-row form-group">
+
+                                                {# Input File #}
+                                                <label class="col-2 col-form-label">Protocole</label>
+
+                                                <label class="custom-file">
+
+                                                    <span id='protocole-file' style='width:260px'
+                                                          class="custom-file-control"></span>
+                                                    <span id='protocole-loader' class="loader ml-2"
+                                                         style='display:none'></span>
+                                                </label>
+
+                                            </div>
+
+                                            <div v-show="protocole.protocole != null" id='protocole-download'
+                                                 class="form-row form-group">
+
+                                                <label for="protocole-pdf-1"
+                                                       class="col-2 col-form-label">Protocole</label>
+
+                                                <div class="col d-flex align-items-center">
+
+                                                    {# Voir le PDF #}
+                                                    <a :href="downloadPDF() + protocole.protocole" target="_blank"
+                                                       class="btn btn-sm btn-info">
+
+                                                        <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                    </a>
+
+                                                    {# Supprimer le PDF #}
+                                                    <button @click='deletePDF("protocole")' type="button"
+                                                            class="ml-2 btn btn-sm btn-outline-danger"><i
+                                                                aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                    {# Loader #}
+
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <div v-show="protocole.crf == null" id='crf-input'
+                                                 class="form-row form-group">
+
+                                                {# Input File #}
+                                                <label class="col-2 col-form-label">CRF</label>
+
+                                                <label class="custom-file">
+
+                                                    <span id='crf-file' style='width:260px'
+                                                          class="custom-file-control"></span>
+                                                    <span id='crf-loader' class="loader ml-2" style='display:none'></span>
+                                                </label>
+
+                                            </div>
+
+                                            <div v-show="protocole.crf != null" id='crf-download'
+                                                 class="form-row form-group">
+
+                                                <label for="crf-pdf-1" class="col-2 col-form-label">CRF</label>
+
+                                                <div class="col d-flex align-items-center">
+
+                                                    {# Voir le PDF #}
+                                                    <a :href="downloadPDF() + protocole.crf" target="_blank"
+                                                       class="btn btn-sm btn-info">
+
+                                                        <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                    </a>
+
+                                                    {# Supprimer le PDF #}
+                                                    <button @click='deletePDF("crf")' type="button"
+                                                            class="ml-2 btn btn-sm btn-outline-danger"><i
+                                                                aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                    {# Loader #}
+
+
+                                                </div>
+
+                                            </div>
+
+                                            <div v-show="protocole.nip == null" id='nip-input'
+                                                 class="form-row form-group">
+
+                                                {# Input File #}
+                                                <label class="col-2 col-form-label">NIP</label>
+
+                                                <label class="custom-file">
+
+                                                    <span id='nip-file' style='width:260px'
+                                                          class="custom-file-control"></span>
+                                                    <span id='nip-loader' class="loader ml-2" style='display:none'></span>
+                                                </label>
+
+                                            </div>
+
+                                            <div v-show="protocole.nip != null" id='nip-download'
+                                                 class="form-row form-group">
+
+                                                <label for="nip-pdf-1" class="col-2 col-form-label">NIP</label>
+
+                                                <div class="col d-flex align-items-center">
+
+                                                    {# Voir le PDF #}
+                                                    <a :href="downloadPDF() + protocole.nip" target="_blank"
+                                                       class="btn btn-sm btn-info">
+
+                                                        <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                    </a>
+
+                                                    {# Supprimer le PDF #}
+                                                    <button @click='deletePDF("nip")' type="button"
+                                                            class="ml-2 btn btn-sm btn-outline-danger"><i
+                                                                aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                    {# Loader #}
+
+
+                                                </div>
+
+                                            </div>
+
+                                            <div v-show="protocole.procedurePDF == null" id='procedure-input'
+                                                 class="form-row form-group">
+
+                                                {# Input File #}
+                                                <label class="col-2 col-form-label">Procédure</label>
+
+                                                <label class="custom-file">
+
+                                                    <span id='procedure-file' style='width:260px'
+                                                          class="custom-file-control"></span>
+                                                    <span id='procedure-loader' class="loader ml-2"
+                                                         style='display:none'></span>
+                                                </label>
+
+                                            </div>
+
+                                            <div v-show="protocole.procedurePDF != null" id='procedure-download'
+                                                 class="form-row form-group">
+
+                                                <label for="procedure-pdf-1"
+                                                       class="col-2 col-form-label">Procédure</label>
+
+                                                <div class="col d-flex align-items-center">
+
+                                                    {# Voir le PDF #}
+                                                    <a :href="downloadPDF() + protocole.procedurePDF" target="_blank"
+                                                       class="btn btn-sm btn-info">
+
+                                                        <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                    </a>
+
+                                                    {# Supprimer le PDF #}
+                                                    <button @click='deletePDF("procedurePDF")' type="button"
+                                                            class="ml-2 btn btn-sm btn-outline-danger"><i
+                                                                aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                    {# Loader #}
+
+
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                    {# Pied de page #}
+                                    <div class="modal-footer">
+
+                                        <div class="ml-auto">
+
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-dismiss="modal">Fermer
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {# Formulaire #}
+                        <form>
+
+                            <div class="form-row form-group">
+
+                                {# Protocole #}
+                                <label for="protocole-nom" class="col-2 col-form-label">Protocole</label>
+
+                                <div class="col">
+
+                                    <input type="text" v-model='protocole.nom' class="form-control form-control-sm"
+                                           id="protocole-nom">
+
+                                </div>
+
+                                {# N° Interne #}
+                                <label title='N° pour classification interne' for="protocole-numero-interne"
+                                       class="col-2 col-form-label title-tooltip">N°Interne</label>
+
+                                <div class="col-3">
+
+                                    <input type="text" v-model='protocole.numeroInterne'
+                                           class="form-control form-control-sm" id="protocole-numero-interne">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Titre #}
+                                <label for="protocole-titre" class="col-2 col-form-label">Titre</label>
+
+                                <div class="col">
+
+                                    <textarea v-model='protocole.titre' class="form-control form-control-sm"
+                                              id="protocole-titre" rows="2"></textarea>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Statut #}
+                                <label for="protocole-statut" class="col-2 col-form-label">Statut</label>
+
+                                <div class="col">
+
+                                    <select v-model='protocole.statut' class="form-control form-control-sm" id="statut">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Essais::STATUT') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# N°Centre #}
+                                <label for="protocole-numero-centre" class="col-2 col-form-label">N°Centre</label>
+
+                                <div class="col">
+
+                                    <input v-model='protocole.numeroCentre' type="text"
+                                           class="form-control form-control-sm" id="protocole-numero-centre">
+
+                                </div>
+
+                            </div>
+
+                            <a href="#protocole-synopsis" class="arcoffice-collapse d-flex" data-toggle="collapse"
+                               aria-expanded="false" aria-controls="protocole-synopsis">
+
+                                <span class="form-lead">Synopsis et Critères <i class="fa fa-angle-down"></i></span>
+
+                            </a>
+
+                            {# Synopsis & Critères - Collapse ---------------------------------------------------#}
+                            <div class="collapse" id="protocole-synopsis">
+
+                                {# Critères d'inclusion #}
+                                <div class="form-row form-group">
+
+                                    <label for="protocole-crint" class="col-2 col-form-label">Objectif/Quota</label>
+
+                                    <div class="col">
+
+                                        <input type="number" min="0" step="1" v-model='protocole.objectif'
+                                               class="form-control form-control-sm" id="protocole-objectif">
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-row form-group">
+
+                                    <label for="protocole-crint" class="col-2 col-form-label">Critères inclusion</label>
+
+                                    <div class="col">
+
+                                        <textarea v-model='protocole.detail.crInc' class="form-control form-control-sm"
+                                                  id="protocole-crint" rows="3"></textarea>
+
+                                    </div>
+
+                                </div>
+
+                                {# Critères de non inclusion #}
+                                <div class="form-row form-group">
+
+                                    <label for="protocole-crnoninc" class="col-2 col-form-label">Critères non
+                                        inclusion</label>
+
+                                    <div class="col">
+
+                                        <textarea v-model='protocole.detail.crNonInc'
+                                                  class="form-control form-control-sm" id="protocole-crnoninc"
+                                                  rows="3"></textarea>
+
+                                    </div>
+
+                                </div>
+
+                                {# Objectifs du protocole #}
+                                <div class="form-row form-group">
+
+                                    <label for="protocole-objectif" class="col-2 col-form-label">Objectifs du
+                                        protocole</label>
+
+                                    <div class="col">
+
+                                        <textarea v-model='protocole.detail.objectif'
+                                                  class="form-control form-control-sm" id="protocole-objectif"
+                                                  rows="3"></textarea>
+
+                                    </div>
+
+                                </div>
+
+                                {# Flowchart #}
+                                <div class="form-row form-group mb-4">
+
+                                    {# Titre #}
+                                    <label for="protocole-flowchart" class="col-2 col-form-label">Flowchart</label>
+
+                                    <div class="col">
+
+                                        <textarea v-model='protocole.detail.calendar'
+                                                  class="form-control form-control-sm" id="protocole-flowchart"
+                                                  rows="3"></textarea>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            {# FIN Synopsis & Critères - Collapse #}
+
+                            {# Suite essais détails #}
+                            <div class="form-row form-group">
+
+                                {# Type d'étude #}
+                                <label for="protocole-type-etude" class="col-2 col-form-label">Type Etude</label>
+
+                                <div class="col">
+
+                                    <select v-model='protocole.typeEssai' class="form-control form-control-sm"
+                                            id="type-etude">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Essais::TYPE') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# Phase #}
+                                <label for="protocole-phase" class="col-2 col-form-label">Phase</label>
+
+                                <div class="col">
+
+                                    <select v-model='protocole.stadeEss' class="form-control form-control-sm"
+                                            id="stadeEss">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Essais::PHASE') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Date MEP #}
+                                <div class="col">
+
+                                    <label class='title-tooltip' title="Date d'ouverture du centre"
+                                           for="protocole-date-mep">Date mise en place</label>
+
+                                    <input :disabled='datesDisabled' v-model='protocole.dateOuv' type="text"
+                                           class="form-control form-control-sm datepicker" id="protocole-date-mep">
+
+                                </div>
+
+                                {# Date Finc #}
+                                <div class="col">
+
+                                    <label class='title-tooltip' title='Date de fin des inclusions'
+                                           for="protocole-date-mep">Date Fin des inclusions</label>
+
+                                    <input :disabled='datesDisabled' v-model='protocole.dateFinInc' type="text"
+                                           class="form-control form-control-sm datepicker" id="protocole-date-fin">
+
+                                </div>
+
+                                {# Date cloture #}
+                                <div class="col">
+
+                                    <label class='title-tooltip' title='Date de clôture du centre'
+                                           for="protocole-date-mep">Date clôture centre</label>
+
+                                    <input :disabled='datesDisabled || dateClotDisabled' v-model='protocole.dateClose'
+                                           type="text" class="form-control form-control-sm datepicker"
+                                           id="protocole-date-close">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Type Prom #}
+                                <div class="col">
+
+                                    <label for="protocole-type-prom">Type Promoteur</label>
+
+                                    <select v-model='protocole.typeProm' class="form-control form-control-sm"
+                                            id="protocole-type-prom">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Essais::PROM') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# Interne externe #}
+                                <div class="col">
+
+                                    <label class='title-tooltip' title='Essai à promotion interne ou Externe?'
+                                           for="protocole-interne-externe">Int/Ext</label>
+
+                                    <select v-model='protocole.autoProm' class="form-control form-control-sm"
+                                            id="protocole-interne-externe">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Essais::AUTO_PROM') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# Promoteur texte #}
+                                <div class="col">
+
+                                    <label for="protocole-promoteur-texte">Nom Promoteur</label>
+
+                                    <input type="text" v-model='protocole.prom' class="form-control form-control-sm"
+                                           id="protocole-promoteur-texte" placeholder="">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Contact #}
+                                <div class="col">
+
+                                    <label for="protocole-contact">Contact</label>
+
+                                    <input type="text" v-model='protocole.contactNom'
+                                           class="form-control form-control-sm" id="protocole-contact">
+
+                                </div>
+
+                                {# Téléphone #}
+                                <div class="col">
+
+                                    <label for="protocole-telephone">Téléphone</label>
+
+                                    <input type="text" v-model='protocole.contactTel'
+                                           class="form-control form-control-sm" id="protocole-telephone">
+
+                                </div>
+
+                                {# Email #}
+                                <div class="col">
+
+                                    <a class="ml-1" target='_blank' v-if='protocole.contactMail != null'
+                                       :href="'mailto:'+protocole.contactMail"><i class='fa fa-envelope'></i></a>
+                                    <label for="protocole-email">Email</label>
+                                    <input type="email" v-model='protocole.contactMail'
+                                           class="form-control form-control-sm" id="protocole-email">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Notes du protocole #}
+                                <label for="protocole-notes" class="col-2 col-form-label">Notes</label>
+
+                                <div class="col">
+
+                                    <textarea v-model='protocole.notes' class="form-control form-control-sm"
+                                              id="protocole-notes" rows="3"></textarea>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-row form-group">
+
+                                {# Tags #}
+                                <div class="col-7">
+
+                                    <label class='title-tooltip' title='Définir des mots clefs' for="protocole-tags">Tags</label>
+                                    <input type="text" class="form-control form-control-sm" id="protocole-tags">
+
+                                </div>
+
+                                <div class="col">
+
+                                    {# Lien ECRF #}
+                                    <a class="ml-1"
+                                       v-if='protocole.ecrfLink != null && protocole.ecrfLink != "" && isUrlValid(protocole.ecrfLink)'
+                                       :href="protocole.ecrfLink" target='_blank'><i class='fa fa-link'></i></a>
+                                    <label for="protocole-ecrf">Lien ECRF</label>
+                                    <input v-model='protocole.ecrfLink' type="url" placeholder='http(s)://'
+                                           class="form-control form-control-sm" id="protocole-ecrf">
+
+                                    {# Lien Serveur Interne #}
+
+                                    <div class="mt-2">
+
+                                        <a class="ml-1" v-if='protocole.intLink != null' :href="protocole.intLink"
+                                           target="_blank">
+
+                                            <i class='fa fa-link'></i>
+
+                                        </a>
+
+                                        <label class='title-tooltip' title="Lien interne ou externe"
+                                               for="protocole-dossier-partage">Lien</label>
+
+                                        <input type="text" v-model='protocole.intLink'
+                                               class="form-control form-control-sm" id="protocole-dossier-partage"
+                                               placeholder='http(s)://'>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {# Administratif - Collaspe #}
+
+                            <a href="#protocole-administratif" class="arcoffice-collapse d-flex mb-0 border-bottom-0"
+                               data-toggle="collapse" aria-expanded="false" aria-controls="protocole-administratif">
+
+                                <span class="form-lead">Administratif <i class="fa fa-angle-down"></i></span>
+
+                            </a>
+
+                            <div class="collapse" id="protocole-administratif">
+
+                                <div class="form-row form-group">
+
+                                    {# Arc Ref #}
+                                    <div class="col">
+
+                                        <label for="protocole-arc-ref">Arc Ref</label>
+
+                                        <select v-model='protocole.arc.id' class="form-control form-control-sm"
+                                                id="arc">
+
+                                            <option value='null' selected></option>
+
+                                            {% for arc in arcs %}
+
+                                                <option value="{{ arc.id }}">{{ arc.nomArc }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    {# Med REF #}
+                                    <div class="col">
+
+                                        <label for="protocole-med-ref">Med. Ref</label>
+
+                                        <select v-model='protocole.medecin.id' class="form-control form-control-sm"
+                                                id="medecin-referent">
+
+                                            <option value='null' selected></option>
+
+                                            {% for medecin in medecins %}
+
+                                                <option value="{{ medecin.id }}">{{ medecin.nomprenom }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    {# Services REF #}
+
+                                    <div class="col">
+
+                                        <label for="protocole-crint">Services</label>
+
+                                        <select v-model='protocole.services' class="form-control form-control-sm"
+                                                id="services" multiple>
+
+                                            {% for service in services %}
+
+                                                <option value="{{ service.id }}">{{ service.nom }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row form-group">
+
+                                    {# Gestion URC #}
+                                    <div class="col-3">
+
+                                        <label for="protocole-gestion-urc">Gestion par URC</label>
+
+                                        <select v-model="protocole.urcGes" class="form-control form-control-sm"
+                                                id="protocole-gestion-urc">
+
+                                            {% for value in constant('AppBundle\\Entity\\Essais::URCGES') %}
+
+                                                <option>{{ value }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-9 d-flex align-items-end">
+
+                                        {# Sigaps #}
+                                        <div class="col form-check form-control-sm mb-0">
+
+                                            <label class="form-check-label">
+
+                                                <input v-model='protocole.sigaps' type="checkbox"
+                                                       class="form-check-input">Sigaps
+
+                                            </label>
+
+                                        </div>
+
+
+                                        {# Sigrec #}
+                                        <div class="col form-check form-control-sm mb-0">
+
+                                            <label class="form-check-label title-tooltip" title="Éligible aux SIGREC">
+
+                                                <input v-model="protocole.sigrec" type="checkbox"
+                                                       class="form-check-input">Sigrec
+
+                                            </label>
+
+                                        </div>
+
+
+                                        {# EMRC #}
+                                        <div class="col form-check form-control-sm mb-0">
+
+                                            <label title='Eligible EMRC' class="form-check-label title-tooltip">
+
+                                                <input v-model='protocole.emrc' type="checkbox"
+                                                       class="form-check-input">EMRC
+
+                                            </label>
+
+                                        </div>
+
+                                        {# Cancer #}
+                                        <div class="col form-check form-control-sm mb-0">
+
+                                            <label class="form-check-label">
+
+                                                <input v-model='protocole.cancer' type="checkbox"
+                                                       class="form-check-input">Cancer
+
+                                            </label>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row form-group">
+
+                                    {# Type Convention #}
+                                    <div class="col">
+
+                                        <label for="protocole-type-convention">Type Convention</label>
+
+                                        <select v-model='protocole.typeConv' class="form-control form-control-sm"
+                                                id="protocole-type-convention">
+
+                                            <option value='null' selected></option>
+
+                                            {% for value in constant('AppBundle\\Entity\\Essais::TYPE_CONV') %}
+
+                                                <option>{{ value }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    {# Date Signature Convention #}
+                                    <div class="col">
+
+                                        <label for="protocole-date-signature-convention">Date Signature
+                                            Convention</label>
+
+                                        <input v-model='protocole.dateSignConv' type="text"
+                                               class="form-control form-control-sm datepicker"
+                                               id="protocole-date-signature-convention">
+
+                                    </div>
+
+                                </div>
+                                {# 	-----------------------------------------------		#}
+                                <div class="form-row form-group">
+
+                                    {# N° Eudra CT #}
+                                    <div class="col">
+
+                                        <label for="protocole-n-eudra-ct">N° Eudra CT</label>
+
+                                        <input :disabled='protocole.eudraCtNd' v-model='protocole.numEudract'
+                                               type="text" class="form-control form-control-sm"
+                                               id="protocole-n-eudra-ct">
+
+                                    </div>
+
+                                    {# EudraND #}
+                                    <div class="col d-flex align-items-end">
+
+                                        <div class="form-check form-control-sm mb-0">
+
+                                            <label class="form-check-label">
+
+                                                <input v-model='protocole.eudraCtNd' class="form-check-input"
+                                                       type="checkbox">
+
+                                                ND
+
+                                            </label>
+
+                                        </div>
+
+                                    </div>
+
+                                    {# N° Eudra CT #}
+                                    <div class="col">
+
+                                        <label for="protocole-n-ct">N° Clinical Trial</label>
+
+                                        <input :disabled='protocole.ctNd' v-model='protocole.numCt' type="text"
+                                               class="form-control form-control-sm" id="protocole-n-ct">
+
+                                    </div>
+
+                                    {# CtND #}
+                                    <div class="col d-flex align-items-end">
+
+                                        <div class="form-check form-control-sm mb-0">
+
+                                            <label class="form-check-label">
+
+                                                <input v-model='protocole.ctNd' class="form-check-input"
+                                                       type="checkbox">
+
+                                                ND
+
+                                            </label>
+
+                                        </div>
+
+                                    </div>
+                                    {# 	-----------------------------------------------		#}
+                                </div>
+
+                            </div>
+                            {# Fin Administratif - Collaspe #}
+
+                        </form>
+
+                    </div>
+
+                    {# Colonne 3--: Liste des patients du protocoles--------------------------------------------------------------------------------------------------------------------------------------------------------- #}
+
+                    {# Colonne Liste des patients #}
+                    <div class="col col-arcoffice col-liste-patient"
+                         v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }'>
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            Patients <span class="ml-1" v-if='protocole.inclusions.length'>([[ protocole.inclusions.length ]])</span>
+
+                            <div class="ml-auto mr-1">
+
+                                {# Nouvelle #}
+                                <button onclick='window.location.href = "{{ path("patient") }}"' v-if='protocole.id'
+                                        type="button" class="btn btn-sm btn-outline-primary title-tooltip"
+                                        data-html="true" title='Ajouter un patient <br>Retour page Patient' v-cloak>
+
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        {# Modal - Modifier un patient à un protocole #}
+                        <div class="modal fade" id="arcoffice-protocole-patient" tabindex="-1" role="dialog"
+                             aria-labelledby="Modifier un patient" aria-hidden="true">
+
+                            <div class="modal-dialog modal-sm" role="document">
+
+                                <div class="modal-content">
+
+                                    <div class="modal-header modal-header-violet">
+
+                                        <p class="modal-title">Modifier l'inclusion</p>
+
+                                        <button @click='cancel' type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+
+                                            <span aria-hidden="true">&times;</span>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <form>
+
+                                            <div class="form-row form-group">
+
+                                                {# Date Inclusion #}
+                                                <label for="protocole-patient-date-inclusion"
+                                                       class="col-4 col-form-label">Date Inclusion</label>
+
+                                                <div class="col">
+
+                                                    <input v-model='patientSelected.datInc' type="text"
+                                                           class="form-control form-control-sm js-datepicker"
+                                                           id="protocole-patient-date-inclusion"
+                                                           name="protocole-patient-date-inclusion">
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-row form-group">
+
+                                                {# Numéro Inclusion #}
+                                                <label for="protocole-patient-numero-inclusion"
+                                                       class="col-4 col-form-label">Numéro Inclusion</label>
+
+                                                <div class="col">
+
+                                                    <input v-model='patientSelected.numInc' type="text"
+                                                           class="form-control form-control-sm"
+                                                           id="protocole-patient-numero-inclusion"
+                                                           name="protocole-patient-numero-inclusion">
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-row form-group">
+
+                                                {# Statut #}
+                                                <label for="protocole-patient-Statut" class="col-4 col-form-label">Statut</label>
+
+                                                <div class="col">
+
+                                                    <select v-model='patientSelected.statut'
+                                                            class="form-control form-control-sm"
+                                                            id="protocole-patient-statut"
+                                                            name="protocole-patient-statut">
+
+                                                        <option value='null' selected></option>
+
+                                                        {% for value in constant('AppBundle\\Entity\\Inclusion::STATUT') %}
+
+                                                            <option>{{ value }}</option>
+
+                                                        {% endfor %}
+
+                                                    </select>
+
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+
+                                        {# <button class="btn btn-sm btn-danger" id="" type="button"><i class="fa fa-trash"></i></button> #}
+
+                                        <div class="ml-auto">
+
+                                            <button @click='cancel' type="button"
+                                                    class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+                                                Annuler
+                                            </button>
+
+                                            <button @click='saveInclusion' class="btn btn-sm btn-success"
+                                                    id="saveInclusion" type="button"><i class="fa fa-check"></i>
+                                                Enregistrer
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <table class="table table-sm table-striped mb-0" v-cloak>
+
+                            {# Header #}
+                            <thead>
+
+                            <tr>
+
+                                <th @click="orderBy('nom')">Nom <i
+                                            v-bind:class='[order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                                <th @click="orderBy('datInc')">Date Incl. <i
+                                            v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                                <th @click="orderBy('numInc')">N° <i
+                                            v-bind:class='[order.numInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr v-for="(inclusion, index) in inclusionsFiltered" v-if='inclusion.patient' v-cloak>
+                                <td>
+
+                                    <a v-bind:href="linkInclusion(inclusion)">[[ inclusion.patient.nom ]] [[
+                                        inclusion.patient.prenom ]]</a>
+
+                                </td>
+
+                                <td @click='openModal(index)'>
+
+                                    <span v-if='inclusion.datInc != null'>[[ inclusion.datInc ]]</span>
+
+                                </td>
+
+                                <td data-placement="right" @click='openModal(index)'
+                                    class="protocole-patient-statut title-tooltip"
+                                    :data-original-title="inclusion.statut"
+                                    v-bind:class="[(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::SCREEN") }}') ? 'arcoffice-bleu' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::OUI_EN_COURS") }}') ? 'arcoffice-vert' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::OUI_SORTIE") }}') ? 'arcoffice-vert-fonce' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::NON_FALSE_SCREENING") }}') ? 'arcoffice-rouge' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::NON_REFUS") }}') ? 'arcoffice-noir' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::AUTRE") }}') ? 'arcoffice-bleu' : '']">
+
+                                    [[ inclusion.numInc ]]
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}
+
+	{% block javascripts %}
+
+        {{ parent() }}
+
+        <script>
+
+            jQuery(document).ready(function ($) {
+
+                function loaderShow(context) {
+                    $("#" + context + "-loader").show();
+                    $("#" + context + "-file").hide();
+                }
+
+                function loaderHide(context) {
+                    $("#" + context + "-loader").hide();
+                    $("#" + context + "-file").show();
+                }
+
+                var synospsisDropzone = new Dropzone("#synopsis-input", {
+                    url: "/",
+                    autoProcessQueue: true,
+                    maxFilesize: 5,
+                    acceptedFiles: "application/pdf",
+                    timeout: 500000,
+                });
+
+                // Si l'uplaod est un succes
+                synospsisDropzone.on("success", function (file, response) {
+                    protocole.protocole[response.type] = response.fileName;
+                    loaderHide("synopsis");
+                    toastr.success("Le pdf a été bien enregistré.");
+                });
+
+                // Pendant l'envois montrer le loader
+                synospsisDropzone.on("sending", function () {
+                    loaderShow("synopsis");
+                });
+
+                // upload du fichier
+                synospsisDropzone.on("processing", function () {
+                    this.options.url = Routing.generate("uploadProtocolePDF", {
+                        type: 'synopsis',
+                        id: protocole.protocole.id
+                    });
+                });
+
+                // en cas d'erreur
+                synospsisDropzone.on("error", function () {
+                    toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                    loaderHide("synopsis");
+                });
+
+                var protocoleDropzone = new Dropzone("#protocole-input", {
+                    url: "/",
+                    autoProcessQueue: true,
+                    maxFilesize: 5,
+                    acceptedFiles: "application/pdf",
+                    timeout: 500000,
+                });
+
+                protocoleDropzone.on("success", function (file, response) {
+                    protocole.protocole[response.type] = response.fileName;
+                    loaderHide("protocole");
+                    toastr.success("Le pdf a été bien enregistré.");
+                });
+                protocoleDropzone.on("sending", function () {
+                    loaderShow("protocole");
+                });
+                protocoleDropzone.on("processing", function () {
+                    this.options.url = Routing.generate("uploadProtocolePDF", {
+                        type: 'protocole',
+                        id: protocole.protocole.id
+                    });
+                });
+                protocoleDropzone.on("error", function () {
+                    toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                    loaderHide("protocole");
+                });
+
+                var crfDropzone = new Dropzone("#crf-input", {
+                    url: "/",
+                    autoProcessQueue: true,
+                    maxFilesize: 5,
+                    acceptedFiles: "application/pdf",
+                    timeout: 500000,
+                });
+
+                crfDropzone.on("success", function (file, response) {
+                    protocole.protocole[response.type] = response.fileName;
+                    loaderHide("crf");
+                    toastr.success("Le pdf a été bien enregistré.");
+                });
+                crfDropzone.on("sending", function () {
+                    loaderShow("crf");
+                });
+                crfDropzone.on("processing", function () {
+                    this.options.url = Routing.generate("uploadProtocolePDF", {
+                        type: 'crf',
+                        id: protocole.protocole.id
+                    });
+                });
+                crfDropzone.on("error", function () {
+                    toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                    loaderHide("crf");
+                });
+
+                var nipDropzone = new Dropzone("#nip-input", {
+                    url: "/",
+                    autoProcessQueue: true,
+                    maxFilesize: 5,
+                    acceptedFiles: "application/pdf",
+                    timeout: 500000,
+                });
+
+                nipDropzone.on("success", function (file, response) {
+                    protocole.protocole[response.type] = response.fileName;
+                    loaderHide("nip");
+                    toastr.success("Le pdf a été bien enregistré.");
+                });
+                nipDropzone.on("sending", function () {
+                    loaderShow("nip");
+                });
+                nipDropzone.on("processing", function () {
+                    this.options.url = Routing.generate("uploadProtocolePDF", {
+                        type: 'nip',
+                        id: protocole.protocole.id
+                    });
+                });
+                nipDropzone.on("error", function () {
+                    toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                    loaderHide("nip");
+                });
+
+                var procedureDropzone = new Dropzone("#procedure-input", {
+                    url: "/",
+                    autoProcessQueue: true,
+                    maxFilesize: 5,
+                    acceptedFiles: "application/pdf",
+                    timeout: 500000,
+                });
+
+                procedureDropzone.on("success", function (file, response) {
+                    protocole.protocole[response.type] = response.fileName;
+                    loaderHide("procedure");
+                    toastr.success("Le pdf a été bien enregistré.");
+                });
+                procedureDropzone.on("sending", function () {
+                    loaderShow("procedure");
+                });
+                procedureDropzone.on("processing", function () {
+                    this.options.url = Routing.generate("uploadProtocolePDF", {
+                        type: 'procedurePDF',
+                        id: protocole.protocole.id
+                    });
+                });
+                procedureDropzone.on("error", function () {
+                    toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                    loaderHide("procedure");
+                });
+            });
+
+        </script>
+
+    {% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Mentions Légales - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Mentions Légales - ArcOffice
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-pages arcoffice-liste{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Mentions Légales' } %}
+
+            {% block fil_ariane_more %}
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="pl-3">Mentions Légales</h4>
+
+                    <div class="col">
+
+                        <h5>Éditeur</h5>
+
+                        <p>ArcOffice : Hervé Perrier - <a href="mailto:contact@arcoffice.fr">contact@arcoffice.fr</a>
+                        </p>
+
+                        <p>L’accès à d’autres sites se fera sous la seule responsabilité de l’internaute et en aucun cas
+                            Hervé Perrier ne pourra être tenue responsable des dommages directs ou indirects résultant
+                            de l’usage de son site ou d’autres sites qui lui sont liés.</p>
+
+                        <h5>Droits d'auteurs</h5>
+
+                        <p>L’ensemble des éléments présents sur ce site est assujetti à la législation française et
+                            internationale sur le droit d’auteur et la propriété intellectuelle. Tous les droits de
+                            reproduction sont réservés, y compris pour les représentations iconographiques et
+                            photographiques.</p>
+
+                        <p>Sauf autorisation expresse de Hervé Perrier, la reproduction de tout ou partie de ce site sur
+                            un support électronique quel qu’il soit est illicite et constituerait une contrefaçon
+                            sanctionnée par les articles L335-2 et suivants du code de la Propriété Intellectuelle.
+                            Toutes les marques citées sont propriétaires de leurs titulaires respectifs.</p>
+
+                        <p>Les articles L122-4 et L122-5 du Code de la Propriété Intellectuelle interdisent toute
+                            représentation ou reproduction, intégrale ou partielle, faites en dehors d’un usage privé.
+                            En outre, Hervé Perrier rappelle qu’elle ne dispose d’aucun contrôle et n’engage en aucune
+                            façon sa responsabilité quant à la création de liens vers ou en provenance de sites
+                            extérieurs et quant au contenu des dits sites.</p>
+
+                        <h5>Confidentialité</h5>
+
+                        <p>Toutes les personnes qui ont fourni des informations les concernant disposent d’un droit
+                            d’accès, de modification de rectification et de suppression des données, selon l’article 34
+                            de la loi « Informatique et Libertés » n° 78-17 du 16 janvier 1978). Pour exercer ce droit,
+                            merci de vous adresser par courrier postal à l'adresse suivante :</p>
+
+                        <p><strong>ArcOffice à compléter.</strong></p>
+
+                        <p>Les messages que vous nous ferez parvenir par l’intermédiaire d’Internet peuvent être
+                            interceptés sur le réseau. Jusqu’à ce qu’ils nous parviennent, leur confidentialité ne peut
+                            être garantie. Assurez-vous de ne pas divulguer d’informations personnelles inutiles ou
+                            sensibles. De plus, l’indication de la provenance des messages électroniques que nous
+                            recevons peut être falsifiée. Par conséquent, si vous souhaitez nous communiquer de telles
+                            informations, utilisez impérativement la voie postale.</p>
+
+                        <p>En conséquence, aucune plainte, déclaration ou demande de conseil transmises par message
+                            Internet ne sera prise en compte.</p>
+
+                        <p>Veuillez formuler vos demandes exclusivement par voie postale. Pour obtenir plus de
+                            renseignements sur les procédures à suivre ou sur des dossiers en cours, veuillez prendre
+                            contact par écrit ou par téléphone.</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

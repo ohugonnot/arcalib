@@ -1,0 +1,291 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addTodo' %}
+
+        {% set title_page = "Ajouter un nouveau bloc-note" %}
+        {% set description_page = "Création d'un nouveau bloc-note" %}
+
+    {% elseif app.request.get("_route") == 'editTodo' %}
+
+        {% set title_page = "Modifier le bloc-note :  " ~ form.vars.value.titre %}
+        {% set description_page = "Édition du bloc-note " ~ form.vars.value.titre %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                {{ title_page }} - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('listeTodos') }}">Bloc-notes</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'une todo #}
+                    <div class="col col-arcoffice col-arc-editer">
+
+                        {{ form_start(form) }}
+
+                        {# {% form_theme form 'form/submit.html.twig' %} #}
+                        {% form_theme form with ['form/boostrap_4_layout_custom.html.twig', 'form/submit.html.twig'] %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                {% if form.vars.value.id  and (app.user == form.vars.value.auteur or is_granted('ROLE_ADMIN')) %}
+
+                                    {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                        title : "Supprimer le bloc-note",
+                                        route_delete : 'deleteTodo',
+                                        route_liste : 'listeTodos',
+                                        message: "Le bloc-note a été supprimée.",
+                                        id: form.vars.value.id
+
+                                    } %}
+
+                                {% endif %}
+
+                                {# Enregistrer #}
+                                {{ form_widget(form.envoyer, {
+                                    'fa' : 'fa-check',
+                                    'right' : true,
+                                    'label' : ' ',
+                                    'attr': {
+                                        'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                        'title': "Enregistrer le bloc-note"
+                                    }
+                                }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col">
+
+                                {# Titre #}
+                                <div class="form-row form-group">
+
+                                    <div class="col">
+
+                                        {{ form_label(form.titre) }}
+
+                                        {{ form_errors(form.titre) }}
+
+                                        {{ form_widget(form.titre, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                                    </div>
+
+                                </div>
+
+                                {# Texte #}
+                                <div class="form-row form-group">
+
+                                    <div class="col">
+
+                                        {{ form_label(form.texte) }}
+
+                                        {{ form_errors(form.texte) }}
+
+                                        {{ form_widget(form.texte, { 'attr': { 'class': 'form-control form-control-sm', "rows" : 12 } }) }}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row form-group">
+
+                                    {# Date Échéance #}
+                                    <div class="col-4">
+
+                                        {{ form_label(form.dateFin) }}
+
+                                        {{ form_errors(form.dateFin) }}
+
+                                        {{ form_widget(form.dateFin, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                                    </div>
+
+                                    {# Alerte #}
+                                    <div class="col-2 d-flex align-items-end justify-content-center bloc-note-alerte">
+
+                                        {{ form_label(form.alerte) }}
+
+                                        {{ form_errors(form.alerte) }}
+
+                                        {{ form_widget(form.alerte) }}
+
+                                    </div>
+
+                                    {# Date Alerte #}
+                                    <div class="col-4">
+
+                                        {{ form_label(form.dateAlerte) }}
+
+                                        {% if form.vars.value.alerte %}
+
+                                            {{ form_widget(form.dateAlerte, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                                        {% else %}
+
+                                            {{ form_widget(form.dateAlerte, { 'attr': { 'class': 'form-control form-control-sm js-datepicker', "disabled": "disabled" } }) }}
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row form-group">
+
+                                    {# Importance #}
+                                    <div class="col-6">
+
+                                        {{ form_label(form.importance) }}
+
+                                        {{ form_errors(form.importance) }}
+
+                                        {{ form_widget(form.importance, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                                    </div>
+
+                                    {# Auteur  #}
+                                    {% if form.auteur is defined %}
+
+                                        <div class="col">
+
+                                            {{ form_label(form.auteur) }}
+
+                                            {{ form_errors(form.auteur) }}
+
+                                            {{ form_widget(form.auteur, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="form-row form-group">
+
+                                    {# Destinataire(s) de la todo #}
+                                    {% if form.destinataires is defined %}
+
+                                        <div class="col">
+
+                                            {{ form_label(form.destinataires) }}
+
+                                            {{ form_errors(form.destinataires) }}
+
+                                            {{ form_widget(form.destinataires) }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                            <div class="col">
+
+                                <div class="form-row form-group">
+
+                                    {# Niveau de résolution #}
+                                    <div class="col-6">
+
+                                        {{ form_label(form.niveauResolution) }}
+
+                                        {{ form_errors(form.niveauResolution) }}
+
+                                        {{ form_widget(form.niveauResolution, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row form-group">
+
+                                    {# Commentaires résolutions #}
+                                    <div class="col">
+
+                                        {{ form_label(form.resolution) }}
+
+                                        {{ form_errors(form.resolution) }}
+
+                                        {{ form_widget(form.resolution, { 'attr': { 'class': 'form-control form-control-sm', "rows" : 12 } }) }}
+
+                                    </div>
+
+                                </div>
+
+                                {{ form_errors(form.dateAlerte) }}
+
+                            </div>
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

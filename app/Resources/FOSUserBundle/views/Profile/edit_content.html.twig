@@ -1,0 +1,172 @@
+
+	{% trans_default_domain 'FOSUserBundle' %}
+
+	{{ form_start(form, { 'attr': { 'class': 'fos_user_profile_edit' } }) }}
+
+		{% form_theme form with ['form/submit.html.twig','form/boostrap_4_layout_custom.html.twig'] %}	
+
+		{# Titre + Boutons #}
+		<div class="form-title d-flex align-items-center">
+			
+			{{ title_page }}
+
+			<div class="ml-auto mr-1">
+
+				{# Enregistrer #}
+				<button type="submit" name="" class="btn btn-sm btn-outline-success title-tooltip" title="Mettre à jour mon profil">
+                  
+                	<i class="fa fa-check" aria-hidden="true"></i> 
+        		
+        		</button>
+
+		        {% if is_granted('ROLE_ADMIN') %}
+
+					{# Supprimer #}
+					{% if form.vars.value.id %}
+
+						{% include 'include/liste/btn-supprimer.html.twig' with { 
+
+							title : "Supprimer l'utilisateur", 
+							route_delete : 'deleteUser', 
+							route_liste : 'listeUsers', 
+							message: "L'utilisateur a été supprimé.",
+							id: form.vars.value.id
+
+						} %}
+
+					{% endif %}
+
+				{% endif %}	
+
+			</div>
+							
+		</div>
+
+	<div class="row">
+	
+	<div class="col">
+	
+		<div class="form-row form-group">
+
+				{# Nom d'utilisateur #}
+				<div class="col-6">
+
+					{{ form_label(form.username) }}
+
+					{{ form_errors(form.username) }}
+
+					{{ form_widget(form.username, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+			
+			    </div>
+				
+				{# Adresse email #}
+			    <div class="col-6">
+
+			    	{{ form_label(form.email) }}
+
+					{{ form_errors(form.email) }}
+
+					{{ form_widget(form.email, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+			
+			    </div>
+
+			    {% if is_granted('ROLE_ADMIN') %}
+
+
+				    <div class="col-6">
+
+				    	{{ form_label(form.plainPassword.first) }}
+
+						{{ form_errors(form.plainPassword.first) }}
+
+						{{ form_widget(form.plainPassword.first, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+				
+				    </div>
+
+				    <div class="col-6">
+
+				    	{{ form_label(form.plainPassword.second) }}
+
+						{{ form_errors(form.plainPassword.second) }}
+
+						{{ form_widget(form.plainPassword.second, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+				
+				    </div>
+
+				    <div class="col">
+
+				    	{{ form_label(form.enabled ) }}
+
+						{{ form_errors(form.enabled) }}
+
+						{{ form_widget(form.enabled) }}
+				
+				    </div>
+
+			    {% endif %}
+
+		</div>
+
+	</div>
+
+		{% if is_granted('ROLE_ADMIN') %}
+
+		<div class="col">
+
+			<div class="form-row form-group">
+
+			    <div class="col">
+
+			    	{{ form_label(form.roles, 'Rôles' ) }}
+
+					{{ form_errors(form.roles) }}
+
+					{{ form_widget(form.roles) }}
+			
+			    </div>
+
+			</div>
+
+			<div class="form-row form-group">
+
+			    <div class="col">
+
+			    	{{ form_label(form.rulesProtocole, "Autorisation d'accès aux protocoles" ) }}
+
+					{{ form_errors(form.rulesProtocole) }}
+
+					{{ form_widget(form.rulesProtocole) }}
+			
+			    </div>
+
+			</div>
+
+			<div id="protocoles-available" style="display:none;" class="form-row form-group">
+
+			    <div class="col">
+
+			    	{{ form_label(form.essais, 'Choisir les protocoles autorisés' ) }}
+
+					{{ form_errors(form.essais) }}
+
+					{{ form_widget(form.essais, {"attr" : {"style": "height:400px"}}) }}
+			
+			    </div>
+
+			</div>
+
+		</div>
+
+		{% else %}
+
+			{% do form.roles.setRendered %}	
+            {% do form.plainPassword.setRendered %}
+            {% do form.enabled.setRendered %}
+            {% do form.essais.setRendered %}		
+            {% do form.rulesProtocole.setRendered %}
+            
+		{% endif %}
+		    
+	{{ form_end(form) }}
+
+</div>

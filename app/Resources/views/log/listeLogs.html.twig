@@ -1,0 +1,226 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des logs - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des patiens
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste arcoffice-liste-logs{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Logs, Mots-clés' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    {# Ajouter un log #}
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addLog') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ logs.getTotalItemCount }} log(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-logs-recherche form-control form-control-sm mr-2" autocomplete="off"
+                               type="text" id='input-recherche' value='{{ app.request.get("recherche") }}'
+                               name="recherche" placeholder="Rechercher une log" aria-label="Rechercher un log">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des logs</h4>
+
+                    {# Liste des logs #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+                            <th class='{% if logs.isSorted('p.id') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Id', ['p.id']) }}
+                            </th>
+
+                            <th class='{% if logs.isSorted('p.createdAt') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Date', ['p.createdAt']) }}
+                            </th>
+
+                            <th class='{% if logs.isSorted('p.info') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Log', ['p.info']) }}
+                            </th>
+
+                            <th style='max-width: 350px;' class='{% if logs.isSorted('p.changeSet') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Changement', ['p.changeSet']) }}
+                            </th>
+
+                            <th class='{% if logs.isSorted('p.action') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Action', ['p.action']) }}
+                            </th>
+
+                            <th class='{% if logs.isSorted('p.entity') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Entité', ['p.entity']) }}
+                            </th>
+
+                            <th class='{% if logs.isSorted('u.username') %}sorted{% endif %}'>
+                                {{ knp_pagination_sortable(logs, 'Utilisateur', ['u.username']) }}
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% set remove = [] %}
+
+                        {% for log in logs %}
+
+                            {% if log.action in ["suppression", "connexion", "déconnexion"] %}
+
+                                {% set remove = remove|merge([log.entity~log.entityId]) %}
+
+                            {% endif %}
+
+
+                        {% endfor %}
+
+                        {% for log in logs %}
+
+                            <tr>
+                                <td class="log">
+
+                                    <a href="{{ path('editLog', { id : log.id }) }}">
+
+                                        {{ log.id }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="log">
+
+                                    {{ log.createdAt|date("d/m/Y H:i") }}
+
+                                </td>
+
+                                <td  style='max-width: 200px;'class="log">
+                                    {% if log.entityId != null and log.entity in ["Essais", "Inclusion", "User", "Patient", "Visite", "Actualite", "Medecin", "Facture","Document","Traitement", "Annuaire", "Arc", "LibCim10", "Service", "Tag", "Todo"] %}
+                                        {% set route = path('edit'~log.entity|replace({'Essais':"Essai"}), { id : log.entityId }) %}
+                                    {% else %}
+                                        {% set route = "" %}
+                                    {% endif %}
+
+                                    {% if log.entity == "Essai" %}
+                                        {% set  route = path("protocole", {id: log.entityId}) %}
+                                    {% elseif log.entity == "Patient" %}
+                                        {% set  route = path("patient", {id: log.entityId}) %}
+                                    {% elseif log.entity == "Inclusion" %}
+                                        {% set  route = path("listeInclusions", {recherche: 'id='~log.entityId}) %}
+                                    {% elseif log.entity == "Visite" %}
+                                        {% set  route = path("listeVisites", {recherche: 'id='~log.entityId}) %}
+                                    {% endif %}
+
+                                    <a {% if log.entity~log.entityId not in remove and route != '' %} href="{{ route }}"{% endif %}>
+
+                                        {{ log.info }}
+
+                                    </a>
+
+                                </td>
+
+                                <td style='max-width: 400px;' class="log">
+
+                                    {{ log.changeSet }}
+
+                                </td>
+
+                                <td class="log">
+
+                                    {{ log.action }}
+
+                                </td>
+
+                                <td class="log">
+
+
+                                    {{ log.entity }}
+
+                                </td>
+
+
+                                <td class="log">
+
+                                    {{ log.user }}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(logs) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

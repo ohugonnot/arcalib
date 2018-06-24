@@ -1,0 +1,43 @@
+	
+	{# Réinitialisation du mot de passe #}
+
+	{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+		{% embed "include/header.html.twig" %}
+			
+			{# Titre #}
+			{% block seo_title %}
+				
+				Réinitialiser le mot de passe - ArcOffice
+
+			{% endblock seo_title %}
+			
+			{# Description #}
+			{% block seo_description %}{% endblock seo_description %}
+
+		{% endembed %}
+
+	{% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-fosuser{% endblock %}
+
+	{# Navigation #}
+	{% block navigation %}{% endblock navigation %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}{% endblock fil_ariane %}
+	
+	{# Contenu #}
+	{% block content %}
+
+		<div class="d-flex justify-content-center align-items-center">
+
+			{% include "@FOSUser/Resetting/reset_content.html.twig" %}
+
+		</div>
+
+	{% endblock content %}

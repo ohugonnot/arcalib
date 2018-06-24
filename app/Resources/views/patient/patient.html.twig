@@ -1,0 +1,1197 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Patient - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des données d'un patient avec ses inclusions et ses visites
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-patient{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Patient' } %}
+
+            {% block fil_ariane_more %}
+
+                {# Barre de recherche #}
+                <form id="recherche" class="form-inline ml-auto" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+                      xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+                      xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+                    <input class="patient-recherche form-control form-control-sm mr-2" autocomplete="off" type="text"
+                           id='input-recherche' v-model="recherche" name="recherche" placeholder="Rechercher un patient"
+                           aria-label="Rechercher un patient">
+
+                    <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                    </button>
+
+                </form>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+	
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Col 1 ----------------------------------------------------------------------------------------------------------#
+                                        {# Colonne Patient #}
+                    <div v-bind:class='{ "is-disabled" : disabled }' id="patient" class="col col-arcoffice col-patient"
+                         v-cloak>
+
+                        <input type="hidden" v-model='patient.id'>
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            Patient
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                <button v-if='patient.id != 0 && patient.id != null' @click='deletePatient'
+                                        type="button" title='Supprimer un patient'
+                                        class="btn btn-sm btn-outline-danger title-tooltip" v-cloak>
+
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+
+                                </button>
+
+                                {# Enregistrer #}
+                                <button v-if='!disabled' id='savePatient' @click="savePatient" type="button"
+                                        title='Enregistrer un patient'
+                                        class="btn btn-sm btn-outline-success title-tooltip">
+
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+
+                                </button>
+
+                                {# Nouveau #}
+                                <button @click='newPatient' type="button" title='Créer un patient'
+                                        class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <form>
+
+                            <div class="form-row form-group">
+
+                                {# Nom #}
+                                <div class="col">
+
+                                    <label for="Nom">Nom</label>
+
+                                    <input v-model='patient.nom' type="text" class="form-control form-control-sm"
+                                           id="Nom">
+
+                                </div>
+
+                                {# Prénom #}
+                                <div class="col">
+
+                                    <label for="Prénom">Prénom</label>
+
+                                    <input v-model='patient.prenom' type="text" class="form-control form-control-sm"
+                                           id="Prénom">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Nom naissance #}
+                                <div class="col">
+
+                                    <label for="Nom-naissance">Nom naissance</label>
+
+                                    <input v-model='patient.nomNaissance' type="text"
+                                           class="form-control form-control-sm" id="Nom-naissance">
+
+                                </div>
+
+                                <div class="col">
+
+                                    {# Date de naissance #}
+                                    <label for="date-de-naissance">Né(e)</label>
+
+                                    <input type="text" v-model='patient.datNai'
+                                           class="form-control form-control-sm js-datepicker" id="date-de-naissance">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                <div class="col">
+
+                                    {# Sexe #}
+                                    <label class="mr-1">Sexe</label>
+
+                                    {% for index, value in constant('AppBundle\\Entity\\Patient::SEXE') %}
+
+                                        <label class="form-check-label {% if loop.first %}mr-1{% endif %}">
+
+                                            <input v-model="patient.sexe" class="form-check-input" type="radio"
+                                                   name="exampleRadios" id="exampleRadios1"
+                                                   value="{{ value }}"> {{ value }}
+
+                                        </label>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                            {# Liste des inclusions #}
+                            <div class="patient-liste-inclusion" v-cloak v-if="patient && patient.inclusions">
+
+                                <div class="form-title d-flex">
+
+                                    Inclusion(s) {# du patient #}
+
+                                </div>
+
+                                <p v-if='patient && patient.inclusions && patient.inclusions.length == 0'
+                                   class="small mb-2">Aucune inclusion.</p>
+
+                                <table v-else class="table table-sm mb-2">
+                                    {# table-striped #}
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th>Protocole</th>
+
+                                        <th>Date</th>
+
+                                        <th width="90">N°</th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                    <tr :data-id='inclusion.id' v-for="(inclusion, index) in patient.inclusions">
+
+                                        <td>
+
+                                            <a v-if='inclusion.essai != null' v-bind:href="linkEssai(inclusion.essai)">
+
+                                                <span v-if='inclusion.essai'>[[ inclusion.essai.nom ]]</span>
+
+                                            </a>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span v-if='inclusion.datInc'>[[ inclusion.datInc.date | date ]]</span></td>
+
+                                        <td width="90">
+
+                                            <a @click.prevent="getInclusion(inclusion.id)"
+                                               class="patient-get-inclusion btn btn-sm btn-violet d-flex" href="#">
+
+                                                [[ inclusion.numInc | default("N/A") ]]
+
+                                                <i class="fa fa-arrow-right ml-1"></i>
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <div class="form-row form-group mt-3">
+
+                                {# IPP #}
+                                <div class="col">
+
+                                    <label class='title-tooltip' title='Identifiant unique' for="ipp">IPP</label>
+
+                                    <input type="text" v-model='patient.ipp' class="form-control form-control-sm"
+                                           id="ipp">
+
+                                </div>
+
+                                {# Médecin Référent #}
+                                <div class="col">
+
+                                    <label for="medecin-referent">Référent</label>
+
+                                    <select v-model='patient.medecin.id' class="form-control form-control-sm"
+                                            id="medecin-referent">
+
+                                        <option value='null' selected></option>
+
+                                        {% for medecin in medecins %}
+
+                                            <option value="{{ medecin.id }}">{{ medecin.nomprenom }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# Liste des médecins (ajouter) #}
+                                <div class="col d-flex align-items-end col-btn-sm">
+
+                                    <a target='_blank' href="{{ path('listeMedecins') }}"
+                                       class="patient-add-medecin btn btn-sm btn-outline-secondary">
+
+                                        <i aria-hidden="true" class="fa fa-plus"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Diagnostic #}
+                                <div class="col">
+
+                                    <label for="diagnostic">Diagnostic</label>
+
+                                    <textarea class="form-control form-control-sm" v-model='patient.txtDiag'
+                                              id="diagnostic" rows="3"></textarea>
+
+                                </div>
+
+                                <div class="col-4">
+
+                                    {# Date du diagnostic #}
+                                    <label for="date-diagnostic">Date</label>
+
+                                    <input type="text" class="form-control form-control-sm js-datepicker"
+                                           v-model='patient.datDiag' id="date-diagnostic">
+
+                                    {# Cancer #}
+                                    <div class="form-check form-control-sm mt-3 mb-0 p-0">
+
+                                        <label class="form-check-label">
+
+                                            <input v-model='patient.cancer' class="form-check-input" type="checkbox">
+
+                                            Cancer
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# CIM10 #}
+                                <div class="col">
+
+                                    <select v-model='patient.libCim10.id' class="form-control form-control-sm"
+                                            id="lib-cim10">
+
+                                        <option value='null' selected>Lib Cim10</option>
+
+                                        {% for libCim in libCim10 %}
+
+                                            <option value="{{ libCim.id }}">{{ libCim.libCourt }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# Choisir un autre CIM10 #}
+                                <div class="col d-flex align-items-end col-btn-sm">
+
+                                    <a target='_blank' href="{{ path('listeLibCim10s') }}"
+                                       class="patient-add-cim10 btn btn-sm btn-outline-secondary">
+
+                                        <i aria-hidden="true" class="fa fa-plus"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                <div class="col-4">
+
+                                    {# Dernières nouvelles #}
+                                    <label class='title-tooltip' title='Date de dernières nouvelles'
+                                           for="date-dernieres-nouvelles">Révision</label>
+
+                                    <input type="text" v-model='patient.datLast'
+                                           class="form-control form-control-sm js-datepicker"
+                                           id="date-dernieres-nouvelles">
+
+                                </div>
+
+                                {# Évolution #}
+                                <div class="col">
+
+                                    <label for="evolution">Évolution</label>
+
+                                    <select v-model='patient.evolution' class="form-control form-control-sm"
+                                            id="evolution">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Patient::EVOLUTION') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# État (vivant, décédé, NSP) #}
+                                <div class="col">
+
+                                    <select v-model='patient.deces' class="form-control form-control-sm" id="etat">
+
+                                        {% for value in constant('AppBundle\\Entity\\Patient::DECES') %}
+
+                                            <option {% if loop.first %}selected{% endif %}>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                                {# Date du décès #}
+                                <div class="col">
+
+                                    <input :disabled='patient.deces != "{{ constant('AppBundle\\Entity\\Patient::DECEDE') }}"'
+                                           v-model="patient.datDeces" type="text"
+                                           class="form-control form-control-sm js-datepicker" id="date-deces"
+                                           placeholder="Date de décès">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Notes du patient #}
+                                <div class="col">
+
+                                    <label for="notes-patient">Notes Patient</label>
+
+                                    <textarea title="Attention au contenu des notes!" v-model='patient.memo'
+                                              class="form-control form-control-sm" id="notes-patient"
+                                              rows="3"></textarea>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    {#  Colonne 2: Inclusion ---------------------------------------------------------------------------------------------------------#}
+
+                    {# Colonne Inclusion #}
+                    <div v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }' id="inclusion"
+                         class="col col-arcoffice col-inclusion" v-cloak>
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            Inclusion
+
+
+                            <div class="ml-auto mr-1" v-cloak>
+
+                                {# Supprimer #}
+                                <button v-if='inclusion.id != 0 && inclusion.id != null' @click='deleteInclusion'
+                                        type="button" title='supprimer une inclusion'
+                                        class="btn btn-sm btn-outline-danger title-tooltip" v-cloak>
+
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+
+                                </button>
+
+                                {# Enregistrer #}
+                                <button v-if='!disabled' id='saveInclusion' type="button"
+                                        title='Sauvegarder une inclusion' @click='saveInclusion'
+                                        class="btn btn-sm btn-outline-success title-tooltip">
+
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+
+                                </button>
+
+
+                                {# Nouvelle #}
+                                <button v-if='!disabled' @click='newInclusion' type="button"
+                                        title='Ajouter une inclusion'
+                                        class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                </button>
+
+
+                            </div>
+
+                        </div>
+
+                        <form>
+
+
+                            {# Boutons de controle PDF #}
+
+                           <div v-if='inclusion.id != 0 && inclusion.id != null' class="form-row form-group">
+
+                                <div class="col">
+
+                                    <label class="col-form-label">Documents</label>
+
+                                    <br>
+
+                                    {#<a :href='linkListeDocuments'
+                                       title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-list" aria-hidden="true"></i>
+
+                                    </a> #}
+
+
+                                    <a target='_blank' v-if="inclusion.documents.length >= 0" :href='firstDocument'
+                                       title='Voir les documents' class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]]   </i>
+
+                                    </a>
+
+
+                                    {# <a target='_blank' :href='addDocument' title='Ajouter un document'
+                                       class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                    </a> #}
+
+                                </div>
+
+
+                                <div class="col">
+
+                                    <label class="col-form-label">Traitements</label>
+
+                                    <br>
+
+                                    <a target='_blank' :href='firstTraitement'
+                                       title='Liste des traitements' class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-medkit" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+
+                                    </a>
+
+                                </div>
+
+                                 <div class="col">
+
+                                    <label class="col-form-label">EI/EIG</label>
+
+                                     <br>
+
+                                    <a target='_blank' :href='firstTraitement'
+                                       title='EI/EIG' class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-ambulance" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+
+                                    </a>
+
+                                </div>
+
+                                 <div class="col">
+
+                                    <label class="col-form-label">Events</label>
+
+                                     <br>
+
+                                    <a target='_blank' :href='firstTraitement'
+                                       title='Evenements' class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+
+                                    </a>
+
+                                </div>
+
+                                <div class="col">
+
+                                    <label class="col-form-label">Surcoûts</label>
+
+                                    <br>
+
+                                    <a target='_blank' :href='firstTraitement'
+                                       title='Surcouts' class="btn btn-sm btn-outline-primary title-tooltip">
+
+                                        <i class="fa fa-eur" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <hr v-if='inclusion.id != 0 && inclusion.id != null'>
+
+                            {# Corps du formulaire inclusion #}
+
+                            {# Protocole #}
+                            <div class="form-row form-group">
+
+                                <label for="protocole" class="col-4 col-form-label">Protocole</label>
+
+                                <div class="col">
+
+                                    <select v-model="inclusion.essai.id" class="form-control form-control-sm">
+
+                                        <option value='null' selected></option>
+
+                                        {% for essai in essais %}
+
+                                            <option {% if essai.statut in [constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION'), constant('AppBundle\\Entity\\Essais::ARCHIVE'), constant('AppBundle\\Entity\\Essais::REFUS')] %}disabled='disabled'
+                                                    style='display:none;'
+                                                    {% endif %}value="{{ essai.id }}">{{ essai.nom }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            {# Screen #}
+                            <div class="form-row form-group">
+
+                                <label for="screen" class="col-4 col-form-label">Screen</label>
+
+                                <div class="col">
+
+                                    <input v-model='inclusion.datScr' type="text"
+                                           class="form-control form-control-sm js-datepicker" id="screen">
+
+                                </div>
+
+                            </div>
+
+                            {# Consentement #}
+                            <div class="form-row form-group">
+
+                                <label for="consentement" class="col-4 col-form-label">Consentement</label>
+
+                                <div class="col">
+
+                                    <input v-model='inclusion.datCst' type="text"
+                                           class="form-control form-control-sm js-datepicker" id="consentement">
+
+                                </div>
+
+                            </div>
+
+                            {# Inclusion #}
+                            <div class="form-row form-group">
+
+                                <label class="col-4 col-form-label title-tooltip" title="Date officielle de l'inclusion"
+                                       for="inclusion" >Inclusion</label>
+
+                                <div class="col">
+
+                                    <input v-model='inclusion.datInc' type="text"
+                                           class="form-control form-control-sm js-datepicker" id="date-inclusion">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Randomisation #}
+                                <label for="randomisation" class="col-4 col-form-label">Randomisation</label>
+
+                                <div class="col-5">
+
+                                    <input :disabled='inclusion.booRa' v-model='inclusion.datRan' type="text"
+                                           class="form-control form-control-sm js-datepicker" id="randomisation">
+
+                                </div>
+
+                                {# booRa #}
+                                <div class="col">
+
+                                    <div class="form-check form-control-sm">
+
+                                        <label class="form-check-label">
+
+                                            <input v-model='inclusion.booRa' class="form-check-input" type="checkbox">
+
+                                            NA
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {# Statut #}
+                            <div class="form-row form-group">
+
+                                <label for="statut" class="col-4 col-form-label">Statut</label>
+
+                                <div class="col">
+
+                                    <select v-model='inclusion.statut' class="form-control form-control-sm" id="statut">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Inclusion::STATUT') %}
+
+
+                                            {% if value == constant('AppBundle\\Entity\\Inclusion::OUI_EN_COURS') %}
+
+                                                <option v-if='!(inclusion.essai != null && ["{{ constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION') }}", "{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}", "{{ constant('AppBundle\\Entity\\Essais::REFUS') }}"].indexOf(inclusion.essai.statut) > -1)'>{{ value }}</option>
+
+                                            {% else %}
+
+                                                <option>{{ value }}</option>
+
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            {# Date J0 #}
+                            <div class="form-row form-group">
+
+                                <label for="date-j0" class="col-4 col-form-label">Date J0</label>
+
+                                <div class="col">
+
+                                    <input v-model='inclusion.datJ0' type="text"
+                                           class="form-control form-control-sm js-datepicker" id="date-j0">
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# N° Inclusion #}
+                                <div class="col-4">
+
+                                    <label for="numero-inclusion">N° Inclusion</label>
+
+                                    <input v-model='inclusion.numInc' type="text" class="form-control form-control-sm"
+                                           id="numero-inclusion">
+
+                                </div>
+
+                                {# Bras TT #}
+                                <div class="col-5">
+
+                                    <label for="bras-tt">Bras</label>
+
+                                    <input :disabled='inclusion.booBras' v-model='inclusion.braTrt' type="text"
+                                           class="form-control form-control-sm" id="bras-tt">
+
+                                </div>
+
+                                {# booBras #}
+                                <div class="d-flex align-items-end">
+
+                                    <div class="form-check form-control-sm mb-0">
+
+                                        <label class="form-check-label">
+
+                                            <input v-model='inclusion.booBras' class="form-check-input" type="checkbox">
+
+                                            NA
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-row form-group">
+
+                                {# Sortie #}
+                                <div class="col-4">
+
+                                    <label for="sortie">Sortie</label>
+
+                                    <input :disabled='inclusion.statut != "{{ constant('AppBundle\\Entity\\Inclusion::OUI_SORTIE') }}"'
+                                           v-model='inclusion.datOut' type="text"
+                                           class="form-control form-control-sm js-datepicker" id="sortie">
+
+                                </div>
+
+                                {# Motif #}
+                                <div class="col">
+
+                                    <label for="motif">Motif</label>
+
+                                    <select :disabled='inclusion.statut != "{{ constant('AppBundle\\Entity\\Inclusion::OUI_SORTIE') }}"'
+                                            v-model='inclusion.motifSortie' class="form-control form-control-sm"
+                                            id="motif">
+
+                                        <option value='null' selected></option>
+
+                                        {% for value in constant('AppBundle\\Entity\\Inclusion::MOTIF_SORTIE') %}
+
+                                            <option>{{ value }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            {# Médecin #}
+                            <div class="form-row form-group">
+
+                                <label for="medecin" class="col-4 col-form-label">Médecin</label>
+
+                                <div class="col">
+
+                                    <select v-model='inclusion.medecin.id' class="form-control form-control-sm"
+                                            id="medecin">
+
+                                        <option value='null' selected></option>
+
+
+                                        {% for medecin in medecins %}
+
+                                            <option value="{{ medecin.id }}">{{ medecin.nomprenom }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            {# Arc #}
+                            <div class="form-row form-group">
+
+                                <label for="arc" class="col-4 col-form-label">Arc</label>
+
+                                <div class="col">
+
+                                    <select v-model='inclusion.arc.id' class="form-control form-control-sm" id="arc">
+
+                                        <option value='null' selected n></option>
+
+                                        {% for arc in arcs %}
+
+                                            <option value="{{ arc.id }}">{{ arc.nomArc }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            {# Service #}
+                            <div class="form-row form-group">
+
+                                <label for="service"
+                                       class="col-4 col-form-label">Service</label>{# TODO creer link service - inclusion#}
+
+                                <div class="col" v-cloak>
+
+                                    <select v-model='inclusion.service.id' class="form-control form-control-sm"
+                                            id="service">
+
+                                        <option value='null' selected></option>
+
+                                        {% for service in services %}
+
+                                            <option value="{{ service.id }}">{{ service.nom }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    {# Col 3 --------Visites--------------------------------------------------------------------------------------------------#}
+                    {# Colonne Visites #}
+                    <div id="visite" class="col col-arcoffice col-visite"
+                         v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }' v-cloak>
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            Visites
+
+                            <div class="ml-auto mr-1">
+
+                                {# Nouvelle #}
+                                <button v-if='!disabled' @click='newVisite' type="button" title='Ajouter une visite'
+                                        class="btn btn-sm btn-outline-primary title-tooltip" data-toggle="modal"
+                                        data-target="#arcoffice-add-visite" v-cloak>
+
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        {# Modal - Ajouter une nouvelle visite #}
+                        <div class="modal fade" id="arcoffice-add-visite" tabindex="-1" role="dialog"
+                             aria-labelledby="Ajouter une nouvelle visite" aria-hidden="true">
+
+                            <div class="modal-dialog modal-sm" role="document">
+
+                                <div class="modal-content">
+
+                                    <div class="modal-header modal-header-violet">
+
+                                        <p class="modal-title">[[ action ]]</p>
+
+                                        <button @click='cancel' type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+
+                                            <span aria-hidden="true">&times;</span>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <form>
+
+                                            <div class="form-row form-group">
+
+                                                {# Date Visite #}
+                                                <label for="date-visite" class="col-4 col-form-label">Date</label>
+
+                                                <div class="col">
+
+                                                    <input v-model='visiteSelected.date' type="text"
+                                                           class="form-control form-control-sm js-datepicker"
+                                                           id="date-visite" name="date-visite" required>
+
+                                                </div>
+
+                                            </div>
+
+                                            {# Type Visite #}
+                                            <div class="form-row form-group">
+
+                                                <label for="type-visite" class="col-4 col-form-label">Type</label>
+
+                                                <div class="col">
+
+                                                    <select v-model='visiteSelected.type'
+                                                            class="form-control form-control-sm" id="statut">
+
+                                                        <option value='null' selected> Choisir un type</option>
+
+                                                        {% for value in constant('AppBundle\\Entity\\Visite::TYPE') %}
+
+                                                            <option>{{ value }}</option>
+
+                                                        {% endfor %}
+
+                                                    </select>
+
+                                                </div>
+
+                                            </div>
+
+                                            {# JMA #}
+                                            <div class="form-row form-group">
+
+                                                <label for="jma-visite" class="col-4 col-form-label">JMA</label>
+
+                                                <div class="col">
+
+                                                    <input v-model='visiteSelected.calendar' type="text"
+                                                           class="form-control form-control-sm" id="jma-visite"
+                                                           name="jma-visite">
+
+                                                </div>
+
+                                            </div>
+
+                                            {# Statut Visite #}
+                                            <div class="form-row form-group">
+
+                                                <label for="statut-visite" class="col-4 col-form-label">Statut</label>
+
+                                                <div class="col">
+
+                                                    <select v-model='visiteSelected.statut'
+                                                            class="form-control form-control-sm" id="statut">
+
+                                                        <option value='null' selected>Choisir un statut</option>
+                                                        {% for value in constant('AppBundle\\Entity\\Visite::STATUT') %}
+
+                                                            <option>{{ value }}</option>
+
+                                                        {% endfor %}
+
+                                                    </select>
+
+                                                </div>
+
+                                            </div>
+
+                                            {# Arc Référent #}
+                                            <div class="form-row form-group">
+
+                                                <label for="arc-referent-visite"
+                                                       class="col-4 col-form-label">Arc</label>
+
+                                                <div class="col">
+
+                                                    <select v-model='visiteSelected.arc.id'
+                                                            class="form-control form-control-sm" id="arc">
+
+                                                        <option value='null' selected>Choisir un arc</option>
+
+                                                        {% for arc in arcs %}
+
+                                                            <option value="{{ arc.id }}">{{ arc.nomArc }}</option>
+
+                                                        {% endfor %}
+
+                                                    </select>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-row form-group">
+
+                                                {# Facturé #}
+                                                <div class="col-4 d-flex align-items-center">
+
+                                                    <div class="form-check mb-0">
+
+                                                        <label class="form-check-label">
+
+                                                            <input v-model='visiteSelected.fact'
+                                                                   class="form-check-input" type="checkbox" value="">Facturée
+
+                                                        </label>
+
+                                                    </div>
+
+                                                </div>
+
+                                                {# N°Facture #}
+                                                <label for="numero-facture-visite"
+                                                       class="col col-form-label">N°Facture</label>
+
+                                                <div class="col">
+
+                                                    <input v-model='visiteSelected.numfact' type="text"
+                                                           class="form-control form-control-sm"
+                                                           id="numero-facture-visite" name="numero-facture-visite">
+
+                                                </div>
+
+                                            </div>
+
+                                            {# Notes #}
+                                            <div class="form-row form-group mb-0">
+
+                                                <label for="notes-visite">Notes</label>
+
+                                                <textarea v-model='visiteSelected.note' id="notes-visite" rows="3"
+                                                          class="form-control form-control-sm"></textarea>
+
+                                            </div>
+
+                                        </form>
+
+                                        <br>
+
+                                        <div>
+
+                                            <button @click='prevVisite'
+                                                    v-show='visiteSelected.index != 0 && visiteSelected.id != 0'
+                                                    type="button" class="btn btn-sm pull-left btn-outline-secondary"><i
+                                                        class="fa fa-chevron-left"></i>Précédent
+                                            </button>
+                                            <button @click='nextVisite'
+                                                    v-show='visiteSelected.index != visites.length -1 && visiteSelected.id != 0'
+                                                    type="button" class="btn btn-sm pull-right btn-outline-secondary">
+                                                Suivant<i class="fa fa-chevron-right"></i></button>
+
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="modal-footer">
+
+                                        <button id="deleteVisite" @click="deleteVisite" type="button"
+                                                class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+
+                                        <div class="ml-auto">
+
+                                            <button @click='cancel' type="button"
+                                                    class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+                                                Annuler
+                                            </button>
+
+                                            <button id='saveVisite' @click='saveVisite' type="button"
+                                                    class="btn btn-sm btn-success"><i class="fa fa-check"></i>
+                                                Enregistrer
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {# Liste des visites v-if='!disabled' #}
+                        <table class="table table-sm table-striped mb-0" v-cloak>
+
+                            {# Header #}
+                            <thead>
+
+                            <tr>
+
+                                <th>Date</th>
+
+                                <th>JMA</th>
+
+                                <th>Type</th>
+
+                                <th>Statut</th>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr :class="isPast(visite)" @click="openModal(index)" v-for="(visite, index) in visites"
+                                v-cloak>
+
+                                <td><a @click.prevent href="">[[ visite.date ]]</a></td>
+
+                                <td>[[ visite.calendar ]]</td>
+
+                                <td>[[ visite.type ]]</td>
+
+                                <td data-placement="right" :data-original-title='visite.statut'
+                                    v-bind:class="[(visite.statut == '{{ constant('AppBundle\\Entity\\Visite::FAITE') }}') ? 'arcoffice-vert' : '', (visite.statut == '{{ constant('AppBundle\\Entity\\Visite::NON_FAITE') }}') ? 'arcoffice-rouge' : '', (visite.statut == '{{ constant('AppBundle\\Entity\\Visite::PREVUE_CONFIRMEE') }}') ? 'arcoffice-orange' : '']"
+                                    class="patient-visite-statut title-tooltip">[[ visite.statut ]]
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

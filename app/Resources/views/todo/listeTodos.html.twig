@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des bloc-notes - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des bloc-notes
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste arcoffice-bloc-notes arcoffice-coherence-data{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% set  hideResolu = app.request.query.get("resolu") == true ? false : true %}
+        {% set  resoluLabel =  app.request.query.get("resolu") == false ? 'Cacher les résolus' : "Tous" %}
+        {% set  after =  app.request.query.get("resolu") == true ? 'Non résolus' : "Tous" %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Bloc-notes', filter: after } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm {% if not hideResolu %} btn-outline-success {% else %} btn-outline-danger {% endif %} mr-3"
+                       href="{{ path("listeTodos",app.request.query.all|merge({ 'resolu': hideResolu})) }}">
+
+                        {{ resoluLabel }} <i class="fa fa-eye{% if hideResolu %}-slash{% endif %}"
+                                             aria-hidden="true"></i>
+
+                    </a>
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addTodo') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <input class="search liste-todos-recherche form-control form-control-sm mr-2" autocomplete="off"
+                               type="text" id='input-recherche' value='{{ app.request.get("recherche") }}'
+                               name="recherche" placeholder="Rechercher un bloc-note / Filtrer"
+                               aria-label="Rechercher un bloc-note / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {% import "todo/macro-listeTodos.twig" as listeTodo %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container" style="display:none;">
+
+                <div class="row">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs w-100" role="tablist">
+
+                        <li class="nav-item">
+
+                            <a class="nav-link active d-flex" data-toggle="tab" href="#block-notes-recus" role="tab"
+                               aria-selected="true">Mes bloc-notes reçus ({{ attribuedTodos.count }})</a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a class="nav-link d-flex" data-toggle="tab" href="#block-notes-envoyes" role="tab"
+                               aria-selected="false">Mes bloc-notes envoyés ({{ myTodos.count }})</a>
+
+                        </li>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+
+                            <li class="nav-item">
+
+                                <a class="nav-link d-flex" data-toggle="tab" href="#block-notes-all" role="tab"
+                                   aria-selected="false">Tous les bloc-notes ({{ todos.count }})</a>
+
+                            </li>
+
+                        {% endif %}
+
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content w-100">
+
+                        {# Bloc-notes reçus #}
+                        <div class="tab-pane active" id="block-notes-recus" role="tabpanel"
+                             aria-labelledby="block-notes-recus">
+
+                            {{ listeTodo.liste(attribuedTodos) }}
+
+                        </div>
+
+                        {# Bloc-notes envoyés #}
+                        <div class="tab-pane" id="block-notes-envoyes" role="tabpanel"
+                             aria-labelledby="block-notes-envoyes">
+
+                            {{ listeTodo.liste(myTodos) }}
+
+                        </div>
+
+                        {% if is_granted('ROLE_ADMIN') and todos is defined %}
+
+                            {# Tous les Bloc-notes #}
+                            <div class="tab-pane" id="block-notes-all" role="tabpanel"
+                                 aria-labelledby="block-notes-all">
+
+                                {{ listeTodo.liste(todos) }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}
+
+    {% block javascripts %}
+
+        {{ parent() }}
+
+        <script>
+
+            var hash = window.location.hash;
+
+            if (hash && $('ul.nav a[href="' + hash + '"]').tab('show')) {
+                $(".container").show();
+            } else {
+                $(".container").show();
+            }
+
+            $('.nav-tabs a').click(function () {
+                $(this).tab('show');
+                var scrollmem = $('body').scrollTop();
+                window.location.hash = this.hash;
+                $('html,body').scrollTop(scrollmem);
+            });
+
+        </script>
+
+    {% endblock %}

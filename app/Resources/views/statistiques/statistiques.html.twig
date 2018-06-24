@@ -1,0 +1,343 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Statistiques - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des statistiques
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste arcoffice-statistiques{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Statistiques' } %}
+
+            {% block fil_ariane_more %}
+
+                {# <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="#">
+
+                        Exporter <i class="fa fa-file-excel-o ml-1"></i>
+
+                    </a> #}
+
+                {# Barre de recherche #}
+                <form id="recherche" class="form-inline ml-auto">
+
+                    <div class="arcoffice-count">
+
+                        {# {{ inclusions.getTotalItemCount }} inclusion(s) trouvée(s) #}
+
+                    </div>
+
+                    <input class="search liste-statistiques form-control form-control-sm mr-2" autocomplete="off"
+                           type="text" id='input-recherche' value='' name="recherche"
+                           placeholder="Rechercher une statistique/ Filtrer" aria-label="Rechercher une statistique">
+
+                    <button class="btn btn-violet btn-sm" type="submit">
+
+                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                    </button>
+
+                </form>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Statistiques</h4>
+
+                    {# Filtre par date #}
+                    <div class="col d-flex justify-content-center my-2">
+
+                        <div class="col-6">
+
+                            <form method="POST">
+
+                                <div class="form-row form-group mb-0">
+
+                                    {# <p class="form-lead mr-2 mb-0 d-flex align-items-center">Intervalle de Dates :</p> #}
+
+                                    <label class="col-form-label text-right" for="dateDebut">Date de début</label>
+
+                                    <div class="col">
+
+                                        <input name='dateDebut' type='text'
+                                               autocomplete="off"
+                                               class='form-control form-control-sm js-datepicker' id="dateDebut"
+                                               value={{ app.request.get("dateDebut") }}>
+
+                                    </div>
+
+                                    <label class="col-form-label text-right" for="dateFin">Date de fin</label>
+
+                                    <div class="col">
+
+                                        <input name='dateFin' type='text'
+                                               autocomplete="off"
+                                               class='form-control form-control-sm js-datepicker' id="dateFin"
+                                               value={{ app.request.get("dateFin") }}>
+
+                                    </div>
+
+                                    <button class="btn btn-primary btn-sm ml-2" type="submit">
+
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    {# Statistiques #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        {# Titre #}
+                        <thead>
+
+                        <tr>
+
+                            <th>N°</th>
+
+                            <th>Nom</th>
+
+                            <th>Contenu</th>
+
+                            <th>Valeur</th>
+
+                        </tr>
+
+                        </thead>
+
+                        {# Corps #}
+                        <tbody>
+
+                        <tr>
+
+                            <td>1</td>
+
+                            <td>Nombre d'essais ouverts par période</td>
+
+                            <td>Nombre d'essais dont la mise en place est comprise entre 2 dates</td>
+
+                            <td>
+                                {% if nbOuverture|length == 0 %}
+
+                                    NA
+
+                                {% else %}
+
+                                    {{ nbOuverture|length|default("NA") }}
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>2</td>
+
+                            <td>Nombre d'essais fermés par période</td>
+
+                            <td>Nombre d'essais dont la cloture est comprise entre 2 dates</td>
+
+                            <td>
+                                {% if nbCloture|length == 0 %}
+
+                                    NA
+
+                                {% else %}
+
+                                    {{ nbCloture|length|default("NA") }}
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>3</td>
+
+                            <td>Inclusions</td>
+
+                            <td>Nombre d'inclusions par période (date d'inclusion entre T1 et T2)</td>
+
+                            <td>
+                                {% if nbInclusion|length == 0 %}
+
+                                    NA
+
+                                {% else %}
+
+                                    {{ nbInclusion|length|default("NA") }}
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>4</td>
+
+                            <td>Visites</td>
+
+                            <td>Nombre de visite par période (date de la visite entre T1 et T2)</td>
+
+                            <td>
+                                {% if nbVisite|length == 0 %}
+
+                                    NA
+
+                                {% else %}
+
+                                    {{ nbVisite|length|default("NA") }}
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>5</td>
+
+                            <td>Nombre de patients total</td>
+
+                            <td>Nombre de patients dans la base (aujourd'hui)</td>
+
+                            <td>{{ nbPatient|length|default(0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>6</td>
+
+                            <td>Nombre d'essais total</td>
+
+                            <td>Nombre d'essais dans la base ( aujourd'hui)</td>
+
+                            <td>{{ nbEssai|length|default(0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>7</td>
+
+                            <td>Nombre d'essais ouverts</td>
+
+                            <td>Nombre d'essais ayant le statut 'ouvert aux inclusions' (aujourd'hui)</td>
+
+                            <td>{{ nbEssaiOuvert|length|default(0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>8</td>
+
+                            <td>Nombre d'essais actifs</td>
+
+                            <td>Nombre d'essais ayant le statut 'ouvert aux inclusions' ou 'en suivi' (aujourd'hui)</td>
+
+                            <td>{{ nbEssaiActif|length|default(0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>9</td>
+
+                            <td>Nombre de patients suivis actuellement</td>
+
+                            <td>patients ayant le statut 'Oui, en cours' (aujourd'hui)</td>
+
+                            <td>{{ nbPatientSuivis|length|default(0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>10</td>
+
+                            <td>Nombre d'anomalies en cours</td>
+
+                            <td>Nombre d'anomalies ayant le statut 'actif' (aujourd'hui)</td>
+
+                            <td>{{ nbErreurs|default(0) }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>11</td>
+
+                            <td>Nombre d'anomalies traitées</td>
+
+                            <td>Nombre d'anomalies ayant le statut 'ignorées' (aujourd'hui)</td>
+
+                            <td>{{ nbValidationIgnored|length|default(0) }}</td>
+
+                        </tr>
+
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {# {{ knp_pagination_render(medecins) }} #}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

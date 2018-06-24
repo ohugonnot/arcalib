@@ -1,0 +1,487 @@
+{% set anomalie = [] %}
+
+        {% for type, tableau in erreurs %}
+
+            {% for id, erreur in tableau %}
+
+                {% set path = path("edit"~type|capitalize, { "id": id }) %}
+                {% set  nom = "" %}
+
+                {% if type == 'essai' %}
+
+                    {% set  nom = essais[id].nom %}
+                    {% set path =  path('protocole', {"id": id }) %}
+
+                    {% if essais[id].statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') %}
+
+                        {% set path =  path('protocole', {"id": id, "archive": true }) %}
+
+                    {% endif %}
+
+
+
+                {% elseif  type == 'patient' %}
+
+                    {% set  nom = patients[id].nom~" "~patients[id].prenom %}
+                    {% set path =  path('patient', {"id": id}) %}
+
+
+
+                {% elseif type == 'inclusion' %}
+
+                    {% if  inclusions[id].patient != null %}
+
+                        {% set  nom = inclusions[id].patient.nom~" "~inclusions[id].patient.prenom %}
+                        {% set path =  path('patient', {"id": inclusions[id].patient.id, 'id_inclusion': id}) %}
+
+                    {% endif %}
+
+
+
+
+                {% elseif  type == 'visite' %}
+
+                    {% if  visites[id].inclusion != null and visites[id].inclusion.patient != null %}
+
+                        {% set  nom = visites[id].date|date('d/m/Y') %}
+                        {% set path =  path('patient', {"id": visites[id].inclusion.patient.id, "id_inclusion": visites[id].inclusion.id }) %}
+
+                    {% endif %}
+
+
+
+                {% elseif  type == 'facture' %}
+
+                    {% set  nom = factures[id].numero %}
+
+                {% endif %}
+
+                {% set erreurs = [] %}
+
+                {% for erreurId, message in erreur %}
+
+                    {% set erreurs = erreurs|merge([{
+                        "message": message,
+                        "ignoreLink": path("verificationSave", { 'type': type, 'entite': id, 'erreur': erreurId }),
+                        'type': type,
+                        'entite': id,
+                        'erreur': erreurId,
+                    }]) %}
+
+                {% endfor %}
+
+                {% set anomalie = anomalie|merge([{ "nom" :  type|replace({'essai': 'protocole' })|capitalize ~ " : " ~nom|default(""),
+                    "erreurs": erreurs,
+                    "path": path,
+                    "entityId": id,
+                }]) %}
+
+
+
+            {% endfor %}
+
+        {% endfor %}
+
+   {% set ignored = [] %}
+
+        {% for  erreur in validationErreurs if (essais[erreur.entite] is defined or patients[erreur.entite] is defined or inclusions[erreur.entite] is defined or visites[erreur.entite] is defined or factures[erreur.entite] is defined ) and erreur.message != null %}
+
+            {% set  type = erreur.type %}
+            {% set  id = erreur.entite %}
+            {% set  idIgnored = erreur.id %}
+            {% set  erreurID = erreur.erreur %}
+            {% set  type = erreur.type %}
+            {% set  nom = "" %}
+            {% set path = path("edit"~type|capitalize, { "id": id }) %}
+
+            {% if type == 'essai' %}
+
+                {% set  nom = essais[id].nom %}
+                {% set path =  path('protocole', {"id": id }) %}
+
+                {% if essais[id].statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') %}
+
+                    {% set path =  path('protocole', {"id": id, "archive": true }) %}
+
+                {% endif %}
+
+            {% elseif  type == 'patient' %}
+
+                {% set  nom = patients[id].nom~" "~patients[id].prenom %}
+                {% set path =  path('patient', {"id": id}) %}
+
+            {% elseif type == 'inclusion' %}
+
+                {% if  inclusions[id].patient != null %}
+
+                    {% set  nom = inclusions[id].patient.nom~" "~inclusions[id].patient.prenom %}
+                    {% set path =  path('patient', {"id": inclusions[id].patient.id, 'id_inclusion': id}) %}
+
+                {% endif %}
+
+
+            {% elseif  type == 'visite' %}
+
+                {% if  visites[id].inclusion != null and visites[id].inclusion.patient != null %}
+                    {% set  nom = visites[id].date|date('d/m/Y') %}
+                    {% set path =  path('patient', {"id": visites[id].inclusion.patient.id, "id_inclusion": visites[id].inclusion.id }) %}
+
+                {% endif %}
+
+
+            {% elseif  type == 'facture' %}
+
+                {% set  nom = factures[id].numero %}
+
+            {% endif %}
+
+            {% set ignored = ignored|merge([{ "nom" :  type|replace({'essai': 'protocole' })|capitalize ~ " : "~nom|default(""),
+                "path": path,
+                "entityId": id,
+                'message': erreur.message,
+                "id": idIgnored,
+                'erreur': erreurID,
+                "type": type
+            }]) %}
+
+        {% endfor %}
+
+
+    {% extends 'base.html.twig' %}
+
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}Anomalies - ArcOffice{% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}{% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-coherence-data{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Liste des anomalies' } %}{% endembed %}
+
+    {% endblock fil_ariane %}
+
+    {# Contenu #}
+    {% block content %}
+
+        {# Section Principale #}
+        <section id="vueAnomalie" class="section-main" v-cloak>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs w-100" role="tablist">
+
+                        <li class="nav-item">
+
+                            <a class="nav-link active d-flex" data-toggle="tab" href="#liste-anomalies" role="tab"
+                               aria-controls="home" aria-selected="true">Liste des Anomalies</a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a class="nav-link d-flex" data-toggle="tab" href="#anomalies-ignorees" role="tab"
+                               aria-controls="profile" aria-selected="false">Anomalies Ignorées</a>
+
+                        </li>
+
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content w-100">
+
+                        {# Liste des anomalies #}
+                        <div class="tab-pane active" id="liste-anomalies" role="tabpanel"
+                             aria-labelledby="liste-anomalies">
+
+                            <div class="col">
+
+                                <div class="arcoffice-count mt-2">[[ nbErreurs ]] anomalie(s) identifiée(s)</div>
+
+                                {# Tableau #}
+                                <table class="table table-sm table-striped table-hover table-responsive">
+
+                                    <thead>
+
+                                    <tr>
+
+                                        <th>Type</th>
+
+                                        <th>Nombre d'anomalie(s)</th>
+
+                                        <th>Message</th>
+
+                                        <th>Actions</th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                    <tr v-for="(anomalie, indexAnomalie) in anomalies">
+
+                                        <td>
+
+                                            <a target="_blank" :href="anomalie.path">
+
+                                                [[ anomalie.nom ]]
+
+                                            </a>
+
+                                        </td>
+
+                                        <td>
+
+                                            [[ anomalie.erreurs.length ]] anomalie(s)
+
+                                        </td>
+
+                                        <td>
+
+                                            <div v-for="(erreur, index) in anomalie.erreurs" :data-nth='index'
+                                                 class="arcoffice-anomalie-wrapper d-flex align-items-center">[[
+                                                erreur.message ]]
+                                            </div>
+
+                                        </td>
+
+                                        <td>
+
+
+                                            <div v-for="(erreur, index) in anomalie.erreurs" :data-nth='index'
+                                                 class="arcoffice-anomalie-wrapper d-flex align-items-center">
+
+                                                <a @click.prevent='ignore(erreur, index, indexAnomalie)'
+                                                   class="verificationSave btn btn-sm btn-outline-success" href="#">
+
+                                                    <i class="fa fa-check"></i> Ignorer
+
+                                                </a>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+
+                        {# Anomalies Ignorées #}
+                        <div class="tab-pane" id="anomalies-ignorees" role="tabpanel"
+                             aria-labelledby="#anomalies-ignorees">
+
+                            <div class="col">
+
+                                <div class="arcoffice-count mt-2">[[ ignored.length ]] anomalie(s) ignorée(s)</div>
+
+                                {# Tableau #}
+                                <table class="table table-sm table-striped table-hover table-responsive">
+
+                                    <thead>
+
+                                    <tr>
+
+                                        <th>
+
+                                            Type
+
+                                        </th>
+
+                                        <th>
+
+                                            Message
+
+                                        </th>
+
+                                        <th>
+
+                                            Actions
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                    <tr v-for="(ignore, index) in ignored">
+
+                                        <td>
+
+
+                                            <a target="_blank" :href="ignore.path">
+
+                                                [[ ignore.nom ]]
+
+                                            </a>
+
+                                        </td>
+
+                                        <td>
+
+                                            [[ ignore.message ]]
+
+                                        </td>
+
+                                        <td>
+
+                                            <div class="arcoffice-anomalie-wrapper d-flex align-items-center">
+
+                                                <a @click.prevent='unignore(ignore, index)'
+                                                   class="verificationSave btn btn-sm btn-outline-success" href="#">
+
+                                                    <i class="fa fa-check"></i> Ne plus ignorer
+
+
+                                                </a>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    {% endblock content %}
+
+
+    {% block javascripts %}
+
+        {{ parent() }}
+
+        <script>
+
+            if ($("#liste-anomalies").length > 0) {
+
+                var verification = new Vue({
+                    delimiters: ['[[', ']]'],
+                    el: '#vueAnomalie',
+                    data: {
+                        anomalies: {{ anomalie|json_encode|raw }},
+                        ignored: {{ ignored|json_encode|raw }}
+                    },
+
+
+                    methods: {
+                        ignore: function (erreur, index, indexAnomalie) {
+
+                            toastr.options = {"positionClass": "toast-bottom-right"};
+                            var anomalie = verification.anomalies[indexAnomalie];
+
+                            $.post(erreur.ignoreLink, {message: erreur.message}, function (data) {
+                                if (data.message) {
+                                    toastr.success('Cette anomalie a été ignorée. Vous pouvez la retrouver dans "anomalies ignorées"')
+                                }
+
+                                verification.ignored.push({
+                                    entityId: anomalie.entityId,
+                                    id: data.id,
+                                    message: erreur.message,
+                                    nom: anomalie.nom,
+                                    path: anomalie.path
+                                });
+
+                                anomalie.erreurs.splice(index, 1);
+                                if (anomalie.erreurs.length === 0) {
+                                    verification.anomalies.splice(indexAnomalie, 1);
+                                }
+                                verification.$forceUpdate();
+
+                            }).fail(function () {
+                                toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                            });
+                        },
+                        unignore: function (erreur, index) {
+
+                            toastr.options = {"positionClass": "toast-bottom-right"};
+
+                            $.post(Routing.generate("verificationUnsave", {erreurId: erreur.id}), function (data) {
+                                if (data.message) {
+                                    toastr.success('Cette anomalie n\'est plus ignorée. Vous pouvez la retrouver dans "liste des anomalies"')
+                                }
+
+                                verification.anomalies.forEach(function (element) {
+
+                                    if (element.entityId === erreur.entityId) {
+                                        element.erreurs.push(
+                                            {
+                                                entite: erreur.entityId,
+                                                erreur: erreur.erreur,
+                                                ignoreLink: Routing.generate("verificationSave", {
+                                                    type: erreur.type,
+                                                    entite: erreur.entiyId,
+                                                    erreur: erreur.erreur
+                                                }),
+                                                message: erreur.message, type: erreur.type
+                                            })
+                                    }
+                                });
+
+                                verification.ignored.splice(index, 1);
+                            }).fail(function () {
+                                toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                            });
+
+                        }
+                    },
+                    computed: {
+                        nbErreurs: function () {
+                            var nbErreurs = 0;
+                            this.anomalies.forEach(function (element) {
+                                    nbErreurs = nbErreurs + element.erreurs.length;
+                                }
+                            );
+                            return nbErreurs;
+                        }
+                    }
+
+                })
+
+            }
+
+        </script>
+
+
+    {% endblock %}
+

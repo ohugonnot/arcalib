@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des mots-clefs - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des TAGS/mots-clefs
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste arcoffice-liste-tags{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Tags, Mots-clés' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    {# Ajouter un tag #}
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addTag') }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ tags.getTotalItemCount }} tag(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-tags-recherche form-control form-control-sm mr-2" autocomplete="off"
+                               type="text" id='input-recherche' value='{{ app.request.get("recherche") }}'
+                               name="recherche" placeholder="Rechercher une tag" aria-label="Rechercher un tag">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des mots-clefs</h4>
+
+                    {# Liste des tags #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if tags.isSorted('p.nom') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(tags, 'Tag', ['p.nom']) }}
+
+                            </th>
+
+                            <th class='{% if tags.isSorted('p.classe') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(tags, 'Classe', ['p.classe']) }}
+
+                            </th>
+
+                            <th class='{% if tags.isSorted('p.nbEssais') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(tags, 'Nb Protocole', ['nbEssais']) }}
+
+                            </th>
+
+                            <th class='{% if tags.isSorted('p.nbInclusions') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(tags, 'Nb Inclusion', ['nbInclusions']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% for tag in tags %}
+
+                            <tr>
+
+                                <td class="tag">
+
+                                    <a href="{{ path('editTag', { id : tag.id }) }}">
+
+                                        {{ tag.nom }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+
+                                    {{ tag.classe }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ tag.essais|length }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ tag.essais|nbInclusions }}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(tags) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

@@ -1,0 +1,302 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Requêtes - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}{% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-requetes arcoffice-liste{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Requêtes' } %}{% endembed %}
+
+    {% endblock fil_ariane %}
+	
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col">
+
+                        {# Pos 1*** req2-Patients ayant une visite prévue ou confirmée dans les 30 Jours #}
+                        <a class="arcoffice-collapse form-title d-flex align-items-center mb-0" href="#requete2"
+                           data-toggle="collapse" aria-expanded="false" aria-controls="protocole-synopsis">
+
+                            {# <i class="fa fa-male mr-2"></i> #}
+
+                            Patients ayant une visite prévue ou confirmée dans les 30 Jours
+                            ({{ patientVisite30Days|length }})
+
+                            <i class="fa fa-angle-down ml-2"></i>
+
+                        </a>
+
+                        <div class="collapse" id="requete2">
+
+                            <table class="table table-sm table-striped table-hover table-responsive">
+
+                                {# Titre #}
+                                <thead>
+
+                                <tr>
+
+                                    <th>Nom / Prénom</th>
+
+                                    <th>Protocole</th>
+
+                                    <th>Statut</th>
+
+                                    <th>Date</th>
+
+                                </tr>
+
+                                </thead>
+
+                                {# Corps #}
+                                <tbody class="list">
+
+                                {% for array in patientVisite30Days %}
+
+                                    {% set    patient = array[0] %}
+
+                                    <tr>
+
+                                        <td class="patient">
+                                            <a href="{{ path("patient", {id: patient.id, id_inclusion: array.id_inclusion }) }}">    {{ patient.nom }} {{ patient.prenom }}
+                                            </a>
+                                        </td>
+
+                                        <td>{% if array.id_essai %}<a
+                                                href="{{ path("protocole", {id: array.id_essai, archive: array.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") or array.statut == constant("AppBundle\\Entity\\Essais::REFUS") }) }}">{{ array.nom }}</a>{% endif %}
+                                        </td>
+
+                                        <td>{{ array.statut }}</td>
+
+                                        <td>{{ array.date|date("d/m/Y") }}</td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        {# Pos 2*** req1-Patients dont la date des dernières nouvelles > 2 ans #}
+                        <a class="arcoffice-collapse form-title d-flex align-items-center mb-0" href="#requete1"
+                           data-toggle="collapse" aria-expanded="false" aria-controls="protocole-synopsis">
+
+                            {# <i class="fa fa-male mr-2"></i> #}
+
+                            Patients dont la date de dernières nouvelles supérieur à 2 ans ({{ patientLastNews|length }}
+                            )
+
+                            <i class="fa fa-angle-down ml-2"></i>
+
+
+                        </a>
+
+                        <div class="collapse" id="requete1">
+
+                            <table class="table table-sm table-striped table-hover table-responsive">
+
+                                {# Titre #}
+                                <thead>
+
+                                <tr>
+
+                                    <th>Nom / Prénom</th>
+
+                                    <th>Protocole</th>
+
+                                    <th>Statut</th>
+
+                                    <th>Date</th>
+
+                                    <th>Statut vital</th>
+
+                                </tr>
+
+                                </thead>
+
+                                {# Corps #}
+                                <tbody class="list">
+
+                                {% for array in patientLastNews %}
+
+                                    {% set    patient = array[0] %}
+
+                                    <tr>
+
+                                        <td class="patient">
+                                            <a href="{{ path("patient", {id: patient.id, id_inclusion: array.id_inclusion }) }}">    {{ patient.nom }} {{ patient.prenom }}
+                                            </a>
+                                        </td>
+
+                                        <td>{% if array.id_essai %}<a
+                                                href="{{ path("protocole", {id: array.id_essai, archive: array.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") or array.statut == constant("AppBundle\\Entity\\Essais::REFUS") }) }}">{{ array.nom }}</a>{% endif %}
+                                        </td>
+
+                                        <td>{{ array.statut }}</td>
+
+                                        <td>{{ patient.datLast|date("d/m/Y") }}</td>
+
+                                        <td>{{ patient.deces }}</td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        {# Pos 3*** req3-Essais ayant le statut ' faisabilité en attente ou  Convention signature ' #}
+                        <a class="arcoffice-collapse form-title d-flex align-items-center mb-0" href="#requete3"
+                           data-toggle="collapse" aria-expanded="false" aria-controls="protocole-synopsis">
+
+                            {# <i class="fa fa-male mr-2"></i> #}
+
+                            Protocoles ayant le statut 'Faisabilité en attente' ou 'Convention signature'
+                            ({{ essaiEnAttente|length }})
+
+                            <i class="fa fa-angle-down ml-2"></i>
+
+                        </a>
+
+                        <div class="collapse" id="requete3">
+
+                            <table class="table table-sm table-striped table-hover table-responsive">
+
+                                {# Titre #}
+                                <thead>
+
+                                <tr>
+
+                                    <th>Protocole</th>
+                                    <th>Titre</th>
+                                    <th>Statut</th>
+
+
+                                </tr>
+
+                                </thead>
+
+                                {# Corps #}
+                                <tbody class="list">
+
+                                {% for array in essaiEnAttente %}
+
+
+                                    <tr>
+
+                                        <td class="patient">
+                                            <a href="{{ path("protocole", {id: array.id }) }}">    {{ array.nom }}
+                                            </a>
+                                        </td>
+                                        <td>{{ array.titre }}</td>
+
+                                        <td>{{ array.statut }}</td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        {# Pos 4*** req3- Visite Confirmée/Théorique dépassée #}
+                        <a class="arcoffice-collapse form-title d-flex align-items-center mb-0" href="#requete4"
+                           data-toggle="collapse" aria-expanded="false" aria-controls="protocole-synopsis">
+
+                            {# <i class="fa fa-male mr-2"></i> #}
+
+                            Visites prévues confirmées/théoriques dépassées
+                            ({{ visiteConfirmeeTheorique|length }})
+
+                            <i class="fa fa-angle-down ml-2"></i>
+
+                        </a>
+
+                        <div class="collapse" id="requete4">
+
+                            <table class="table table-sm table-striped table-hover table-responsive">
+
+                                {# Titre #}
+                                <thead>
+
+                                <tr>
+
+                                    <th>Patient</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+
+
+                                </tr>
+
+                                </thead>
+
+                                {# Corps #}
+                                <tbody class="list">
+
+                                {% for visite in visiteConfirmeeTheorique %}
+
+
+                                    <tr>
+
+                                        <td class="patient">
+                                            <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: visite.inclusion.id }) }}">    {{ visite.inclusion.patient.nomPrenom }}
+                                            </a>
+                                        </td>
+                                        <td>{{ visite.date|date("d/m/Y") }}</td>
+
+                                        <td>{{ visite.statut }}</td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                        {# 2-Fin des requetes #}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

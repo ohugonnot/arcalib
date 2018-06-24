@@ -1,0 +1,202 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des patients - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des patients
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-liste{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Patients' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+
+                    {% if is_granted('ROLE_ARC') %}
+
+                        <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportPatients') }}">
+
+                            Exporter <i class="fa fa-file-excel-o ml-1"></i>
+
+                        </a>
+
+                    {% endif %}
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ patients.getTotalItemCount }} patient(s) trouvé(s)
+
+                        </div>
+
+                        <input class="search liste-patients-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un patient / Filtrer" aria-label="Rechercher un patient">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+	
+	{% block content %}
+
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des patients présents dans la base</h4>
+
+                    {# Liste des patients #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if patients.isSorted('p.id') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'id', ['p.id', 'p.nom']) }}
+
+                            </th>
+
+                            <th class='{% if patients.isSorted('p.nom') %}sorted{% endif %}' data-sort="patient">
+
+                                {{ knp_pagination_sortable(patients, 'Patient', ['p.nom', 'p.prenom']) }}
+
+                            </th>
+
+                            <th class='{% if patients.isSorted('p.nom') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Initiales', ['p.nom', 'p.prenom']) }}
+
+                            </th>
+
+                            <th class='{% if patients.isSorted('p.sexe') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Genre', ['p.sexe', 'p.nom']) }}
+
+                            </th>
+
+                            <th class='{% if patients.isSorted('p.datNai') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Date de Naissance', ['p.datNai', 'p.nom']) }}
+
+                            </th>
+                            <th class='{% if patients.isSorted('p.datNai') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Age', ['p.datNai', 'p.nom']) }}
+
+                            </th>
+
+                            <th class='{% if patients.isSorted('p.deces') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Statut vital', ['p.deces', 'p.nom']) }}
+
+                            </th>
+
+                            <th class='{% if patients.isSorted('p.datDeces') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Date Décès', ['p.datDeces', 'p.nom']) }}
+
+                            </th>
+                            <th class='{% if patients.isSorted('nbInclusions') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(patients, 'Nbr inclusion', ['nbInclusions', 'p.nom']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody class="list">
+
+                        {% for patient in patients %}
+
+                            <tr>
+
+                                <td class="Id">{{ patient.id }}</td>
+
+                                <td class="patient">
+
+                                    <a href="{{ path("patient", {id: patient.id }) }}">
+                                        {{ patient.nom }} {{ patient.prenom }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="initial">{{ patient.initial }}</td>
+
+                                <td class="sexe">{{ patient.sexe }}</td>
+
+                                <td class="datNai">{{ patient.datNai is empty ? "" : patient.datNai|date('d/m/Y') }}</td>
+
+                                <td class="datNai">{{ patient.datNai is empty ? "" :  (patient.datNai | age(patient.datDeces)) ~ ' ans' }}</td>
+
+                                <td class="deces">{{ patient.deces }}</td>
+
+                                <td class="datDeces">{{ patient.datDeces is empty ? "" : patient.datDeces|date('d/m/Y') }}</td>
+
+                                <td>{{ patient.inclusions|length }}</td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(patients) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

@@ -1,0 +1,47 @@
+
+{# Embed Header (Méta, css, etc) #}
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block seo_title %}ArcOffice - Outil de gestion clinique{% endblock seo_title %}</title>
+    <meta name="description"
+          content="{% block seo_description %}Outil de gestion d'une unité de recherche clinique{% endblock seo_description %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#f34f55">
+    <meta name="theme-color" content="#f34f56"> #}
+
+    <meta property="og:title" content="ArcOffice - Outil de gestion clinique">
+    <meta property="og:description" content="ArcOffice est un outil de gestion d'une unité de recherche clinique.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.arcoffice.fr">
+    <meta property="og:image" content="">
+    <meta property="og:site_name" content="ArcOffice">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:alt" content="ArcOffice - Outil de gestion clinique">
+
+    {# CSS #}
+    <link href="{{ asset('dist/css/global.min.css') }}" rel="stylesheet" media="all">
+
+    {# Google Analytics #}
+    <script></script>
+
+    {# Structured Data #}
+    <script type='application/ld+json'>
+            {
+                "@context": "http://schema.org",
+                "@type": "WebSite",
+                "name": "ArcOffice",
+                "url": "https://www.arcoffice.fr",
+                "image": "https://www.arcoffice.fr/dist/img/logo.svg",
+                "description": "Outil de gestion d'une unité de recherche clinique",
+                "publisher": "ArcOffice" 
+            }
+
+    </script>
+
+</head>

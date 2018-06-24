@@ -1,0 +1,66 @@
+
+	{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% set title_page = "Modifier mon profil" %}
+	{% set description_page = "Modifications des informations personnelles de l'utilisateur" %}
+
+	{# Réécriture SEO #}
+	{% block header %}
+
+		{% embed "include/header.html.twig" %}
+			
+			{# Titre #}
+			{% block seo_title %}
+				
+				ArcOffice - Editer mon profil
+
+			{% endblock seo_title %}
+			
+			{# Description #}
+			{% block seo_description %}
+				
+				{{ description_page }}
+
+			{% endblock seo_description %}
+
+		{% endembed %}
+
+	{% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+		
+		{% embed "include/fil-ariane.html.twig" with { page_name : 'Mon profil' } %}{% endembed %}
+
+	{% endblock fil_ariane %}
+
+	{% block content %}
+
+		{# Flash Messages #}
+		{% include 'include/flash-messages.html.twig' %}
+
+		{# Section Principale #}
+		<section class="section-main">
+			
+			<div class="container">
+		
+				<div class="row">
+
+					{# Colonne Édition d'un tag #}
+					<div class="col col-arcoffice">
+
+						{% include "@FOSUser/Profile/edit_content.html.twig" %}
+
+					</div>
+
+				</div>
+		
+			</div>
+		
+		</section>
+
+	{% endblock content %}

@@ -1,0 +1,417 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addMedecin' %}
+
+        {% set title_page = "Ajouter un nouveau médecin" %}
+        {% set description_page = "Création d'un nouveau médecin" %}
+
+    {% elseif app.request.get("_route") == 'editMedecin' %}
+
+        {% set title_page = "Modifier le médecin " ~ form.vars.value.nom ~ ' ' ~ form.vars.value.prenom %}
+        {% set description_page = "Édition du médecin : " ~ form.vars.value.nom ~ ' ' ~ form.vars.value.prenom %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                ArcOffice - {{ title_page }}
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center">
+
+                    <a href="{{ path('listeMedecins') }}">Médecins</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'un médecin #}
+                    <div class="col col-arcoffice col-medecin-editer">
+
+                        {{ form_start(form) }}
+
+                        {% form_theme form 'form/submit.html.twig' %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            {% if is_granted('ROLE_ARC') %}
+
+                                <div class="ml-auto mr-1">
+
+                                    {# Supprimer #}
+                                    {% if form.vars.value.id %}
+
+                                        {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                            title : 'Supprimer le médecin',
+                                            route_delete : 'deleteMedecin',
+                                            route_liste : 'listeMedecins',
+                                            message: 'Le medecin a bien été supprimé.',
+                                            id: form.vars.value.id
+
+                                        } %}
+
+                                    {% endif %}
+
+                                    {# Enregistrer #}
+                                    {{ form_widget(form.envoyer, {
+                                        'fa' : 'fa-check',
+                                        'right' : true,
+                                        'label' : ' ',
+                                        'attr': {
+                                            'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                            'title': 'Enregistrer le médecin'
+                                        }
+                                    }) }}
+
+                                </div>
+
+                            {% else %}
+
+                                {% do form.envoyer.setRendered %}
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# Nom #}
+                            <div class="col">
+
+                                {{ form_label(form.nom) }}
+
+                                {{ form_errors(form.nom) }}
+
+                                {{ form_widget(form.nom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Prénom #}
+                            <div class="col">
+
+                                {{ form_label(form.prenom) }}
+
+                                {{ form_errors(form.prenom) }}
+
+                                {{ form_widget(form.prenom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Services #}
+                            <div class="col">
+
+                                {{ form_label(form.service) }}
+
+                                {{ form_errors(form.service) }}
+
+                                {{ form_widget(form.service, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# dateEntrée #}
+                            <div class="col">
+
+                                {{ form_label(form.dateEntre) }}
+
+                                {{ form_errors(form.dateEntre) }}
+
+                                {{ form_widget(form.dateEntre, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+
+                            <div class="col">
+
+                                {{ form_label(form.dateSortie) }}
+
+                                {{ form_errors(form.dateSortie) }}
+
+                                {{ form_widget(form.dateSortie, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# Dect #}
+                            <div class="col">
+
+                                {{ form_label(form.dect) }}
+
+                                {{ form_errors(form.dect) }}
+
+                                {{ form_widget(form.dect, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Portable #}
+                            <div class="col" title="portable ou ligne direct">
+
+                                {{ form_label(form.portable) }}
+
+                                {{ form_errors(form.portable) }}
+
+                                {{ form_widget(form.portable, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Adresse Email #}
+                            <div class="col">
+
+                                {{ form_label(form.email) }}
+
+                                {{ form_errors(form.email) }}
+
+                                {{ form_widget(form.email, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# Notes #}
+                            <div class="col">
+
+                                {{ form_label(form.note) }}
+
+                                {{ form_errors(form.note) }}
+
+                                {{ form_widget(form.note, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# Secrétaire(s) #}
+                            <div class="col">
+
+                                {{ form_label(form.secNom) }}
+
+                                {{ form_errors(form.secNom) }}
+
+                                {{ form_widget(form.secNom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# Téléphone Secrétariat #}
+                            <div class="col">
+
+                                {{ form_label(form.secTel) }}
+
+                                {{ form_errors(form.secTel) }}
+
+                                {{ form_widget(form.secTel, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# N° SIRET #}
+                            <div class="col">
+
+                                {{ form_label(form.numSiret) }}
+
+                                {{ form_errors(form.numSiret) }}
+
+                                {{ form_widget(form.numSiret, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# N° SIGAPS #}
+                            <div class="col">
+
+                                {{ form_label(form.numSigaps) }}
+
+                                {{ form_errors(form.numSigaps) }}
+
+                                {{ form_widget(form.numSigaps, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# N° Ordre #}
+                            <div class="col">
+
+                                {{ form_label(form.numOrdre) }}
+
+                                {{ form_errors(form.numOrdre) }}
+
+                                {{ form_widget(form.numOrdre, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# N° RPPS #}
+                            <div class="col">
+
+                                {{ form_label(form.numRpps) }}
+
+                                {{ form_errors(form.numRpps) }}
+
+                                {{ form_widget(form.numRpps, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# N° MERRI #}
+                            <div class="col">
+
+                                {{ form_label(form.merri) }}
+
+                                {{ form_errors(form.merri) }}
+
+                                {{ form_widget(form.merri, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    {# Colonne Information #}
+                    {% if app.request.get('_route') == 'editMedecin' %}
+
+                        <div class="col-5 col-arcoffice col-medecin-editer">
+
+                            {# Titre + Boutons #}
+                            <div class="form-title d-flex align-items-center">Informations</div>
+
+                            {% if informations.essais is defined and informations.essais|length >= 1 %}
+
+                                <p class="mb-0">Investigateur principal des protocoles :</p>
+
+                                <ul>
+
+                                    {% for essai in informations.essais %}
+
+                                        <li><a href="{{ path("protocole", { id: essai.id }) }}">{{ essai.nom }}</a></li>
+
+                                    {% endfor %}
+
+                                </ul>
+
+                            {% else %}
+
+                                <p class="mb-0">Ce médecin n'est investigateur principal d'aucun essai..</p>
+
+                            {% endif %}
+
+                            <hr>
+
+                            <ul>
+
+                                <li>Nombre d'inclusion(s) : <span> {{ informations.medecin }}</span>
+                                    sur {{ informations.total }} inclusions totales
+                                </li>
+
+                            </ul>
+
+                            {#<p>Médecin référent de:</p>
+
+                            <ul>
+
+                                {% for patient in form.vars.value.patients %}
+
+                                    <li>
+
+                                        <a href="{{ path('editPatient', {id: patient.id}) }}">{{ patient.nom }} {{ patient.prenom }}</a>
+
+                                    </li>
+
+                                {% endfor %}
+
+                            </ul> #}
+
+                            {# <p>Responsable de l'inclusion</p>
+
+                            <ul>
+
+                                {% for inclusion in form.vars.value.inclusions %}
+
+                                   <li>Patient:
+
+                                       <a href="{{ path("editPatient", { id: inclusion.patient.id }) }}">
+
+                                           {{ inclusion.patient.nom }}
+
+                                       </a>
+
+                                       <a href="{{ path("editPatient", { id: inclusion.patient.id }) }}">
+
+                                           {{ inclusion.patient.prenom }}
+
+                                       </a>
+
+                                       Inclus le <a href="{{ path("editInclusion", { id: inclusion.id }) }}">{{ inclusion.datInc|date('d/m/Y') }}</a>
+
+                                      dans l'étude  <a href="{{  path("editEssai", { id: inclusion.essai.id }) }}">{{  inclusion.essai.nom }}</a> </li>
+
+                                 {% endfor %}
+
+                            </ul> #}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

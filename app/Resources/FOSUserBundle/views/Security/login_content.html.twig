@@ -1,0 +1,90 @@
+
+    {# Connexion #}
+    {% trans_default_domain 'FOSUserBundle' %}
+    
+    <div class="arcoffice-fosuser-sub">
+
+        <p class="lead text-center">Bienvenue sur ArcOffice</p>
+
+        {# Erreur #}
+        {% if error %}
+            
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+
+        {% endif %}
+        
+        {% if app.request.hasPreviousSession %}
+
+            {% for type, messages in app.session.flashbag.all() %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ type }}">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endfor %}
+
+        {% endif %}
+
+        <form action="{{ path("fos_user_security_check") }}" method="post">
+
+            {% if csrf_token %}
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+            {% endif %}
+            
+            {# Email #}
+            <div class="form-group">
+            
+                <label for="username">Nom d'utilisateur*</label>
+
+                {# {{ 'security.login.email'|trans }} #}
+
+                <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="Nom d'utilisateur" required>
+
+            </div>
+            
+            {# Mot de passe #}
+            <div class="form-group">
+                
+                <label for="password">{{ 'security.login.password'|trans }}*</label>
+
+                <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}" required>
+
+            </div>
+            
+            {# Se Souvenir de moi #}
+            <div class="form-check small mb-3">
+                
+                <label class="form-check-label">
+                    
+                    <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me" value="on">
+                    {{ 'security.login.remember_me'|trans }}
+                
+                </label>
+
+            </div>
+            
+            {# Bouton 'Se Connecter' #}
+            <div class="form-group">
+            
+                <input type="submit" class="w-100 btn btn-primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}">
+
+            </div>
+
+            {# Mot de passe oublié #}
+            <div class="form-group mb-0 small">
+                
+                <a href="{{ path('fos_user_resetting_request') }}">Mot de passe oublié ?</a>
+                
+            </div>
+
+        </form>
+
+    </div>

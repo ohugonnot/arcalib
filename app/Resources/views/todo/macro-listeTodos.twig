@@ -1,0 +1,183 @@
+{% macro liste(todos) %}
+
+    <div class="col">
+
+        {# Liste des todos #}
+        <table class="table table-sm table-striped table-hover table-responsive table-bloc-notes">
+
+            <thead>
+
+            <tr>
+
+
+                <th class='{% if todos.isSorted('t.id') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Titre', ['t.titre']) }}
+                </th>
+
+                <th>
+                    {{ knp_pagination_sortable(todos, 'Action', ['t.texte']) }}
+                </th>
+
+                {# <th class='{% if todos.isSorted('t.dateAlerte') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Alerte', ['t.dateAlerte']) }}
+                </th> #}
+
+                <th class='{% if todos.isSorted('t.dateFin') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Échéance', ['t.dateFin']) }}
+                </th>
+
+                <th class='{% if todos.isSorted('t.importance') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Importance', ['t.importance']) }}
+                </th>
+
+                <th class='{% if todos.isSorted('a.username') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Auteur', ['a.username']) }}
+                </th>
+
+                <th class='{% if todos.isSorted('d.username') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Destinataire(s)', ['d.username']) }}
+                </th>
+
+                <th class='{% if todos.isSorted('t.niveauResolution') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'État', ['t.niveauResolution']) }}
+                </th>
+
+                <th class='{% if todos.isSorted('t.id') %}sorted{% endif %}'>
+                    {{ knp_pagination_sortable(todos, 'Id', ['t.id']) }}
+                </th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for todo in todos %}
+
+                {% set  date_class = null %}
+
+                <tr>
+
+                    {# Titre #}
+                    <td class="todo">
+
+                        <a href="{{ path('editTodo', { id : todo.id }) }}">{{ todo.titre }}</a>
+
+                    </td>
+
+                    {# Texte #}
+                    <td>{{ todo.texte|truncate(150, true, "...") }}
+
+                    </td>
+
+
+                    {# |truncate(125, true, '...') #}
+
+                    {% if todo.dateAlerte != null %}
+
+                        {% if date() >= date(todo.dateAlerte) %}
+
+                            {% set date_class = 'bloc-note-alerte-done' %}
+
+                        {% elseif date() <= date(todo.dateAlerte) %}
+
+                            {% set date_class = 'bloc-note-alerte-ok' %}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                    {% if date() >= date(todo.dateFin) %}
+
+                        {% set date_class = 'bloc-note-date-outdated' %}
+
+                    {% endif %}
+
+                    {% if todo.niveauResolution in [ 'Résolu', 'Résolu avec remarques' ] %}
+
+                        {% set date_class = 'bloc-note-date-done' %}
+
+                    {% endif %}
+
+
+
+                    {# Date d'alerte
+                        <td class="date">
+                            {{ todo.dateAlerte is empty ? "Aucune date" : todo.dateAlerte|date('d/m/Y') }}
+                         </td>
+                    #}
+
+                    {# Date d'échéance #}
+                    {% set RESOLU = [constant('AppBundle\\Entity\\Todo::RESOLU'), constant('AppBundle\\Entity\\Todo::RESOLU_AVEC_REMARQUES')] %}
+                    <td class="date {{ date_class|default("bloc-note-alerte-ok") }}">
+
+                        {{ todo.dateFin is empty ? "Aucune date" : todo.dateFin|date('d/m/Y') }}
+                        {% if date() >= date(todo.dateAlerte) and  todo.niveauResolution not in RESOLU and todo.alerte %}
+                            <br><span class="badge badge-warning">Alerte</span>
+                        {% endif %}
+
+                        {% if date() >= date(todo.dateFin) and  todo.niveauResolution not in RESOLU and todo.dateFin %}
+                            <br><span class="badge badge-danger">Dépassé</span>
+                        {% endif %}
+
+                    </td>
+
+                    {# Importance#}
+                    <td>{{ todo.importance }}
+
+                        {% if todo.importance == "Prioritaire" and  todo.niveauResolution not in RESOLU and todo.alerte %}
+                            <span class="badge badge-danger">!</span>
+                        {% endif %}
+
+                    </td>
+
+                    <td>{{ todo.auteur|capitalize }}</td>
+
+                    <td>
+
+                        <div class="d-flex flex-column">
+
+                            {% for destinataire in todo.destinataires %}
+
+                                <span class="w-100 mb-1">{{ destinataire.username|capitalize }}</span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </td>
+
+                    {# Etat#}
+
+                    <td>{{ todo.niveauResolution }}
+
+                        {% if todo.resolution != "" %}
+
+                            <a href="{{ path('editTodo', { id : todo.id }) }}"> <span class="badge badge-info"><i
+                                            class='fa fa-eye'></i></span></a>
+
+                        {% endif %}
+
+                    </td>
+
+                    {# Id #}
+                    <td class="todo">
+
+                        <a href="{{ path('editTodo', { id : todo.id }) }}">{{ todo.Id }}</a>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {# Pagination #}
+        {{ knp_pagination_render(todos) }}
+
+    </div>
+
+{% endmacro %}

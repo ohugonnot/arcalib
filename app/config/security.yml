@@ -1,0 +1,48 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+
+    role_hierarchy:
+        ROLE_ARC:         ROLE_USER
+        ROLE_ADMIN:       ROLE_ARC
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+
+    firewalls:
+        main:
+            pattern: ^/
+            form_login:
+                provider:               fos_userbundle
+                login_path:             fos_user_security_login 
+                check_path:             fos_user_security_check
+                remember_me: true
+                default_target_path: recherche
+                # if you are using Symfony < 2.8, use the following config instead:
+                # csrf_provider: form.csrf_provider
+
+            logout:
+                handlers: [AppBundle\EventListener\LogoutListener]
+                path:   /deconnexion
+                target: /
+            anonymous:    true
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+                 
+            logout_on_user_change: true
+
+
+    access_control:
+        - { path: ^/arcalib/utilisateurs/, role: ROLE_ADMIN }
+        - { path: ^/arcalib/utilisateur/, role: ROLE_ADMIN }
+        - { path: ^/arcalib/log/, role: ROLE_ADMIN }
+        - { path: ^/arcalib/logs/, role: ROLE_ADMIN }
+        - { path: ^/arcalib/actualite/, role: ROLE_ADMIN }
+        - { path: ^/arcalib/actualites/, role: ROLE_ADMIN }
+        - { path: ^/arcalib/*, role: ROLE_USER }
+        - { path: ^/pdf/*, role: ROLE_USER }
+        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }

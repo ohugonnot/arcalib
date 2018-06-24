@@ -1,0 +1,234 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des traitements - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des traitements du patient
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Traitements' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addTraitement', {id: inclusion.id}) }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ traitements.getTotalItemCount }} traitements(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-traitements-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un traitement / Filtrer"
+                               aria-label="Rechercher un traitement / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+
+    
+    {% block content %}
+
+
+        {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
+
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+
+                    <h4 class="text-center">Liste des {{ traitements.getTotalItemCount }} traitements pour l'inclusion
+                        N° {{ inclusion.numInc }} - <a
+                                href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
+                    </h4>
+
+
+                    {# Liste des traitements #}
+
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if traitements.isSorted('t.attributionAt') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Date d\'attribution', ['t.attributionAt']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.priseAt') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Date de prise', ['t.priseAt']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.peremptionAt') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Date de péremption', ['t.peremptionAt']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.traitement') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Traitement', ['t.traitement']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.nombre') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Nombre', ['t.nombre']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.numLot') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'N° / Lot', ['t.numLot']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.verificateur') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Vérificateur', ['t.verificateur']) }}
+
+                            </th>
+
+                            <th class='{% if traitements.isSorted('t.retour') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(traitements, 'Retour', ['t.retour']) }}
+
+                            </th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for traitement in traitements %}
+
+                            <tr>
+
+                                <td class="traitement">
+
+                                    <a href="{{ path('editTraitement', {id: traitement.id}) }}">
+
+                                        {{ traitement.attributionAt|date('d/m/Y') }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+                                        {{ (traitement.priseAt != null) ? traitement.priseAt|date('d/m/Y') : '' }}
+                                </td>
+
+                                <td>
+                                        {{ (traitement.peremptionAt != null) ? traitement.peremptionAt|date('d/m/Y') : '' }}
+                                </td>
+
+                                <td>
+                                    {{ traitement.traitement }}
+                                    {% if traitement.retour and traitement.traitement != null  %}
+                                        / {{ traitement.traitementRetour }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ traitement.nombre }}
+                                    {% if traitement.retour and traitement.nombre != null  %}
+                                        / {{ traitement.nombreRetour }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ traitement.numLot }}
+                                    {% if traitement.retour and traitement.numLot != null %}
+                                        / {{ traitement.numLotRetour }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ traitement.verificateur }}
+                                    {% if traitement.retour and traitement.verificateur != null %}
+                                        / {{ traitement.verificateurRetour }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if traitement.retour %}
+                                        Oui
+                                        {% if traitement.retourAt != null %}
+                                            - {{ traitement.retourAt|date('d/m/Y') }}
+                                        {% endif %}
+                                    {% else %}
+                                        Non
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(traitements) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

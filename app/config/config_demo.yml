@@ -1,0 +1,24 @@
+imports:
+    - { resource: config.yml }
+    - { resource: parameters_demo.yml }
+
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: error
+            handler: nested
+        nested:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+        console:
+            type: console
+            process_psr_3_messages: false
+
+            
+doctrine:
+    orm:
+        auto_generate_proxy_classes:  true # <- change to true
+        proxy_dir:            '%kernel.cache_dir%/doctrine/orm/Proxies'
+        proxy_namespace:      Proxies

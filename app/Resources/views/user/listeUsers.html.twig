@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Utilisateurs - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des utilisateurs
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Utilisateurs' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addUser') }}">Ajouter <i
+                                class="fa fa-plus mr-1"></i></a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ users.getTotalItemCount }} utilisateurs trouvé(s)
+
+                        </div>
+
+                        <input class="search liste-users-recherche form-control form-control-sm mr-2" autocomplete="off"
+                               type="text" id='input-recherche' value='{{ app.request.get("recherche") }}'
+                               name="recherche" placeholder="Rechercher un utilisateur / Filtrer"
+                               aria-label="Rechercher un utilisateur">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+    
+    {% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h4 class="text-center">Liste des utilisateurs</h4>
+
+                    {# Flash Messages #}
+                    {% if app.session is not null and app.session.started %}
+
+                        {% for label, messages in app.session.flashbag.all %}
+
+                            {% for message in messages %}
+
+                                <div class="alert alert-{{ label }}">{{ message }}</div>
+
+                            {% endfor %}
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                    {# Liste des Utilisateurs #}
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if users.isSorted('p.username') %}sorted{% endif %}' data-sort="user">
+
+                                {{ knp_pagination_sortable(users, 'Pseudonyme', ['p.username']) }}
+
+                            </th>
+
+                            <th class='{% if users.isSorted('p.email') %}sorted{% endif %}' data-sort="user">
+
+                                {{ knp_pagination_sortable(users, 'Adresse email', ['p.email']) }}
+
+                            </th>
+
+                            <th class='{% if users.isSorted('p.roles') %}sorted{% endif %}' data-sort="user">
+
+                                {{ knp_pagination_sortable(users, 'Rôles', ['p.roles']) }}
+
+                            </th>
+
+                            <th class='{% if users.isSorted('p.enabled') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(users, 'Activé', ['p.enabled']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for user in users %}
+
+                            <tr>
+
+                                <td>
+
+                                    <a href="{{ path('editUser', { id : user.id }) }}">
+
+                                        {{ user.username }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+
+                                    <a href="mailto:{{ user.email }}">
+
+                                        {{ user.email }}
+
+                                    </a>
+
+                                </td>
+
+                                <td>
+
+                                    {% if  "ROLE_ADMIN" in user.roles %}Admin
+
+                                    {% elseif "ROLE_ARC" in user.roles %}Arc
+
+                                    {% else %}Visio
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if user.enabled %}
+
+                                        <i class="fa fa-circle actualite-ok"></i>
+
+                                    {% else %}
+
+                                        <i class="fa fa-circle actualite-ko"></i>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(users) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

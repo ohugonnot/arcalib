@@ -1,0 +1,1154 @@
+{% extends 'base.html.twig' %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre SEO #}
+            {% block seo_title %}Recherche - ArcOffice{% endblock seo_title %}
+
+            {# Description SEO #}
+            {% block seo_description %}{% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-recherche arcoffice-coherence-data{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Recherche' } %}{% endembed %}
+
+    {% endblock fil_ariane %}
+	
+	{# Contenu #}
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main" id="rechercheAdvanced">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Recherche #}
+                    <div class="col col-recherche">
+
+                        <div class="row">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs w-100" role="tablist">
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link active d-flex" data-toggle="tab"
+                                       href="#block-recherche-protocole" role="tab" aria-selected="true"><i
+                                                class="fa fa-folder-open  mr-2"></i>Protocole</a>
+
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link d-flex" data-toggle="tab" href="#block-recherche-patient"
+                                       role="tab" aria-selected="true"><img class="mr-1"
+                                                                            src="{{ asset('/dist/img/icones/patient.png') }}"
+                                                                            alt="patients"> Patient
+                                    </a>
+
+
+                                </li>
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link d-flex" data-toggle="tab" href="#block-recherche-medecin"
+                                       role="tab" aria-selected="true"><i class="fa fa-stethoscope mr-2"></i>Médecin</a>
+
+                                </li>
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link d-flex" data-toggle="tab" href="#block-recherche-annuaire"
+                                       role="tab" aria-selected="true"><i class="fa fa-address-card-o mr-2"></i>Annuaire</a>
+
+                                </li>
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link d-flex" data-toggle="tab" href="#block-recherche-service"
+                                       role="tab" aria-selected="true"><i class="fa fa-sitemap mr-2"></i>Service</a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content w-100">
+
+                            {# Recherche par protocole ----------------------------------------------------------#}
+                            <div class="tab-pane active" id="block-recherche-protocole" role="tabpanel"
+                                 aria-labelledby="block-recherche-protocole">
+
+                                <h2 class="form-title d-flex align-items-center">
+
+                                    Rechercher un protocole
+
+                                </h2>
+
+                                {# Formulaire de recherche #}
+                                <form class="form-inline mb-2">
+
+
+                                    <div class="form-group">
+
+                                        <label class="mr-2" for="recherche-protocole-nom-mot-clef">Par Nom / Mots
+                                            clefs</label>
+
+                                        <input class="form-control form-control-sm recherche-protocole-nom-mot-clef"
+                                               id="recherche-nom-mot-clef" v-model='essai.query' type="text" value=""
+                                               placeholder="">
+
+                                    </div>
+
+                                    <div class="form-group ml-3">
+
+                                        <label class="mr-2" for="recherche-protocole-statut">Par Statut</label>
+
+                                        <select class="recherche-protocole-statut form-control form-control-sm"
+                                                id="recherche-statut" @change="searchEssais"
+                                                v-model='essai.filters.statut' name="statut">
+
+                                            <option value=''>Tous</option>
+
+                                            {% for value in constant('AppBundle\\Entity\\Essais::STATUT') %}
+
+                                                <option>{{ value }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="searchEssais">
+
+                                        <i class="fa fa-search"></i>
+
+                                    </button>
+
+                                </form>
+
+                                {# Résultats #}
+                                <table v-if='essai.results.length > 0'
+                                       class="recherche-protocole-resultat table table-sm" id="listeEssais" v-cloak>
+
+                                    {# Compteur #}
+                                    <div v-if='essai.results.length > 0' v-cloak>
+
+                                        <div class="arcoffice-count m-0" v-if='essai.results.length < 25'>[[
+                                            essai.results.length ]] protocole(s) trouvé(s)
+                                        </div>
+
+                                        <div class="arcoffice-count" v-else>Plus de [[ essai.results.length ]]
+                                            protocole(s) trouvé(s), veuillez affiner votre recherche.
+                                        </div>
+
+                                    </div>
+
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th @click="orderBy('nom', 'essai')">
+
+                                            Nom
+                                            <i v-bind:class='[essai.order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('statut', 'essai')">
+
+                                            Statut <i
+                                                    v-bind:class='[essai.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('inclusions', 'essai')">
+
+                                            Nb. d'inclusions/ Objectif <i
+                                                    v-bind:class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('inclusions', 'essai')">
+
+                                            Médecin référent <i
+                                                    v-bind:class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody v-for="essai in essaisFiltered">
+
+                                    <tr>
+
+                                        <td>
+
+                                            <a :href="linkEssai(essai)">[[ essai.nom ]]</a>
+
+                                        </td>
+
+                                        <td>[[ essai.statut ]]</td>
+
+
+                                        <td>
+
+                                            <span v-if='essai.inclusions != null'>[[ essai.inclusions.length ]] / [[ essai.objectif ]]</span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span v-if='essai.medecin != null'>[[ essai.medecin.nom ]] [[ essai.medecin.prenom ]]</span>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr class='tags'>
+
+                                        <td></td>
+
+                                        <td colspan="3">
+
+                                            <ul class="recherche-tags list-inline mb-0">
+
+                                                <li class="list-inline-item" v-for="tag in essai.tags">[[ tag.nom ]]
+                                                </li>
+
+                                            </ul>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                                <div v-if="essai.noResult" v-cloak>
+
+                                    <p>Aucun résultat ne correspond à votre recherche.</p>
+
+                                </div>
+
+                            </div>
+
+                            {# Recherche par patient ----------------------------------------------------------#}
+                            <div class="tab-pane" id="block-recherche-patient" role="tabpane2"
+                                 aria-labelledby="block-recherche-patient">
+
+                                <h2 class="form-title d-flex align-items-center">
+
+                                    Rechercher un patient
+
+                                </h2>
+
+                                {# Formulaire de recherche #}
+                                <form class="form-inline mb-2">
+
+
+                                    <div class="form-group">
+
+                                        <label class="mr-2" for="recherche-patient-nom">Par Nom / Prénom</label>
+
+                                        <input class="recherche-patient-nom form-control form-control-sm"
+                                               id="recherche-patient-nom" v-model='patient.query' type="text" value="">
+
+                                    </div>
+
+                                    <div class="form-group ml-3">
+
+                                        <label class="mr-2" for="recherche-patient-statut">Par Statut</label>
+
+                                        <select class="recherche-patient-statut form-control form-control-sm"
+                                                @change='searchPatients' v-model='patient.filters.statut' name="statut"
+                                                id="recherche-patient-statut">
+
+                                            <option value=''>Tous</option>
+
+                                            {% for value in constant('AppBundle\\Entity\\Inclusion::STATUT') %}
+
+                                                <option>{{ value }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="searchPatients">
+
+                                        <i class="fa fa-search"></i>
+
+                                    </button>
+
+                                </form>
+
+                                {# Résultats #}
+                                <table v-if='patient.results.length > 0'
+                                       class="recherche-patient-resultat table table-sm" id="" v-cloak>
+
+                                    {# Compteur #}
+                                    <div v-if='patient.results.length > 0' v-cloak>
+
+                                        <div class="arcoffice-count m-0" v-if='patient.results.length < 25'>[[
+                                            patient.results.length ]] patient(s) trouvé(s)
+                                        </div>
+
+                                        <div class="arcoffice-count" v-else>Plus de [[ patient.results.length ]]
+                                            patient(s) trouvé(s), veuillez affiner votre recherche.
+                                        </div>
+
+                                    </div>
+
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th @click="orderBy('nom', 'patient')">
+
+                                            Nom
+                                            <i v-bind:class='[patient.order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('nomNaissance', 'patient')">
+
+                                            Nom Naissance <i
+                                                    v-bind:class='[patient.order.nomNaissance == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('datNai', 'patient')">
+
+                                            Date Naissance <i
+                                                    v-bind:class='[patient.order.datNai == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th>
+
+                                            Protocole(s)
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody v-for="patient in patientsFiltered">
+
+                                    <tr>
+
+                                        <td>
+
+                                            <a :href="linkPatient(patient)">[[ patient.nom ]] [[ patient.prenom ]]</a>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a :href="linkPatient(patient)">[[ patient.nomNaissance ]]</a>
+
+                                        </td>
+
+                                        <td v-if='patient.datNai != null'>
+
+                                            [[ patient.datNai.date | date ]]
+
+                                        </td>
+
+                                        <td>
+
+												<span v-for="inclusion in patient.inclusions">
+
+														<span v-if='inclusion.essai != null'><a
+                                                                    :href="linkEssai(inclusion.essai)">[[ inclusion.essai.nom ]]</a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+												</span>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                                <div v-if="patient.noResult" v-cloak>
+
+                                    <p>Aucun résultat ne correspond à votre recherche.</p>
+
+                                </div>
+
+                            </div>
+
+                            {# Recherche par Medecin ----------------------------------------------------------#}
+
+                            <div class="tab-pane" id="block-recherche-medecin" role="tabpane3"
+                                 aria-labelledby="block-recherche-medecin">
+
+                                <h2 class="form-title d-flex align-items-center">
+
+                                    Recherche par médecin
+
+                                </h2>
+
+                                {# Formulaire de recherche #}
+                                <form class="form-inline mb-2">
+
+                                    <div class="form-group">
+
+                                        <label class="mr-2" for="recherche-medecin-nom">Par nom du médecin </label>
+
+                                        <input class="recherche-medecin-nom form-control form-control-sm"
+                                               id="recherche-medecin-nom" v-model='medecin.query' type="text" value="">
+
+                                    </div>
+
+                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="searchMedecin">
+
+                                        <i class="fa fa-search"></i>
+
+                                    </button>
+
+                                </form>
+
+                                {# Résultats #}
+                                <table v-if='medecin.results.length > 0'
+                                       class="recherche-medecin-resultat table table-sm" id="" v-cloak>
+
+                                    {# Compteur #}
+                                    <div v-if='medecin.results.length > 0' v-cloak>
+
+                                        <div class="arcoffice-count m-0" v-if='medecin.results.length < 25'>[[
+                                            medecin.results.length ]] medecin(s) trouvé(s)
+                                        </div>
+
+                                        <div class="arcoffice-count" v-else>Plus de [[ medecin.results.length ]]
+                                            medecin(s) trouvé(s), veuillez affiner votre recherche.
+                                        </div>
+
+                                    </div>
+
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th @click="orderBy('nom', 'medecin')">
+
+                                            Nom
+                                            <i v-bind:class='[medecin.order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                        <th {# @click="orderBy('inclusions', 'medecin')" #}>
+
+                                            {# Patient - Protocole - Inclusion (date, statut) <i v-bind:class='[medecin.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]' class="fa"></i> #}
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody v-for="medecin in medecinsFiltered">
+
+                                    <tr>
+
+                                        <td>
+
+                                            <a :href="linkMedecin(medecin)">[[ medecin.nom ]] [[ medecin.prenom ]]</a>
+
+                                        </td>
+
+                                        <td>
+
+                                            <table v-if='medecin.inclusions'
+                                                   class="w-100 recherche-medecin-resultat-sub">
+
+                                                <thead>
+
+                                                <tr>
+
+                                                    <th>Patient</th>
+
+                                                    <th>Protocole</th>
+
+                                                    <th {# @click="orderBy('inclusions', 'medecin')" #}>
+
+                                                        Inclusion (date,
+                                                        statut) {# <i v-bind:class='[medecin.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]' class="fa"> #}</i>
+
+                                                    </th>
+
+                                                </tr>
+
+                                                </thead>
+
+                                                <tr v-if='inclusion.patient && inclusion.essai'
+                                                    v-for='inclusion in medecin.inclusions'>
+
+                                                    <td>
+
+                                                        <a :href="linkInclusion(inclusion)">
+                                                            [[ inclusion.patient.nom ]] [[ inclusion.patient.prenom ]]
+                                                        </a>
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        <a :href="linkEssai(inclusion.essai)">
+                                                            [[ inclusion.essai.nom ]]
+                                                        </a>
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        <span v-if='inclusion.datInc && inclusion.statut == "{{ constant("AppBundle\\Entity\\Inclusion::OUI_EN_COURS") }}" '>[[ inclusion.datInc.date | date ]]</span>
+
+                                                        <span v-if='inclusion.datScr && inclusion.statut == "{{ constant("AppBundle\\Entity\\Inclusion::SCREEN") }}"'>[[ inclusion.datScr.date | date ]]</span>
+
+                                                        <span>[[ inclusion.statut ]]</span>
+
+                                                    </td>
+
+                                                </tr>
+
+                                            </table>
+
+                                            {# <ul>
+                                                <li v-if='inclusion.patient && inclusion.essai' v-for='inclusion in medecin.inclusions'>
+                                                    <a :href="linkInclusion(inclusion)">
+                                                        [[ inclusion.patient.nom ]] [[ inclusion.patient.prenom ]]
+                                                    </a>
+                                                    -
+                                                    <a :href="linkEssai(inclusion.essai)">
+                                                        [[ inclusion.essai.nom ]]
+                                                    </a>
+                                                    -
+                                                    <span v-if='inclusion.datInc'>[[ inclusion.datInc.date | date ]], </span>
+                                                    [[ inclusion.statut ]]
+                                                </li>
+
+                                            </ul>
+                                                 #}
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                                <div v-if="medecin.noResult" v-cloak>
+
+                                    <p>Aucun résultat ne correspond à votre recherche.</p>
+
+                                </div>
+
+                            </div>
+
+                            {# Recherche dans l'annuaire ---------------------------------------------------------------------------------#}
+
+                            <div class="tab-pane" id="block-recherche-annuaire" role="tabpane4"
+                                 aria-labelledby="block-recherche-annuaire">
+
+                                <h2 class="form-title d-flex align-items-center">
+
+                                    Rechercher dans l'annuaire
+                                </h2>
+
+                                {# Formulaire de recherche #}
+                                <form class="form-inline mb-2">
+
+                                    <div class="form-group">
+
+                                        <label class="mr-2" for="recherche-annuaire-nom">Par Nom / Prénom /
+                                            Société </label>
+
+                                        <input class="recherche-annuaire-nom form-control form-control-sm"
+                                               id="recherche-annuaire-nom" v-model='annuaire.query' type="text"
+                                               value="">
+
+                                    </div>
+
+                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="searchAnnuaire">
+
+                                        <i class="fa fa-search"></i>
+
+                                    </button>
+
+                                </form>
+
+                                {# Résultats #}
+                                <table v-if='annuaire.results.length > 0'
+                                       class="recherche-annuaire-resultat table table-sm" id="" v-cloak>
+
+                                    {# Compteur #}
+                                    <div v-if='annuaire.results.length > 0' v-cloak>
+
+                                        <div class="arcoffice-count m-0" v-if='annuaire.results.length < 25'>[[
+                                            annuaire.results.length ]] contact(s) trouvé(s)
+                                        </div>
+
+                                        <div class="arcoffice-count" v-else>Plus de [[ annuaire.results.length ]]
+                                            contact(s) trouvé(s), veuillez affiner votre recherche.
+                                        </div>
+
+                                    </div>
+
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th @click="orderBy('nom', 'annuaire')">
+
+                                            Nom
+                                            <i v-bind:class='[annuaire.order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('societe', 'annuaire')">
+
+                                            Société <i
+                                                    v-bind:class='[annuaire.order.societe == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('fonction', 'annuaire')">
+
+                                            Fonction <i
+                                                    v-bind:class='[annuaire.order.fonction == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('telephone', 'annuaire')">
+
+                                            Téléphone <i
+                                                    v-bind:class='[annuaire.order.telephone == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('mail', 'annuaire')">
+
+                                            Mail
+                                            <i v-bind:class='[annuaire.order.mail == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody v-for="annuaire in annuairesFiltered">
+
+                                    <tr>
+
+                                        <td>
+
+                                            <a :href="linkAnnuaire(annuaire)">[[ annuaire.nom ]] [[ annuaire.prenom
+                                                ]]</a>
+
+                                        </td>
+
+                                        <td>
+
+                                            [[ annuaire.societe ]]
+
+                                        </td>
+
+
+                                        <td>
+
+                                            [[ annuaire.fonction ]]
+
+                                        </td>
+
+                                        <td>
+
+                                            <a :href="'tel:'+annuaire.telephone">[[ annuaire.telephone ]]</a>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a :href="'mailto:'+annuaire.mail">[[ annuaire.mail ]]</a>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                                <div v-if="annuaire.noResult" v-cloak>
+
+                                    <p>Aucun résultat ne correspond à votre recherche.</p>
+
+                                </div>
+
+                            </div>
+
+                            {# Recherche par service #}
+                            <div class="tab-pane" id="block-recherche-service" role="tabpane5"
+                                 aria-labelledby="block-recherche-service">
+
+                                <h2 class="form-title d-flex align-items-center">
+
+                                    Rechercher par service
+                                </h2>
+
+
+                                {# Formulaire de recherche #}
+                                <form class="form-inline mb-2">
+
+                                    <div class="form-group">
+
+                                        <label class="mr-2" for="recherche-service">Par Service</label>
+
+                                        <select class="recherche-protocole-service form-control form-control-sm"
+                                                id="recherche-service" @change="searchByService" v-model='service'
+                                                name="service">
+
+                                            <option value='' selected="selected">Tous</option>
+
+                                            {% for service in services %}
+
+                                                <option value='{{ service.id }}'>{{ service.nom }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+
+                                    </div>
+
+                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="searchByService">
+
+                                        <i class="fa fa-search"></i>
+
+                                    </button>
+
+                                </form>
+
+                                {# Résultats #}
+                                <table v-if='essai.results.length > 0'
+                                       class="recherche-protocole-resultat table table-sm" id="listeEssais" v-cloak>
+
+                                    {# Compteur #}
+                                    <div v-if='essai.results.length > 0' v-cloak>
+
+                                        <div class="arcoffice-count m-0" v-if='essai.results.length < 25'>[[
+                                            essai.results.length ]] protocole(s) trouvé(s)
+                                        </div>
+
+                                        <div class="arcoffice-count" v-else>Plus de [[ essai.results.length ]]
+                                            protocole(s) trouvé(s), veuillez affiner votre recherche.
+                                        </div>
+
+                                    </div>
+
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th @click="orderBy('nom', 'essai')">
+
+                                            Nom
+                                            <i v-bind:class='[essai.order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('statut', 'essai')">
+
+                                            Statut <i
+                                                    v-bind:class='[essai.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('inclusions', 'essai')">
+
+                                            Nb. d'inclusions/ Objectif <i
+                                                    v-bind:class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('inclusions', 'essai')">
+
+                                            Médecin référent <i
+                                                    v-bind:class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody v-for="essai in essaisFiltered">
+
+                                    <tr>
+
+                                        <td>
+
+                                            <a :href="linkEssai(essai)">[[ essai.nom ]]</a>
+
+                                        </td>
+
+                                        <td>[[ essai.statut ]]</td>
+
+
+                                        <td>
+
+                                            <span v-if='essai.inclusions != null'>[[ essai.inclusions.length ]] / [[ essai.objectif ]]</span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span v-if='essai.medecin != null'>[[ essai.medecin.nom ]] [[ essai.medecin.prenom ]]</span>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr class='tags'>
+
+                                        <td></td>
+
+                                        <td colspan="3">
+
+                                            <ul class="recherche-tags list-inline mb-0">
+
+                                                <li class="list-inline-item" v-for="tag in essai.tags">[[ tag.nom ]]
+                                                </li>
+
+                                            </ul>
+
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                                <div v-if="essai.noResult" v-cloak>
+
+                                    <p>Aucun résultat ne correspond à votre recherche.</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {# Actualités------------------------------------------------------------------------------------------------ #}
+
+                    <div class="col-3 col-xl-4 col-actualites">
+
+                        <h2 class="form-title d-flex align-items-center mb-0">
+
+                            <i class="fa fa-newspaper-o mr-2"></i> Actualités
+
+                        </h2>
+
+                        <div class="recherche-actualites">
+
+                            {% for actualite in actualites %}
+
+                                <article>
+
+                                    <div class="titre">{{ actualite.titre }}</div>
+
+                                    <div class="date">{{ actualite.date is empty ? "" : actualite.date|date('d/m/Y') }}</div>
+
+                                    <div class="description">
+
+                                        <p>{{ actualite.text|raw|nl2br }}</p>
+
+                                    </div>
+
+                                </article>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                    {# Liens favoris------------------------------------------------------------------------------------------------ #}
+
+                    <div class="col-3 col-xl-1 col-links">
+
+                        <h2 class="form-title d-flex align-items-center mb-0">
+
+                            <i class="fa fa-external-link mr-2"></i> Liens
+
+                        </h2>
+
+                        {% if app.user %}
+
+                            <a href="{{ path('listeAnnuaires') }}" class="d-flex justify-content-center title-tooltip"
+                               title="Adresses">
+
+                                <i class="fa fa-address-card-o fa-2x"></i>
+
+                            </a>
+
+                            <a href="{{ path('analyseGraphique') }}" class="d-flex justify-content-center title-tooltip"
+                               title="Graphiques">
+
+                                <i class="fa fa-bar-chart fa-2x"></i>
+
+                            </a>
+
+                            <a href="{{ path('listeMedecins') }}" class="d-flex justify-content-center title-tooltip"
+                               title="Médecins">
+
+                                <i class="fa fa-user-md fa-2x" aria-hidden="true"></i>
+
+                            </a>
+
+                        {% endif %}
+
+                        <a href="http://arceraa.forumactif.com/" target="_blank"
+                           class="d-flex justify-content-center title-tooltip" title="Forum">
+
+                            <i class="fa fa-comments-o fa-2x mr-1" aria-hidden="true"></i>
+
+                        </a>
+
+                        <a href="https://www.arcenregion.net/" target="_blank"
+                           class="d-flex justify-content-center title-tooltip" title="Arcenregion">
+
+                            <i class="fa fa-handshake-o fa-2x" aria-hidden="true"></i>
+
+                        </a>
+
+                        <a href="http://www.e-cancer.fr/Professionnels-de-la-recherche/Recherche-clinique/Le-registre-des-essais-cliniques/Le-registre-des-essais-cliniques"
+                           target="_blank" class="d-flex justify-content-center title-tooltip" title="Registre inca">
+
+                            <i class="fa fa-flask fa-2x" aria-hidden="true"></i>
+
+                        </a>
+
+                        <a href="https://pacs.norimagerie.com/" target="_blank"
+                           class="d-flex justify-content-center title-tooltip" title="Radiologie">
+
+                            <img src="{{ asset('/dist/img/icones/radiologie.svg') }}" alt="radiologie">
+
+                        </a>
+
+
+                        <a href="https://www.vidal.fr/" target="_blank"
+                           class="d-flex justify-content-center title-tooltip" title="Vidal">
+
+                            <img src="{{ asset('/dist/img/icones/pill.svg') }}" alt="Vidal">
+
+                        </a>
+
+                        <a href="https://clinicaltrials.gov/" target="_blank"
+                           class="d-flex justify-content-center title-tooltip" title="clinical trial">
+
+                            <img src="{{ asset('/dist/img/icones/blood-sample.svg') }}" alt="Clinical trial">
+
+                        </a>
+
+                    </div>
+
+                    {# Modal de message d'accueil/ vistes du jour ------------------------------------------------------------#}
+
+                    {% if app.session.get("modalNewVisites") and app.user.rulesProtocole is defined and app.user.rulesProtocole != "np" %}
+
+                        {{ app.session.set("modalNewVisites", true) }}
+
+                        <div class="modal fade" id="messageAccueil" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Visite(s) du jour</h5>
+
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <p>Bonjour {{ app.user.username }}, les visites qui arrivent :</p>
+
+
+                                        <ul>
+
+                                            {% for index, visites in visiteForweek %}
+
+                                                <li>
+
+                                                    {% if visites == [] %}
+
+                                                        <a data-date='{{ index }}' href="#" class='changeDay'>Aujourd'hui
+                                                            <span class="badge badge-info">{{ visites|length }}</span></a>
+
+                                                    {% else %}
+
+                                                        <a data-date='{{ index }}' href="#" class='changeDay'>
+
+                                                            {% if  visites[0] is defined and "now"|date("m/d/Y") == visites[0].date|date("m/d/Y") %}
+
+                                                                Aujourd'hui
+
+                                                            {% else %}
+
+                                                                {{ visites[0].date|localizeddate('full', 'none')|capitalize }}
+
+                                                            {% endif %}
+
+                                                            <span class="badge badge-info">{{ visites|length }}</span>
+                                                        </a>
+
+                                                    {% endif %}
+
+                                                </li>
+
+                                            {% endfor %}
+
+                                        </ul>
+
+                                        <hr>
+
+                                        {% for index, visites in visiteForweek %}
+
+                                            <div style='display:none;' class='visite-popup {{ index }}'>
+
+                                                {{ visites|length }} visite(s) pour
+                                                {% if   visites[0] is defined and "now"|date("m/d/Y") == visites[0].date|date("m/d/Y") %}
+                                                    aujourd'hui.
+                                                {% elseif  visites is not empty %}
+                                                    {{ visites[0].date|localizeddate('full', 'none') }}.
+                                                {% else %}
+                                                    aujourd'hui.
+                                                {% endif %}
+
+                                                {% if visites|length == 0 %}
+                                                    <div class="alert alert-success">Pas de visite programmée
+                                                        aujourd'hui.<br> Vérifier sur l'agenda.
+                                                    </div>{% endif %}
+
+                                                <ul>
+                                                    {% for    visite in visites %}
+                                                        {% set id_inclusion = null %}
+                                                        <li>
+
+                                                            {% if visite.inclusion.patient != null %}
+                                                                <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion }) }}">
+                                                                    {{ visite.inclusion.patient.nom }} {{ visite.inclusion.patient.prenom }}
+                                                                </a>
+                                                            {% endif %}
+
+                                                            {% if visite.inclusion != null %}
+                                                                {% set id_inclusion = visite.inclusion.id %}
+                                                                {% if visite.inclusion.essai %}
+                                                                    {% set archive = visite.inclusion.essai.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") %}
+                                                                    {# <a href="{{ path("protocole", {id: visite.inclusion.essai.id, archive: archive }) }}">#}
+                                                                    - {{ visite.inclusion.essai.nom }}
+                                                                    {# </a> #}
+                                                                {% endif %}
+
+
+                                                                - {{ visite.type }} -  {{ visite.calendar }} - {{ visite.statut }} -
+
+                                                                {% if visite.arc != null %}
+                                                                    {{ visite.arc.nomArc }}
+                                                                {% endif %}
+
+
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}
+
+	{% block javascripts %}
+
+        {{ parent() }}
+
+        <script>
+            $(document).ready(function () {
+                var today = '{{ 'now'|date("Y-m-d") }}';
+                $(".visite-popup." + today).show();
+                $(document).on('click', '.changeDay', function (event) {
+                    event.preventDefault();
+                    var date = $(this).data("date");
+                    $(".visite-popup").hide();
+                    $(".visite-popup." + date).show();
+                });
+
+            });
+        </script>
+
+    {% endblock %}
