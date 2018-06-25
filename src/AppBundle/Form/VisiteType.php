@@ -28,11 +28,9 @@ class VisiteType extends AbstractType
         $builder
             ->add('date', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date visite"
             ))
             ->add('type', ChoiceType::class, array(
@@ -50,34 +48,22 @@ class VisiteType extends AbstractType
             ->add('numfact', TextType::class, ["required" => false, 'label' => 'N°facture'])
             ->add('note', TextareaType::class, ["required" => false, 'label' => 'Notes'])
             ->add('arc', EntityType::class, array(
-                // query choices from this entity
                 'class' => Arc::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('a')
                         ->orderBy('a.nomArc', 'ASC');
                 },
-                // use the User.username property as the visible option string
                 'choice_label' => 'nomArc',
                 'required' => false,
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                // 'expanded' => true,
             ))
             ->add('inclusion', EntityType::class, array(
-                // query choices from this entity
                 'class' => Inclusion::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->orderBy('i.id', 'ASC');
                 },
-                // use the User.username property as the visible option string
                 'choice_label' => 'id',
                 'required' => true,
-
-
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                // 'expanded' => true,
             ))
 //--------------------------------------------------------------BOUTONS--------------------------------------------------------------
             ->add('envoyer', SubmitType::class, array(

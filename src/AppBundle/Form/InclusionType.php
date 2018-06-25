@@ -34,11 +34,9 @@ class InclusionType extends AbstractType
                 },
                 'choice_label' => 'NomPrenom',
                 'required' => false,
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient
                 'attr' => ["class" => "js-select2"],
             ))
             ->add('essai', EntityType::class, array(
-
                 'class' => Essais::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('e')
@@ -46,22 +44,18 @@ class InclusionType extends AbstractType
                 },
                 'choice_label' => 'nom',
                 'required' => false,
-
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient  
                 'attr' => ["class" => "js-select2"],
             ))
             ->add('statut', ChoiceType::class, array(
-
                 'choices' => Inclusion::STATUT,
                 'label' => "Statut",
-
             ))
             ->add('datScr', DateType::class, array(
                 'widget' => 'single_text',
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date Screen"
             ))
             ->add('datCst', DateType::class, array(
@@ -69,7 +63,7 @@ class InclusionType extends AbstractType
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date Consentement"
             ))
             ->add('datInc', DateType::class, array(
@@ -77,7 +71,7 @@ class InclusionType extends AbstractType
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date Inclusion"
             ))
             ->add('datRan', DateType::class, array(
@@ -85,7 +79,7 @@ class InclusionType extends AbstractType
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date Randomisation"
             ))
             ->add('datJ0', DateType::class, array(
@@ -93,62 +87,47 @@ class InclusionType extends AbstractType
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date J0"
             ))
             ->add('numInc', TextType::class, ["required" => false, 'label' => 'N° inclusion'])
             ->add('braTrt', TextType::class, ["required" => false, 'label' => 'Bras TT'])
             ->add('datOut', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date sortie d'etude"
             ))
             ->add('motifSortie', ChoiceType::class, array(
                 'choices' => Inclusion::MOTIF_SORTIE,
                 'label' => "Motif de la sortie",
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche
                 'attr' => ["class" => "js-select2"],
             ))
             ->add('note', TextareaType::class, ["required" => false, 'label' => 'Notes'])
 // -------------Variables liés a d'autres tables------------------------------------------------------------------------
 
             ->add('medecin', EntityType::class, array(
-                // query choices from this entity
                 'class' => Medecin::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('m')
                         ->orderBy('m.nom', 'ASC');
                 },
-                // use the User.username property as the visible option string
                 'choice_label' => 'NomPrenom',
                 'required' => false,
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                // 'expanded' => true,
                 'label' => "Médecin référent",
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche
                 'attr' => ["class" => "js-select2"],
             ))
             ->add('arc', EntityType::class, array(
-                // query choices from this entity
                 'class' => Arc::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('a')
                         ->orderBy('a.nomArc', 'ASC');
                 },
-                // use the User.username property as the visible option string
                 'choice_label' => 'nomArc',
                 'required' => false,
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                // 'expanded' => true,
                 'label' => "ARC référent",
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche
                 'attr' => ["class" => "js-select2"],
             ))
             /**->add('visites', EntityType::class, array(

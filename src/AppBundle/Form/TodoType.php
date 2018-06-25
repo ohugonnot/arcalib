@@ -63,9 +63,6 @@ class TodoType extends AbstractType
                     "required" => true,
                     "multiple" => false,
                     'choices' => Todo::IMPORTANCE,
-                    'choice_label' => function ($IMPORTANCE) {
-                        return $IMPORTANCE;
-                    },
                     "disabled" => true
                 ))
                 ->add('alerte', CheckboxType::class, array(
@@ -75,23 +72,19 @@ class TodoType extends AbstractType
                 ))
                 ->add('dateAlerte', DateType::class, array(
                     'widget' => 'single_text',
-                    // do not render as type="date", to avoid HTML5 date pickers
                     "required" => false,
                     'html5' => false,
                     'format' => 'dd/MM/yyyy',
-                    // add a class that can be selected in JavaScript
-                    'attr' => ['class' => 'js-datepicker'],
+                    'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                     'label' => "Date de l'alerte",
                     "disabled" => true
                 ))
                 ->add('dateFin', DateType::class, array(
                     'widget' => 'single_text',
-                    // do not render as type="date", to avoid HTML5 date pickers
                     "required" => false,
                     'html5' => false,
                     'format' => 'dd/MM/yyyy',
-                    // add a class that can be selected in JavaScript
-                    'attr' => ['class' => 'js-datepicker'],
+                    'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                     'label' => "Date de l'échéance",
                     "disabled" => true
                 ));
@@ -113,16 +106,13 @@ class TodoType extends AbstractType
                 ))
                 ->add('dateAlerte', DateType::class, array(
                     'widget' => 'single_text',
-                    // do not render as type="date", to avoid HTML5 date pickers
                     "required" => false,
                     'html5' => false,
                     'format' => 'dd/MM/yyyy',
-                    // add a class that can be selected in JavaScript
-                    'attr' => ['class' => 'js-datepicker'],
+                    'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                     'label' => "Date de l'alerte"
                 ))
                 ->add('destinataires', EntityType::class, array(
-
                     'class' => User::class,
                     'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('u')
@@ -135,22 +125,16 @@ class TodoType extends AbstractType
                     'expanded' => true,
                     'multiple' => true,
                     'required' => true,
-
-                    //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient
-                    // 'attr' => ["class" => "js-select2"],
                     'attr' => ["class" => "bloc-notes-destinataires"],
                 ))
                 ->add('dateFin', DateType::class, array(
                     'widget' => 'single_text',
-                    // do not render as type="date", to avoid HTML5 date pickers
                     "required" => false,
                     'html5' => false,
                     'format' => 'dd/MM/yyyy',
-                    // add a class that can be selected in JavaScript
-                    'attr' => ['class' => 'js-datepicker'],
+                    'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                     'label' => "Date de l'échéance"
                 ));
-
         }
 
         $builder
@@ -162,7 +146,6 @@ class TodoType extends AbstractType
                 'choices' => Todo::NIVEAU_RESOLUTION,
             ))
             ->add('auteur', EntityType::class, array(
-
                 'class' => User::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
@@ -171,8 +154,6 @@ class TodoType extends AbstractType
                 'label' => 'Auteur',
                 'choice_label' => 'username',
                 'required' => true,
-
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient  
                 'attr' => ["class" => "js-select2"],
                 "disabled" => true,
             ))

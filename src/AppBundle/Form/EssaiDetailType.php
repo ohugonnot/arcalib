@@ -18,7 +18,7 @@ class EssaiDetailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('crInc', TextareaType::class, ["required" => false, 'label' => "Critéres d'inclusion"])// ToDO
+            ->add('crInc', TextareaType::class, ["required" => false, 'label' => "Critéres d'inclusion"])
             ->add('crNonInc', TextareaType::class, ["required" => false, 'label' => 'Critéres de NON inclusion'])
             ->add('objectif', TextareaType::class, ["required" => false, 'label' => "Objectif de l'etude"])
             ->add('calendar', TextareaType::class, ["required" => false, 'label' => 'Calendrier']);
