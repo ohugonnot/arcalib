@@ -26,12 +26,10 @@ class FactureType extends AbstractType
         $builder
             ->add('date', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date Facture"
             ))
             ->add('numero', TextType::class, ["required" => false, 'label' => 'N° Facture'])
@@ -45,7 +43,6 @@ class FactureType extends AbstractType
                 "required" => false,
                 'choices' => Facture::TYPE,
                 'label' => "Type",
-
             ))
             ->add('creditDebit', ChoiceType::class, array(
                 "required" => false,
@@ -61,22 +58,18 @@ class FactureType extends AbstractType
                 'choices' => Facture::STATUT))
             ->add('dateEncaissement', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Encaissable le"
             ))
             ->add('dateCaisse', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date Encaissement"
             ))
             ->add('note', TextareaType::class, ["required" => false, 'label' => 'Notes'])
@@ -92,8 +85,6 @@ class FactureType extends AbstractType
                 'label' => 'Protocole',
                 'choice_label' => 'nom',
                 'required' => false,
-
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient  
                 'attr' => ["class" => "js-select2"],
             ))
             ->add('responsable', TextType::class, ["required" => false, 'label' => 'Responsable facture'])

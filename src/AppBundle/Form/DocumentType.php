@@ -24,12 +24,10 @@ class DocumentType extends AbstractType
         $builder
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => true,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date"
             ])
             ->add('type', ChoiceType::class, [

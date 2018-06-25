@@ -27,15 +27,13 @@ class PatientType extends AbstractType
             ->add('nom', TextType::class, ['label' => 'Nom'])
             ->add('nomNaissance', TextType::class, ['label' => 'Nom de Naissance'])
             ->add('prenom', TextType::class, ['label' => ' Prénom'])
-            ->add('initial', TextType::class, ['label' => ' Initiales', 'disabled' => true])// défini dans l'entity, tout en bas
+            ->add('initial', TextType::class, ['label' => ' Initiales', 'disabled' => true])
 
             ->add('datNai', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date de Naissance"
             ))
             ->add('sexe', ChoiceType::class, array(
@@ -46,40 +44,31 @@ class PatientType extends AbstractType
             ->add('ipp', TextType::class, ['required' => false, 'label' => 'IPP'])
             ->add('datDiag', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'format' => 'dd/MM/yyyy',
                 'html5' => false,
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date de diagnostic"
             ))
             ->add('cancer')
             ->add('libCim10', EntityType::class, array(
-                // query choices from this entity
                 'class' => LibCim10::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('l')
                         ->where('l.utile = true')
                         ->orderBy('l.cim10code', 'ASC');
                 },
-
                 'choice_label' => 'libCourt',
                 'required' => false,
-
                 'label' => "Code CIM 10",
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un recherche d'un code
                 'attr' => ["class" => "js-select2"],
-
             ))
             ->add('txtDiag', TextareaType::class, ['required' => false, 'label' => 'Diagnostic (texte)'])
             ->add('datLast', DateType::class, array(
                 'widget' => 'single_text',
                 "required" => false,
-                // do not render as type="date", to avoid HTML5 date pickers
                 'html5' => false,
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'format' => 'dd/MM/yyyy',
                 'label' => "Date dernières nouvelles"
             ))
@@ -97,44 +86,21 @@ class PatientType extends AbstractType
                 'choices' => Patient::DECES))
             ->add('datDeces', DateType::class, array(
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'format' => 'dd/MM/yyyy',
                 'label' => "Date décès"
             ))
             ->add('medecin', EntityType::class, array(
-                // query choices from this entity
                 'class' => Medecin::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('m')
                         ->orderBy('m.nom', 'ASC');
                 },
-                // use the User.username property as the visible option string
                 'choice_label' => 'NomPrenom',
                 'required' => false,
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                // 'expanded' => true,
                 'label' => "Médecin référent"))
-            /*           ->add('inclusions', EntityType::class, array(
-                            // query choices from this entity
-                            'class' => 'AppBundle:Inclusion',
-                            'query_builder' => function ($er) {
-                                return $er->createQueryBuilder('i')
-                                    ->orderBy('i.id', 'ASC');
-                            },
-                            // use the User.username property as the visible option string
-                            'choice_label' => 'id',
-
-                            // used to render a select box, check boxes or radios
-                             'multiple' => true,
-                             'by_reference' => false,
-                             'required' => false,
-                            // 'expanded' => true,
-                        )) */
 
             ->add('memo', TextareaType::class, ['required' => false, 'label' => 'Notes'])
             // *****************************boutons***********************************************

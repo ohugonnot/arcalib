@@ -20,8 +20,6 @@ class LibCim10Type extends AbstractType
     {
         $builder
             ->add('cim10code', TextType::class, ['required' => false, 'label' => 'CIM10Code'])
-            //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient
-
             ->add('libCourt', TextType::class, ['required' => false, 'label' => 'Label Court'])
             ->add('libLong', TextareaType::class, ['required' => false, 'label' => 'Label Long'])
             ->add('utile', CheckboxType::class, ['required' => false, 'label' => 'Utile'])
