@@ -138,7 +138,7 @@
 
                             <th style="max-width: 100px;">
 
-                                Documents / Traitements
+                                Documents / Traitements / EI
 
                             </th>
 
@@ -171,7 +171,7 @@
                                 <td class="essai">
 
                                     {% if inclusion.essai != null %}
-                                        <a href="{{ path("protocole", {id: inclusion.essai.id }) }}">{{ inclusion.essai.nom }}</a>
+                                        <a href="{{ path("editEssai", {id: inclusion.essai.id }) }}">{{ inclusion.essai.nom }}</a>
                                     {% endif %}
 
                                 </td>
@@ -191,6 +191,11 @@
                                     {% if inclusion.traitements|length > 0 %}
                                         <a target="_blank" href="{{ path("listeTraitements", {id : inclusion.id}) }}" type="" title="" class="btn btn-sm btn-outline-primary title-tooltip" data-original-title="Liste des traitements">
                                             <i aria-hidden="true" class="fa fa-medkit"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if inclusion.eis|length > 0 %}
+                                        <a target="_blank" href="{{ path("listeEis", {id : inclusion.id}) }}" type="" title="" class="btn btn-sm btn-outline-primary title-tooltip" data-original-title="Liste des EIs">
+                                            <i aria-hidden="true" class="fa fa-ambulance"></i>
                                         </a>
                                     {% endif %}
                                 </td>

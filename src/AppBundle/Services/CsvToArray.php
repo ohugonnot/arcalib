@@ -2,6 +2,10 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Essais;
+use AppBundle\Entity\Facture;
+use AppBundle\Entity\Inclusion;
+use AppBundle\Entity\Patient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -143,6 +147,7 @@ class CsvToArray
 
     public function inclusions($values, $entity)
     {
+        /** @var $entity Inclusion */
         $medecinRef = ($entity->getMedecin() != null) ? $entity->getMedecin()->getNom() . ' ' . $entity->getMedecin()->getPrenom() : "";
         $service = ($entity->getService() != null) ? $entity->getService()->getNom() : "";
         $patientNomPrenom = ($entity->getPatient() != null) ? $entity->getPatient()->getNom() . ' ' . $entity->getPatient()->getPrenom() : "";
@@ -162,6 +167,7 @@ class CsvToArray
     //extractions  de la page patient
     public function patients($values, $entity)
     {
+        /** @var $entity Patient */
         $libCim10 = ($entity->getLibCim10() != null) ? $entity->getLibCim10()->getcim10code() : "";
 
         return array_merge($values, [$libCim10]);
@@ -178,6 +184,7 @@ class CsvToArray
     //extractions  de la page Essais
     public function essais($values, $entity)
     {
+        /** @var $entity Essais */
         $medecinRef = ($entity->getMedecin() != null) ? $entity->getMedecin()->getNom() . ' ' . $entity->getMedecin()->getPrenom() : "";
 
         return array_merge($values, [$medecinRef]);
@@ -192,6 +199,7 @@ class CsvToArray
     //extractions  des factures
     public function factures($values, $entity)
     {
+        /** @var $entity Facture */
         $essaiNom = ($entity->getEssai() != null) ? $entity->getEssai()->getNom() : "";
 
         return array_merge($values, [$essaiNom]);
@@ -206,6 +214,7 @@ class CsvToArray
     //extractions  des factures
     public function inclusionsProtocole($values, $entity)
     {
+        /** @var $entity Inclusion */
         $medecinRef = ($entity->getMedecin() != null) ? $entity->getMedecin()->getNom() . ' ' . $entity->getMedecin()->getPrenom() : "";
         $service = ($entity->getService() != null) ? $entity->getService()->getNom() : "";
         $patientNomPrenom = ($entity->getPatient() != null) ? $entity->getPatient()->getNom() . ' ' . $entity->getPatient()->getPrenom() : "";
@@ -216,7 +225,7 @@ class CsvToArray
 
     public function inclusionsProtocoleTitles($values, $entity)
     {
-
+        /** @var $entity Inclusion */
         return array_merge(["Patient", "Initiales", "Médecin référent de l'inclusion", "Service"], $values, $this->getEntityColumn($entity->getEssai(), "essais"));
     }
 }

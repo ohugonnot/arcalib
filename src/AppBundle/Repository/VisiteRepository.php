@@ -31,7 +31,6 @@ class VisiteRepository extends \Doctrine\ORM\EntityRepository
         if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
             $queryBuilder->andWhere("u = :user")
                 ->setParameter("user", $user)
-                ->leftJoin('i.essai', 'e')
                 ->leftJoin('e.users', 'u');
 
         }
@@ -41,15 +40,17 @@ class VisiteRepository extends \Doctrine\ORM\EntityRepository
 
 
     /**
+     * @param User $user
+     * @param $search
+     * @param $searchId
      * @return \Doctrine\ORM\Query
      */
     public function getQuery(User $user, $search, $searchId)
     {
         $queryBuilder = $this->createQueryBuilder('v')
-            ->select('v')
             ->where("v.id like :search or p.nom like :search or p.prenom like :search or e.nom like :search or v.date like :search or v.statut like :search or v.type like :search or v.calendar like :search or v.id = :searchId")
             ->addSelect("e","a","p","i")
-            ->groupBy('i.id')
+            ->groupBy('v.id')
             ->setParameter('searchId', $searchId)
             ->setParameter('search', '%' . $search . '%');
 

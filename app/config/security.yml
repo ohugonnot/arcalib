@@ -29,9 +29,9 @@ security:
                 target: /
             anonymous:    true
             remember_me:
-                secret:   '%kernel.secret%'
+                secret:   '%secret%'
                 lifetime: 604800 # 1 week in seconds
-                path:     /
+                path:     recherche
                  
             logout_on_user_change: true
 

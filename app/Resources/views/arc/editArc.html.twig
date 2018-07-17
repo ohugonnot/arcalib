@@ -231,7 +231,7 @@
 
                                 {% for essai in form.vars.value.essais %}
 
-                                    <li><a href="{{ path("protocole",{id: essai.id }) }}">{{ essai.nom }}</a></li>
+                                    <li><a href="{{ path("editEssai",{id: essai.id }) }}">{{ essai.nom }}</a></li>
 
                                 {% endfor %}
 

@@ -1,0 +1,171 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des events - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des events du patient
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Events' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3"
+                       href="{{ path('addEvent', {id: inclusion.id}) }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                           {{ events.getTotalItemCount }} events(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-events-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un event / Filtrer"
+                               aria-label="Rechercher un event / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+
+    
+    {% block content %}
+
+
+        {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
+
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+
+                    <h4 class="text-center">Liste des {{ events.getTotalItemCount }} events pour l'inclusion
+                        N° {{ inclusion.numInc }} - <a
+                                href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
+                    </h4>
+
+
+                    {# Liste des events #}
+
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if events.isSorted('ev.date') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(events, 'Date de l\'évenement', ['ev.date']) }}
+
+                            </th>
+
+                            <th class='{% if events.isSorted('ev.titre') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(events, 'Titre', ['ev.titre']) }}
+
+                            </th>
+
+                            <th class='{% if events.isSorted('ev.detail') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(events, 'Détail', ['ev.detail']) }}
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for event in events %}
+
+                            <tr>
+
+                                <td class="event">
+
+                                    <a href="{{ path('editEvent', {id: event.id}) }}">
+
+                                        {{ event.date|date('d/m/Y') }}
+
+                                    </a>
+
+                                </td>
+
+                                <td class="event">
+
+                                        {{ event.titre }}
+
+                                </td>
+
+                                <td class="event">
+
+                                    {{ event.detail|nl2br|raw }}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(events) }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}

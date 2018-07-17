@@ -41,12 +41,11 @@ class DoctrineEventListener implements EventSubscriber
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        $reflection = new \ReflectionClass($entity);
-        $type = $reflection->getShortName();
-
-        if($entity instanceof Log) {
+        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
             return;
         }
+        $reflection = new \ReflectionClass($entity);
+        $type = $reflection->getShortName();
 
         $this->logManager->save(
             ucfirst($type),
@@ -59,6 +58,10 @@ class DoctrineEventListener implements EventSubscriber
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
+        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
+            return;
+        }
+
         $reflection = new \ReflectionClass($entity);
         $type = $reflection->getShortName();
 
@@ -79,6 +82,11 @@ class DoctrineEventListener implements EventSubscriber
      */
     public function preUpdate(PreUpdateEventArgs $args)
     {
+        $entity = $args->getObject();
+        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
+            return;
+        }
+
         $this->changeSet = $args->getEntityChangeSet();
         foreach($this->changeSet as $key => $param) {
 
@@ -93,12 +101,12 @@ class DoctrineEventListener implements EventSubscriber
     public function postUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        $reflection = new \ReflectionClass($entity);
-        $type = $reflection->getShortName();
-
         if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
             return;
         }
+
+        $reflection = new \ReflectionClass($entity);
+        $type = $reflection->getShortName();
 
         $this->logManager->save(
             ucfirst($type),

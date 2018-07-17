@@ -156,9 +156,7 @@
 
                                 <td class="essai">
 
-                                    {% set archive = essai.statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') or essai.statut == constant('AppBundle\\Entity\\Essais::REFUS') %}
-
-                                    <a href="{{ path('protocole', { id : essai.id, archive: archive }) }}">
+                                    <a href="{{ path('editEssai', { id : essai.id }) }}">
                                         {{ essai.nom }}
                                     </a>
 

@@ -192,7 +192,7 @@ class Log
      *
      * @return Log
      */
-    public function setUser(User $user = null)
+    public function setUser(?User $user = null)
     {
         $this->user = $user;
 

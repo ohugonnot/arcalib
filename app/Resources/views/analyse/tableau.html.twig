@@ -16,7 +16,7 @@
                                     class='title-tooltip'
                                     data-toggle="tooltip" data-html="true"
                                     title="{{ protocole.titre|raw|nl2br }}"
-                                    href="{{ path("protocole", {id: protocole.id}) }}">{{ protocole.nom }}
+                                    href="{{ path("editEssai", {id: protocole.id}) }}">{{ protocole.nom }}
                             </a> ({{ protocole.inclusions|length }})
 
                         {% endif %}

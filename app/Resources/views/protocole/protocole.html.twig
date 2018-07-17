@@ -82,7 +82,7 @@
 
                 <div class="row">
 
-                    {# Colonne 1-: Liste des protocoles----------------------------------------------------------------------------------------------------------------------------------------------------------- #}
+                    {# Colonne 1-: Liste des protocoles------------------------------------------------------------------------------------------------------------ #}
 
                     {# Colonne Liste des Protocoles #}
                     <div class="col-2 col-arcoffice col-liste-protocole">
@@ -95,7 +95,9 @@
                             <div class="ml-auto mr-1">
 
                                 {# Archivés #}
-                                <a href='?archive={{ archive }}'
+                                <a id = "link-archive"
+                                   data-archive='{{ archive == true ? false : true }}'
+                                   href='?archive={{ archive }}'
                                    class="btn btn-sm btn-outline-danger title-tooltip {% if not archive %}is-selected{% endif %}"
                                    title="Afficher les protocoles archivés">
 
@@ -486,6 +488,9 @@
                                            class="form-control form-control-sm" id="protocole-numero-interne">
 
                                 </div>
+                                <a :href="linkDocument()">
+                                    <i class="fa fa-download"></i>
+                                </a>
 
                             </div>
 
@@ -1125,7 +1130,7 @@
                             <div class="ml-auto mr-1">
 
                                 {# Nouvelle #}
-                                <button onclick='window.location.href = "{{ path("patient") }}"' v-if='protocole.id'
+                                <button  :disabled="protocole.statut == '{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}' || protocole.statut == '{{ constant('AppBundle\\Entity\\Essais::REFUS') }}'" onclick='window.location.href = "{{ path("patient") }}"' v-if='protocole.id'
                                         type="button" class="btn btn-sm btn-outline-primary title-tooltip"
                                         data-html="true" title='Ajouter un patient <br>Retour page Patient' v-cloak>
 

@@ -66,6 +66,7 @@ class ImportCommand extends ContainerAwareCommand
     }
 
     /**
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function import(InputInterface $input, OutputInterface $output)
@@ -96,7 +97,7 @@ class ImportCommand extends ContainerAwareCommand
                 $libCim10 = $em->getRepository(LibCim10::class)
                     ->findOneByCim10code(trim($row['cim10code']));
 
-                // If the user doest not exist we create one
+                // If the u ser doest not exist we create one
                 if (!is_object($libCim10)) {
                     $libCim10 = new LibCim10();
                     $libCim10->setCim10code(trim($row['cim10code']));
@@ -210,6 +211,7 @@ class ImportCommand extends ContainerAwareCommand
     }
 
     /**
+     * @param $file
      * @return array|bool
      */
     protected function get($file)

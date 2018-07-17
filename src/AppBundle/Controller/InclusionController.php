@@ -76,14 +76,17 @@ class InclusionController extends Controller
         $user = $this->getUser();
 
         $emInclusion = $em->getRepository(Inclusion::class);
-        $query = $emInclusion->getQuery($user, $searchId, $search);
+        $query = $emInclusion->getQuery($user, $searchId, $search, [
+            'statut' => $request->query->get("statut")
+        ]);
+
 
         $paginator = $this->get('knp_paginator');
         $inclusions = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             20/*limit per page*/,
-            array('defaultSortFieldName' => ['p.nom', 'p.prenom'], 'defaultSortDirection' => 'asc')
+            array('defaultSortFieldName' => ['i.datInc'], 'defaultSortDirection' => 'desc')
         );
 
         return $this->render('inclusion/listeInclusions.html.twig', [
