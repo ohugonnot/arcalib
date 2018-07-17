@@ -140,9 +140,7 @@
 
                                 <td class="visite">
 
-                                    {% set archive = visite.inclusion.essai.statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') or visite.inclusion.essai.statut == constant('AppBundle\\Entity\\Essais::REFUS') %}
-
-                                    <a {% if visite.inclusion != null %}href="{{ path("protocole", {id: visite.inclusion.essai.id, archive: archive}) }}"{% endif %}>
+                                    <a {% if visite.inclusion != null and visite.inclusion.essai != null %}href="{{ path("editEssai", {id: visite.inclusion.essai.id}) }}"{% endif %}>
 
                                         {{ visite.inclusion.essai.nom|default("") }}
 

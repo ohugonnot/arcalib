@@ -1,0 +1,130 @@
+
+	{# Boutons (Documents) #}
+
+	<div class="arcoffice-buttons">
+
+		{# Flêches #}
+		<div class="d-flex">
+		
+			{# Précédent #}
+			<div class="arcoffice-button_arrow arcoffice-button_prev">
+				
+				{% if prev is defined and prev %}
+                                    
+                    <a href="{{ path('editDocumentEssai', { id: prev.id }) }}">
+
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+
+                        <span>précédent</span>
+
+                    </a>
+
+                {% endif %}
+
+			</div>
+			
+			{# Suivant #}
+			<div class="arcoffice-button_arrow arcoffice-button_next">
+
+				{% if next is defined and next %}
+	                
+	                <a href="{{ path('editDocumentEssai', { id: next.id }) }}">
+	                    
+	                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+						
+						<span>suivant</span>
+
+	                </a>
+
+	            {% endif %}
+
+	        </div>
+
+		</div>
+
+		{% if count is defined and count > 0 %}
+            
+            {# Pagination #}                   
+            <div class="arcoffice-buttons_pagination">
+
+            	<span>{{ index + 1 }}</span>/<span>{{ count }}</span>
+
+            </div>
+
+            <div class="arcoffice-buttons_utilities row m-0">
+
+            	{# Voir le PDF #}
+            	<div id='voir-pdf-button' class="col-6 p-0 {% if url == null %}d-none {% endif %} ">
+
+            		<a class="arcoffice-buttons_get-doc" href="{{ url|default('') }}">
+
+			        	<span>Voir</span>
+			            
+			           <i class="fa fa-eye" aria-hidden="true"></i>
+
+			        </a>
+
+            	</div>
+				
+				{# Supprimer le PDF en cours #}
+            	<div id='remove-pdf-button' class="col-6 p-0 {% if url == null %}d-none {% endif %}">
+            		
+            		<a data-id="{{ form.vars.value.id }}" class="arcoffice-buttons_delete-doc remove-document-button" href="">
+
+			        	<span>Supprimer</span>
+			            
+			           <i class="fa fa-trash" aria-hidden="true"></i>
+
+			        </a>
+
+            	</div>
+				
+				{# Liste des documents PDF #}
+				<div class="col-6 p-0">
+					
+					<a class="arcoffice-buttons_liste-doc" href="{{ path('listeDocumentEssais', { id: form.vars.value.essai.id }) }}">
+
+			        	<span>Liste</span>
+			            
+			            <i class="fa fa-list ml-1"></i>
+
+			        </a>
+
+				</div>
+				
+				{# Nouveau Document PDF #}
+				<div class="col-6 p-0">
+					
+					<a class="arcoffice-buttons_add-doc" href="{{ path("addDocumentEssai", { id : form.vars.value.essai.id }) }}">
+	            
+			            <span>Nouveau</span>
+
+			            <i class="fa fa-plus-circle ml-1"></i>
+
+			        </a>
+
+				</div>
+
+				{% if form.vars.value.essai.id is defined %}
+                            
+		            {% set essai = form.vars.value.essai %}
+
+		            <div class="col-12 p-0">
+
+			            <a class="arcoffice-buttons_get-patient" href="{{ path("editEssai", { id: essai.id }) }}">
+
+			                <i class="fa fa-user mr-1"></i>
+
+			                <span>{{ essai.nom }}</span>
+
+			            </a>
+
+			           </div>
+
+		        {% endif %}
+
+            </div>
+
+	    {% endif %}
+
+	</div>

@@ -74,7 +74,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function findNotArchived(User $user)
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("(e.statut != '" . Essais::ARCHIVE . "' and e.statut != '" . Essais::REFUS . "') or e.statut is null")
+            ->where("e.statut NOT IN ('" . Essais::ARCHIVE . "','" . Essais::REFUS . "') or e.statut is null")
             ->orderBy("e.nom", "ASC");
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
@@ -101,7 +101,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function findArchived(User $user)
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("e.statut = '" . Essais::ARCHIVE . "' or e.statut = '" . Essais::REFUS . "'")
+            ->where("e.statut IN('" . Essais::ARCHIVE . "','" . Essais::REFUS . "')")
             ->orderBy("e.nom", "ASC");
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
@@ -126,7 +126,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function findActif()
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("e.statut = '" . Essais::INCLUSIONS_OUVERTES . "' or e.statut = '" . Essais::INCLUSIONS_CLOSES_SUIVI . "'")
+            ->where("e.statut IN ('" . Essais::INCLUSIONS_OUVERTES . "','" . Essais::INCLUSIONS_CLOSES_SUIVI . "')")
             ->orderBy("e.nom", "ASC");
 
         return $queryBuilder->getQuery()->getResult();
@@ -134,9 +134,8 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
 
     public function findEssaiEnAttente()
     {
-
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("e.statut = '" . Essais::FAISABILITE_EN_ATTENTE . "' or e.statut = '" . Essais::CONVENTION_SIGNATURE . "'")
+            ->where("e.statut IN ('" . Essais::FAISABILITE_EN_ATTENTE . "','" . Essais::CONVENTION_SIGNATURE . "')")
             ->orderBy("e.nom", "ASC");
 
         return $queryBuilder->getQuery()->getResult();

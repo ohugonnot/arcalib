@@ -163,7 +163,7 @@
                                 Il y a {{ essais|length }} protocole(s) avec ce tag
                             <ul>
                                 {% for essai in essais %}
-                                    <li><a href="{{ path("protocole", {id: essai.id}) }}">{{ essai.nom }}</a>
+                                    <li><a href="{{ path("editEssai", {id: essai.id}) }}">{{ essai.nom }}</a>
                                         - {{ essai.inclusions|length }} inclusion(s)
                                     </li>
                                 {% endfor %}

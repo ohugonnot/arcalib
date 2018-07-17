@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 
@@ -39,18 +40,29 @@ class InclusionRepository extends \Doctrine\ORM\EntityRepository
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function getQuery(User $user, $searchId, $search)
+    public function getQuery(User $user, $searchId, $search, $filters = [])
     {
         $queryBuilder = $this->createQueryBuilder('i')
             ->select('i')
             ->leftJoin('i.patient', 'p')
             ->leftJoin('i.documents','d')
             ->leftJoin('i.traitements','t')
-            ->addSelect("p", "e", "d","t")
+            ->leftJoin('i.eis','ei')
+            ->leftJoin('i.events','ev')
+            ->addSelect("p", "e", "d","t", "ei", "ev")
             ->where("p.nom like :search or p.prenom like :search or i.statut like :search or i.datInc like :search or e.nom like :search or i.numInc like :search or i.idInterne = :searchId or i.id = :searchId")
             ->groupBy('i.id')
             ->setParameter('searchId', $searchId)
             ->setParameter('search', '%' . $search . '%');
+
+        if($filters) {
+            foreach($filters as $param => $value) {
+                if($value == null) continue;
+                $paramValue = $param.'_value';
+                $queryBuilder->andWhere("i.$param = :$paramValue")
+                    ->setParameter($paramValue, $value);
+            }
+        }
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
@@ -91,6 +103,21 @@ class InclusionRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
+     * @param User $user
+     * @return array
+     */
+    public function findByStatutScreen(User $user)
+    {
+        $queryBuilder = $this->createQueryBuilder('i')
+            ->leftJoin("i.patient", "p")
+            ->addSelect("p")
+            ->where("i.statut = '". Inclusion::SCREEN ."'");
+        $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
      * @param $id
      * @param User $user
      * @return array
@@ -104,8 +131,10 @@ class InclusionRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('i.documents', 'd')
             ->leftJoin('i.service', 's')
             ->leftJoin('i.traitements', 't')
+            ->leftJoin('i.eis', 'ei')
+            ->leftJoin('i.events', 'ev')
             ->leftJoin('v.arc', 'va')
-            ->addSelect('m','a', 'd', 'e', 'v', 's', 't', 'va')
+            ->addSelect('m','a', 'd', 'e', 'v', 's', 't', 'va', 'ei', "ev")
             ->where('i.id = :id')
             ->setParameter('id', $id);
 

@@ -40,7 +40,6 @@
 	{% block body_class %}arcoffice-edition{% endblock %}
 
 	{# Section 'Fil d'ariane' #}
-
 	{% block fil_ariane %}
 
         {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
@@ -60,8 +59,6 @@
 
     {% endblock fil_ariane %}
 
- {# Section  #}
-
 	{% block content %}
 
         {# Section Principale #}
@@ -71,8 +68,8 @@
 
                 <div class="row">
 
-                    {# Colonne Édition d'une document #}
-                    <div class="col col-arcoffice col-arc-editer">
+                    {# Colonne "Édition d'un document" #}
+                    <div class="col col-arcoffice col-arc-editer col-visite">
 
                         {{ form_start(form) }}
 
@@ -101,25 +98,6 @@
 
                                 {% endif %}
 
-                                {% if app.request.get('_route') == 'editDocument' %}
-
-                                    {# Bouton 'Ajouter/Consulter le PDF' #}
-                                    <button type="button" data-id='{{ form.vars.value.id }}'
-                                            class="btn btn-sm btn-outline-info title-tooltip document-modal-button"
-                                            title='Ajouter/Consulter les PDF'>
-
-                                        <i class="fa
-                                            {% if form.vars.value.file != null %}
-                                                fa-file-text
-                                            {% else %}
-                                                fa-upload
-                                            {% endif %}
-                                            " aria-hidden="true"></i>
-
-                                    </button>
-
-                                {% endif %}
-
                                 {# Enregistrer #}
                                 {{ form_widget(form.envoyer, {
                                     'fa' : 'fa-check',
@@ -135,10 +113,9 @@
 
                         </div>
 
-                        {# CORPS #}
+                        {# Date #}
                         <div class="form-row form-group">
 
-                            {# date #}
                             <div class="col">
 
                                 {{ form_label(form.date) }}
@@ -148,11 +125,12 @@
                                 {{ form_widget(form.date, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
 
                             </div>
+
                         </div>
 
-
-                        {# jma #}
+                        {# J/M/A #}
                         <div class="form-row form-group">
+                            
                             <div class="col">
 
                                 {{ form_label(form.jma) }}
@@ -164,10 +142,10 @@
                             </div>
 
                         </div>
-
-
+                        
+                        {# Type #}
                         <div class="form-row form-group">
-                            {# type #}
+
                             <div class="col">
 
                                 {{ form_label(form.type) }}
@@ -178,13 +156,11 @@
 
                             </div>
 
-
                         </div>
-
-
+                        
+                        {# Description #}
                         <div class="form-row form-group">
 
-                            {# Description #}
                             <div class="col">
 
                                 {{ form_label(form.description) }}
@@ -196,11 +172,10 @@
                             </div>
 
                         </div>
-
-
+                        
+                        {# Auteur #}
                         <div class="form-row form-group">
 
-                            {# Auteur #}
                             <div class="col">
 
                                 {{ form_label(form.auteur) }}
@@ -213,66 +188,46 @@
 
                         </div>
 
-
-                        {# Fleches #}
-                        <div class="form-row form-group">
-
-                            <div class="col">
-                                {% if prev is defined and prev %}
-
-                                    <b>Préc.&nbsp;</b>
-                                    <br>
-                                    <a href="{{ path('editDocument', {id: prev.id}) }}"><i
-                                                class="fa fa-chevron-circle-left fa-3x mr-1 mt-4"
-                                                aria-hidden="true"></i></a>
-
-
-                                {% endif %}
-                            </div>
-
-                            <div class="col align-items-center">
-                                {% if count is defined and count > 0 %}
-                                    <span> {{ index+1 }}/{{ count }} </span>
-
-                                    <br>
-                                    <a href="{{ path('inclusion_list_documents', {id: form.vars.value.inclusion.id }) }}">
-                                        <i class="fa fa-list fa-2x mt-2" aria-hidden="true"
-                                           title='Liste des documents'></i>
-                                    </a>
-                                    <a href="{{  path("addDocument", {id: form.vars.value.inclusion.id}) }}">
-                                        <i class="fa fa-plus-circle fa-2x mt-4" aria-hidden="true"></i>
-                                    </a>
-                                {% endif %}
-                            </div>
-
-                            <div class="col">
-                                {% if next is defined and next %}
-
-                                    <b>&nbsp;Suiv.</b>
-
-                                    <a href="{{ path('editDocument', {id: next.id}) }}">
-                                        <i class="fa fa-chevron-circle-right fa-3x mr-2 mt-4 "
-                                                aria-hidden="true"></i></a>
-
-                                {% endif %}
-                            </div>
-
-                        </div>
-
-
                         {{ form_end(form) }}
 
+                        {# Boutons #}
+                        {% include "document/buttons.html.twig" 
+
+                            with {
+                                'has_prev_elem' : true,
+                                'has_next_elem' : true,
+                                'has_liste_elem' : true,
+                                'has_new_elem' : true
+                            }
+                        %}
 
                     </div>
 
                     {# Colonne view pdf #}
                     {% if app.request.get('_route') == 'editDocument' %}
 
-                        <div data-id='{{ form.vars.value.id }}' id="viewer" style="padding: 0 0; height: 750px;" class="col-7 col-arcoffice col-arc-editer">
+                        <div class="col-7 col-arcoffice col-arcoffice-document p-0 {% if url == null %}col-arcoffice-document-add{% endif %}">
 
-                            <object {% if url == null %}style="display: none;"{% endif %}  width='100%' height="750" data="{% if url != null %}{{ url }}{% endif %}"
-                                    type="application/pdf">
+
+
+                                <div data-id='{{ form.vars.value.id }}' id="viewer" class="{% if url != null %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
+
+                                    <div id="viewer-content">
+
+                                        <h5>Glisser/déposer ou cliquer pour télécharger un PDF <i class="fa fa-file-pdf-o"></i></h5>
+
+                                        <p class="text-center"><small>(le fichier doit être au format PDF et ne pas dépasser 3 Mo.)</small></p>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            <object {% if url == null %}class="d-none"{% endif %} data="{% if url != null %}{{ url }}{% endif %}" type="application/pdf">
+                                
                                 <embed src="{% if url != null %}{{ url }}{% endif %}" type="application/pdf"/>
+
                             </object>
 
                         </div>
@@ -280,88 +235,39 @@
                     {% endif %}
 
                     {# Colonne liste pdf #}
+                    <div class="col-3 col-arcoffice col-liste-documents col-visite">
 
-                    <div class="col-3 col-arcoffice col-arc-editer">
+                        <div class="form-title d-flex align-items-center">Liste ({{ allDocuments|length }})</div>
 
-                        {% if form.vars.value.inclusion.patient.id is defined %}
-                            {% set patient = form.vars.value.inclusion.patient %}
-                            Retour dossier Patient : <a href="{{ path("patient", {id: patient.id}) }}">
-                                {{ patient.nomPrenom }}
-                            </a>
-
-                        {% endif %}
-
-
-
-                      <div class="col">
-                            {% if prev is defined and prev %}
-
-                                 
-                                <a href="{{ path('editDocument', {id: prev.id}) }}"> <i
-                                            class="fa fa-chevron-circle-left fa-2x mr-3 mt-4"
-                                            aria-hidden="true"></i></a>
-
-                            {% endif %}
-
-
-                            {% if next is defined and next %}
-
-                                <a href="{{ path('editDocument', {id: next.id}) }}">
-                                        <i class="fa fa-chevron-circle-right fa-2x ml-0 mt-4 "
-                                                aria-hidden="true"></i></a>
-
-                            {% endif %}
-                         </div>
-
-                        <br>
-
+                        {# Tableau #}
                         {% if allDocuments is defined %}
 
-                            <table class="table">
+                            <table class="table table-sm table-striped mb-0">
                                 <thead>
-                                <tr>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">JMA</th>
-                                    <th scope="col">Type</th>
-                                </tr>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>JMA</th>
+                                        <th>Type</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {% for document in allDocuments %}
-                                    <tr {% if document.id == form.vars.value.id %}class="item-selected"{% endif %}>
-                                        <td scope="row">
-                                            <a href="{{ path("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}
-                                            </a>
-                                        </td>
-
-                                        <td>{{ document.jma }}</td>
-
-                                        <td>
-                                            {% if document.file == null %}<i style='color: #17a2b8;'
-                                                                             class='fa fa-upload'></i>{% endif %} {{ document.type }}
-
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+                                    {% for document in allDocuments %}
+                                        <tr {% if document.id == form.vars.value.id %}class="is-active"{% endif %}>
+                                            <td>
+                                                <a href="{{ path("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}</a>
+                                            </td>
+                                            <td>{{ document.jma }}</td>
+                                            <td>
+                                                {% if document.file == null %}<i class='fa fa-ban mr-1 text-danger title-tooltip' data-placement="top" title="Aucun PDF"></i>{% endif %} {{ document.type }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         {% endif %}
-                        <style>
-                            .item-selected {
-                               font-weight: bold;
-                                background-color:silver;
-                                border: 2px solid blue;
-                            }
-
-                            .table td, .table th {
-                                padding: .2em;
-                                vertical-align: middle;
-                            }
-                        </style>
                     </div>
 
-
                     {# Modal - Ajouter/Éditer une document PDF #}
-
                     <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1"
                          role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
 
@@ -438,8 +344,7 @@
 
                                     <div class="ml-auto">
 
-                                        <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                data-dismiss="modal">Fermer
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Fermer
                                         </button>
 
                                     </div>

@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EiRepository")
  * @ORM\Table(name="ei")
  */
 class EI
@@ -263,7 +263,7 @@ class EI
     /**
      * @return ArrayCollection|User[]
      */
-    public function getUsers(): ArrayCollection
+    public function getUsers()
     {
         return $this->users;
     }

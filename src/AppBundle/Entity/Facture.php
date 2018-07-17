@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * facture
  *
@@ -67,7 +66,7 @@ class Facture
     /**
      * @var string
      *
-     * @ORM\Column(name="numero", type="string", length=20, nullable=true, unique=true)
+     * @ORM\Column(name="numero", type="string", length=20, nullable=true)
      */
     private $numero;
 

@@ -156,14 +156,14 @@
                                 </td>
 
                                 <td  style='max-width: 200px;'class="log">
-                                    {% if log.entityId != null and log.entity in ["Essais", "Inclusion", "User", "Patient", "Visite", "Actualite", "Medecin", "Facture","Document","Traitement", "Annuaire", "Arc", "LibCim10", "Service", "Tag", "Todo"] %}
-                                        {% set route = path('edit'~log.entity|replace({'Essais':"Essai"}), { id : log.entityId }) %}
+                                    {% if log.entityId != null and log.entity in ["Essais", "Inclusion", "User", "Patient", "Visite", "Actualite", "Medecin", "Facture","Document","Traitement", "Annuaire", "Arc", "LibCim10", "Service", "Tag", "Todo", "EI"] %}
+                                        {% set route = path('edit'~log.entity|replace({'Essais':"Essai","EI":"Ei"}), { id : log.entityId }) %}
                                     {% else %}
                                         {% set route = "" %}
                                     {% endif %}
 
                                     {% if log.entity == "Essai" %}
-                                        {% set  route = path("protocole", {id: log.entityId}) %}
+                                        {% set  route = path("editEssai", {id: log.entityId}) %}
                                     {% elseif log.entity == "Patient" %}
                                         {% set  route = path("patient", {id: log.entityId}) %}
                                     {% elseif log.entity == "Inclusion" %}

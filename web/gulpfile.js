@@ -85,14 +85,14 @@ gulp.task('copy-bootstrap', function () {
 // Ressources JavaScript utilisées par ce projet (vendors + scripts JS spécifiques /dev/js/**/*.js)
 var vendors = [
     paths.vendors + 'core-js/client/core.min.js',
-    paths.vendors + 'jquery/dist/jquery.min.js',
+    paths.vendors + 'jquery/dist/jquery.js',
     paths.vendors + 'popper.js/dist/umd/popper.min.js',
-    paths.vendors + 'tether/dist/tether.min.js',
+    paths.vendors + 'tether/dist/tether.js',
     paths.vendors + 'bootstrap/dist/js/bootstrap.min.js',
     paths.vendors + 'toastr/build/toastr.min.js',
     paths.vendors + 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
     paths.vendors + 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js',
-    paths.vendors + 'sweetalert2/dist/sweetalert2.min.js',
+    paths.vendors + 'sweetalert2/dist/sweetalert2.js',
     paths.vendors + 'bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
     paths.vendors + 'dropzone/dist/min/dropzone.min.js',
     paths.vendors + 'lodash/lodash.min.js',

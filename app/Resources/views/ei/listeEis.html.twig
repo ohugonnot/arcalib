@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+    
+    {# Réécriture SEO #}
+    {% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                Liste des eis - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Gestion des eis du patient
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+    {# Body Class #}
+    {% block body_class %}arcoffice-liste{% endblock %}
+
+    {# Section 'Fil d'ariane' #}
+    {% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Eis' } %}
+
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addEi', {id: inclusion.id}) }}">
+
+                        Ajouter <i class="fa fa-plus ml-1"></i>
+
+                    </a>
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
+
+                        <div class="arcoffice-count">
+
+                            {{ eis.getTotalItemCount }} eis(s) trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-eis-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un ei / Filtrer"
+                               aria-label="Rechercher un ei / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+
+    
+    {% block content %}
+
+
+        {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
+
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+
+                    <h4 class="text-center">Liste des {{ eis.getTotalItemCount }} eis pour l'inclusion
+                        N° {{ inclusion.numInc }} - <a
+                                href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
+                    </h4>
+
+
+                    {# Liste des eis #}
+
+                    <table class="table table-sm table-striped table-hover table-responsive">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class='{% if eis.isSorted('ei.debutAt') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(eis, 'Debut', ['ei.debutAt']) }}
+
+                            </th>
+
+                            <th class='{% if eis.isSorted('t.nom') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(eis, 'Terme CtcAE', ['t.nom']) }}
+
+                            </th>
+
+                            <th class='{% if eis.isSorted('ei.suivi') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(eis, 'Suivi', ['ei.suivi']) }}
+
+                            </th>
+
+                            <th class='{% if eis.isSorted('ei.finAt') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(eis, 'Fin', ['ei.finAt']) }}
+
+                            </th>
+
+                            <th class='{% if eis.isSorted('ei.evolution') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(eis, 'Evolution', ['ei.evolution']) }}
+
+                            </th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        {% for ei in eis %}
+
+                            <tr>
+
+                                <td class="ei">
+
+                                    <a href="{{ path('editEi', {id: ei.id}) }}">
+
+                                        {{ ei.debutAt|date('d/m/Y') }}
+
+                                    </a>
+
+                                </td>
+                                <td class="ei">{{ ei.term.nom }}</td>
+                                <td class="ei">{{ ei.suivi }}</td>
+                                <td class="ei">
+                                    {% if ei.finAt %}
+                                        {{ ei.finAt|date('d/m/Y') }}
+                                    {% endif %}
+                                </td>
+                                <td class="ei">{{ ei.evolution }}</td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {# Pagination #}
+                    {{ knp_pagination_render(eis) }}
+
+                </div>
+
+            </div>
+
+
+            <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-ei-pdf" tabindex="-1" role="dialog"
+                 aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+
+                <div class="modal-dialog modal-md" role="ei">
+
+                    <div class="modal-content">
+
+                        {# Entête #}
+                        <div class="modal-header modal-header-violet">
+
+                            <p class="modal-title">Ajouter / Consulter le PDF du ei</p>
+
+                            <button @click='cancel' type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                                <span aria-hidden="true">&times;</span>
+
+                            </button>
+
+                        </div>
+
+                        {# Contenu #}
+                        <div class="modal-body">
+
+                            <form>
+
+                                {# Liste des 5 PDFs #}
+
+                                {# PDF N°1 #}
+                                <div id='ei-input' class="form-row form-group">
+
+                                    {# Input File #}
+                                    <label class="col-2 col-form-label">Ei</label>
+
+                                    <label class="custom-file">
+
+                                        <span id='ei-file' style='width:260px' class="custom-file-control"></span>
+                                        <span id='ei-loader' class="loader ml-2" style='display:none'></span>
+                                    </label>
+
+                                </div>
+
+                                <div id='ei-download' class="form-row form-group">
+
+                                    <label for="ei-pdf" class="col-2 col-form-label">Ei</label>
+
+                                    <div class="col d-flex align-items-center">
+
+                                        {# Voir le PDF #}
+                                        <a href="" target="_blank" class="btn btn-sm btn-info">
+
+                                            <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                        </a>
+
+                                        {# Supprimer le PDF #}
+                                        <button type="button"
+                                                class="ml-2 btn btn-sm btn-outline-danger remove-ei-button"><i
+                                                    aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                        {# Loader #}
+
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        {# Pied de page #}
+                        <div class="modal-footer">
+
+                            <div class="ml-auto">
+
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+                                    Fermer
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    {% endblock content %}

@@ -12,7 +12,7 @@
         {% set description_page = "Édition du traitement" %}
 
     {% endif %}
-	
+
 	{# Réécriture SEO #}
 	{% block header %}
 
@@ -39,9 +39,7 @@
 	{# Body Class #}
 	{% block body_class %}arcoffice-edition{% endblock %}
 
-
-{# Section 'Fil d'ariane' #}
-
+    {# Section 'Fil d'ariane' #}
 	{% block fil_ariane %}
 
         {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
@@ -61,38 +59,40 @@
 
     {% endblock fil_ariane %}
 
-
 	{% block content %}
 
-{# Section Principale #}
+        {# Section Principale #}
         <section class="section-main">
 
             <div class="container">
 
                 <div class="row">
 
-{# Colonne Édition d'une traitement #}
+                    {# Colonne Édition d'une traitement #}
                     <div class="col col-arcoffice col-arc-editer">
 
                         {{ form_start(form) }}
 
                         {% form_theme form 'form/submit.html.twig' %}
 
-                {# Titre + Boutons #}
+                        {# Titre + Boutons #}
                         <div class="form-title d-flex align-items-center">
 
                             {{ title_page }}
 
                             <div class="ml-auto mr-1">
 
-
-                                {# Supprimer #}
+                                {# Liste #}
                                 {% if form.vars.value.id %}
 
-                                    <a title='Liste des traitements' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('listeTraitements', {id: form.vars.value.inclusion.id }) }}">
+                                    <a title='Liste des traitements'
+                                       class='btn btn-sm btn-outline-primary title-tooltip'
+                                       href="{{ path('listeTraitements', {id: form.vars.value.inclusion.id }) }}">
                                         <i class="fa fa-list" aria-hidden="true"
                                         ></i>
                                     </a>
+
+                                 {# Supprimer #}   
 
                                     {% include 'include/liste/btn-supprimer.html.twig' with {
 
@@ -107,9 +107,8 @@
 
                                 {% endif %}
 
-
-
                                 {# Enregistrer #}
+
                                 {{ form_widget(form.envoyer, {
                                     'fa' : 'fa-check',
                                     'right' : true,
@@ -124,24 +123,25 @@
 
                         </div>
 
-
-                {# Form attribution #}
-
+                        {# Form attribution #}
                         <div class="form-row form-group">
 
-                            {# date #}
+                            {# date att #}
                             <div class="col">
                                 {{ form_label(form.attributionAt) }}
                                 {{ form_errors(form.attributionAt) }}
                                 {{ form_widget(form.attributionAt, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
                             </div>
 
+                            {# date Prise #}
                             <div class="col">
                                 {{ form_label(form.priseAt) }}
                                 {{ form_errors(form.priseAt) }}
                                 {{ form_widget(form.priseAt, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
                             </div>
 
+
+                            {# date Peremption #}
                             <div class="col">
                                 {{ form_label(form.peremptionAt) }}
                                 {{ form_errors(form.peremptionAt) }}
@@ -192,8 +192,7 @@
 
                         </div>
 
-            {# Form Retour #}
-
+                        {# Form Retour #}
                         <hr>
 
                         <div class="form-row form-group">
@@ -206,140 +205,121 @@
 
                         </div>
 
+                        {# S'ouvre Retour=oui #}
                         <div style="display: {% if form.vars.value.retour %}block;{% else %}none;{% endif %}" id="retour-input">
 
-                        <div class="form-row form-group">
+                            <div class="form-row form-group">
 
-                            <div class="col-4">
+                                <div class="col-4">
                                 {{ form_label(form.retourAt) }}
                                 {{ form_errors(form.retourAt) }}
                                 {{ form_widget(form.retourAt, { 'attr': { 'class': 'form-control form-control-sm js-datepicker retour-input' } }) }}
+                            	</div>
+
                             </div>
 
-                        </div>
+                            <div class="form-row form-group">{# tt et n° Lot #}
 
-                        <div class="form-row form-group">
-
-                            <div class="col">
+                                <div class="col">
                                 {{ form_label(form.traitementRetour) }}
                                 {{ form_errors(form.traitementRetour) }}
                                 {{ form_widget(form.traitementRetour, { 'attr': { 'class': 'form-control form-control-sm retour-input' } }) }}
-                            </div>
+                            	</div>
 
-                            <div class="col">
+                                <div class="col">
                                 {{ form_label(form.numLotRetour) }}
                                 {{ form_errors(form.numLotRetour) }}
                                 {{ form_widget(form.numLotRetour, { 'attr': { 'class': 'form-control form-control-sm retour-input' } }) }}
+                            	</div>
+
                             </div>
 
-                        </div>
+                            <div class="form-row form-group">{# Nbr et verificateur #}
 
-                        <div class="form-row form-group">
-
-                            <div class="col">
+                                <div class="col">
                                 {{ form_label(form.nombreRetour) }}
                                 {{ form_errors(form.nombreRetour) }}
                                 {{ form_widget(form.nombreRetour, { 'attr': { 'class': 'form-control form-control-sm retour-input' } }) }}
-                            </div>
+                            	</div>
 
-                            <div class="col">
+                                <div class="col">
                                 {{ form_label(form.verificateurRetour) }}
                                 {{ form_errors(form.verificateurRetour) }}
                                 {{ form_widget(form.verificateurRetour, { 'attr': { 'class': 'form-control form-control-sm retour-input' } }) }}
+                            	</div>
+
                             </div>
 
-                        </div>
+                            <div class="form-row form-group">{# Notes #}
 
-                        <div class="form-row form-group">
-
-                            <div class="col">
+                                <div class="col">
                                 {{ form_label(form.notesRetour) }}
                                 {{ form_errors(form.notesRetour) }}
                                 {{ form_widget(form.notesRetour, { 'attr': { 'class': 'form-control form-control-sm retour-input', 'rows': 3 } }) }}
+                            	</div>
+
                             </div>
 
                         </div>
 
-                        </div>
-                        
                         {{ form_end(form) }}
-
 
                     </div>
 
+                    {# Colonne liste attribution #}
+                    {% if index is defined %}
+                    <div class="col-7 col-arcoffice col-arc-editer col-visite">
 
+                        <div class="form-title d-flex align-items-center">Liste des traitements : n° {{ index + 1 }}/{{ count }}
 
-{# Colonne liste attribution #}
+                            <div class="ml-auto mr-1">
+                     
+                                {# Prec #}
+                                {% if prev != null %}
 
-
-
-
-
-                    <div class="col-7 col-arcoffice col-arc-editer">
-
-                        {% if form.vars.value.inclusion.patient.id is defined %}
-                            {% set patient = form.vars.value.inclusion.patient %}
-                            Retour fiche patient : <a href="{{ path("patient", {id: patient.id}) }}">
-                                {{ patient.nomPrenom }}
-                            </a>
-                        {% endif %}
-
-                        <br>
-                        {# Fleches #}
-                        {% if form.vars.value.id != null %}
-                            <div class="form-row form-group">
-
-                                <div class="col-2"></div>
-
-                                <div class="col">
-
-                                    {% if prev is defined and prev %}
-
-                                        {# gauche #} <a href="{{ path('editTraitement', {id: prev.id}) }}"><i
-                                                class="fa fa-chevron-circle-left fa-2x mr-0 mt-4"
-                                                aria-hidden="true"></i></a>
-                                        <b>Préc.&nbsp;</b>
-
-                                    {% endif %}
-                                </div>
-
-
-                                <div class="col align-items-center">
-                                    {% if count is defined and count > 0 %}
-                                        <span> {{ index+1 }}/{{ count }} </span>
-                                    {% endif %}
-                                </div>
-
-
-                                {# droite #}<div class="col">
-                                    {% if next is defined and next %}
-
-                                        <b>&nbsp;Suiv.</b>
-                                        <a href="{{ path('editTraitement', {id: next.id}) }}"><i
-                                                    class="fa fa-chevron-circle-right fa-2x ml-0 mt-4 "
-                                                    aria-hidden="true"></i></a>
-
-                                    {% endif %}
-                                </div>
-
-                                {# Ajouter #}
-                                <div class="col-2">
-                                    <a href="{{ path("addTraitement", { id: form.vars.value.inclusion.id }) }}">
-                                        <i class="fa fa-plus fa-2x ml-0 mt-4" aria-hidden="true"></i>
+                                    <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editTraitement', { id: prev.id }) }}">
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                     </a>
-                                </div>
+
+                                {% endif %}
+
+                                 {# Suiv #}
+                                {% if next != null %}
+
+                                    <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editTraitement', { id: next.id }) }}">
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+
+                                {% endif %}
+                                
+                                {# Add #}
+                                <a title='Ajouter un traitement' class='btn btn-sm btn-outline-success title-tooltip' href="{{ path("addTraitement", { id: form.vars.value.inclusion.id }) }}">
+                                   <i class="fa fa-plus" aria-hidden="true"></i>
+                                </a>
+
+                                {# Retour Fiche patient#}
+                                {% if form.vars.value.inclusion.patient.id is defined %}
+                                        
+                                   {% set patient = form.vars.value.inclusion.patient %}
+
+                                    <a class="btn btn-sm btn-outline-info" href="{{ path("patient", { id: patient.id }) }}">
+                                        <i class="fa fa-user"></i> <span>{{ patient.nomPrenom }}</span>
+                                    </a>
+
+                                 {% endif %}
 
                             </div>
 
-                        {% endif %}
+						 </div>
 
+                        {# Tableau attribution#}
                         {% if allTraitements is defined %}
 
-                            <table class="table">
+                            <table class="table table-sm table-striped">
                                 <thead>
                                 <tr>
                                     <th scope="col">Attribution</th>
-                                    <th scope="col">Date Prise </th>
+                                    <th scope="col">Date Prise</th>
                                     <th scope="col">Traitement</th>
                                     <th scope="col">N°/ Lot</th>
                                     <th scope="col">Nombre/ Quantité</th>
@@ -350,14 +330,14 @@
 
                                 <tbody>
                                 {% for traitement in allTraitements %}
-                                    <tr {% if traitement.id == form.vars.value.id %}class="item-selected"{% endif %}>
+                                    <tr {% if traitement.id == form.vars.value.id %}class="is-active"{% endif %}>
                                         <td scope="row">
                                             <a href="{{ path("editTraitement", {id: traitement.id}) }}">
                                                 {{ traitement.attributionAt|date("d/m/Y") }}
                                             </a>
                                         </td>
                                         <td>
-                                                {{ (traitement.priseAt != null) ? traitement.priseAt|date("d/m/Y") : '' }}
+                                            {{ (traitement.priseAt != null) ? traitement.priseAt|date("d/m/Y") : '' }}
                                         </td>
                                         <td>
                                             {{ traitement.traitement }}
@@ -374,27 +354,16 @@
                                         <td>
                                             {{ traitement.nombreRetour }}
                                         </td>
-                                                                                
+
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                         {% endif %}
-                        <style>
-                            .item-selected {
-                                font-weight: bold;
-                                background-color:silver;
-                                border: 2px solid blue;
-                            }
-
-                            .table td, .table th {
-                                padding: .2em;
-                                vertical-align: middle;
-                            }
-                        </style>
 
                     </div>
 
+                    {% endif %}
                 </div>
 
             </div>
@@ -409,17 +378,17 @@
 
         <script>
             $(function () {
-                $(document).on("change", "#appbundle_traitement_retour", function(e) {
+                $(document).on("change", "#appbundle_traitement_retour", function (e) {
                     e.preventDefault();
                     var retour = $(this).val();
-                    if(retour === "1") {
-                        $(".retour-input").removeAttr("disabled")
-                        $('#retour-input').show();
-                    } else {
-                        $(".retour-input").attr("disabled", "disabled").val(null)
+                    if (retour !== "1") {
+                        $(".retour-input").attr("disabled", "disabled").val(null);
                         $('#retour-input').hide();
+                    } else {
+                        $(".retour-input").removeAttr("disabled");
+                        $('#retour-input').show();
                     }
-                })
+                });
                 $('#appbundle_traitement_retour').trigger("change");
 
             });

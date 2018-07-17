@@ -40,7 +40,7 @@ class EssaisController extends Controller
 
 
     /**
-     * @Route("/essai/edit/{id}", name="editEssai", options={"expose"=true})
+     * @Route("/protocole/editer/{id}", name="editEssai", options={"expose"=true})
      * @Route("/protocole", name="protocole", options={"expose"=true})
      * @param Request $request
      * @param null $id
@@ -48,14 +48,15 @@ class EssaisController extends Controller
      */
     public function protocoleAction(Request $request, $id = null)
     {
-        if ($id) {
-            return $this->redirectToRoute("protocole", ["id" => $id]);
-        }
-
         $em = $this->getDoctrine()->getManager();
         $emEssai = $em->getRepository(Essais::class);
-        $user = $this->getUser();
 
+        if ($id) {
+            $essai = $emEssai->find($id);
+            return $this->redirectToRoute("protocole", ["id" => $id, "archive" => in_array($essai->getStatut(),[Essais::ARCHIVE, Essais::REFUS])]);
+        }
+
+        $user = $this->getUser();
         if ($request->get("archive") == true) {
             $essais = $emEssai->findArchived($user);
         } else {

@@ -2,14 +2,17 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Document;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
+use AppBundle\Services\MoneticoService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-
 
 class DefaultController extends Controller
 {
@@ -38,23 +41,29 @@ class DefaultController extends Controller
      */
     public function generateCustomPatient()
     {
+        set_time_limit(100);
         if ($this->container->getParameter('kernel.environment') != "demo") {
             return new JsonResponse(["Message" => "Désolé vous ne pouvez lancer cette commande quand environnement demo pour ne pas éffacer les patients de l'application."]);
         }
 
         $em = $this->getDoctrine()->getManager();
+
         $patients = $em->getRepository(Patient::class)->findAll();
         $jsonCustomPatient = json_decode(file_get_contents("https://randomuser.me/api/?results=1000&nat=Fr"), true);
 
-
         foreach ($patients as $k => $patient) {
+
+            if($patient->getNom() == "TEST") {
+                continue;
+            };
 
             $patient->setNom($jsonCustomPatient["results"][$k]["name"]["last"]);
             $patient->setPrenom($jsonCustomPatient["results"][$k]["name"]["first"]);
-            $patient->setdatNai(\DateTime::createFromFormat('Y-m-d H:i:s', $jsonCustomPatient["results"][$k]["dob"]));
+            $patient->setdatNai(new \DateTime($jsonCustomPatient["results"][$k]["dob"]["date"]));
             $patient->setSexe(($jsonCustomPatient["results"][$k]["gender"] == "female") ? "F" : "H");
-
         }
+        $em->flush();
+        $em->clear();
 
         $medecins = $em->getRepository(Medecin::class)->findAll();
         $jsonCustomMedecin = json_decode(file_get_contents("https://randomuser.me/api/?results=1000&nat=Fr"), true);
@@ -63,8 +72,25 @@ class DefaultController extends Controller
 
             $medecin->setNom($jsonCustomMedecin["results"][$k]["name"]["last"]);
             $medecin->setPrenom($jsonCustomMedecin["results"][$k]["name"]["first"]);
-
+            $medecin->setEmail($jsonCustomMedecin["results"][$k]["email"]);
+            $medecin->setSecTel("");
+            $medecin->setPortable("");
         }
+        $em->flush();
+        $em->clear();
+
+        /** @var Document[] $documents */
+        $documents = $em->getRepository(Document::class)->findAll();
+
+        foreach ($documents as $k => $document) {
+
+            if($document->getInclusion()->getPatient()->getNom() == "TEST") {
+                continue;
+            }
+            $document->setFile(null);
+        }
+        $em->flush();
+        $em->clear();
 
         $em->flush();
         return new JsonResponse(["Message" => "Les " . count($patients) . " utilisateurs ont étés randomisés"]);
@@ -131,5 +157,19 @@ class DefaultController extends Controller
         die();
     }
 
+    /**
+     * @Route("/monetico", name="monetico")
+     * @param Request $request
+     * @return Response
+     */
+    public function moneticoAction(Request $request)
+    {
+        $monetico = $this->get(MoneticoService::class);
+        $form = $monetico->createForm("test2".uniqid(), 50, "EUR", "folken70@hotmail.com", "test");
+
+        return $this->render('pages/mentions-legales.html.twig', [
+           "form" => $form
+        ]);
+    }
 
 }

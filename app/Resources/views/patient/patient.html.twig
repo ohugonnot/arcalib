@@ -519,7 +519,7 @@
                                     </a> #}
 
 
-                                    <a  v-if="inclusion.documents.length >= 0" :href='firstDocument'
+                                    <a :href='firstDocument'
                                        title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]]   </i>
@@ -573,16 +573,16 @@
 
                                      <br>
 
-                                    <a target='_blank'
+                                    <a :href='firstEvent'
                                        title='Liste des Evenements' class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+                                        <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.events.length ]] </i>
 
                                     </a>
 
                                 </div>
 
-                                <div class="col">
+                               {# <div class="col">
 
                                     <label class="col-form-label">Surcoûts</label>
 
@@ -595,7 +595,7 @@
 
                                     </a>
 
-                                </div>
+                                </div> #}
 
                             </div>
 
@@ -859,7 +859,7 @@
 
                                     <select v-model='inclusion.arc.id' class="form-control form-control-sm" id="arc">
 
-                                        <option value='null' selected n></option>
+                                        <option value='null' selected></option>
 
                                         {% for arc in arcs %}
 
