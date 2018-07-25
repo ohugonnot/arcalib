@@ -74,6 +74,7 @@ doctrine:
                         date_format: DoctrineExtensions\Query\Mysql\DateFormat  
                         MONTH: DoctrineExtensions\Query\Mysql\Month
                         YEAR: DoctrineExtensions\Query\Mysql\Year
+                        DAY: DoctrineExtensions\Query\Mysql\Day
                 auto_mapping:  true
                 mappings:
                     AppBundle: ~
