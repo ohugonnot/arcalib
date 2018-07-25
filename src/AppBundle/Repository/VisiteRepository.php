@@ -135,4 +135,41 @@ class VisiteRepository extends \Doctrine\ORM\EntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    /**
+     * @param null $date
+     * @param $filters
+     * @param User $user
+     * @return array
+     */
+    public function findAdvancedArray($date = null, $filters, User $user)
+    {
+        $queryBuilder = $this->createQueryBuilder('v')
+            ->addSelect('p', 'a', 'e', 'i')
+            ->groupBy("v.id")
+            ->setMaxResults(500);
+
+        $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
+
+
+        /** @var \DateTime $date */
+        if ($date) {
+            $queryBuilder->andWhere("YEAR(v.date) = :year")
+                ->setParameter("year", $date->format("Y"))
+                ->andWhere("MONTH(v.date) = :month")
+                ->setParameter("month", $date->format("m") )
+                ->andWhere("DAY(v.date) = :day")
+                ->setParameter("day", $date->format("d") );
+        }
+
+
+        if (isset($filters["statut"]) && $filters["statut"] != null) {
+            $queryBuilder->andWhere("v.statut = :statut")
+                ->setParameter("statut", $filters["statut"]);
+        }
+
+        $queryBuilder->orderBy('v.date', 'ASC');
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
 }
