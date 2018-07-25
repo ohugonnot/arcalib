@@ -72,24 +72,18 @@
 
     {% endblock fil_ariane %}
 
-
-    
     {% block content %}
 
-
         {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
-
         <section id='document-type' data-type="essai" class="section-main">
 
             <div class="container">
 
                 <div class="row">
 
-
                     <h4 class="text-center">Liste des {{ documentEssais.getTotalItemCount }} documents pour le protocole
                          <a href="{{ path("editEssai", {id: essai.id }) }}">{{ essai.nom }}</a>
                     </h4>
-
 
                     {# Liste des documents #}
 
@@ -117,7 +111,7 @@
 
                             <th class='{% if documentEssais.isSorted('d.details') %}sorted{% endif %}'>
 
-                                {{ knp_pagination_sortable(documentEssais, 'Details', ['d.details']) }}
+                                {{ knp_pagination_sortable(documentEssais, 'Détails', ['d.details']) }}
 
                             </th>
 
@@ -208,9 +202,7 @@
 
             </div>
 
-
-            <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1" role="dialog"
-                 aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+            <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1" role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
 
                 <div class="modal-dialog modal-md" role="document">
 
@@ -297,7 +289,6 @@
                 </div>
 
             </div>
-
 
         </section>
 
