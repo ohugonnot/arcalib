@@ -8,7 +8,7 @@
 
     {% elseif app.request.get("_route") == 'editTraitement' %}
 
-        {% set title_page = "Editer " %}
+        {% set title_page = "Editer le traitement" %}
         {% set description_page = "Édition du traitement" %}
 
     {% endif %}
@@ -78,7 +78,7 @@
                         {# Titre + Boutons #}
                         <div class="form-title d-flex align-items-center">
 
-                            {{ title_page }}
+                            {{ title_page }} {% if index is defined %}{{ index + 1 }}{% endif %}
 
                             <div class="ml-auto mr-1">
 
@@ -268,100 +268,101 @@
 
                     {# Colonne liste attribution #}
                     {% if index is defined %}
-                    <div class="col-7 col-arcoffice col-arc-editer col-visite">
 
-                        <div class="form-title d-flex align-items-center">Liste des traitements : n° {{ index + 1 }}/{{ count }}
+                        <div class="col-7 col-arcoffice col-arc-editer col-visite">
 
-                            <div class="ml-auto mr-1">
-                     
-                                {# Prec #}
-                                {% if prev != null %}
+                            <div class="form-title d-flex align-items-center">Liste des traitements : n° {{ index + 1 }}/{{ count }}
 
-                                    <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editTraitement', { id: prev.id }) }}">
-                                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                <div class="ml-auto mr-1">
+                         
+                                    {# Prec #}
+                                    {% if prev != null %}
+
+                                        <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editTraitement', { id: prev.id }) }}">
+                                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                        </a>
+
+                                    {% endif %}
+
+                                    {# Suiv #}
+                                    {% if next != null %}
+
+                                        <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editTraitement', { id: next.id }) }}">
+                                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                        </a>
+
+                                    {% endif %}
+                                    
+                                    {# Add #}
+                                    <a title='Ajouter un traitement' class='btn btn-sm btn-outline-success title-tooltip' href="{{ path("addTraitement", { id: form.vars.value.inclusion.id }) }}">
+                                       <i class="fa fa-plus" aria-hidden="true"></i>
                                     </a>
 
-                                {% endif %}
+                                    {# Retour Fiche patient#}
+                                    {% if form.vars.value.inclusion.patient.id is defined %}
+                                            
+                                       {% set patient = form.vars.value.inclusion.patient %}
 
-                                 {# Suiv #}
-                                {% if next != null %}
+                                        <a class="btn btn-sm btn-outline-info" href="{{ path("patient", { id: patient.id }) }}">
+                                            <i class="fa fa-user"></i> <span>{{ patient.nomPrenom }}</span>
+                                        </a>
 
-                                    <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editTraitement', { id: next.id }) }}">
-                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                    </a>
+                                    {% endif %}
 
-                                {% endif %}
-                                
-                                {# Add #}
-                                <a title='Ajouter un traitement' class='btn btn-sm btn-outline-success title-tooltip' href="{{ path("addTraitement", { id: form.vars.value.inclusion.id }) }}">
-                                   <i class="fa fa-plus" aria-hidden="true"></i>
-                                </a>
+                                </div>
 
-                                {# Retour Fiche patient#}
-                                {% if form.vars.value.inclusion.patient.id is defined %}
-                                        
-                                   {% set patient = form.vars.value.inclusion.patient %}
+    						 </div>
 
-                                    <a class="btn btn-sm btn-outline-info" href="{{ path("patient", { id: patient.id }) }}">
-                                        <i class="fa fa-user"></i> <span>{{ patient.nomPrenom }}</span>
-                                    </a>
+                            {# Tableau attribution#}
+                            {% if allTraitements is defined %}
 
-                                 {% endif %}
-
-                            </div>
-
-						 </div>
-
-                        {# Tableau attribution#}
-                        {% if allTraitements is defined %}
-
-                            <table class="table table-sm table-striped">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Attribution</th>
-                                    <th scope="col">Date Prise</th>
-                                    <th scope="col">Traitement</th>
-                                    <th scope="col">N°/ Lot</th>
-                                    <th scope="col">Nombre/ Quantité</th>
-                                    <th scope="col">Date retour</th>
-                                    <th scope="col">Reste</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                {% for traitement in allTraitements %}
-                                    <tr {% if traitement.id == form.vars.value.id %}class="is-active"{% endif %}>
-                                        <td scope="row">
-                                            <a href="{{ path("editTraitement", {id: traitement.id}) }}">
-                                                {{ traitement.attributionAt|date("d/m/Y") }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            {{ (traitement.priseAt != null) ? traitement.priseAt|date("d/m/Y") : '' }}
-                                        </td>
-                                        <td>
-                                            {{ traitement.traitement }}
-                                        </td>
-                                        <td>
-                                            {{ traitement.numLot }}
-                                        </td>
-                                        <td>
-                                            {{ traitement.nombre }}
-                                        </td>
-                                        <td>
-                                            {{ (traitement.retourAt != null) ? traitement.retourAt|date("d/m/Y") : '' }}
-                                        </td>
-                                        <td>
-                                            {{ traitement.nombreRetour }}
-                                        </td>
-
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Attribution</th>
+                                        <th scope="col">Date Prise</th>
+                                        <th scope="col">Traitement</th>
+                                        <th scope="col">N°/ Lot</th>
+                                        <th scope="col">Nombre/ Quantité</th>
+                                        <th scope="col">Date retour</th>
+                                        <th scope="col">Reste</th>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
+                                    </thead>
 
-                    </div>
+                                    <tbody>
+                                    {% for traitement in allTraitements %}
+                                        <tr {% if traitement.id == form.vars.value.id %}class="is-active"{% endif %}>
+                                            <td scope="row">
+                                                <a href="{{ path("editTraitement", {id: traitement.id}) }}">
+                                                    {{ traitement.attributionAt|date("d/m/Y") }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ (traitement.priseAt != null) ? traitement.priseAt|date("d/m/Y") : '' }}
+                                            </td>
+                                            <td>
+                                                {{ traitement.traitement }}
+                                            </td>
+                                            <td>
+                                                {{ traitement.numLot }}
+                                            </td>
+                                            <td>
+                                                {{ traitement.nombre }}
+                                            </td>
+                                            <td>
+                                                {{ (traitement.retourAt != null) ? traitement.retourAt|date("d/m/Y") : '' }}
+                                            </td>
+                                            <td>
+                                                {{ traitement.nombreRetour }}
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+
+                        </div>
 
                     {% endif %}
                 </div>

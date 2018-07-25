@@ -73,28 +73,21 @@
 
     {% endblock fil_ariane %}
 
-
-    
     {% block content %}
 
-
         {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
-
         <section class="section-main">
 
             <div class="container">
 
                 <div class="row">
 
-
-                    <h4 class="text-center">Liste des {{ traitements.getTotalItemCount }} traitements pour l'inclusion
-                        N° {{ inclusion.numInc }} - <a
-                                href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
+                    <h4 class="text-center">
+                        Liste des {{ traitements.getTotalItemCount }} traitements pour l'inclusion N° {{ inclusion.numInc }} - <a href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
                     </h4>
 
 
                     {# Liste des traitements #}
-
                     <table class="table table-sm table-striped table-hover table-responsive">
 
                         <thead>
@@ -103,7 +96,7 @@
 
                             <th class='{% if traitements.isSorted('t.attributionAt') %}sorted{% endif %}'>
 
-                                {{ knp_pagination_sortable(traitements, 'Date d\'attribution', ['t.attributionAt']) }}
+                                {{ knp_pagination_sortable(traitements, "Date d'attribution", ['t.attributionAt']) }}
 
                             </th>
 
