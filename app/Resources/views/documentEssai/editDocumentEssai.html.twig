@@ -69,7 +69,7 @@
                 <div class="row">
 
                     {# Colonne "Édition d'un document" #}
-                    <div class="col col-arcoffice col-arc-editer col-visite">
+                    <div class=" col-arcoffice col-arc-editer col-visite {% if app.request.get("_route") == 'addDocumentEssai' %}col-8{% elseif app.request.get("_route") == 'editDocumentEssai' %}col{% endif %}">
 
                         {{ form_start(form) }}
 
@@ -87,11 +87,11 @@
 
                                     {% include 'include/liste/btn-supprimer.html.twig' with {
 
-                                        title : "Supprimer le document",
+                                        title : "Supprimer la fiche complète",
                                         route_delete : 'deleteDocumentEssai',
                                         route_liste : 'listeDocumentEssais',
                                         route_liste_param : {id: form.vars.value.essai.id},
-                                        message: "Le document a été supprimée.",
+                                        message: "Le document a été supprimé.",
                                         id: form.vars.value.id
 
                                     } %}
@@ -175,39 +175,24 @@
 
                         {{ form_end(form) }}
 
-                        {# Boutons #}
-                        {% include "documentEssai/buttons.html.twig"
-
-                            with {
-                                'has_prev_elem' : true,
-                                'has_next_elem' : true,
-                                'has_liste_elem' : true,
-                                'has_new_elem' : true
-                            }
-                        %}
-
                     </div>
 
                     {# Colonne view pdf #}
                     {% if app.request.get('_route') == 'editDocumentEssai' %}
 
-                        <div class="col-7 col-arcoffice col-arcoffice-document p-0 {% if url == null %}col-arcoffice-document-add{% endif %}">
+                        <div class="col-6 col-arcoffice col-arcoffice-document p-0 {% if url == null %}col-arcoffice-document-add{% endif %}">
 
+                            <div data-id='{{ form.vars.value.id }}' id="viewer" class="{% if url != null %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
 
+                                <div id="viewer-content">
 
-                                <div data-id='{{ form.vars.value.id }}' id="viewer" class="{% if url != null %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
+                                    <h5>Glisser/déposer ou cliquer pour télécharger un PDF <i class="fa fa-file-pdf-o"></i></h5>
 
-                                    <div id="viewer-content">
-
-                                        <h5>Glisser/déposer ou cliquer pour télécharger un PDF <i class="fa fa-file-pdf-o"></i></h5>
-
-                                        <p class="text-center"><small>(le fichier doit être au format PDF et ne pas dépasser 3 Mo.)</small></p>
-
-                                    </div>
+                                    <p class="text-center"><small>(le fichier doit être au format PDF et ne pas dépasser 3 Mo.)</small></p>
 
                                 </div>
 
-
+                            </div>
 
                             <object {% if url == null %}class="d-none"{% endif %} data="{% if url != null %}{{ url }}{% endif %}" type="application/pdf">
                                 
@@ -220,129 +205,185 @@
                     {% endif %}
 
                     {# Colonne liste pdf #}
-                    <div class="col-3 col-arcoffice col-liste-documents col-visite">
+                    {% if index is defined %}
 
-                        <div class="form-title d-flex align-items-center">Liste des documents ({{ allDocumentEssais|length }})</div>
+                        <div class="col-4 col-arcoffice col-liste-documents col-visite">
 
-                        {# Tableau #}
-                        {% if allDocumentEssais is defined %}
+                            <div class="form-title d-flex align-items-center">Liste : n° {{ index + 1 }}/{{ count }}
 
-                            <table class="table table-sm table-striped mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>JMA</th>
-                                        <th>Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for documentEssai in allDocumentEssais %}
-                                        <tr {% if documentEssai.id == form.vars.value.id %}class="is-active"{% endif %}>
-                                            <td>
-                                                <a href="{{ path("editDocumentEssai", {id: documentEssai.id}) }}">{{ documentEssai.date|date("d/m/Y") }}</a>
-                                            </td>
-                                            <td>{{ documentEssai.titre }}</td>
-                                            <td>
-                                                {% if documentEssai.file == null %}<i class='fa fa-ban mr-1 text-danger title-tooltip' data-placement="top" title="Aucun PDF"></i>{% endif %} {{ documentEssai.type }}
-                                            </td>
+                                <div class="ml-auto mr-1">
+
+                                    {#  # Prec #}
+                                    {% if prev != null %}
+
+                                        <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocumentEssai', { id: prev.id }) }}">
+                                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                        </a>
+
+                                    {% endif %}
+
+                                    {# Suiv #}
+                                    {% if next != null %}
+
+                                        <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocumentEssai', { id: next.id }) }}">
+                                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                        </a>
+
+                                    {% endif %}
+                                    
+                                    {# Add #}
+                                    <a title='Ajouter un document' class='btn btn-sm btn-outline-success title-tooltip' href="{{ path("addDocumentEssai", { id: form.vars.value.essai.id }) }}">
+                                       <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </a>
+
+                                    {# Supprimer le PDF en cours #}
+                                    <a id='remove-pdf-button' data-id="{{ form.vars.value.id }}" class="btn btn-sm btn-outline-danger title-tooltip arcoffice-buttons_delete-doc remove-document-button" href="#" title="Supprimer le PDF">
+                                        
+                                       <i class="fa fa-trash" aria-hidden="true"></i>
+
+                                    </a>
+
+                                    <a class="btn btn-sm btn-outline-secondary title-tooltip" href="{{ path('listeDocumentEssais', { id: form.vars.value.essai.id }) }}" title="Tous les documents">
+                                        
+                                        <i class="fa fa-list ml-1"></i>
+
+                                    </a>
+
+                                    {# Retour Protocole #}
+                                    {% if form.vars.value.essai.id is defined %}
+                                            
+                                       {% set essai = form.vars.value.essai %}
+
+                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("editEssai", { id: essai.id }) }}" title="{{ essai.nom }}">
+                                            <i class="fa fa-file-text"></i> <span class="d-none">{{ essai.nom }}</span>
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                            {# Tableau #}
+                            {% if allDocumentEssais is defined %}
+
+                                <table class="table table-sm table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>JMA</th>
+                                            <th>Type</th>
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-                    </div>
+                                    </thead>
+                                    <tbody>
+                                        {% for documentEssai in allDocumentEssais %}
+                                            <tr {% if documentEssai.id == form.vars.value.id %}class="is-active"{% endif %}>
+                                                <td>
+                                                    <a href="{{ path("editDocumentEssai", {id: documentEssai.id}) }}">{{ documentEssai.date|date("d/m/Y") }}</a>
+                                                </td>
+                                                <td>{{ documentEssai.titre }}</td>
+                                                <td>
+                                                    {% if documentEssai.file == null %}<i class='fa fa-ban mr-1 text-danger title-tooltip' data-placement="top" title="Aucun PDF"></i>{% endif %} {{ documentEssai.type }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </div>
 
-                    {# Modal - Ajouter/Éditer une document PDF #}
-                    <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1"
-                         role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+                        {# Modal - Ajouter/Éditer une document PDF #}
+                        <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1" role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
 
-                        <div class="modal-dialog modal-md" role="document">
+                            <div class="modal-dialog modal-md" role="document">
 
-                            <div class="modal-content">
+                                <div class="modal-content">
 
-                                {# Entête #}
-                                <div class="modal-header modal-header-violet">
+                                    {# Entête #}
+                                    <div class="modal-header modal-header-violet">
 
-                                    <p class="modal-title">Ajouter / Consulter le PDF de le document</p>
+                                        <p class="modal-title">Ajouter / Consulter le PDF de le document</p>
 
-                                    <button @click='cancel' type="button" class="close" data-dismiss="modal"
-                                            aria-label="Close">
+                                        <button @click='cancel' type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
 
-                                        <span aria-hidden="true">&times;</span>
+                                            <span aria-hidden="true">&times;</span>
 
-                                    </button>
-
-                                </div>
-
-                                {#  CORPS MODAL ajouter un document #}
-                                <div class="modal-body">
-
-                                    <form>
-
-
-                                        {# PDF N°1 #}
-                                        <div id='document-input' class="form-row form-group">
-
-                                            {# Input File #}
-                                            <label class="col-5 col-form-label">Document</label>
-
-                                            <label class="custom-file">
-
-                                                <span id='document-file' style='width:260px' class="custom-file-control"></span>
-                                                <span id='document-loader' class="loader ml-2" style='display:none'></span>
-
-                                            </label>
-
-                                        </div>
-
-                                        <div id='document-download' class="form-row form-group">
-
-                                            <label for="document-pdf" class="col-2 col-form-label">Document</label>
-
-                                            <div class="col d-flex align-items-center">
-
-                                                {# Voir le PDF #}
-                                                <a href="" target="_blank" class="btn btn-sm btn-info">
-
-                                                    <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
-
-                                                </a>
-
-                                                {# Supprimer le PDF #}
-                                                <button type="button"
-                                                        class="ml-2 btn btn-sm btn-outline-danger remove-document-button">
-                                                    <i aria-hidden="true" class="fa fa-trash"></i></button>
-
-                                                {# Loader #}
-
-
-                                            </div>
-
-                                        </div>
-
-                                    </form>
-
-                                </div>
-
-                                {# Pied de page  modal#}
-                                <div class="modal-footer">
-
-                                    <div class="ml-auto">
-
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Fermer
                                         </button>
 
                                     </div>
 
-                                </div>
+                                    {#  CORPS MODAL ajouter un document #}
+                                    <div class="modal-body">
 
-                                {# Fin MODAL ajouter un document #}
+                                        <form>
+
+
+                                            {# PDF N°1 #}
+                                            <div id='document-input' class="form-row form-group">
+
+                                                {# Input File #}
+                                                <label class="col-5 col-form-label">Document</label>
+
+                                                <label class="custom-file">
+
+                                                    <span id='document-file' style='width:260px' class="custom-file-control"></span>
+                                                    <span id='document-loader' class="loader ml-2" style='display:none'></span>
+
+                                                </label>
+
+                                            </div>
+
+                                            <div id='document-download' class="form-row form-group">
+
+                                                <label for="document-pdf" class="col-2 col-form-label">Document</label>
+
+                                                <div class="col d-flex align-items-center">
+
+                                                    {# Voir le PDF #}
+                                                    <a href="" target="_blank" class="btn btn-sm btn-info">
+
+                                                        <i aria-hidden="true" class="fa fa-arrow-right"></i> Voir le PDF
+
+                                                    </a>
+
+                                                    {# Supprimer le PDF #}
+                                                    <button type="button"
+                                                            class="ml-2 btn btn-sm btn-outline-danger remove-document-button">
+                                                        <i aria-hidden="true" class="fa fa-trash"></i></button>
+
+                                                    {# Loader #}
+
+
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                    {# Pied de page  modal#}
+                                    <div class="modal-footer">
+
+                                        <div class="ml-auto">
+
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Fermer
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    {# Fin MODAL ajouter un document #}
+
+                                </div>
 
                             </div>
 
                         </div>
 
-                    </div>
+                    {% endif %}
 
                 </div>
 
