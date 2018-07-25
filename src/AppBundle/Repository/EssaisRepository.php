@@ -203,6 +203,8 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('f')
             ->leftJoin('e.detail', 'd')
             ->addSelect('d')
+            ->leftJoin('e.documents', 'doc')
+            ->addSelect('doc')
             ->leftJoin('i.patient', 'p')
             ->addSelect('p')
             ->andWhere("e.id = :id")
@@ -304,6 +306,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('e.inclusions', 'i')
             ->leftJoin('e.factures', 'f')
             ->leftJoin('e.detail', 'd')
+            ->leftJoin('e.documents', 'doc')
             ->leftJoin('i.patient', 'p')
             ->addSelect('m')
             ->addSelect('t')
@@ -312,6 +315,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('f')
             ->addSelect('d')
             ->addSelect('p')
+            ->addSelect('doc')
             ->andwhere("e.id IN(:essaiIds)")
             ->setParameter('essaiIds', $essaiIds);
 
