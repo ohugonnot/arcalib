@@ -112,14 +112,14 @@
 
                                         <label class="mr-2" for="recherche-medecin-nom">Par date de visite </label>
 
-                                        <button @click.prevent="" class="btn btn-sm btn-outline-primary"><i class="fa fa-chevron-left"></i></button>
+                                        <button @click.prevent="dayBefore" class="btn btn-sm btn-outline-primary"><i class="fa fa-chevron-left"></i></button>
                                         <input class="recherche-medecin-nom form-control form-control-sm js-datepicker"
-                                               id="recherche-medecin-date"  type="text" value="">
-                                        <button @click.prevent="" class="btn btn-sm btn-outline-primary"><i class="fa fa-chevron-right"></i></button>
+                                               id="recherche-medecin-date" v-model='visite.query' type="text" value="">
+                                        <button @click.prevent="dayAfter" class="btn btn-sm btn-outline-primary"><i class="fa fa-chevron-right"></i></button>
 
                                     </div>
 
-                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="">
+                                    <button class="btn btn-violet btn-sm ml-2" @click.prevent="searchByVisite">
 
                                         <i class="fa fa-search"></i>
 
@@ -127,6 +127,85 @@
 
                                 </form>
 
+                                {# Résultats #}
+                                <table v-if='visite.results.length > 0'
+                                       class="recherche-visite-resultat table table-sm" id="listeVisites" v-cloak>
+
+                                    {# Compteur #}
+                                    <div v-if='visite.results.length > 0' v-cloak>
+
+                                        <div class="arcoffice-count m-0" v-if='visite.results.length < 25'>[[
+                                            visite.results.length ]] visite(s) trouvée(s)
+                                        </div>
+
+                                        <div class="arcoffice-count" v-else>Plus de [[ visite.results.length ]]
+                                            visite(s) trouvée(s), veuillez affiner votre recherche.
+                                        </div>
+
+                                    </div>
+
+                                    {# Header #}
+                                    <thead>
+
+                                    <tr>
+
+                                        <th @click="orderBy('date', 'visite')">
+
+                                            Date
+                                            <i v-bind:class='[visite.order.date == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('patient', 'visite')">
+
+                                            Patient <i
+                                                    v-bind:class='[visite.order.patient == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                        <th @click="orderBy('statut', 'visite')">
+
+                                            Statut <i
+                                                    v-bind:class='[visite.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></i>
+
+                                        </th>
+
+                                    </tr>
+
+                                    </thead>
+
+                                    <tbody v-for="visite in visitesFiltered">
+
+                                    <tr>
+
+                                        <td>
+
+                                            <a v-if='visite.date.date != null' :href="linkVisite(visite)">[[ visite.date.date | date ]]</a>
+
+                                        </td>
+
+                                        <td>
+                                            <span v-if="visite.inclusion != null && visite.inclusion.patient != null">
+                                                [[ visite.inclusion.patient.nom ]] [[ visite.inclusion.patient.prenom ]]
+                                            </span>
+                                        </td>
+
+                                        <td>[[ visite.statut ]]</td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                                <div v-if="visite.noResult" v-cloak>
+
+                                    <p>Aucun résultat ne correspond à votre recherche.</p>
+
+                                </div>
 
                             </div>
 

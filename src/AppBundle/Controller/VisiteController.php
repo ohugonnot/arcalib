@@ -208,4 +208,28 @@ class VisiteController extends Controller
 
         return $this->redirectToRoute("listeVisites");
     }
+
+    /**
+     * @Route("/visite/advanced/recherche/{day}/{month}/{year}", name="searchVisitesByDate", options={"expose"=true})
+     * @Route("/visite/advanced/recherche/{query}", name="searchVisites", options={"expose"=true})
+     * @param Request $request
+     * @param null $day
+     * @param null $month
+     * @param null $year
+     * @param null $query
+     * @return JsonResponse
+     */
+    public function searchVisitesAction(Request $request, $day = null, $month = null, $year = null, $query = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $date = new \DateTime();
+        $date->setDate($year, $month, $day);
+        $filters = $request->request->get("filters");
+        $emVisite = $em->getRepository(Visite::class);
+        $visites = $emVisite->findAdvancedArray($date, $filters, $user);
+
+        return new JsonResponse($visites);
+    }
+
 }
