@@ -303,7 +303,7 @@
                                             
                                        {% set patient = form.vars.value.inclusion.patient %}
 
-                                        <a class="btn btn-sm btn-outline-info" href="{{ path("patient", { id: patient.id }) }}">
+                                        <a title='Retour fiche patient' class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}">
                                             <i class="fa fa-user"></i> <span>{{ patient.nomPrenom }}</span>
                                         </a>
 
