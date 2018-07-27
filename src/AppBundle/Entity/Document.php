@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Document
 {
     const CONSENTEMENT = "Consentement";
+    const ATTINC = 'Fiche Inclusion';
     const CR_CST = 'CR Cst';
     const CR_HOSP = 'CR Hosp';
     const RCP = 'RCP';
@@ -26,23 +27,26 @@ class Document
     const CHIMIO = 'Chimio';
     const ORDONNANCE = 'Ordonnance';
     const RANDO = 'Rando';
+    const VISITE = 'Visite';
     const QUEST = 'Questionnaire';
     const AUTRES = 'Autres';
 
     CONST TYPE = [
         'Consentement' => self::CONSENTEMENT,
+        'Fiche Inclusion' => self::ATTINC,
         'CR Consultation' => self::CR_CST,
-        'CR Hosp' => self::CR_HOSP,
+        'CR Hospitalisation' => self::CR_HOSP,
         'RCP' => self::RCP,
-        'Anapath' => self::ANAPATH,
+        'Anatomopathologie' => self::ANAPATH,
         'Scanner' => self::SCANNER,
         'IRM' => self::IRM,
         'PetScan' => self::PET_SCAN,
         'Radio' => self::RADIO,
-        'Bilan Bio' => self::BILAN_BIO,
-        'Chimiotherapie' => self::CHIMIO,
+        'Bilan Biologique' => self::BILAN_BIO,
+        'Chimiothérapie' => self::CHIMIO,
         'Ordonnance' => self::ORDONNANCE,
         'Randomisation' => self::RANDO,
+        'Fiche Visite' => self::VISITE,
         'Questionnaire' => self::QUEST,
         'Autres' => self::AUTRES,
     ];
