@@ -51,7 +51,6 @@ class InclusionRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('i.events','ev')
             ->addSelect("p", "e", "d","t", "ei", "ev")
             ->where("p.nom like :search or p.prenom like :search or i.statut like :search or i.datInc like :search or e.nom like :search or i.numInc like :search or i.idInterne = :searchId or i.id = :searchId")
-            ->groupBy('i.id')
             ->setParameter('searchId', $searchId)
             ->setParameter('search', '%' . $search . '%');
 
