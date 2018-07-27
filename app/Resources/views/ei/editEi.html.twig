@@ -316,7 +316,7 @@
 
                     </div>
 
-                    {# Colonne liste pdf #}
+                    {# Colonne2:  liste ei #}
                     <div class="col-7 col-arcoffice col-arc-editer col-visite">
 
                         <div class="form-title d-flex align-items-center">Liste des Eis : n° {{ index + 1 }}/{{ count }}
@@ -346,12 +346,16 @@
                                    <i class="fa fa-plus" aria-hidden="true"></i>
                                 </a>
 
+                                <a class="btn btn-sm btn-outline-secondary title-tooltip" href="{{ path('listeEis', { id: form.vars.value.inclusion.id }) }}" title="Tous les Eis">
+                                    <i class="fa fa-list ml-1"></i>
+                                </a>
+
                                 {# Retour Fiche patient#}
                                 {% if form.vars.value.inclusion.patient.id is defined %}
                                         
                                    {% set patient = form.vars.value.inclusion.patient %}
 
-                                    <a class="btn btn-sm btn-outline-info" href="{{ path("patient", { id: patient.id }) }}">
+                                    <a title='Retour fiche patient' class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}">
                                         <i class="fa fa-user"></i> <span>{{ patient.nomPrenom }}</span>
                                     </a>
 
