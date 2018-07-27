@@ -40,7 +40,7 @@ class EiRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('ei')
             ->leftJoin("ei.term","t")
             ->addSelect("t")
-            ->where("ei.details like :search")
+            ->where("ei.details like :search or ei.suivi like :search")
             ->andWhere('i.id = :id')
             ->groupBy('ei.id')
             ->setParameter('search', '%' . $search . '%')
