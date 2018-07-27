@@ -175,7 +175,7 @@
 
                                 {{ form_errors(form.description) }}
 
-                                {{ form_widget(form.description, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+                                {{ form_widget(form.description, { 'attr': { 'class': 'form-control form-control-sm',"rows" : 12 } }) }}
 
                             </div>
 
@@ -243,6 +243,7 @@
 
                         <div class="col-4 col-arcoffice col-liste-documents col-visite">
 
+                            {# Barre de titre et boutons #}
                             <div class="form-title d-flex align-items-center">Liste : n° {{ index + 1 }}/{{ count }}
                                 
                                 <div class="ml-auto mr-1">
@@ -276,20 +277,22 @@
                                        <i class="fa fa-trash" aria-hidden="true"></i>
 
                                     </a>
-
+                                    
+                                    {# Liste des documents de l'inclusion #}
                                     <a class="btn btn-sm btn-outline-secondary title-tooltip" href="{{ path('inclusion_list_documents', { id: form.vars.value.inclusion.id }) }}" title="Tous les documents">
                                         
                                         <i class="fa fa-list ml-1"></i>
 
                                     </a>
+                                        <br>
 
                                     {# Retour Fiche patient#}
                                     {% if form.vars.value.inclusion.patient.id is defined %}
                                             
                                        {% set patient = form.vars.value.inclusion.patient %}
 
-                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}" title="{{ patient.nomPrenom }}">
-                                            <i class="fa fa-user"></i> <span class="d-none">{{ patient.nomPrenom }}</span>
+                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}" title="Retour fiche du patient">
+                                            <i class="fa fa-user"></i> <span> {{ patient.nomPrenom }}</span>
                                         </a>
 
                                     {% endif %}
