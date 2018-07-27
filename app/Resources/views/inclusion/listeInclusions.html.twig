@@ -185,8 +185,7 @@
                                 <td>
                                     {% if inclusion.documents|length > 0 %}
                                         <a target="_blank" href="{{ path("inclusion_list_documents", {id : inclusion.id}) }}" type="" title="" class="btn btn-sm btn-outline-primary title-tooltip" data-original-title="Liste des documents">
-                                            <i aria-hidden="true" class="fa fa-list"></i>
-                                        </a>
+                                            <i aria-hidden="true" class="fa fa-list">  {{inclusion.documents|length}}</i>      </a>
                                     {% endif %}
                                     {% if inclusion.traitements|length > 0 %}
                                         <a target="_blank" href="{{ path("listeTraitements", {id : inclusion.id}) }}" type="" title="" class="btn btn-sm btn-outline-primary title-tooltip" data-original-title="Liste des traitements">
