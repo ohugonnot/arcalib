@@ -159,7 +159,7 @@
                         </div>
                         
                         {# Description #}
-                        <div class="form-row form-group">
+                        <div class="form-row form-group ">
 
                             <div class="col">
 
@@ -167,7 +167,7 @@
 
                                 {{ form_errors(form.details) }}
 
-                                {{ form_widget(form.details, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+                                {{ form_widget(form.details, { 'attr': { 'class': 'form-control form-control-sm',"rows" : 18 } }) }}
 
                             </div>
 
@@ -248,15 +248,18 @@
                                         <i class="fa fa-list ml-1"></i>
 
                                     </a>
+                                    <br>
 
                                     {# Retour Protocole #}
                                     {% if form.vars.value.essai.id is defined %}
                                             
                                        {% set essai = form.vars.value.essai %}
 
-                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("editEssai", { id: essai.id }) }}" title="{{ essai.nom }}">
-                                            <i class="fa fa-file-text"></i> <span class="d-none">{{ essai.nom }}</span>
+                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("editEssai", { id: essai.id }) }}" title="Retour fiche Protocole">
+                                            <i class="fa fa-file-text"></i> <span >{{ essai.nom }}</span>
                                         </a>
+
+
 
                                     {% endif %}
 
