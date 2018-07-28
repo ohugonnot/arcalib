@@ -35,7 +35,7 @@
 
                 <div class="row">
 
-                    {# Recherche #}
+                    {# 1-COLONNE RECHERCHE..................................................... #}
                     <div class="col col-recherche">
 
                         <div class="row">
@@ -105,7 +105,7 @@
 
                                 </h2>
 
-                                {# Formulaire de recherche #}
+                                {# A-Formulaire de recherche #}
                                 <form class="form-inline mb-2">
 
 
@@ -423,9 +423,7 @@
                                  aria-labelledby="block-recherche-medecin">
 
                                 <h2 class="form-title d-flex align-items-center">
-
                                     Recherche par médecin
-
                                 </h2>
 
                                 {# Formulaire de recherche #}
@@ -1017,8 +1015,7 @@
 
                     </div>
 
-                    {# Actualités------------------------------------------------------------------------------------------------ #}
-
+                    {# 2-ACTUALITES..................................................... #}
                     <div class="col-3 col-xl-4 col-actualites">
 
                         <h2 class="form-title d-flex align-items-center mb-0">
@@ -1051,8 +1048,7 @@
 
                     </div>
 
-                    {# Liens favoris------------------------------------------------------------------------------------------------ #}
-
+                    {# 3-LIENS FAVORIS..................................................... #}
                     <div class="col-1 col-xl-1 col-links">
 
                         <h2 class="form-title d-flex align-items-center mb-0">
@@ -1144,8 +1140,7 @@
 
                     </div>
 
-                    {# Modal de message d'accueil/ vistes du jour ------------------------------------------------------------#}
-
+        {# MODAl D ACCEUIL ------------------------------------------------------------#}
                     {% if app.session.get("modalNewVisites") and app.user.rulesProtocole is defined and app.user.rulesProtocole != "np" %}
 
                         {{ app.session.set("modalNewVisites", true) }}
@@ -1154,6 +1149,7 @@
                              aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
+{# 2- visites Proches.................................................... #}                                    
                                     <div class="modal-header">
                                         <h5 class="modal-title">Visite(s) proches</h5>
 
@@ -1162,7 +1158,6 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-
 
                                         <ul>
 
@@ -1243,14 +1238,12 @@
                                                                             {# </a> #}
                                                                         {% endif %}
 
-
                                                                         <br>
                                                                         {{ visite.calendar }} - {{ visite.statut }} -
 
                                                                         {% if visite.arc != null %}
                                                                             {{ visite.arc.nomArc }}
                                                                         {% endif %}
-
 
                                                                     {% endif %}
                                                                 </li>
@@ -1261,14 +1254,13 @@
                                                 {% endif %}
 
                                             </div>
-
+{# 2- Alertes EI..................................................... #}
                                         {% endfor %}
 
                                         {% if eiAlertes|length > 0 %}
 
                                             <hr>
-
-                                            <h5 class="modal-title">Alertes EI/EIG: </h5>
+                                            <h5 class="modal-title">Alertes EI/EIGs: </h5>
                                             <hr>
 
                                             {{ eiAlertes|length }} alerte(s)
@@ -1294,11 +1286,10 @@
                                             </ul>
 
                                         {% endif %}
-
+{# 3- Screen en cours..................................................... #}
                                         {% if inclusionsScreen|length > 0 %}
 
                                             <hr>
-
                                             <h5 class="modal-title">Screen en cours:</h5>
                                             <hr>
                                             {{ inclusionsScreen|length }} patient(s)
@@ -1306,22 +1297,14 @@
                                                 <Li><a href="{{ path("listeInclusions", {"statut": "screen"}) }}">Voir
                                                         la liste</a></Li>
                                             </ul>
-
-
-
-
                                         {% endif %}
-
-
                                     </div>
-
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
                                         <h5 class="modal-title">Bonjour {{ app.user.username }}.
                                             <br>Vous êtes connecté.</h5>
                                         <hr>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
