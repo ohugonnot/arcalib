@@ -211,12 +211,12 @@
 
                             <div class="form-title d-flex align-items-center">Liste : n° {{ index + 1 }}/{{ count }}
 
-                                <div class="ml-auto mr-1">
+                                <div class="ml-auto">
 
                                     {#  # Prec #}
                                     {% if prev != null %}
 
-                                        <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocumentEssai', { id: prev.id }) }}">
+                                        <a title="Précédent" class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocumentEssai', { id: prev.id }) }}">
                                             <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                         </a>
 
@@ -225,7 +225,7 @@
                                     {# Suiv #}
                                     {% if next != null %}
 
-                                        <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocumentEssai', { id: next.id }) }}">
+                                        <a title='Suivant' class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocumentEssai', { id: next.id }) }}">
                                             <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                         </a>
 
@@ -248,6 +248,7 @@
                                         <i class="fa fa-list ml-1"></i>
 
                                     </a>
+
                                     <br>
 
                                     {# Retour Protocole #}
@@ -255,11 +256,9 @@
                                             
                                        {% set essai = form.vars.value.essai %}
 
-                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("editEssai", { id: essai.id }) }}" title="Retour fiche Protocole">
+                                        <a class="mt-2 btn btn-sm btn-outline-info title-tooltip" href="{{ path("editEssai", { id: essai.id }) }}" title="Retour fiche Protocole">
                                             <i class="fa fa-file-text"></i> <span >{{ essai.nom }}</span>
                                         </a>
-
-
 
                                     {% endif %}
 
