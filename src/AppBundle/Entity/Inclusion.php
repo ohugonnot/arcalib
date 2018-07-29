@@ -221,13 +221,13 @@ class Inclusion
 
     /**
      * @var ArrayCollection|EI[]
-     * @ORM\OneToMany(targetEntity="EI", mappedBy="inclusion", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="EI", mappedBy="inclusion", cascade={"all"})
      */
     private $eis;
 
     /**
      * @var ArrayCollection|Event[]
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="inclusion", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="inclusion", cascade={"all"})
      */
     private $events;
 
