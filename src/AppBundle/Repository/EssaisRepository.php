@@ -34,9 +34,11 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function getQuery(User $user, $search)
     {
         $queryBuilder = $this->createQueryBuilder('e')
+            ->select('COUNT(DISTINCT i) AS  nb', 'e')
             ->leftJoin('e.inclusions', 'i')
             ->addSelect("i")
             ->where("e.nom like :search or e.numeroInterne like :search or e.statut like :search or e.typeEssai like :search or e.typeProm like :search or e.dateOuv like :search or e.dateClose like :search")
+            ->groupBy("e.id")
             ->setParameter('search', '%' . $search . '%');
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);

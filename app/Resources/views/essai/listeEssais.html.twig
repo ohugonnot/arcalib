@@ -150,7 +150,8 @@
 
                         <tbody class="list">
 
-                        {% for essai in essais %}
+                        {% for result in essais%}
+                            {% set essai = result[0] %}
 
                             <tr>
 
@@ -167,7 +168,7 @@
                                 <td class="dateClose">{{ essai.dateClose is empty ? "" : essai.dateClose|date('d/m/Y') }}</td>
                                 <td class="typeEssai">{{ essai.typeEssai }}</td>
                                 <td class="typeProm">{{ essai.typeProm }}</td>
-                                <td><span v-if='essai.inclusions != null'>{{ essai.inclusions|length }}</span></td>
+                                <td><span v-if='essai.inclusions != null'>{{ result.nb }}</span></td>
 
                             </tr>
 
