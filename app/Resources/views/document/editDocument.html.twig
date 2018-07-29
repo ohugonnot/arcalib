@@ -246,12 +246,12 @@
                             {# Barre de titre et boutons #}
                             <div class="form-title d-flex align-items-center">Liste : n° {{ index + 1 }}/{{ count }}
                                 
-                                <div class="ml-auto mr-1">
+                                <div class="ml-auto">
                                     
                                     {# Prec #}
                                     {% if prev != null %}
 
-                                        <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocument', { id: prev.id }) }}">
+                                        <a title="Précédent" class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocument', { id: prev.id }) }}">
                                             <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                         </a>
 
@@ -260,7 +260,7 @@
                                     {# Suiv #}
                                     {% if next != null %}
 
-                                        <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocument', { id: next.id }) }}">
+                                        <a title='Suivant' class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocument', { id: next.id }) }}">
                                             <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                         </a>
 
@@ -284,14 +284,15 @@
                                         <i class="fa fa-list ml-1"></i>
 
                                     </a>
-                                        <br>
+                                    
+                                    <br>
 
                                     {# Retour Fiche patient#}
                                     {% if form.vars.value.inclusion.patient.id is defined %}
                                             
                                        {% set patient = form.vars.value.inclusion.patient %}
 
-                                        <a class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}" title="Retour fiche du patient">
+                                        <a class="mt-2 btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}" title="Retour fiche du patient">
                                             <i class="fa fa-user"></i> <span> {{ patient.nomPrenom }}</span>
                                         </a>
 
