@@ -188,6 +188,11 @@ class VerificationController extends Controller
         if ($essai->getTypeProm() == null) {
             $this->erreurs["essai"][$essai->getId()][13] = "e13-Le type du promoteur n'a pas été renseigné ";
         }
+
+        if ($essai->getStatut() == Essais::REFUS && !$essai->getInclusions()->isEmpty()) {
+            $this->erreurs["essai"][$essai->getId()][14] = "e14-Les protocole avec un statut REFUS ne doivent pas avoir d'inclusion.";
+        }
+
     }
 
     private function VerificationInclusion(Inclusion $inclusion)

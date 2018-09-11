@@ -21,7 +21,6 @@ class TagType extends AbstractType
         $builder
             ->add('nom', TextType::class, ["required" => false, 'label' => 'Nom'])
             ->add('classe', TextType::class, ["required" => false, 'label' => 'Classe'])
-            // ->add('essais', TextType::class, ["required" => false,'label' => 'Nb essais'])
             ->add('envoyer', SubmitType::class, array(
                 'label' => "Enregistrer",
             ));

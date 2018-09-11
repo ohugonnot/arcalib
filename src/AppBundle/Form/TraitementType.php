@@ -23,22 +23,18 @@ class TraitementType extends AbstractType
         $builder
             ->add('attributionAt', DateType::class, [
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => true,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date d'attribution",
             ])
             ->add('priseAt', DateType::class, [
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date de prise",
             ])
             ->add('traitement', TextType::class, [
@@ -51,12 +47,10 @@ class TraitementType extends AbstractType
             ])
             ->add('peremptionAt', DateType::class, [
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date de peremption",
             ])
             ->add('nombre', IntegerType::class, [
@@ -80,12 +74,10 @@ class TraitementType extends AbstractType
             ])
             ->add('retourAt', DateType::class, [
                 'widget' => 'single_text',
-                // do not render as type="date", to avoid HTML5 date pickers
                 "required" => true,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                // add a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date de retour",
             ])
             ->add('traitementRetour', TextType::class, [

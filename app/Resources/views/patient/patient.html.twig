@@ -519,8 +519,8 @@
                                     </a> #}
 
 
-                                    <a target='_blank' v-if="inclusion.documents.length >= 0" :href='firstDocument'
-                                       title='Voir les documents' class="btn btn-sm btn-outline-primary title-tooltip">
+                                    <a :href='firstDocument'
+                                       title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]]   </i>
 
@@ -543,7 +543,7 @@
 
                                     <br>
 
-                                    <a target='_blank' :href='firstTraitement'
+                                    <a :href='firstTraitement'
                                        title='Liste des traitements' class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-medkit" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
@@ -558,10 +558,10 @@
 
                                      <br>
 
-                                    <a target='_blank' :href='firstTraitement'
-                                       title='EI/EIG' class="btn btn-sm btn-outline-primary title-tooltip">
+                                    <a :href='firstEi'
+                                       title='Liste des EI/EIG' class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-ambulance" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+                                        <i class="fa fa-ambulance" aria-hidden="true"> [[ inclusion.eis.length ]] </i>
 
                                     </a>
 
@@ -573,29 +573,29 @@
 
                                      <br>
 
-                                    <a target='_blank' :href='firstTraitement'
-                                       title='Evenements' class="btn btn-sm btn-outline-primary title-tooltip">
+                                    <a :href='firstEvent'
+                                       title='Liste des Evenements' class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+                                        <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.events.length ]] </i>
 
                                     </a>
 
                                 </div>
 
-                                <div class="col">
+                               {# <div class="col">
 
                                     <label class="col-form-label">Surcoûts</label>
 
                                     <br>
 
-                                    <a target='_blank' :href='firstTraitement'
-                                       title='Surcouts' class="btn btn-sm btn-outline-primary title-tooltip">
+                                    <a target='_blank'
+                                       title='Liste des Surcouts' class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-eur" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
 
                                     </a>
 
-                                </div>
+                                </div> #}
 
                             </div>
 
@@ -859,7 +859,7 @@
 
                                     <select v-model='inclusion.arc.id' class="form-control form-control-sm" id="arc">
 
-                                        <option value='null' selected n></option>
+                                        <option value='null' selected></option>
 
                                         {% for arc in arcs %}
 

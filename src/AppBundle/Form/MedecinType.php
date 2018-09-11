@@ -26,25 +26,20 @@ class MedecinType extends AbstractType
             ->add('nom', TextType::class, ['label' => 'Nom'])
             ->add('prenom', TextType::class, ['label' => 'Prénom'])
             ->add('service', EntityType::class, array(
-                // query choices from this entity
                 'class' => Service::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('s')
                         ->orderBy('s.nom', 'ASC');
                 },
-                // use the User.username property as the visible option string
                 'choice_label' => 'nom',
                 'required' => false,
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                // 'expanded' => true,
             ))
             ->add('dateEntre', DateType::class, array(
                 'widget' => 'single_text',
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date d'entrée"
             ))
             ->add('dateSortie', DateType::class, array(
@@ -52,7 +47,7 @@ class MedecinType extends AbstractType
                 "required" => false,
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
                 'label' => "Date de départ"
             ))
             ->add('dect', TextType::class, ["required" => false, 'label' => 'DECT'])

@@ -59,9 +59,9 @@ class PatientRepository extends \Doctrine\ORM\EntityRepository
     public function findByNomPrenom($query, User $user)
     {
         $query = explode(" ", $query);
-        $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->setMaxResults(10);
-
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->setMaxResults(10)
+            ->groupBy('p');
         foreach ($query as $k => $q) {
             $queryBuilder->andWhere("p.nom like :q$k or p.prenom like :q$k or p.nomNaissance like :q$k")
                 ->setParameter("q$k", '%' . $q . "%");

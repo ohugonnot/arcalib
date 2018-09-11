@@ -1,0 +1,441 @@
+{% extends 'base.html.twig' %}
+
+	{# Variables #}
+	{% if app.request.get("_route") == 'addEi' %}
+
+        {% set title_page = "Ajouter un nouveau ei" %}
+        {% set description_page = "Création d'un nouveau ei" %}
+
+    {% elseif app.request.get("_route") == 'editEi' %}
+
+        {% set title_page = "Modifier " %}
+        {% set description_page = "Édition du ei" %}
+
+    {% endif %}
+	
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+                {{ title_page }} - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                {{ description_page }}
+
+            {% endblock seo_description %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-edition{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : title_page } %}
+
+            {% block fil_ariane_link %}
+
+                <li class="breadcrumb-item d-flex align-items-center" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+                    <a href="{{ path('listeEis', {id: form.vars.value.inclusion.id }) }}">Eis de
+                        l'inclusion N° {{ form.vars.value.inclusion.numInc }}</a>
+
+                </li>
+
+            {% endblock %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+    {# Section  #}
+	{% block content %}
+
+        <input id="ctcae" type="hidden" value="{{ { soc: form.vars.value.soc.id|default(""), term: form.vars.value.term.id|default(""), grade: form.vars.value.grade.id|default("")}|json_encode }}">
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row">
+
+                    {# Colonne Édition d'une ei #}
+                    <div id='formEi' class="col col-arcoffice col-arc-editer">
+
+                        {{ form_start(form) }}
+
+                        {# {% form_theme form 'form/submit.html.twig' %} #}
+                        {% form_theme form with ['form/boostrap_4_layout_custom.html.twig', 'form/submit.html.twig'] %}
+
+                        {# Titre + Boutons #}
+                        <div class="form-title d-flex align-items-center">
+
+                            {{ title_page }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Supprimer #}
+                                {% if form.vars.value.id %}
+
+                                    {% include 'include/liste/btn-supprimer.html.twig' with {
+
+                                        title : "Supprimer le ei",
+                                        route_delete : 'deleteEi',
+                                        route_liste : 'listeEis',
+                                        route_liste_param : {id: form.vars.value.inclusion.id},
+                                        message: "Le ei a été supprimée.",
+                                        id: form.vars.value.id
+
+                                    } %}
+
+                                {% endif %}
+
+                                {# Enregistrer #}
+                                {{ form_widget(form.envoyer, {
+                                    'fa' : 'fa-check',
+                                    'right' : true,
+                                    'label' : ' ',
+                                    'attr': {
+                                        'class': 'btn btn-sm btn-outline-success title-tooltip',
+                                        'title': "Enregistrer le ei"
+                                    }
+                                }) }}
+
+                            </div>
+
+                        </div>
+
+                        {# CORPS #}
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.debutAt) }}
+
+                                {{ form_errors(form.debutAt) }}
+
+                                {{ form_widget(form.debutAt, { 'attr': { 'class': 'form-control form-control-sm js-datepicker', } }) }}
+
+                            </div>
+
+                            <div class="col">
+
+                                {{ form_label(form.suivi) }}
+
+                                {{ form_errors(form.suivi) }}
+
+                                {{ form_widget(form.suivi, { 'attr': { 'class': 'form-control form-control-sm', } }) }}
+
+                            </div>
+
+                            <div class="col">
+
+                                {{ form_label(form.finAt) }}
+
+                                {{ form_errors(form.finAt) }}
+
+                                {{ form_widget(form.finAt, { 'attr': { 'class': 'form-control form-control-sm js-datepicker'} }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col-4">
+
+                                {{ form_label(form.type) }}
+
+                                {{ form_errors(form.type) }}
+
+                                {{ form_widget(form.type, { 'attr': { 'class': 'form-control form-control-sm'} }) }}
+
+                            </div>
+
+                            <div class="col">
+
+                                {{ form_label(form.siEIG) }}
+
+                                {{ form_errors(form.siEIG) }}
+
+                                {{ form_widget(form.siEIG, { 'attr': { 'class': 'form-control form-control-sm', } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            {# Auteur #}
+                            <div class="col">
+
+                                {{ form_label(form.soc) }}
+
+                                {{ form_errors(form.soc) }}
+
+                                {{ form_widget(form.soc, { 'attr': { 'class': 'form-control form-control-sm', "v-model": 'soc', '@change': 'changeSoc()' } }) }}
+
+                            </div>
+
+
+                            <div class="col">
+
+                                <label for="appbundle_ei_term" class="required">Term</label>
+                                <select id="appbundle_ei_term" v-model='term' @change="changeTerm()"
+                                        name="appbundle_ei[term]" class="form-control form-control-sm" v-cloak="hidden">
+                                    <option v-for="option in termOptions" :value="option.value">
+                                        [[ option.text ]]
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                <label for="appbundle_ei_grade" class="required">Grade</label>
+                                <select id="appbundle_ei_grade" v-model='grade' name="appbundle_ei[grade]"
+                                        class="form-control form-control-sm" v-cloak="hidden">
+                                    <option v-for="option in gradeOptions" :value="option.value">
+                                        [[ option.text ]]
+                                    </option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.diagnostic) }}
+
+                                {{ form_errors(form.diagnostic) }}
+
+                                {{ form_widget(form.diagnostic, { 'attr': { 'class': 'form-control form-control-sm'} }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.evolution) }}
+
+                                {{ form_errors(form.evolution) }}
+
+                                {{ form_widget(form.evolution, { 'attr': { 'class': 'form-control form-control-sm'} }) }}
+
+                            </div>
+
+                            <div class="col">
+
+                                {{ form_label(form.surcouts) }}
+
+                                {{ form_errors(form.surcouts) }}
+
+                                {{ form_widget(form.surcouts, { 'attr': { 'class': 'form-control form-control-sm'} }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col-4">
+
+                                {{ form_label(form.siDeces) }}
+
+                                {{ form_errors(form.siDeces) }}
+
+                                {{ form_widget(form.siDeces, { 'attr': { 'class': 'form-control form-control-sm'} }) }}
+
+                            </div>
+
+                            <div class="col">
+
+                                {{ form_label(form.texteDC) }}
+
+                                {{ form_errors(form.texteDC) }}
+
+                                {{ form_widget(form.texteDC, { 'attr': { 'class': 'form-control form-control-sm'} }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.details) }}
+
+                                {{ form_errors(form.details) }}
+
+                                {{ form_widget(form.details, { 'attr': { 'class': 'form-control form-control-sm', "rows": 5} }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.users) }}
+
+                                {{ form_errors(form.users) }}
+
+                                {{ form_widget(form.users, { 'attr': { 'class': 'form-control form-control-sm', "rows": 5} }) }}
+
+                            </div>
+
+                        </div>
+
+                        {% do form.term.setRendered %}
+                        {% do form.grade.setRendered %}
+
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    {# Colonne2:  liste ei #}
+                    <div class="col-7 col-arcoffice col-arc-editer col-visite">
+
+                        <div class="form-title d-flex align-items-center">Liste des Eis : n° {{ index + 1 }}/{{ count }}
+
+                            <div class="ml-auto mr-1">
+
+                                {# Prec #}
+                                {% if prev != null %}
+
+                                    <a title="Précédent" class="btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editEi', { id: prev.id }) }}">
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    </a>
+
+                                {% endif %}
+
+                                 {# Suiv #}
+                                {% if next != null %}
+
+                                    <a title='Suivant' class='btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editEi', { id: next.id }) }}">
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+
+                                {% endif %}
+                                
+                                {# Add #}
+                                <a title='Ajouter un Ei' class='btn btn-sm btn-outline-success title-tooltip' href="{{ path("addEi", { id: form.vars.value.inclusion.id }) }}">
+                                   <i class="fa fa-plus" aria-hidden="true"></i>
+                                </a>
+
+                                <a class="btn btn-sm btn-outline-secondary title-tooltip" href="{{ path('listeEis', { id: form.vars.value.inclusion.id }) }}" title="Tous les Eis">
+                                    <i class="fa fa-list ml-1"></i>
+                                </a>
+
+                                {# Retour Fiche patient#}
+                                {% if form.vars.value.inclusion.patient.id is defined %}
+                                        
+                                   {% set patient = form.vars.value.inclusion.patient %}
+
+                                    <a title='Retour fiche patient' class="btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}">
+                                        <i class="fa fa-user"></i> <span>{{ patient.nomPrenom }}</span>
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if allEis is defined %}
+
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Début</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Fin</th>
+                                    <th scope="col">Terme</th>
+                                    <th scope="col">Evolution</th>
+
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for ei in allEis %}
+                                    <tr {% if ei.id == form.vars.value.id %}class="is-active"{% endif %}>
+                                        <td scope="row">
+                                            <a href="{{ path("editEi", {id: ei.id}) }}">
+                                                {{ ei.debutAt|date("d/m/Y") }}
+                                            </a>
+                                        </td>
+
+                                        <td scope="row">
+                                            {{ ei.suivi }}
+
+                                        </td>
+                                        <td scope="row">
+                                            {% if ei.finAt %}
+                                                {{ ei.finAt|date("d/m/Y") }}
+                                            {% endif %}
+                                        </td>
+                                        <td scope="row">
+                                            {{ ei.term.nom }}
+                                        </td>
+
+                                        <td scope="row">
+                                            {{ ei.evolution}}
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}
+
+    {% block javascripts %}
+
+        {{ parent() }}
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/fr.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#appbundle_ei_users').select2({
+                    language: "fr",
+                    width: "100%"
+                });
+            });
+        </script>
+    {% endblock %}

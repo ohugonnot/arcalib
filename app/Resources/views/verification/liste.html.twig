@@ -10,15 +10,7 @@
                 {% if type == 'essai' %}
 
                     {% set  nom = essais[id].nom %}
-                    {% set path =  path('protocole', {"id": id }) %}
-
-                    {% if essais[id].statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') %}
-
-                        {% set path =  path('protocole', {"id": id, "archive": true }) %}
-
-                    {% endif %}
-
-
+                    {% set path =  path('editEssai', {"id": id }) %}
 
                 {% elseif  type == 'patient' %}
 
@@ -97,13 +89,7 @@
             {% if type == 'essai' %}
 
                 {% set  nom = essais[id].nom %}
-                {% set path =  path('protocole', {"id": id }) %}
-
-                {% if essais[id].statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') %}
-
-                    {% set path =  path('protocole', {"id": id, "archive": true }) %}
-
-                {% endif %}
+                {% set path =  path('editEssai', {"id": id }) %}
 
             {% elseif  type == 'patient' %}
 

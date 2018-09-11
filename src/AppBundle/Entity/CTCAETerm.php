@@ -44,6 +44,7 @@ class CTCAETerm
     /**
      * @var ArrayCollection|CTCAEGrade[]
      * @ORM\OneToMany(targetEntity="CTCAEGrade", mappedBy="term", cascade={"persist"})
+     * @ORM\OrderBy({"grade" = "ASC"})
      */
     private $grades;
 

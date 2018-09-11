@@ -39,10 +39,20 @@ class TodoController extends Controller
             ->leftJoin("t.destinataires", "d")
             ->where("(t.importance like :search or t.titre like :search or t.texte like :search or t.niveauResolution like :search  or t.dateAlerte like :search or t.dateFin like :search or d.username like :search or d.email like :search  or a.username like :search or a.email like :search)")
             ->addSelect("d", "a")
-            ->setParameter("search", $search);
+            ->setParameter("search", '%'. $search . '%');
 
         if ($request->query->get("resolu") != null && $request->query->get("resolu")) {
             $queryBuilder->andWhere("t.niveauResolution != '" . Todo::RESOLU . "' and t.niveauResolution != '" . Todo::RESOLU_AVEC_REMARQUES . "'");
+        }
+
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+
+            $todos = $paginator->paginate(
+                $queryBuilder->getQuery(), /* query NOT result */
+                $request->query->getInt('page', 1)/*page number*/,
+                20/*limit per page*/,
+                array('defaultSortFieldName' => ['t.dateFin'], 'defaultSortDirection' => 'ASC', "wrap-queries" => true, "anchor" => '#block-notes-all')
+            );
         }
 
         $myTodosBuilder = clone $queryBuilder;
@@ -64,16 +74,6 @@ class TodoController extends Controller
             20/*limit per page*/,
             array('defaultSortFieldName' => ['t.dateFin'], 'defaultSortDirection' => 'ASC', "wrap-queries" => true, "anchor" => '#block-notes-recus')
         );
-
-        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-
-            $todos = $paginator->paginate(
-                $queryBuilder->getQuery(), /* query NOT result */
-                $request->query->getInt('page', 1)/*page number*/,
-                20/*limit per page*/,
-                array('defaultSortFieldName' => ['t.dateFin'], 'defaultSortDirection' => 'ASC', "wrap-queries" => true, "anchor" => '#block-notes-all')
-            );
-        }
 
         $response = $this->render('todo/listeTodos.html.twig', [
             'todos' => (isset($todos)) ? $todos : [],
