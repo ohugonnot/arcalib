@@ -126,16 +126,6 @@ class DefaultController extends Controller
 
         $message[] = $process->getOutput();
 
-        $process = new Process('php ./../bin/console cache:clear --env=demo --no-debug');
-        $process->run();
-
-        // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        $message[] = $process->getOutput();
-
         $process = new Process('chmod -R 777 ./../var/cache');
 
         return new JsonResponse(["Message" => $message]);
