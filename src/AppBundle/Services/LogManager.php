@@ -42,6 +42,9 @@ class LogManager
         if ($this->tokenStorage->getToken() != null) {
             $this->user = $this->tokenStorage->getToken()->getUser() ?? null;
         }
+        if ($this->user === "anon.") {
+            $this->user = null;
+        }
 
         $log = new Log();
         date_default_timezone_set('Europe/Paris');

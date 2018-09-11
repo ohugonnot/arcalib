@@ -31,7 +31,6 @@ class VisiteRepository extends \Doctrine\ORM\EntityRepository
         if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
             $queryBuilder->andWhere("u = :user")
                 ->setParameter("user", $user)
-                ->leftJoin('i.essai', 'e')
                 ->leftJoin('e.users', 'u');
 
         }
@@ -41,15 +40,17 @@ class VisiteRepository extends \Doctrine\ORM\EntityRepository
 
 
     /**
+     * @param User $user
+     * @param $search
+     * @param $searchId
      * @return \Doctrine\ORM\Query
      */
     public function getQuery(User $user, $search, $searchId)
     {
         $queryBuilder = $this->createQueryBuilder('v')
-            ->select('v')
             ->where("v.id like :search or p.nom like :search or p.prenom like :search or e.nom like :search or v.date like :search or v.statut like :search or v.type like :search or v.calendar like :search or v.id = :searchId")
             ->addSelect("e","a","p","i")
-            ->groupBy('i.id')
+            ->groupBy('v.id')
             ->setParameter('searchId', $searchId)
             ->setParameter('search', '%' . $search . '%');
 
@@ -133,5 +134,42 @@ class VisiteRepository extends \Doctrine\ORM\EntityRepository
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param null $date
+     * @param $filters
+     * @param User $user
+     * @return array
+     */
+    public function findAdvancedArray($date = null, $filters, User $user)
+    {
+        $queryBuilder = $this->createQueryBuilder('v')
+            ->addSelect('p', 'a', 'e', 'i')
+            ->groupBy("v.id")
+            ->setMaxResults(500);
+
+        $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
+
+
+        /** @var \DateTime $date */
+        if ($date) {
+            $queryBuilder->andWhere("YEAR(v.date) = :year")
+                ->setParameter("year", $date->format("Y"))
+                ->andWhere("MONTH(v.date) = :month")
+                ->setParameter("month", $date->format("m") )
+                ->andWhere("DAY(v.date) = :day")
+                ->setParameter("day", $date->format("d") );
+        }
+
+
+        if (isset($filters["statut"]) && $filters["statut"] != null) {
+            $queryBuilder->andWhere("v.statut = :statut")
+                ->setParameter("statut", $filters["statut"]);
+        }
+
+        $queryBuilder->orderBy('v.date', 'ASC');
+
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 }

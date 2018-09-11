@@ -204,7 +204,7 @@
 
                                 <td>
 
-                                    <a {% if facture.essai != null %}href="{{ path("protocole", {id: facture.essai.id}) }}"{% endif %}>
+                                    <a {% if facture.essai != null %}href="{{ path("editEssai", {id: facture.essai.id}) }}"{% endif %}>
 
                                         {{ facture.essai.nom|default("") }}
 

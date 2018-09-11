@@ -37,7 +37,6 @@ class AnnuaireType extends AbstractType
             ->add('fax', TextType::class, ["required" => false, 'label' => 'Fax'])
             ->add('notes')
             ->add('essai', EntityType::class, array(
-
                 'class' => Essais::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('e')
@@ -45,8 +44,6 @@ class AnnuaireType extends AbstractType
                 },
                 'choice_label' => 'nom',
                 'required' => false,
-
-                //--- ajout de la class pour activer select2 -> SELECT avec recherche d'un patient  
                 'attr' => ["class" => "js-select2"],
             ))
             ->add('autre', TextType::class, ["required" => false, 'label' => 'Autre'])

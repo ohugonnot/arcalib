@@ -35,7 +35,8 @@
 
                 <div class="ml-auto d-flex">
 
-                    <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addTraitement', {id: inclusion.id}) }}">
+                    <a class="btn btn-sm btn-outline-primary mr-3"
+                       href="{{ path('addTraitement', {id: inclusion.id}) }}">
 
                         Ajouter <i class="fa fa-plus ml-1"></i>
 
@@ -46,7 +47,7 @@
 
                         <div class="arcoffice-count">
 
-                            {{ traitements.getTotalItemCount }} traitements(s) trouvée(s)
+                            {{ traitements.getTotalItemCount }}  traitements(s) trouvée(s)
 
                         </div>
 
@@ -72,28 +73,21 @@
 
     {% endblock fil_ariane %}
 
-
-    
     {% block content %}
 
-
         {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
-
         <section class="section-main">
 
             <div class="container">
 
                 <div class="row">
 
-
-                    <h4 class="text-center">Liste des {{ traitements.getTotalItemCount }} traitements pour l'inclusion
-                        N° {{ inclusion.numInc }} - <a
-                                href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
+                    <h4 class="text-center">
+                        Liste des {{ traitements.getTotalItemCount }} traitements pour l'inclusion N° {{ inclusion.numInc }} - <a href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
                     </h4>
 
 
                     {# Liste des traitements #}
-
                     <table class="table table-sm table-striped table-hover table-responsive">
 
                         <thead>
@@ -102,7 +96,7 @@
 
                             <th class='{% if traitements.isSorted('t.attributionAt') %}sorted{% endif %}'>
 
-                                {{ knp_pagination_sortable(traitements, 'Date d\'attribution', ['t.attributionAt']) }}
+                                {{ knp_pagination_sortable(traitements, "Date d'attribution", ['t.attributionAt']) }}
 
                             </th>
 
@@ -168,23 +162,23 @@
                                 </td>
 
                                 <td>
-                                        {{ (traitement.priseAt != null) ? traitement.priseAt|date('d/m/Y') : '' }}
+                                    {{ (traitement.priseAt != null) ? traitement.priseAt|date('d/m/Y') : '' }}
                                 </td>
 
                                 <td>
-                                        {{ (traitement.peremptionAt != null) ? traitement.peremptionAt|date('d/m/Y') : '' }}
+                                    {{ (traitement.peremptionAt != null) ? traitement.peremptionAt|date('d/m/Y') : '' }}
                                 </td>
 
                                 <td>
                                     {{ traitement.traitement }}
-                                    {% if traitement.retour and traitement.traitement != null  %}
+                                    {% if traitement.retour and traitement.traitement != null %}
                                         / {{ traitement.traitementRetour }}
                                     {% endif %}
                                 </td>
 
                                 <td>
                                     {{ traitement.nombre }}
-                                    {% if traitement.retour and traitement.nombre != null  %}
+                                    {% if traitement.retour and traitement.nombre != null %}
                                         / {{ traitement.nombreRetour }}
                                     {% endif %}
                                 </td>

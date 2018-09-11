@@ -221,9 +221,16 @@ class Inclusion
 
     /**
      * @var ArrayCollection|EI[]
-     * @ORM\OneToMany(targetEntity="EI", mappedBy="inclusion", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="EI", mappedBy="inclusion", cascade={"all"})
      */
     private $eis;
+
+    /**
+     * @var ArrayCollection|Event[]
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="inclusion", cascade={"all"})
+     */
+    private $events;
+
 
 
     /**------------------------constructor----------------------------- */
@@ -237,7 +244,9 @@ class Inclusion
         $this->documents = new ArrayCollection();
         $this->traitements = new ArrayCollection();
         $this->eis = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
+
     /**------------------------Get et set variables----------------------------- */
     /**
      * Get id
@@ -248,6 +257,41 @@ class Inclusion
     {
         return $this->id;
     }
+
+    /**
+     * @return Event[]|ArrayCollection
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function addEvent(Event $event)
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setInclusion($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function removeEvent(Event $event)
+    {
+        if ($this->events->contains($event)) {
+            $this->events->removeElement($event);
+            $event->setInclusion(null);
+        }
+        return $this;
+    }
+
 
     /**
      * Get datScr

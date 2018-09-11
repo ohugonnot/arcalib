@@ -29,6 +29,7 @@ class CTCAESoc
     /**
      * @var ArrayCollection|CTCAETerm[]
      * @ORM\OneToMany(targetEntity="CTCAETerm", mappedBy="soc", cascade={"persist"})
+     * @ORM\OrderBy({"nom" = "ASC"})
      */
     private $terms;
 

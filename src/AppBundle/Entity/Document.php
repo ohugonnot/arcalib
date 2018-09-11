@@ -12,38 +12,49 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DocumentRepository")
  */
 class Document
-{
+{   const HIS = 'Historique';
     const CONSENTEMENT = "Consentement";
+    const ATTINC = 'Fiche Inclusion';
     const CR_CST = 'CR Cst';
     const CR_HOSP = 'CR Hosp';
+    const CR_OP = 'CR Opératoire';
     const RCP = 'RCP';
     const ANAPATH = 'Anapath';
     const SCANNER = 'Scanner';
     const IRM = 'IRM';
     const PET_SCAN = 'PetScan';
     const RADIO = 'Radio';
+    const ECG = 'ECG';
     const BILAN_BIO = 'Bilan Bio';
     const CHIMIO = 'Chimio';
     const ORDONNANCE = 'Ordonnance';
     const RANDO = 'Rando';
+    const VISITE = 'Visite';
     const QUEST = 'Questionnaire';
+    const QUERY = 'Queries';
     const AUTRES = 'Autres';
 
     CONST TYPE = [
+        'Historique' => self::HIS,
         'Consentement' => self::CONSENTEMENT,
+        'Fiche Inclusion' => self::ATTINC,
         'CR Consultation' => self::CR_CST,
-        'CR Hosp' => self::CR_HOSP,
+        'CR Hospitalisation' => self::CR_HOSP,
+        'CR Operatoire' => self::CR_OP,
         'RCP' => self::RCP,
-        'Anapath' => self::ANAPATH,
+        'Anatomopathologie' => self::ANAPATH,
         'Scanner' => self::SCANNER,
         'IRM' => self::IRM,
         'PetScan' => self::PET_SCAN,
         'Radio' => self::RADIO,
-        'Bilan Bio' => self::BILAN_BIO,
-        'Chimiotherapie' => self::CHIMIO,
+        'ECG' => self::ECG,
+        'Bilan Biologique' => self::BILAN_BIO,
+        'Chimiothérapie' => self::CHIMIO,
         'Ordonnance' => self::ORDONNANCE,
         'Randomisation' => self::RANDO,
+        'Fiche Visite' => self::VISITE,
         'Questionnaire' => self::QUEST,
+        'Queries' => self::QUERY,
         'Autres' => self::AUTRES,
     ];
 

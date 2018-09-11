@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Document;
 use AppBundle\Entity\Inclusion;
-use AppBundle\Entity\User;
 use AppBundle\Form\DocumentType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -266,7 +265,7 @@ class DocumentController extends Controller
         $path = $this->getBasePath() . $inclusion->getId();
 
         $file_path = $path . '/' . $document->getFile();
-        if (file_exists($file_path)) unlink($file_path);
+        if (file_exists($file_path) && $document->getFile()) unlink($file_path);
 
         $document->setFile(null);
         $em->flush();

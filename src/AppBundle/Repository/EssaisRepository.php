@@ -34,11 +34,11 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function getQuery(User $user, $search)
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->select('COUNT(DISTINCT i) AS HIDDEN nb', 'e')
+            ->select('COUNT(DISTINCT i) AS  nb', 'e')
             ->leftJoin('e.inclusions', 'i')
             ->addSelect("i")
             ->where("e.nom like :search or e.numeroInterne like :search or e.statut like :search or e.typeEssai like :search or e.typeProm like :search or e.dateOuv like :search or e.dateClose like :search")
-            ->groupBy('e.id')
+            ->groupBy("e.id")
             ->setParameter('search', '%' . $search . '%');
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
@@ -74,7 +74,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function findNotArchived(User $user)
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("(e.statut != '" . Essais::ARCHIVE . "' and e.statut != '" . Essais::REFUS . "') or e.statut is null")
+            ->where("e.statut NOT IN ('" . Essais::ARCHIVE . "','" . Essais::REFUS . "') or e.statut is null")
             ->orderBy("e.nom", "ASC");
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
@@ -101,7 +101,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function findArchived(User $user)
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("e.statut = '" . Essais::ARCHIVE . "' or e.statut = '" . Essais::REFUS . "'")
+            ->where("e.statut IN('" . Essais::ARCHIVE . "','" . Essais::REFUS . "')")
             ->orderBy("e.nom", "ASC");
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
@@ -126,7 +126,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
     public function findActif()
     {
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("e.statut = '" . Essais::INCLUSIONS_OUVERTES . "' or e.statut = '" . Essais::INCLUSIONS_CLOSES_SUIVI . "'")
+            ->where("e.statut IN ('" . Essais::INCLUSIONS_OUVERTES . "','" . Essais::INCLUSIONS_CLOSES_SUIVI . "')")
             ->orderBy("e.nom", "ASC");
 
         return $queryBuilder->getQuery()->getResult();
@@ -134,9 +134,8 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
 
     public function findEssaiEnAttente()
     {
-
         $queryBuilder = $this->createQueryBuilder('e')
-            ->where("e.statut = '" . Essais::FAISABILITE_EN_ATTENTE . "' or e.statut = '" . Essais::CONVENTION_SIGNATURE . "'")
+            ->where("e.statut IN ('" . Essais::FAISABILITE_EN_ATTENTE . "','" . Essais::CONVENTION_SIGNATURE . "')")
             ->orderBy("e.nom", "ASC");
 
         return $queryBuilder->getQuery()->getResult();
@@ -204,6 +203,8 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('f')
             ->leftJoin('e.detail', 'd')
             ->addSelect('d')
+            ->leftJoin('e.documents', 'doc')
+            ->addSelect('doc')
             ->leftJoin('i.patient', 'p')
             ->addSelect('p')
             ->andWhere("e.id = :id")
@@ -305,6 +306,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('e.inclusions', 'i')
             ->leftJoin('e.factures', 'f')
             ->leftJoin('e.detail', 'd')
+            ->leftJoin('e.documents', 'doc')
             ->leftJoin('i.patient', 'p')
             ->addSelect('m')
             ->addSelect('t')
@@ -313,6 +315,7 @@ class EssaisRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('f')
             ->addSelect('d')
             ->addSelect('p')
+            ->addSelect('doc')
             ->andwhere("e.id IN(:essaiIds)")
             ->setParameter('essaiIds', $essaiIds);
 

@@ -150,15 +150,14 @@
 
                         <tbody class="list">
 
-                        {% for essai in essais %}
+                        {% for result in essais%}
+                            {% set essai = result[0] %}
 
                             <tr>
 
                                 <td class="essai">
 
-                                    {% set archive = essai.statut == constant('AppBundle\\Entity\\Essais::ARCHIVE') or essai.statut == constant('AppBundle\\Entity\\Essais::REFUS') %}
-
-                                    <a href="{{ path('protocole', { id : essai.id, archive: archive }) }}">
+                                    <a href="{{ path('editEssai', { id : essai.id }) }}">
                                         {{ essai.nom }}
                                     </a>
 
@@ -169,7 +168,7 @@
                                 <td class="dateClose">{{ essai.dateClose is empty ? "" : essai.dateClose|date('d/m/Y') }}</td>
                                 <td class="typeEssai">{{ essai.typeEssai }}</td>
                                 <td class="typeProm">{{ essai.typeProm }}</td>
-                                <td><span v-if='essai.inclusions != null'>{{ essai.inclusions|length }}</span></td>
+                                <td><span v-if='essai.inclusions != null'>{{ result.nb }}</span></td>
 
                             </tr>
 

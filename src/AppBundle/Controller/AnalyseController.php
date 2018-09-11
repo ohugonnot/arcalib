@@ -35,32 +35,41 @@ class AnalyseController extends Controller
             $debut = \DateTime::createFromFormat("d/m/Y", $request->get("dateDebut"));
             $fin = \DateTime::createFromFormat("d/m/Y", $request->get("dateFin"));
 
-            $dateMedecin = $dateProtocole = $dateVisites = $inclusionsService = $inclusionsMedecin = null;
+            $inclusionsArc = $dateArcVisites = $dateArc = $dateMedecin = $dateProtocole = $dateVisites = $inclusionsService = $inclusionsMedecin = null;
 
             if ($fin && $debut) {
                 $dateMedecin = $this->inclusionMedecinByDate($debut, $fin);
+                $dateArc = $this->inclusionArcByDate($debut, $fin);
                 $dateProtocole = $this->inclusionProtocoleByDate($debut, $fin);
                 $dateVisites = $this->visiteProtocoleByDate($debut, $fin);
+                $dateArcVisites = $this->visiteArcByDate($debut, $fin);
                 $inclusionsService = $this->inclusionsByService($debut, $fin);
-                $inclusionsMedecin = $this->inclusionByMedecin($debut, $fin);
+                $inclusionsArc = $this->inclusionByArc($debut, $fin);
+                $inclusionsMedecin = $this->inclusionByMedecin($debut, $fin, true);
                 $inclusionsByProtocole = $this->inclusionsByProtocole($debut, $fin);
             }
         } else {
             $dateMedecin = $this->inclusionMedecinByDate($lastYear, $endMonth);
+            $dateArc = $this->inclusionArcByDate($lastYear, $endMonth);
             $dateProtocole = $this->inclusionProtocoleByDate($lastYear, $endMonth);
             $dateVisites = $this->visiteProtocoleByDate($lastYear, $endMonth);
+            $dateArcVisites = $this->visiteArcByDate($lastYear, $endMonth);
             $inclusionsService = $this->inclusionsByService($lastYear, $endMonth);
-            $inclusionsMedecin = $this->inclusionByMedecin($lastYear, $endMonth);
+            $inclusionsArc = $this->inclusionByArc($lastYear, $endMonth);
+            $inclusionsMedecin = $this->inclusionByMedecin($lastYear, $endMonth, true);
             $inclusionsByProtocole = $this->inclusionsByProtocole($lastYear, $endMonth);
         }
 
         return $this->render('analyse/graphiques.html.twig', [
             "inclusionMedecin" => $inclusionMedecin,
             'inclusionsByMounthMedecin' => $dateMedecin,
+            'inclusionsByMounthArc' => $dateArc,
             'inclusionsByMounthProtocole' => $dateProtocole,
             'visiteByMounthProtocole' => $dateVisites,
+            'visiteByMounthArc' => $dateArcVisites,
             'inclusionsService' => $inclusionsService,
             'inclusionsMedecin' => $inclusionsMedecin,
+            'inclusionsArc' => $inclusionsArc,
             'inclusionsByProtocole' => $inclusionsByProtocole ?? null,
             'inclusionByYear' => $inclusionByYear,
             'debut' => isset($debut) ? $debut : $lastYear,
@@ -68,7 +77,7 @@ class AnalyseController extends Controller
         ]);
     }
 
-    public function inclusionByMedecin(?\DateTime $debut = null, ?\DateTime $fin = null)
+    public function inclusionByMedecin(?\DateTime $debut = null, ?\DateTime $fin = null, $order = false)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -112,11 +121,63 @@ class AnalyseController extends Controller
             }
             $inclusionMedecin[$medecin->getNom() . ' ' . substr($medecin->getPrenom(), 0, 1) . '.'] += 1;
         }
+        if ($order) {
+            ksort($inclusionMedecin);
+        } else {
+            arsort($inclusionMedecin);
+        }
 
-        arsort($inclusionMedecin);
         return $inclusionMedecin;
     }
 
+    public function inclusionByArc(?\DateTime $debut = null, ?\DateTime $fin = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if (!$debut && !$fin) {
+            $inclusions = $em->getRepository(Inclusion::class)
+                ->createQueryBuilder('i')
+                ->select('i')
+                ->join('i.arc', 'a')
+                ->addSelect("a")
+                ->orderBy('a.nomArc')
+                ->getQuery()
+                ->getResult();
+
+        } else {
+            /** @var Inclusion[] $inclusions */
+            $inclusions = $em->getRepository(Inclusion::class)
+                ->createQueryBuilder('i')
+                ->select('i')
+                ->where('i.datInc IS NOT NULL')
+                ->andWhere('i.datInc >= :debut')
+                ->andWhere('i.datInc <= :fin')
+                ->setParameter('debut', $debut)
+                ->setParameter('fin', $fin)
+                ->join('i.arc', 'a')
+                ->addSelect("a")
+                ->orderBy('a.nomArc')
+                ->getQuery()
+                ->getResult();
+        }
+
+        $inclusionArc = [];
+
+        foreach ($inclusions as $inclusion) {
+
+            $arc = $inclusion->getArc();
+            if (!$arc) {
+                continue;
+            }
+            if (!isset($inclusionArc[$arc->getNomArc()])) {
+                $inclusionArc[$arc->getNomArc()] = 0;
+            }
+            $inclusionArc[$arc->getNomArc()] += 1;
+        }
+
+        ksort($inclusionArc);
+        return $inclusionArc;
+    }
 // Creation du vecteurs medecin, date, inclusion-CANVAS 2------------------------------------------------------------------------------
 
     public function inclusionByYear()
@@ -205,6 +266,75 @@ class AnalyseController extends Controller
         return $dateMedecin;
     }
 
+    public function inclusionArcByDate(?\DateTime $debut, ?\DateTime $fin)
+    {
+        if (!$debut && !$fin) {
+            return false;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $inclusionsByMonth = $em->getRepository(Inclusion::class)
+            ->createQueryBuilder('i')
+            ->select(' count(i) as nb, MONTH(i.datInc) AS month, YEAR(i.datInc) AS year, a.nomArc as nom')
+            ->join('i.arc', 'a')
+            ->where('i.datInc IS NOT NULL')
+            ->andWhere('i.datInc >= :debut')
+            ->andWhere('i.datInc <= :fin')
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+            ->orderBy('i.datInc, a.nomArc')
+            ->groupBy('month')
+            ->addGroupBy('year')
+            ->addGroupBy('i.arc')
+            ->getQuery()
+            ->getResult();
+
+        $dateArc = [];
+
+        // Creation du vecteurs medecin, date, inclusion
+        foreach ($inclusionsByMonth as $array) {
+
+            $formtedMonth = $this->add0($array["month"]);
+            $year = $array["year"];
+            $nom = $array["nom"];
+
+            if (!isset($dateArc[$nom][$year . $formtedMonth])) {
+                $dateArc[$nom][$year . $formtedMonth] = [];
+            }
+
+            $dateArc[$nom][$year . $formtedMonth] = $array;
+        }
+
+        // Création du vecteur par defaut avec les inclusions a 0
+        for ($annee = $debut->format("Y"); $annee <= $fin->format("Y"); $annee++) {
+
+            for ($month = 1; $month <= 12; $month++) {
+
+                $formtedMonth = $this->add0($month);
+
+                foreach ($dateArc as $key => $value) {
+
+                    if ($debut->format("Y") == $annee && $month < (int)$debut->format("m") - 1) {
+                        continue;
+                    }
+                    if ($fin->format("Y") == $annee && $month > (int)$fin->format("m") + 1) {
+                        continue;
+                    }
+                    if (isset($dateArc[$key][$annee . $formtedMonth])) {
+                        continue;
+                    }
+
+                    $dateArc[$key][$annee . $formtedMonth] = ["nb" => 0, "month" => $formtedMonth, "year" => $annee];
+                }
+            }
+        }
+
+        ksort($dateArc);
+        return $dateArc;
+    }
+
+
     public function add0($month)
     {
 
@@ -237,20 +367,24 @@ class AnalyseController extends Controller
             ->getQuery()
             ->getResult();
 
-        $dateProtocole = [];
+        return $this->orderByDate($inclusionsByMonth, $debut, $fin);
+    }
 
-        // Creation du vecteurs medecin, date, inclusion
-        foreach ($inclusionsByMonth as $array) {
+    private function orderByDate($valuesByMonth, $debut, $fin) {
+
+        $date = [];
+
+        foreach ($valuesByMonth as $array) {
 
             $formattedByMonth = $this->add0($array["month"]);
             $year = $array["year"];
             $nom = $array["nom"];
 
-            if (!isset($dateProtocole[$nom][$year . $formattedByMonth])) {
-                $dateProtocole[$nom][$year . $formattedByMonth] = [];
+            if (!isset($date[$nom][$year . $formattedByMonth])) {
+                $date[$nom][$year . $formattedByMonth] = [];
             }
 
-            $dateProtocole[$nom][$year . $formattedByMonth] = $array;
+            $date[$nom][$year . $formattedByMonth] = $array;
         }
 
         // Création du vecteur par defaut avec les inclusions a 0
@@ -260,7 +394,7 @@ class AnalyseController extends Controller
 
                 $formattedByMonth = $this->add0($month);
 
-                foreach ($dateProtocole as $key => $value) {
+                foreach ($date as $key => $value) {
 
                     if ($debut->format("Y") == $annee && $month < (int)$debut->format("m") - 1) {
                         continue;
@@ -268,17 +402,17 @@ class AnalyseController extends Controller
                     if ($fin->format("Y") == $annee && $month > (int)$fin->format("m") + 1) {
                         continue;
                     }
-                    if (isset($dateProtocole[$key][$annee . $formattedByMonth])) {
+                    if (isset($date[$key][$annee . $formattedByMonth])) {
                         continue;
                     }
 
-                    $dateProtocole[$key][$annee . $formattedByMonth] = ["nb" => 0, "month" => $formattedByMonth, "year" => $annee];
+                    $date[$key][$annee . $formattedByMonth] = ["nb" => 0, "month" => $formattedByMonth, "year" => $annee];
                 }
             }
         }
 
-        ksort($dateProtocole);
-        return $dateProtocole;
+        ksort($date);
+        return $date;
     }
 
     public function visiteProtocoleByDate(?\DateTime $debut, ?\DateTime $fin)
@@ -297,6 +431,7 @@ class AnalyseController extends Controller
             ->where('v.date IS NOT NULL')
             ->andWhere('v.date >= :debut')
             ->andWhere('v.date <= :fin')
+            ->andWhere("v.statut ='".Visite::FAITE."' ")
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin)
             ->orderBy('v.date, e.nom')
@@ -306,48 +441,35 @@ class AnalyseController extends Controller
             ->getQuery()
             ->getResult();
 
-        $dateVisites = [];
+        return $this->orderByDate($visitesByMonth, $debut, $fin);
+    }
 
-        // Creation du vecteurs medecin, date, inclusion
-        foreach ($visitesByMonth as $array) {
-
-            $formtedMonth = $this->add0($array["month"]);
-            $year = $array["year"];
-            $nom = $array["nom"];
-
-            if (!isset($dateVisites[$nom][$year . $formtedMonth])) {
-                $dateVisites[$nom][$year . $formtedMonth] = [];
-            }
-
-            $dateVisites[$nom][$year . $formtedMonth] = $array;
+    public function visiteArcByDate(?\DateTime $debut, ?\DateTime $fin)
+    {
+        if (!$debut && !$fin) {
+            return false;
         }
 
-        // Création du vecteur par defaut avec les inclusions a 0
-        for ($annee = $debut->format("Y"); $annee <= $fin->format("Y"); $annee++) {
+        $em = $this->getDoctrine()->getManager();
 
-            for ($month = 1; $month <= 12; $month++) {
+        $visitesByMonth = $em->getRepository(Visite::class)
+            ->createQueryBuilder('v')
+            ->select(' count(v) as nb, MONTH(v.date) AS month, YEAR(v.date) AS year, a.nomArc as nom')
+            ->leftJoin('v.arc', 'a')
+            ->where('v.date IS NOT NULL')
+            ->andWhere('v.date >= :debut')
+            ->andWhere('v.date <= :fin')
+            ->andWhere("v.statut ='".Visite::FAITE."' ")
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+            ->orderBy('v.date, a.nomArc')
+            ->groupBy('month')
+            ->addGroupBy('year')
+            ->addGroupBy('v.arc')
+            ->getQuery()
+            ->getResult();
 
-                $formtedMonth = $this->add0($month);
-
-                foreach ($dateVisites as $key => $value) {
-
-                    if ($debut->format("Y") == $annee && $month < (int)$debut->format("m") - 1) {
-                        continue;
-                    }
-                    if ($fin->format("Y") == $annee && $month > (int)$fin->format("m") + 1) {
-                        continue;
-                    }
-                    if (isset($dateVisites[$key][$annee . $formtedMonth])) {
-                        continue;
-                    }
-
-                    $dateVisites[$key][$annee . $formtedMonth] = ["nb" => 0, "month" => $formtedMonth, "year" => $annee];
-                }
-            }
-        }
-
-        ksort($dateVisites);
-        return $dateVisites;
+        return $this->orderByDate($visitesByMonth, $debut, $fin);
     }
 
 // Inclusion par service/ mois---cenvas 5------------------------------------------------------------------------

@@ -530,6 +530,13 @@ class Essais
      */
     private $procedurePDF;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="DocumentEssai", mappedBy="essai", cascade={"all"})
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $documents;
+
     /**
      * Constructor
      */
@@ -541,6 +548,7 @@ class Essais
         $this->annuaires = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->services = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getSynopsis()
@@ -1670,5 +1678,40 @@ class Essais
     public function getServices()
     {
         return $this->services;
+    }
+
+    /**
+     * Add document
+     *
+     * @param DocumentEssai $documentEssai
+     *
+     * @return Essais
+     */
+    public function addDocument(DocumentEssai $documentEssai)
+    {
+        $this->documents[] = $documentEssai;
+        $documentEssai->setEssai($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove document
+     *
+     * @param DocumentEssai $documentEssai
+     */
+    public function removeDocument(DocumentEssai $documentEssai)
+    {
+        $this->documents->removeElement($documentEssai);
+    }
+
+    /**
+     * Get documents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 }
