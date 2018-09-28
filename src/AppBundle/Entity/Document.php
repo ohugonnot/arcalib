@@ -32,6 +32,7 @@ class Document
     const VISITE = 'Visite';
     const QUEST = 'Questionnaire';
     const QUERY = 'Queries';
+    const SUSAR = 'Susar';
     const AUTRES = 'Autres';
 
     CONST TYPE = [
@@ -55,6 +56,7 @@ class Document
         'Fiche Visite' => self::VISITE,
         'Questionnaire' => self::QUEST,
         'Queries' => self::QUERY,
+        'Susar' => self::SUSAR,
         'Autres' => self::AUTRES,
     ];
 
