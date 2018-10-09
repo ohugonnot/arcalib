@@ -14,7 +14,7 @@
 			{% endblock seo_title %}
 			
 			{# Description #}
-			{% block seo_description %}{% endblock seo_description %}
+			{% block seo_description %}{{ parent() }}{% endblock seo_description %}
 
 		{% endembed %}
 

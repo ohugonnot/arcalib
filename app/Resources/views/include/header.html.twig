@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{% block seo_title %}ArcOffice - Outil de gestion clinique{% endblock seo_title %}</title>
+    <title>{% spaceless %}{% block seo_title %}ArcOffice - Outil de gestion clinique{% endblock seo_title %}{% endspaceless %}</title>
     <meta name="description"
           content="{% block seo_description %}Outil de gestion d'une unité de recherche clinique{% endblock seo_description %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
