@@ -69,7 +69,7 @@
     <script src="{{ asset('dist/js/global.min.js') }}"></script>
 
     {% if app.environment != "dev" %}
-        <script type="text/javascript" charset="utf-8" src="{{ asset('/cometchat/js.php') }}"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ asset('/cometchat/js.php') }}" async></script>
         <link type="text/css" rel="stylesheet" media="all" href="{{ asset('/cometchat/css.php') }}">
     {% endif %}
 
