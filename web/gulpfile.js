@@ -6,7 +6,7 @@
 var gulp = require('gulp'),
     $ = require('gulp-load-plugins')(),
     pump = require('pump');
-
+var uglify = require('gulp-uglify-es').default;
 
 // Configuration générale du projet et des composants utilisés
 var project = {
@@ -120,6 +120,22 @@ gulp.task('css', function () {
 	    .pipe(gulp.dest(paths.dest + paths.styles.root));
 });
 
+gulp.task('css-prod', function () {
+    return gulp.src(paths.dev + paths.styles.sass.mainFile)
+      .pipe($.plumber({ errorHandler: $.notify.onError("Erreur: <%= error.message %>") }))
+      .pipe($.sourcemaps.init())
+      .pipe($.sass())
+      .pipe($.csscomb())
+      .pipe($.cssbeautify(project.configuration.cssbeautify))
+      .pipe($.autoprefixer({ grid: true }))
+      .pipe(gulp.dest(paths.dev + paths.styles.root))
+      .pipe($.rename({ suffix: '.min' }))
+      .pipe($.csso({ comments: false }))
+      .pipe($.sourcemaps.write(paths.maps))
+      .pipe(gulp.dest(paths.dest + paths.styles.root));
+});
+
+
 // Tâche JS : copie des fichiers JS et vendor + babel (+ concat et uglify si prod)
 gulp.task('js', function (callback) {
   pump([
@@ -132,6 +148,19 @@ gulp.task('js', function (callback) {
     callback
   );
 });
+
+gulp.task('js-prod', function (callback) {
+  pump([
+      gulp.src(vendors),
+      $.concat(project.globalJSFile),
+      gulp.dest(paths.dev + paths.scripts.no_min),
+      uglify(),
+      gulp.dest(paths.dest + paths.scripts.root)
+    ],
+    callback
+  );
+});
+
 
 // Tâche IMG : optimisation des images
 gulp.task('img', function () {
