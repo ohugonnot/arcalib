@@ -56,3 +56,12 @@ bfg.jar
 .idea/*
 /bdd/*
 .dropbox
+.idea/
+app/Resources/pdf/
+bdd/
+tests/
+var/cache/
+var/logs/
+var/sessions/
+vendor/
+web/assets/
