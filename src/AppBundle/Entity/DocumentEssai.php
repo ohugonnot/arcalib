@@ -20,16 +20,20 @@ class DocumentEssai
     const COURRIERS = 'Courriers';
     const NEWSLETTER = 'Newsletter';
     const CLOTURE = 'Cloture';
+    const SUSAR = 'Susar';
+    const PROC = 'Procedures';
     const AUTRE = 'Autre';
 
     CONST TYPE = [
-        'Admin' => self::ADMIN,
+        'Administratif' => self::ADMIN,
         'Screen' => self::SCREEN,
-        'Doc' => self::DOC,
+        'Documents' => self::DOC,
         'Versions' => self::VERSIONS,
         'Courriers' => self::COURRIERS,
         'Newsletter' => self::NEWSLETTER,
         'Cloture' => self::CLOTURE,
+        'Susar' => self::SUSAR,
+        'Procedures' => self::PROC,
         'Autre' => self::AUTRE,
     ];
 
