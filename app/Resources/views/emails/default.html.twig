@@ -1,0 +1,18 @@
+<h3>Nouvelle inclusion !</h3>
+
+<p>
+    Bonjour<br>
+    Une inclusion a été faite sur Arcoffice<br>
+    •	Par <b>{{ user.username|default('') }}</b> ({{ user.email|default('') }})<br>
+    {% if inclusion.datInc is not null  %}
+        •	Date <b>{{ inclusion.datInc|date('d/m/Y')|default('N/A') }}</b><br>
+    {% else %}
+        •	Date <b>N/A</b>
+    {% endif %}
+    •	Protocole: <b>{{ inclusion.essai.nom|default('') }}</b><br>
+    •	N° inclusion: <b>{{ inclusion.numInc|default('N/A') }}</b><br>
+    {% if inclusion.medecin is defined and inclusion.medecin %}
+        •	Médecin référent: <b>{{ inclusion.medecin.nom|default('') }} {{ inclusion.medecin.prenom|default('') }}</b> ({{ inclusion.medecin.email|default('') }})<br>
+    {% else %}
+        •	Médecin référent: <b>N/A</b>
+    {% endif %}
