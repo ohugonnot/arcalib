@@ -8,10 +8,9 @@ use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
 use AppBundle\Entity\Service;
-use AppBundle\Event\ArcalibEvents;
-use AppBundle\Event\InclusionEvent;
 use AppBundle\Form\InclusionType;
 use AppBundle\Services\CsvToArray;
+use AppBundle\Services\SendMail;
 use DateTime as DateTime;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -38,15 +37,8 @@ class InclusionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $emInclusion = $em->getRepository(Inclusion::class);
         $inclusion = $emInclusion->find($id);
-
-        $eventDispatcher = $this->get("event_dispatcher");
-        $event = new InclusionEvent($inclusion);
-        $eventDispatcher->dispatch(ArcalibEvents::BEFORE_DELETE_INCLUSION, $event);
-
         $em->remove($inclusion);
         $em->flush();
-
-        $eventDispatcher->dispatch(ArcalibEvents::AFTER_DELETE_INCLUSION, $event);
 
         return new JsonResponse(true);
     }
@@ -127,10 +119,11 @@ class InclusionController extends Controller
         }
 
         $form = $this->get('form.factory')->create(InclusionType::class, $inclusion);
+        $form->handleRequest($request);
 
         $params = $request->request->get("appbundle_inclusion");
         $patient_id = $request->request->get("patient");
-        $form->handleRequest($request);
+
         if ($params["statut"] == "") {
             $params["statut"] = null;
         }
@@ -185,52 +178,53 @@ class InclusionController extends Controller
         }
 
         if (isset($params["datCst"])) {
-            $datCst = \DateTime::createFromFormat('d/m/Y', $params["datCst"])->settime(0,0);
+            $datCst = \DateTime::createFromFormat('d/m/Y', $params["datCst"])->settime(0, 0);
             if ($datCst != $inclusion->getDatCst()) {
                 $inclusion->setDatCst($datCst);
             }
         }
         if (isset($params["datScr"])) {
-            $datScr = \DateTime::createFromFormat('d/m/Y', $params["datScr"])->settime(0,0);
+            $datScr = \DateTime::createFromFormat('d/m/Y', $params["datScr"])->settime(0, 0);
             if ($datScr != $inclusion->getDatScr()) {
                 $inclusion->setDatScr($datScr);
             }
         }
         if (isset($params["datInc"])) {
-            $datInc = \DateTime::createFromFormat('d/m/Y', $params["datInc"])->settime(0,0);
+            $datInc = \DateTime::createFromFormat('d/m/Y', $params["datInc"])->settime(0, 0);
             if ($datInc != $inclusion->getDatInc()) {
                 $inclusion->setDatInc($datInc);
             }
         }
         if (isset($params["datRan"])) {
-            $datRan = \DateTime::createFromFormat('d/m/Y', $params["datRan"])->settime(0,0);
+            $datRan = \DateTime::createFromFormat('d/m/Y', $params["datRan"])->settime(0, 0);
             if ($datRan != $inclusion->getDatRan()) {
                 $inclusion->setDatRan($datRan);
             }
         }
         if (isset($params["datJ0"])) {
-            $datJ0 = \DateTime::createFromFormat('d/m/Y', $params["datJ0"])->settime(0,0);
+            $datJ0 = \DateTime::createFromFormat('d/m/Y', $params["datJ0"])->settime(0, 0);
             if ($datJ0 != $inclusion->getDatJ0()) {
                 $inclusion->setDatJ0($datJ0);
             }
         }
         if (isset($params["datOut"])) {
-            $datOut = \DateTime::createFromFormat('d/m/Y', $params["datOut"])->settime(0,0);
+            $datOut = \DateTime::createFromFormat('d/m/Y', $params["datOut"])->settime(0, 0);
             if ($datOut != $inclusion->getDatOut()) {
                 $inclusion->setDatOut($datOut);
             }
         }
 
-        $eventDispatcher = $this->get("event_dispatcher");
-        $event = new InclusionEvent($inclusion);
-
         if (isset($new) && $new) {
             $em->persist($inclusion);
             $em->flush();
-            $eventDispatcher->dispatch(ArcalibEvents::ADD_INCLUSION, $event);
+            $mailer = $this->get(SendMail::class);
+            $mailer->sendEmail("default", [
+                'sujet' => "Création d'une inclusion",
+                "inclusion" => $inclusion,
+                "user" => $this->getUser()
+            ]);
         } else {
             $em->flush();
-            $eventDispatcher->dispatch(ArcalibEvents::EDIT_INCLUSION, $event);
         }
 
         return new JsonResponse(["success" => true, "inclusion" => ["id" => $inclusion->getId()]]);
@@ -246,8 +240,6 @@ class InclusionController extends Controller
     public function editInclusionPartialAction(Request $request, Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $eventDispatcher = $this->get("event_dispatcher");
-        $event = new InclusionEvent($inclusion);
 
         $params = $request->request->get("appbundle_inclusion");
         $inclusion->setDatInc(DateTime::createFromFormat("d/m/Y", $params["datInc"]));
@@ -255,7 +247,6 @@ class InclusionController extends Controller
         $inclusion->setStatut($params["statut"]);
 
         $em->flush();
-        $eventDispatcher->dispatch(ArcalibEvents::EDIT_INCLUSION, $event);
 
         return new JsonResponse(["success" => true, "inclusion" => ["id" => $inclusion->getId()]]);
     }
@@ -291,10 +282,6 @@ class InclusionController extends Controller
         $emInclusion = $em->getRepository(Inclusion::class);
         $inclusions = $emInclusion->findAllByUser($user);
 
-        $eventDispatcher = $this->get("event_dispatcher");
-        $event = new InclusionEvent();
-        $eventDispatcher->dispatch(ArcalibEvents::DOWNLOAD_INCLUSIONS, $event);
-
         return $export->exportCSV($inclusions, "inclusions");
     }
 
@@ -310,10 +297,6 @@ class InclusionController extends Controller
         $user = $this->getUser();
         $emInclusion = $em->getRepository(Inclusion::class);
         $inclusions = $emInclusion->findAllByUser($user);
-
-        $eventDispatcher = $this->get("event_dispatcher");
-        $event = new InclusionEvent();
-        $eventDispatcher->dispatch(ArcalibEvents::DOWNLOAD_INCLUSIONS, $event);
 
         return $export->exportCSV($inclusions, "inclusionsProtocole");
     }
