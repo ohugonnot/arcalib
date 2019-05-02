@@ -8,7 +8,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class LogManager
 {
-
     private $em;
 
     private $tokenStorage;
@@ -30,7 +29,7 @@ class LogManager
      * Return roles.
      *
      * @param $name
-     * @param null $entity
+     * @param $entity
      * @param $action
      * @param $info
      * @param null $changeSet
@@ -38,7 +37,6 @@ class LogManager
      */
     public function save($name, $entity = null, $action, $info, $changeSet = null)
     {
-
         if ($this->tokenStorage->getToken() != null) {
             $this->user = $this->tokenStorage->getToken()->getUser() ?? null;
         }
