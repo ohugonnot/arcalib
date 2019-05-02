@@ -492,40 +492,30 @@ class Essais
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @Assert\NotBlank(message="Please, upload the product synopsis as a PDF file.")
      * @Assert\File(mimeTypes={ "application/pdf" })
      */
     private $synopsis;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @Assert\NotBlank(message="Please, upload the product synopsis as a PDF file.")
      * @Assert\File(mimeTypes={ "application/pdf" })
      */
     private $protocole;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @Assert\NotBlank(message="Please, upload the product synopsis as a PDF file.")
      * @Assert\File(mimeTypes={ "application/pdf" })
      */
     private $crf;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @Assert\NotBlank(message="Please, upload the product synopsis as a PDF file.")
      * @Assert\File(mimeTypes={ "application/pdf" })
      */
     private $nip;
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     *
-     * @Assert\NotBlank(message="Please, upload the product synopsis as a PDF file.")
      * @Assert\File(mimeTypes={ "application/pdf" })
      */
     private $procedurePDF;
