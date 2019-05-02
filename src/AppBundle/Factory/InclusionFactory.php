@@ -17,8 +17,10 @@ class InclusionFactory implements FactoryInterface
 	 */
 	public function hydrate($inclusion, ?array $params = [])
 	{
+		$request = $this->requestStack->getCurrentRequest();
 		$form = $this->formFactory->create(InclusionType::class, $inclusion);
-		$form->handleRequest($this->requestStack->getCurrentRequest());
+		$form->handleRequest($request);
+		$params["patient_id"] = $request->request->get("patient");
 
 		if ($params["statut"] == "") {
 			$params["statut"] = null;
