@@ -317,6 +317,7 @@
                     </div>
 
                     {# Colonne2:  liste ei #}
+                    {% if allEis is defined %}
                     <div class="col-7 col-arcoffice col-arc-editer col-visite">
 
                         <div class="form-title d-flex align-items-center">Liste des Eis : n° {{ index + 1 }}/{{ count }}
@@ -399,7 +400,7 @@
                                             {% endif %}
                                         </td>
                                         <td scope="row">
-                                            {{ ei.term.nom }}
+                                            {{ ei.term.nom|default() }}
                                         </td>
 
                                         <td scope="row">
@@ -414,6 +415,7 @@
 
                     </div>
 
+                    {% endif %}
                 </div>
 
             </div>
