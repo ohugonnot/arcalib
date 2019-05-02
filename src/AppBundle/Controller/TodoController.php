@@ -116,17 +116,15 @@ class TodoController extends Controller
 
     // ------------------------------------------Edit TODO-----------------------------------------------------
 
-    /**
-     * @Route("/todo/editer/{id}", name="editTodo")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editTodoAction(Request $request, $id)
+	/**
+	 * @Route("/todo/editer/{id}", name="editTodo")
+	 * @param Request $request
+	 * @param Todo $todo
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editTodoAction(Request $request, Todo $todo)
     {
         $em = $this->getDoctrine()->getManager();
-        $emTodo = $em->getRepository(Todo::class);
-        $todo = $emTodo->find($id);
 
         /** @var ArrayCollection $destinaires */
         $destinaires = $todo->getDestinataires();
@@ -154,16 +152,14 @@ class TodoController extends Controller
 
     // ------------------------------------------delete TODO-----------------------------------------------------
 
-    /**
-     * @Route("/todo/supprimer/{id}", name="deleteTodo", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteTodoAction($id)
+	/**
+	 * @Route("/todo/supprimer/{id}", name="deleteTodo", options={"expose"=true})
+	 * @param Todo $todo
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteTodoAction(Todo $todo)
     {
         $em = $this->getDoctrine()->getManager();
-        $emTodo = $em->getRepository(Todo::class);
-        $todo = $emTodo->find($id);
 
         if ($this->getUser() != $todo->getAuteur() && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accèder à cette page");

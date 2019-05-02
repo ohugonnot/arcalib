@@ -22,22 +22,16 @@ class DocumentController extends Controller
 {
 
     // ------------------------------------------ADD Document-----------------------------------------------------
-    /**
-     * @Route("/documents/inclusion/{id}/ajouter", name="addDocument", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public function addDocumentAction(Request $request, $id)
+	/**
+	 * @Route("/documents/inclusion/{id}/ajouter", name="addDocument", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
+    public function addDocumentAction(Request $request, Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if(!$inclusion) {
-            return $this->createNotFoundException("L'inclusion $id n'a pas été trouvé");
-        }
-
         $document = new Document();
         $document->setInclusion($inclusion);
 
@@ -60,21 +54,16 @@ class DocumentController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/documents/editer/{id}", name="editDocument", options={"expose"=true})
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editDocumentAction(Request $request, $id)
+	/**
+	 * @Route("/documents/editer/{id}", name="editDocument", options={"expose"=true})
+	 * @param Request $request
+	 * @param Document $document
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editDocumentAction(Request $request, Document $document)
     {
         $em = $this->getDoctrine()->getManager();
         $emDocument = $em->getRepository(Document::class);
-        $document = $emDocument->find($id);
-
-        if (!$document) {
-            throw $this->createNotFoundException("Le document $id n'existe pas.");
-        }
 
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
@@ -127,20 +116,14 @@ class DocumentController extends Controller
 
     // ------------------------------------------delete DOCUMENT-----------------------------------------------------
 
-    /**
-     * @Route("/documents/inclusion/{id}/voir", name="voirDocument", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
-     */
-    public function firstDocumentAction($id)
+	/**
+	 * @Route("/documents/inclusion/{id}/voir", name="voirDocument", options={"expose"=true})
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 */
+    public function firstDocumentAction(Inclusion $inclusion)
     {
-        $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
+	    $em = $this->getDoctrine()->getManager();
         $emDocument = $em->getRepository(Document::class);
 
         $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => "DESC"]));
@@ -150,21 +133,19 @@ class DocumentController extends Controller
         }
 
         return $this->forward("AppBundle:Document:listeDocumentsInclusion", [
-            "id" => $id
+            "id" => $inclusion->getId()
         ]);
     }
 
-    /**
-     * @Route("/documents/supprimer/{id}", name="deleteDocument", options={"expose"=true})
-     * @Security("has_role('ROLE_ADMIN')")
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteDocumentAction($id)
+	/**
+	 * @Route("/documents/supprimer/{id}", name="deleteDocument", options={"expose"=true})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 * @param Document $document
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteDocumentAction(Document $document)
     {
         $em = $this->getDoctrine()->getManager();
-        $emDocument = $em->getRepository(Document::class);
-        $document = $emDocument->find($id);
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
 
@@ -174,13 +155,13 @@ class DocumentController extends Controller
         return $this->redirectToRoute("inclusion_list_documents", ["id" => $inclusion->getId()]);
     }
 
-    /**
-     * @Route("/documents/inclusion/{id}", name="inclusion_list_documents", options={"expose"=true})
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listeDocumentsInclusionAction(Request $request, $id)
+	/**
+	 * @Route("/documents/inclusion/{id}", name="inclusion_list_documents", options={"expose"=true})
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+    public function listeDocumentsInclusionAction(Request $request, Inclusion $inclusion)
     {
         $search = $request->query->get("recherche");
         if ($search == null) {
@@ -190,13 +171,8 @@ class DocumentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $emDocument = $em->getRepository(Document::class);
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
 
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
-        $query = $emDocument->getQuery($user, $search, $id);
+        $query = $emDocument->getQuery($user, $search, $inclusion->getId());
 
         $paginator = $this->get('knp_paginator');
         $documents = $paginator->paginate(
@@ -213,18 +189,16 @@ class DocumentController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/documents/upload/pdf/{id}", name="uploadDocumentPDF", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     */
-    public function uploadDocumentPDFAction(Request $request, $id)
+	/**
+	 * @Route("/documents/upload/pdf/{id}", name="uploadDocumentPDF", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Document $document
+	 * @return JsonResponse
+	 */
+    public function uploadDocumentPDFAction(Request $request, Document $document)
     {
         $em = $this->getDoctrine()->getManager();
-        $emDocument = $em->getRepository(Document::class);
-        $document = $emDocument->find($id);
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
 
@@ -248,23 +222,20 @@ class DocumentController extends Controller
         return new JsonResponse(["success" => true, "fileName" => $this->getUrlDocument($document)]);
     }
 
-    /**
-     * @Route("/documents/remove/pdf/{id}", name="removeDocumentPDF", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param $id
-     * @return JsonResponse
-     */
-    public function removeDocumentPDFAction($id)
+	/**
+	 * @Route("/documents/remove/pdf/{id}", name="removeDocumentPDF", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Document $document
+	 * @return JsonResponse
+	 */
+    public function removeDocumentPDFAction(Document $document)
     {
         $em = $this->getDoctrine()->getManager();
-        $emDocument = $em->getRepository(Document::class);
-        $document = $emDocument->find($id);
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
-
         $path = $this->getBasePath() . $inclusion->getId();
-
         $file_path = $path . '/' . $document->getFile();
+
         if (file_exists($file_path) && $document->getFile()) unlink($file_path);
 
         $document->setFile(null);
@@ -273,16 +244,13 @@ class DocumentController extends Controller
         return new JsonResponse(["success" => true]);
     }
 
-    /**
-     * @Route("/document/get/pdf/{id}", name="getDocumentPDF", options={"expose"=true})
-     * @param $id
-     * @return JsonResponse
-     */
-    public function getDocumentPDFAction($id)
+	/**
+	 * @Route("/document/get/pdf/{id}", name="getDocumentPDF", options={"expose"=true})
+	 * @param Document $document
+	 * @return JsonResponse
+	 */
+    public function getDocumentPDFAction(Document $document)
     {
-        $em = $this->getDoctrine()->getManager();
-        $emDocument = $em->getRepository(Document::class);
-        $document = $emDocument->find($id);
 
         return new JsonResponse(["document" => $this->getUrlDocument($document)]);
     }

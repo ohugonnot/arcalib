@@ -42,18 +42,15 @@ class TagController extends Controller
 
     // ------------------------------------------Edit TAG----------------------------------------------------- 
 
-    /**
-     * @Route("/tag/editer/{id}", name="editTag")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editTagAction(Request $request, $id)
+	/**
+	 * @Route("/tag/editer/{id}", name="editTag")
+	 * @param Request $request
+	 * @param Tag $tag
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editTagAction(Request $request, Tag $tag)
     {
         $em = $this->getDoctrine()->getManager();
-        $emTag = $em->getRepository(Tag::class);
-        $tag = $emTag->find($id);
-
         $form = $this->get('form.factory')->create(TagType::class, $tag);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -75,17 +72,15 @@ class TagController extends Controller
 
     // ------------------------------------------Supp TAG-----------------------------------------------------
 
-    /**
-     * @Route("/tag/supprimer/{id}", name="deleteTag", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteTagAction($id)
+	/**
+	 * @Route("/tag/supprimer/{id}", name="deleteTag", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Tag $tag
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteTagAction(Tag $tag)
     {
         $em = $this->getDoctrine()->getManager();
-        $emTag = $em->getRepository(Tag::class);
-        $tag = $emTag->find($id);
 
         $em->remove($tag);
         $em->flush();

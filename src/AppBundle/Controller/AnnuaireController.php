@@ -29,8 +29,6 @@ class AnnuaireController extends Controller
         $form = $this->get('form.factory')->create(AnnuaireType::class, $annuaire);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-
-            // Le reste de la méthode reste inchangé
             $em = $this->getDoctrine()->getManager();
             $em->persist($annuaire);
             $em->flush();

@@ -43,18 +43,15 @@ class UserController extends Controller
 
 // ------------------------------------------Edit USER----------------------------------------------------- 
 
-    /**
-     * @Route("/utilisateur/editer/{id}", name="editUser")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editUserAction(Request $request, $id)
+	/**
+	 * @Route("/utilisateur/editer/{id}", name="editUser")
+	 * @param Request $request
+	 * @param User $user
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editUserAction(Request $request, User $user)
     {
         $em = $this->getDoctrine()->getManager();
-        $emUser = $em->getRepository(User::class);
-        $user = $emUser->find($id);
-
         $form = $this->get('form.factory')->create(UserTypeAdmin::class, $user);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -77,16 +74,14 @@ class UserController extends Controller
 
 // ------------------------------------------Supp USER-----------------------------------------------------
 
-    /**
-     * @Route("/utilisateur/supprimer/{id}", name="deleteUser", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteUserAction($id)
+	/**
+	 * @Route("/utilisateur/supprimer/{id}", name="deleteUser", options={"expose"=true})
+	 * @param User $user
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteUserAction(User $user)
     {
         $em = $this->getDoctrine()->getManager();
-        $emUser = $em->getRepository(User::class);
-        $user = $emUser->find($id);
 
         $em->remove($user);
         $em->flush();

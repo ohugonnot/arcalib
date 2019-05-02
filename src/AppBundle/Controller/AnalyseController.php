@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * TODO REFACTO LE CONTROLLEUR EN MODE SERVICE
  * @Route("/arcalib")
  */
 class AnalyseController extends Controller
@@ -370,7 +371,13 @@ class AnalyseController extends Controller
         return $this->orderByDate($inclusionsByMonth, $debut, $fin);
     }
 
-    private function orderByDate($valuesByMonth, $debut, $fin) {
+	/**
+	 * @param $valuesByMonth
+	 * @param $debut \DateTime
+	 * @param $fin \DateTime
+	 * @return array
+	 */
+	private function orderByDate($valuesByMonth, $debut, $fin) {
 
         $date = [];
 
