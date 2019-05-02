@@ -2,7 +2,6 @@
 
 
 namespace AppBundle\Services;
-;
 
 use AppBundle\Entity\Inclusion;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,15 +43,13 @@ class SendMail
         }
 
         $to = array_unique(array_merge($to, self::EMAILS_ADMIN));
+        $twigTemplate = "emails/${render}.html.twig";
 
         $message = (new \Swift_Message($variables["sujet"] ?? self::SUBJECT_DEFAULT))
             ->setFrom($this->container->getParameter("mailer_user"))
             ->setTo($to)
             ->setBody(
-                $this->templating->render(
-                    "emails/${render}.html.twig",
-                    $variables
-                )
+                $this->templating->render($twigTemplate, $variables)
             )
             ->setContentType('text/html');
 
