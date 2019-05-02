@@ -24,7 +24,6 @@ class StatistiqueController extends Controller
      */
     public function analyseStatistiqueAction(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
         $emEssai = $em->getRepository(Essais::class);
         $emInclusion = $em->getRepository(Inclusion::class);
@@ -32,21 +31,12 @@ class StatistiqueController extends Controller
         $emPatient = $em->getRepository(Patient::class);
         $emValidation = $em->getRepository(ValidationErreur::class);
 
-        $debut = new \DateTime();
-        $debut->modify('-12 month');
-        $fin = new \DateTime();
-        $fin->modify('last day of this month');
-
         $nbPatient = $emPatient->findAll();
         $nbEssai = $emEssai->findAll();
         $nbEssaiOuvert = $emEssai->findByStatut(Essais::INCLUSIONS_OUVERTES);
         $nbEssaiActif = $emEssai->findActif();
         $nbValidationIgnored = $emValidation->findAll();
         $nbPatientSuivis = $emPatient->findPatientSuivis();
-        $nbOuverture = [];
-        $nbCloture = [];
-        $nbInclusion = [];
-        $nbVisite = [];
 
         $verification = $this->forward('AppBundle\Controller\VerificationController::verificationDataAction', ["api" => true]);
         $nbErreurs = json_decode($verification->getContent(), true);
@@ -65,10 +55,10 @@ class StatistiqueController extends Controller
         }
 
         return $this->render('statistiques/statistiques.html.twig', [
-            "nbOuverture" => $nbOuverture,
-            "nbCloture" => $nbCloture,
-            "nbInclusion" => $nbInclusion,
-            "nbVisite" => $nbVisite,
+            "nbOuverture" => $nbOuverture ?? [],
+            "nbCloture" => $nbCloture  ?? [],
+            "nbInclusion" => $nbInclusion  ?? [],
+            "nbVisite" => $nbVisite  ?? [],
             "nbPatient" => $nbPatient,
             "nbEssai" => $nbEssai,
             'nbEssaiOuvert' => $nbEssaiOuvert,

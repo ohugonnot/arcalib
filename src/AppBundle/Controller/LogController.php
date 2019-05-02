@@ -41,18 +41,15 @@ class LogController extends Controller
 
     // ------------------------------------------Edit Log----------------------------------------------------- 
 
-    /**
-     * @Route("/log/editer/{id}", name="editLog")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editLogAction(Request $request, $id)
+	/**
+	 * @Route("/log/editer/{id}", name="editLog")
+	 * @param Request $request
+	 * @param Log $log
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editLogAction(Request $request, Log $log)
     {
         $em = $this->getDoctrine()->getManager();
-        $emLog = $em->getRepository(Log::class);
-        $log = $emLog->find($id);
-
         $form = $this->get('form.factory')->create(LogType::class, $log);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -68,16 +65,14 @@ class LogController extends Controller
 
     // ------------------------------------------Supp Log-----------------------------------------------------
 
-    /**
-     * @Route("/log/supprimer/{id}", name="deleteLog", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteLogAction($id)
+	/**
+	 * @Route("/log/supprimer/{id}", name="deleteLog", options={"expose"=true})
+	 * @param Log $log
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteLogAction(Log $log)
     {
         $em = $this->getDoctrine()->getManager();
-        $emLog = $em->getRepository(Log::class);
-        $log = $emLog->find($id);
 
         $em->remove($log);
         $em->flush();

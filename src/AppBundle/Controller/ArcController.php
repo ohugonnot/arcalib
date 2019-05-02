@@ -3,9 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Arc;
-use AppBundle\Entity\Service;
 use AppBundle\Form\ArcType;
-use AppBundle\Services\CsvToArray;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -70,6 +68,8 @@ class ArcController extends Controller
 // ------------------------------------------SUPP ARC-----------------------------------------------------
 
     /**
+     * @Route("/arc/delete/{id}", name="deleteArc", options={"expose"=true})
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Arc $arc
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\ORM\ORMException
@@ -116,87 +116,5 @@ class ArcController extends Controller
         return $this->render('arc/listeArcs.html.twig', [
             'arcs' => $arcs
         ]);
-    }
-
-
-    /**
-     * @param CsvToArray $csvToArray
-     * @param bool $checkIfExist
-     * @param bool $truncate
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function importAction(CsvToArray $csvToArray, $checkIfExist = true, $truncate = true)
-    {
-
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $emArc = $em->getRepository(Arc::class);
-
-        if ($truncate) {
-            $em->createQuery('DELETE AppBundle:Arc a')->execute();
-        }
-
-        $file = $this->get('kernel')->getRootDir() . '/../bdd/arc.csv';
-        $arcs = $csvToArray->convert($file, ";");
-
-        $bulkSize = 500;
-        $i = 0;
-        foreach ($arcs as $a) {
-            $i++;
-            $arc = false;
-
-            foreach ($a as $k => $v) {
-                $a[$k] = trim($v);
-            }
-
-            if ($checkIfExist) {
-                $exist = $emArc->findOneBy(["nomArc" => $a["Nom ARC"]]);
-                if ($exist) {
-                    $arc = $exist;
-                }
-            }
-
-            if (!$arc) {
-                $arc = new Arc();
-            }
-
-            $datIn = \DateTime::createFromFormat('d/m/Y', $a["Date d'entrée"]);
-            $datOut = \DateTime::createFromFormat('d/m/Y', $a["Date de sortie"]);
-
-            if (!$datIn) {
-                $datIn = null;
-            }
-
-            if (!$datOut) {
-                $datOut = null;
-            }
-
-            $arc->setNomArc($a["Nom ARC"]);
-            $arc->setDatIn($datIn);
-            $arc->setDatOut($datOut);
-            $arc->setIniArc($a["Initiales"]);
-            $arc->setDect($a["n° Poste"]);
-            $arc->setTel($a["Teléphone"]);
-            $arc->setMail($a["Mail"]);
-
-            if ($service = $em->getRepository(Service::class)->findOneBy(["nom" => $a["SERVICE"]])) {
-                $arc->setService($service);
-            }
-
-            $em->persist($arc);
-
-            if ($i % $bulkSize == 0) {
-                $em->flush();
-                $em->clear();
-            }
-        }
-
-        $em->flush();
-        $em->clear();
-
-        return $this->redirectToRoute("listeArcs");
     }
 }

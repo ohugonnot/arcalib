@@ -22,21 +22,16 @@ class EiController extends Controller
 {
 
     // ------------------------------------------ADD Document-----------------------------------------------------
-    /**
-     * @Route("/eis/inclusion/{id}/ajouter", name="addEi", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public function addEiAction(Request $request, $id)
+	/**
+	 * @Route("/eis/inclusion/{id}/ajouter", name="addEi", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
+    public function addEiAction(Request $request, Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if(!$inclusion) {
-            return $this->createNotFoundException("L'inclusion $id n'a pas été trouvé");
-        }
 
         $ei = new Ei();
         $ei->setInclusion($inclusion);
@@ -57,7 +52,10 @@ class EiController extends Controller
 
         return $this->render('ei/editEi.html.twig', [
             'form' => $form->createView(),
-            'allEis' => $allEis
+	        'prev' => $prev ?? null,
+	        'next' => $next ?? null,
+	        'count' => $allEis->count(),
+	        'index' => $index ?? null,
         ]);
     }
 
@@ -74,6 +72,7 @@ class EiController extends Controller
         foreach($terms as $term) {
             $options[] = ["value" => $term->getId(), "text" => $term->getNom()];
         }
+
         return new JsonResponse($options);
     }
 
@@ -90,6 +89,7 @@ class EiController extends Controller
         foreach($grades as $grade) {
             $options[] = ["value" => $grade->getId(), "text" => $grade->getGrade().' - '.$grade->getNom()];
         }
+
         return new JsonResponse($options);
     }
 
@@ -103,11 +103,6 @@ class EiController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $emEi = $em->getRepository(Ei::class);
-
-        if (!$ei) {
-            throw $this->createNotFoundException("Le ei ".$ei->getId()." n'existe pas.");
-        }
-
         $inclusion = $ei->getInclusion();
 
         $form = $this->get('form.factory')->create(EiType::class, $ei);
@@ -120,15 +115,15 @@ class EiController extends Controller
             }
             $em->flush();
 
-            return $this->redirectToRoute("listeEis", ["id" => $inclusion->getId()]);
+            return $this->redirectToRoute("editEi", ["id" => $ei->getId()]);
         }
 
         $allEis = new ArrayCollection($emEi->findBy(["inclusion" => $inclusion], ["debutAt" => "ASC"]));
-        if ($allEis->contains($ei)) {
-            $index = $allEis->indexOf($ei);
-            $prev = $allEis->get($index - 1);
-            $next = $allEis->get($index + 1);
-        }
+	    if ($allEis->contains($ei)) {
+		    $index = $allEis->indexOf($ei);
+		    $prev = $allEis->get($index - 1);
+		    $next = $allEis->get($index + 1);
+	    }
 
         return $this->render('ei/editEi.html.twig', [
             'form' => $form->createView(),
@@ -140,20 +135,14 @@ class EiController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/ei/inclusion/{id}/voir", name="voirEi", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
-     */
-    public function firstEiAction($id)
+	/**
+	 * @Route("/ei/inclusion/{id}/voir", name="voirEi", options={"expose"=true})
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 */
+    public function firstEiAction(Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
         $emEi = $em->getRepository(Ei::class);
         $allEis = new ArrayCollection($emEi->findBy(["inclusion" => $inclusion], ["debutAt" => "ASC"]));
 
@@ -161,7 +150,7 @@ class EiController extends Controller
             return $this->redirectToRoute('editEi', ["id" => $allEis->first()->getId()], 301);
         }
         return $this->forward("AppBundle:Ei:listeEiInclusion", [
-            "id" => $id
+            "id" => $inclusion->getId()
         ]);
     }
 
@@ -182,13 +171,13 @@ class EiController extends Controller
         return $this->redirectToRoute("listeEis", ["id" => $inclusion->getId()]);
     }
 
-    /**
-     * @Route("/eis/inclusion/{id}", name="listeEis", options={"expose"=true})
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listeEiInclusionAction(Request $request, $id)
+	/**
+	 * @Route("/eis/inclusion/{id}", name="listeEis", options={"expose"=true})
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+    public function listeEiInclusionAction(Request $request, Inclusion $inclusion)
     {
         $search = $request->query->get("recherche");
         if ($search == null) {
@@ -198,13 +187,8 @@ class EiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $emEi = $em->getRepository(Ei::class);
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
 
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
-        $query = $emEi->getQuery($user, $search, $id);
+        $query = $emEi->getQuery($user, $search, $inclusion->getId());
 
         $paginator = $this->get('knp_paginator');
         $eis = $paginator->paginate(

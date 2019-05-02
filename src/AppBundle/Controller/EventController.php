@@ -19,22 +19,16 @@ class EventController extends Controller
 {
 
     // ------------------------------------------ADD Document-----------------------------------------------------
-    /**
-     * @Route("/events/inclusion/{id}/ajouter", name="addEvent", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public function addEventAction(Request $request, $id)
+	/**
+	 * @Route("/events/inclusion/{id}/ajouter", name="addEvent", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
+    public function addEventAction(Request $request, Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if(!$inclusion) {
-            return $this->createNotFoundException("L'inclusion $id n'a pas été trouvé");
-        }
-
         $event = new Event();
         $event->setInclusion($inclusion);
 
@@ -68,11 +62,6 @@ class EventController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $emEvent = $em->getRepository(Event::class);
-
-        if (!$event) {
-            throw $this->createNotFoundException("Le event ".$event->getId()." n'existe pas.");
-        }
-
         $inclusion = $event->getInclusion();
 
         $form = $this->get('form.factory')->create(EventType::class, $event);
@@ -105,20 +94,14 @@ class EventController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/event/inclusion/{id}/voir", name="voirEvent", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
-     */
-    public function firstEventAction($id)
+	/**
+	 * @Route("/event/inclusion/{id}/voir", name="voirEvent", options={"expose"=true})
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 */
+    public function firstEventAction(Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
         $emEvent = $em->getRepository(Event::class);
         $allEvents = new ArrayCollection($emEvent->findBy(["inclusion" => $inclusion], ["date" => "ASC"]));
 
@@ -126,7 +109,7 @@ class EventController extends Controller
             return $this->redirectToRoute('editEvent', ["id" => $allEvents->first()->getId()], 301);
         }
         return $this->forward("AppBundle:Event:listeEventInclusion", [
-            "id" => $id
+            "id" => $inclusion->getId()
         ]);
     }
 
@@ -147,13 +130,13 @@ class EventController extends Controller
         return $this->redirectToRoute("listeEvents", ["id" => $inclusion->getId()]);
     }
 
-    /**
-     * @Route("/events/inclusion/{id}", name="listeEvents", options={"expose"=true})
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listeEventInclusionAction(Request $request, $id)
+	/**
+	 * @Route("/events/inclusion/{id}", name="listeEvents", options={"expose"=true})
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+    public function listeEventInclusionAction(Request $request, Inclusion $inclusion)
     {
         $search = $request->query->get("recherche");
         if ($search == null) {
@@ -163,13 +146,8 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $emEvent = $em->getRepository(Event::class);
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
 
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
-        $query = $emEvent->getQuery($user, $search, $id);
+        $query = $emEvent->getQuery($user, $search, $inclusion->getId());
 
         $paginator = $this->get('knp_paginator');
         $events = $paginator->paginate(

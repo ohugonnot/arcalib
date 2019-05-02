@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * TODO REFACTO LE CONTROLLEUR EN MODE SERVICE
  * @property array erreurs
  * @Route("/arcalib")
  */

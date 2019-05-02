@@ -46,19 +46,16 @@ class ServiceController extends Controller
 
 // ------------------------------------------Edit SERVICE----------------------------------------------------- 
 
-    /**
-     * @Route("/service/editer/{id}", name="editService")
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editServiceAction(Request $request, $id)
+	/**
+	 * @Route("/service/editer/{id}", name="editService")
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Service $service
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editServiceAction(Request $request, Service $service)
     {
         $em = $this->getDoctrine()->getManager();
-        $emService = $em->getRepository(Service::class);
-        $service = $emService->find($id);
-
         $form = $this->get('form.factory')->create(ServiceType::class, $service);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -75,17 +72,15 @@ class ServiceController extends Controller
 
 // ------------------------------------------Supp SERVICE-----------------------------------------------------
 
-    /**
-     * @Route("/service/supprimer/{id}", name="deleteService", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteServiceAction($id)
+	/**
+	 * @Route("/service/supprimer/{id}", name="deleteService", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Service $service
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteServiceAction(Service $service)
     {
         $em = $this->getDoctrine()->getManager();
-        $emService = $em->getRepository(Service::class);
-        $service = $emService->find($id);
 
         $em->remove($service);
         $em->flush();
@@ -128,68 +123,4 @@ class ServiceController extends Controller
             'services' => $services
         ]);
     }
-
-    /**
-     * @param CsvToArray $csvToArray
-     * @param bool $checkIfExist
-     * @param bool $truncate
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function importAction(CsvToArray $csvToArray, $checkIfExist = true, $truncate = true)
-    {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $emService = $em->getRepository(Service::class);
-
-        if ($truncate) {
-            $em->createQuery('DELETE AppBundle:Service s')->execute();
-        }
-
-        $file = $this->get('kernel')->getRootDir() . '/../bdd/service.csv';
-        $services = $csvToArray->convert($file, ";");
-
-        $bulkSize = 500;
-        $i = 0;
-        foreach ($services as $s) {
-            $i++;
-            $service = false;
-
-            if (empty($s["SERVICE"])) {
-                continue;
-            }
-
-            foreach ($s as $k => $v) {
-                $s[$k] = trim($v);
-            }
-
-            if ($checkIfExist) {
-                $exist = $emService->findOneBy(["nom" => $s["SERVICE"]]);
-                if ($exist) {
-                    $service = $exist;
-                }
-            }
-
-            if (!$service) {
-                $service = new Service();
-            }
-
-            $service->setNom($s["SERVICE"]);
-            $em->persist($service);
-
-            if ($i % $bulkSize == 0) {
-                $em->flush();
-                $em->clear();
-            }
-        }
-
-        $em->flush();
-        $em->clear();
-
-        return $this->redirectToRoute("listeServices");
-    }
-
-// ----------------------------------------------------------------------------------------------
 }

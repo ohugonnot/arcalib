@@ -46,18 +46,16 @@ class LibCim10Controller extends Controller
 
     // ------------------------------------------EDIT CIM10-----------------------------------------------------  
 
-    /**
-     * @Route("/libcim10/editer/{id}", name="editLibCim10")
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editLibCim10Action(Request $request, $id)
+	/**
+	 * @Route("/libcim10/editer/{id}", name="editLibCim10")
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param LibCim10 $libCim10
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editLibCim10Action(Request $request, LibCim10 $libCim10)
     {
         $em = $this->getDoctrine()->getManager();
-        $emLibCim10 = $em->getRepository(LibCim10::class);
-        $libCim10 = $emLibCim10->find($id);
         $emPatient = $em->getRepository(Patient::class);
         $patients = $emPatient->findBy(["libCim10" => $libCim10], ["nom" => "ASC"]);
         $patientsCount = count($patients);
@@ -79,17 +77,15 @@ class LibCim10Controller extends Controller
 
     // ------------------------------------------DEL CIM10-----------------------------------------------------  
 
-    /**
-     * @Route("/libcim10/supprimer/{id}", name="deleteLibCim10", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteLibCim10Action($id)
+	/**
+	 * @Route("/libcim10/supprimer/{id}", name="deleteLibCim10", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param LibCim10 $libCim10
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteLibCim10Action(LibCim10 $libCim10)
     {
         $em = $this->getDoctrine()->getManager();
-        $emLibCim10 = $em->getRepository(LibCim10::class);
-        $libCim10 = $emLibCim10->find($id);
 
         $em->remove($libCim10);
         $em->flush();
@@ -133,18 +129,17 @@ class LibCim10Controller extends Controller
         ]);
     }
 
-    /**
-     * @Route("/libcim10/editer/utile/{id}", name="editUtile", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     */
-    public function editUtileAction(Request $request, $id)
+	/**
+	 * @Route("/libcim10/editer/utile/{id}", name="editUtile", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param LibCim10 $libCim10
+	 * @return JsonResponse
+	 */
+    public function editUtileAction(Request $request, LibCim10 $libCim10)
     {
         $em = $this->getDoctrine()->getManager();
-        $emLibCim10 = $em->getRepository(LibCim10::class);
-        $libCim10 = $emLibCim10->find($id);
+
         $libCim10->setUtile(($request->get("checked") == "true") ? true : false);
         $em->flush();
 

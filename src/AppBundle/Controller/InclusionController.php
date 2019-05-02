@@ -2,17 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Arc;
-use AppBundle\Entity\Essais;
 use AppBundle\Entity\Inclusion;
-use AppBundle\Entity\Medecin;
-use AppBundle\Entity\Patient;
-use AppBundle\Entity\Service;
-use AppBundle\Form\InclusionType;
+use AppBundle\Factory\InclusionFactory;
 use AppBundle\Services\CsvToArray;
 use AppBundle\Services\SendMail;
 use DateTime as DateTime;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,17 +20,15 @@ class InclusionController extends Controller
 {
 
     // ------------------------------------------Delete Inclusion-----------------------------------------------------
-    /**
-     * @Route("/inclusion/supprimer/{id}", name="deleteInclusion", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param $id
-     * @return JsonResponse
-     */
-    public function deleteInclusionAction($id)
+	/**
+	 * @Route("/inclusion/supprimer/{id}", name="deleteInclusion", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Inclusion $inclusion
+	 * @return JsonResponse
+	 */
+    public function deleteInclusionAction(Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $emInclusion = $em->getRepository(Inclusion::class);
-        $inclusion = $emInclusion->find($id);
         $em->remove($inclusion);
         $em->flush();
 
@@ -102,117 +94,28 @@ class InclusionController extends Controller
     }
 
 
-    /**
-     * @Route("/inclusion/save/{id}", name="saveInclusion", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param null $id
-     * @return JsonResponse
-     */
-    public function saveInclusionAction(Request $request, $id = null)
+	/**
+	 * @Route("/inclusion/save/{id}", name="saveInclusion", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param null $id
+	 * @param InclusionFactory $inclusionFactory
+	 * @return JsonResponse
+	 */
+    public function saveInclusionAction(Request $request, $id = null, InclusionFactory $inclusionFactory)
     {
         $em = $this->getDoctrine()->getManager();
         $inclusion = $em->getRepository(Inclusion::class)->find($id);
         if (!$inclusion) {
             $inclusion = new Inclusion();
+            $em->persist($inclusion);
             $new = true;
         }
-
-        $form = $this->get('form.factory')->create(InclusionType::class, $inclusion);
-        $form->handleRequest($request);
-
-        $params = $request->request->get("appbundle_inclusion");
-        $patient_id = $request->request->get("patient");
-
-        if ($params["statut"] == "") {
-            $params["statut"] = null;
-        }
-        if ($params["motifSortie"] == "") {
-            $params["motifSortie"] = null;
-        }
-
-        $inclusion->setStatut($params["statut"]);
-        $inclusion->setMotifSortie($params["motifSortie"]);
-
-        if (isset($params["essai"]["id"])) {
-            $essai = $em->getRepository('AppBundle:Essais')->find($params["essai"]["id"]);
-            $inclusion->setEssai($essai);
-        }
-
-        if (isset($params["medecin"]["id"])) {
-            $medecin = $em->getRepository('AppBundle:Medecin')->find($params["medecin"]["id"]);
-            $inclusion->setMedecin($medecin);
-        }
-
-        if (isset($params["arc"]["id"])) {
-            $arc = $em->getRepository('AppBundle:Arc')->find($params["arc"]["id"]);
-            $inclusion->setArc($arc);
-        }
-
-        if ($patient_id) {
-            $patient = $em->getRepository('AppBundle:Patient')->find($patient_id);
-            $inclusion->setPatient($patient);
-        }
-
-        if (isset($params["service"]["id"])) {
-            $service = $em->getRepository('AppBundle:Service')->find($params["service"]["id"]);
-            $inclusion->setService($service);
-        }
-
-        if (isset($params["booRa"]) && $params["booRa"] == "true") {
-            $inclusion->setBooRa(true);
-        } else {
-            $inclusion->setBooRa(false);
-        }
-
-        if (isset($params["booBras"]) && $params["booBras"] == "true") {
-            $inclusion->setBooBras(true);
-        } else {
-            $inclusion->setBooBras(false);
-        }
-
-        foreach ($params as $key => $value) {
-            if (is_array($value) || $value == '') {
-                unset($params[$key]);
-            }
-        }
-
-        if (isset($params["datCst"])) {
-            $datCst = \DateTime::createFromFormat('d/m/Y', $params["datCst"])->settime(0, 0);
-            if ($datCst != $inclusion->getDatCst()) {
-                $inclusion->setDatCst($datCst);
-            }
-        }
-        if (isset($params["datScr"])) {
-            $datScr = \DateTime::createFromFormat('d/m/Y', $params["datScr"])->settime(0, 0);
-            if ($datScr != $inclusion->getDatScr()) {
-                $inclusion->setDatScr($datScr);
-            }
-        }
-        if (isset($params["datInc"])) {
-            $datInc = \DateTime::createFromFormat('d/m/Y', $params["datInc"])->settime(0, 0);
-            if ($datInc != $inclusion->getDatInc()) {
-                $inclusion->setDatInc($datInc);
-            }
-        }
-        if (isset($params["datRan"])) {
-            $datRan = \DateTime::createFromFormat('d/m/Y', $params["datRan"])->settime(0, 0);
-            if ($datRan != $inclusion->getDatRan()) {
-                $inclusion->setDatRan($datRan);
-            }
-        }
-        if (isset($params["datJ0"])) {
-            $datJ0 = \DateTime::createFromFormat('d/m/Y', $params["datJ0"])->settime(0, 0);
-            if ($datJ0 != $inclusion->getDatJ0()) {
-                $inclusion->setDatJ0($datJ0);
-            }
-        }
-        if (isset($params["datOut"])) {
-            $datOut = \DateTime::createFromFormat('d/m/Y', $params["datOut"])->settime(0, 0);
-            if ($datOut != $inclusion->getDatOut()) {
-                $inclusion->setDatOut($datOut);
-            }
-        }
+        
+        $inclusion = $inclusionFactory->hydrate(
+        	$inclusion,
+	        $request->request->get("appbundle_inclusion")
+        );
 
         if (isset($new) && $new) {
             $em->persist($inclusion);
@@ -299,133 +202,5 @@ class InclusionController extends Controller
         $inclusions = $emInclusion->findAllByUser($user);
 
         return $export->exportCSV($inclusions, "inclusionsProtocole");
-    }
-
-    /**
-     * @param CsvToArray $csvToArray
-     * @param bool $checkIfExist
-     * @param bool $truncate
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function importAction(CsvToArray $csvToArray, $checkIfExist = true, $truncate = true)
-    {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $emInclusion = $em->getRepository(Inclusion::class);
-
-        if ($truncate) {
-            $em->createQuery('DELETE AppBundle:Inclusion i')->execute();
-        }
-
-        $file = $this->get('kernel')->getRootDir() . '/../bdd/inclusion.csv';
-        $inclusions = $csvToArray->convert($file, ";");
-
-        $bulkSize = 500;
-        $i = 0;
-        foreach ($inclusions as $inc) {
-            $i++;
-            $inclusion = false;
-
-            // si une inclusion n'a pas un protocole et un patient je l'ignore
-            if (empty($inc["Protocole"]) || empty($inc["Id Patient"])) {
-                continue;
-            }
-
-            foreach ($inc as $k => $v) {
-                $inc[$k] = trim($v);
-            }
-
-            $datScr = \DateTime::createFromFormat('d/m/Y', $inc["Date du screen"]);
-            $datCst = \DateTime::createFromFormat('d/m/Y', $inc["Date du consentement"]);
-            $datInc = \DateTime::createFromFormat('d/m/Y', $inc["Date d'inclusion"]);
-            $datRan = \DateTime::createFromFormat('d/m/Y', $inc["Date de randomisation"]);
-            $datJ0 = \DateTime::createFromFormat('d/m/Y', $inc["Date J0"]);
-            $datOut = \DateTime::createFromFormat('d/m/Y', $inc["Date de sortie"]);
-
-            $booRa = (strtolower($inc["Randomisation NA"]) == "vrai") ? true : false;
-
-            if (!$datScr) {
-                $datScr = null;
-            }
-
-            if (!$datCst) {
-                $datCst = null;
-            }
-
-            if (!$datInc) {
-                $datInc = null;
-            }
-
-            if (!$datRan) {
-                $datRan = null;
-            }
-
-            if (!$datJ0) {
-                $datJ0 = null;
-            }
-
-            if (!$datOut) {
-                $datOut = null;
-            }
-
-            if ($checkIfExist) {
-                $exist = $emInclusion->findOneBy(["idInterne" => $inc["N° inclusion table"]]);
-                if ($exist) {
-                    $inclusion = $exist;
-                }
-            }
-
-            if (!$inclusion) {
-                $inclusion = new Inclusion();
-            }
-
-            $inclusion->setNumInc($inc["N° inclusion"]);
-            $inclusion->setIdInterne($inc["N° inclusion table"]);
-            $inclusion->setDatScr($datScr);
-            $inclusion->setDatCst($datCst);
-            $inclusion->setDatInc($datInc);
-            $inclusion->setDatRan($datRan);
-            $inclusion->setDatJ0($datJ0);
-            $inclusion->setDatOut($datOut);
-            $inclusion->setStatut($inc["Statut du patient"]);
-            $inclusion->setBooRa($booRa);
-            $inclusion->setBraTrt($inc["Bras de traitement"]);
-            $inclusion->setMotifSortie($inc["Cause de sortie"]);
-
-            if ($medecin = $em->getRepository(Medecin::class)->findOneBy(["NomPrenomConcat" => $inc["Médecin responsable de l'Inclusion"]])) {
-                $inclusion->setMedecin($medecin);
-            }
-
-            if ($patient = $em->getRepository(Patient::class)->findOneBy(["idInterne" => $inc["Id Patient"]])) {
-                $inclusion->setPatient($patient);
-            }
-
-            if ($essai = $em->getRepository(Essais::class)->findOneBy(["nom" => $inc["Protocole"]])) {
-                $inclusion->setEssai($essai);
-            }
-
-            if ($service = $em->getRepository(Service::class)->findOneBy(["nom" => $inc["service"]])) {
-                $inclusion->setService($service);
-            }
-
-            if ($arc = $em->getRepository(Arc::class)->findOneBy(["iniArc" => $inc["ArcInc"]])) {
-                $inclusion->setArc($arc);
-            }
-
-            $em->persist($inclusion);
-
-            if ($i % $bulkSize == 0) {
-                $em->flush();
-                $em->clear();
-            }
-        }
-
-        $em->flush();
-        $em->clear();
-
-        return $this->redirectToRoute("listeInclusions");
     }
 }

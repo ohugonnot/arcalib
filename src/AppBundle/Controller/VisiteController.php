@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Arc;
 use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Visite;
+use AppBundle\Factory\VisiteFactory;
 use AppBundle\Form\VisiteType;
 use AppBundle\Services\CsvToArray;
 use Doctrine\ORM\EntityManager;
@@ -20,16 +21,14 @@ class VisiteController extends Controller
 {
 
 //-----------------------------------DELETE VISITE  ->  deleteVisite-------------------------
-    /**
-     * @Route("/visite/supprimer/{id}", name="deleteVisite", options={"expose"=true})
-     * @param $id
-     * @return JsonResponse
-     */
-    public function deleteVisiteAction($id)
+	/**
+	 * @Route("/visite/supprimer/{id}", name="deleteVisite", options={"expose"=true})
+	 * @param Visite $visite
+	 * @return JsonResponse
+	 */
+    public function deleteVisiteAction(Visite $visite)
     {
         $em = $this->getDoctrine()->getManager();
-        $emVisite = $em->getRepository(Visite::class);
-        $visite = $emVisite->find($id);
 
         $em->remove($visite);
         $em->flush();
@@ -78,14 +77,15 @@ class VisiteController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/visite/edit/{id}", name="editVisite", options={"expose"=true})
-     * @Route("/visite/save/{id}", name="saveVisite", options={"expose"=true})
-     * @param Request $request
-     * @param null $id
-     * @return JsonResponse
-     */
-    public function saveVisitetAction(Request $request, $id = null)
+	/**
+	 * @Route("/visite/edit/{id}", name="editVisite", options={"expose"=true})
+	 * @Route("/visite/save/{id}", name="saveVisite", options={"expose"=true})
+	 * @param Request $request
+	 * @param null $id
+	 * @param VisiteFactory $visiteFactory
+	 * @return JsonResponse
+	 */
+    public function saveVisitetAction(Request $request, $id = null, VisiteFactory $visiteFactory)
     {
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($id);
@@ -94,34 +94,7 @@ class VisiteController extends Controller
             $new = true;
         }
 
-        $form = $this->get('form.factory')->create(VisiteType::class, $visite);
-        $form->handleRequest($request);
-
-        $inclusion_id = $request->request->get("inclusion");
-        $inclusion = $em->getRepository(Inclusion::class)->find($inclusion_id);
-        $visite->setInclusion($inclusion);
-
-        $params = $request->request->get("appbundle_visite");
-
-        $arc = $em->getRepository(Arc::class)->find($params["arc"]["id"]);
-        $visite->setArc($arc);
-
-        foreach ($params as $key => $value) {
-            if (is_array($value) || $value == '') {
-                unset($params[$key]);
-            }
-        }
-
-        if (isset($params["date"])) {
-            $date = \DateTime::createFromFormat('d/m/Y', $params["date"]);
-            $visite->setDate($date);
-        }
-
-        if (isset($params["fact"]) and $params["fact"] == "true") {
-            $visite->setFact(true);
-        } else {
-            $visite->setFact(false);
-        }
+        $visite = $visiteFactory->hydrate($visite, $request->request->get("appbundle_visite"));
 
         if (isset($new) && $new) {
             $em->persist($visite);
@@ -131,82 +104,6 @@ class VisiteController extends Controller
         }
 
         return new JsonResponse(["success" => true, "visite" => ["id" => $visite->getId()]]);
-    }
-
-
-    /**
-     * @param CsvToArray $csvToArray
-     * @param bool $truncate
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function importAction(CsvToArray $csvToArray, $truncate = true)
-    {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-
-        if ($truncate) {
-            $em->createQuery('DELETE AppBundle:Visite v')->execute();
-        }
-
-        $file = $this->get('kernel')->getRootDir() . '/../bdd/visite.csv';
-        $visites = $csvToArray->convert($file, ";");
-
-        $bulkSize = 500;
-        $i = 0;
-        foreach ($visites as $p) {
-            $i++;
-            $visite = false;
-
-            if (empty($p["N° inclusion table"]) || empty($p["Date visite"])) {
-                continue;
-            }
-
-            foreach ($p as $k => $v) {
-                $p[$k] = trim($v);
-            }
-
-            $date = \DateTime::createFromFormat('d/m/Y', $p["Date visite"]);
-            $fact = (strtolower($p["Facturé"]) == "vrai") ? true : false;;
-
-            if (!$date) {
-                $date = null;
-            }
-
-            if (!$visite) {
-                $visite = new Visite();
-            }
-
-            $visite->setDate($date);
-            $visite->setType($p["Type visite"]);
-            $visite->setCalendar($p["JMA"]);
-            $visite->setStatut($p["Statut visite"]);
-            $visite->setNote($p["Notes"]);
-            $visite->setFact($fact);
-            $visite->setNumFact($p["N° facture"]);
-
-            if ($inclusion = $em->getRepository(Inclusion::class)->findOneBy(["idInterne" => $p["N° inclusion table"]])) {
-                $visite->setInclusion($inclusion);
-            }
-
-            if ($arc = $em->getRepository(Arc::class)->findOneBy(["nomArc" =>$p["Arc référent"]])) {
-                $visite->setArc($arc);
-            }
-
-            $em->persist($visite);;
-
-            if ($i % $bulkSize == 0) {
-                $em->flush();
-                $em->clear();
-            }
-        }
-
-        $em->flush();
-        $em->clear();
-
-        return $this->redirectToRoute("listeVisites");
     }
 
     /**
@@ -231,5 +128,4 @@ class VisiteController extends Controller
 
         return new JsonResponse($visites);
     }
-
 }

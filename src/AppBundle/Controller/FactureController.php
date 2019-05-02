@@ -50,19 +50,17 @@ class FactureController extends Controller
 
 // ------------------------------------------Edit FACTURE-----------------------------------------------------
 
-    /**
-     * @Route("/facture/editer/{id}", name="editFacture")
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function editFactureAction(Request $request, $id)
+	/**
+	 * @Route("/facture/editer/{id}", name="editFacture")
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Facture $facture
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+    public function editFactureAction(Request $request, Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
         $emFacture = $em->getRepository(Facture::class);
-        $facture = $emFacture->find($id);
-
         $facturesSoeurs = $emFacture->findBy(['essai' => $facture->getEssai()], ["date" => "DESC"]);
 
         $form = $this->get('form.factory')->create(FactureType::class, $facture);
@@ -81,17 +79,15 @@ class FactureController extends Controller
 
 // ------------------------------------------delete FACTURE-----------------------------------------------------
 
-    /**
-     * @Route("/facture/supprimer/{id}", name="deleteFacture", options={"expose"=true})
-     * @Security("has_role('ROLE_ADMIN')")
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteFactureAction($id)
+	/**
+	 * @Route("/facture/supprimer/{id}", name="deleteFacture", options={"expose"=true})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 * @param Facture $facture
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+    public function deleteFactureAction(Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
-        $emFacture = $em->getRepository(Facture::class);
-        $facture = $emFacture->find($id);
 
         $em->remove($facture);
         $em->flush();
@@ -114,7 +110,6 @@ class FactureController extends Controller
         if ($search == null) {
             $search = '%%';
         }
-
 
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -151,19 +146,16 @@ class FactureController extends Controller
     }
 
 
-    /**
-     * @Route("/facture/upload/pdf/{id}", name="uploadFacturePDF", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     */
-    public function uploadFacturePDFAction(Request $request, $id)
+	/**
+	 * @Route("/facture/upload/pdf/{id}", name="uploadFacturePDF", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Facture $facture
+	 * @return JsonResponse
+	 */
+    public function uploadFacturePDFAction(Request $request, Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
-        $emFacture = $em->getRepository(Facture::class);
-        $facture = $emFacture->find($id);
-
         $file = $request->files->get('file');
         $path = $this->get('kernel')->getRootDir() . '/Resources/' . $this->getParameter("pdf_directory_asset");
         $fileName = date('m-d-Y_his') . '-' . $file->getClientOriginalName();
@@ -186,18 +178,15 @@ class FactureController extends Controller
         return new JsonResponse(["success" => true, "fileName" => $file_path]);
     }
 
-    /**
-     * @Route("/facture/remove/pdf/{id}", name="removeFacturePDF", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param $id
-     * @return JsonResponse
-     */
-    public function removeFacturePDFAction($id)
+	/**
+	 * @Route("/facture/remove/pdf/{id}", name="removeFacturePDF", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Facture $facture
+	 * @return JsonResponse
+	 */
+    public function removeFacturePDFAction(Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
-        $emFacture = $em->getRepository(Facture::class);
-        $facture = $emFacture->find($id);
-
         $file_path = $this->get('kernel')->getRootDir() . '/Resources/' . $this->getParameter("pdf_directory_asset") . '/' . $facture->getFacture();
         if (file_exists($file_path)) unlink($file_path);
 
@@ -207,17 +196,13 @@ class FactureController extends Controller
         return new JsonResponse(["success" => true]);
     }
 
-    /**
-     * @Route("/facture/get/pdf/{id}", name="getFacturePDF", options={"expose"=true})
-     * @param $id
-     * @return JsonResponse
-     */
-    public function getFacturePDFAction($id)
+	/**
+	 * @Route("/facture/get/pdf/{id}", name="getFacturePDF", options={"expose"=true})
+	 * @param Facture $facture
+	 * @return JsonResponse
+	 */
+    public function getFacturePDFAction(Facture $facture)
     {
-        $em = $this->getDoctrine()->getManager();
-        $emFacture = $em->getRepository(Facture::class);
-        $facture = $emFacture->find($id);
-
         if ($facture->getFacture()) {
             $file_path = $this->generateUrl('downloadPDF', array('pdf' => $facture->getFacture()), UrlGeneratorInterface::ABSOLUTE_URL);
         } else {

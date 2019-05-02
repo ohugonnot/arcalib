@@ -19,22 +19,16 @@ class TraitementController extends Controller
 {
 
     // ------------------------------------------ADD Document-----------------------------------------------------
-    /**
-     * @Route("/traitements/inclusion/{id}/ajouter", name="addTraitement", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public function addTraitementAction(Request $request, $id)
+	/**
+	 * @Route("/traitements/inclusion/{id}/ajouter", name="addTraitement", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 */
+    public function addTraitementAction(Request $request, Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if(!$inclusion) {
-            return $this->createNotFoundException("L'inclusion $id n'a pas été trouvé");
-        }
-
         $traitement = new Traitement();
         $traitement->setInclusion($inclusion);
 
@@ -105,20 +99,14 @@ class TraitementController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/traitement/inclusion/{id}/voir", name="voirTraitement", options={"expose"=true})
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
-     */
-    public function firstTraitementAction($id)
+	/**
+	 * @Route("/traitement/inclusion/{id}/voir", name="voirTraitement", options={"expose"=true})
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 */
+    public function firstTraitementAction(Inclusion $inclusion)
     {
         $em = $this->getDoctrine()->getManager();
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
-
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
         $emTraitement = $em->getRepository(Traitement::class);
         $allTraitements = new ArrayCollection($emTraitement->findBy(["inclusion" => $inclusion], ["attributionAt" => "ASC"]));
 
@@ -126,7 +114,7 @@ class TraitementController extends Controller
             return $this->redirectToRoute('editTraitement', ["id" => $allTraitements->first()->getId()], 301);
         }
         return $this->forward("AppBundle:Traitement:listeTraitementInclusion", [
-            "id" => $id
+            "id" => $inclusion->getId()
         ]);
     }
 
@@ -147,13 +135,13 @@ class TraitementController extends Controller
         return $this->redirectToRoute("listeTraitements", ["id" => $inclusion->getId()]);
     }
 
-    /**
-     * @Route("/traitements/inclusion/{id}", name="listeTraitements", options={"expose"=true})
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listeTraitementInclusionAction(Request $request, $id)
+	/**
+	 * @Route("/traitements/inclusion/{id}", name="listeTraitements", options={"expose"=true})
+	 * @param Request $request
+	 * @param Inclusion $inclusion
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+    public function listeTraitementInclusionAction(Request $request, Inclusion $inclusion)
     {
         $search = $request->query->get("recherche");
         if ($search == null) {
@@ -163,13 +151,8 @@ class TraitementController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $emTraitement = $em->getRepository(Traitement::class);
-        $inclusion = $em->getRepository(Inclusion::class)->find($id);
 
-        if (!$inclusion) {
-            throw $this->createNotFoundException("L'inclusion $id n'existe pas.");
-        }
-
-        $query = $emTraitement->getQuery($user, $search, $id);
+        $query = $emTraitement->getQuery($user, $search, $inclusion->getId());
 
         $paginator = $this->get('knp_paginator');
         $traitements = $paginator->paginate(

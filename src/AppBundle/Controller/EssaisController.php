@@ -3,14 +3,14 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Arc;
-use AppBundle\Entity\EssaiDetail;
 use AppBundle\Entity\Essais;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Service;
 use AppBundle\Entity\Tag;
-use AppBundle\Form\EssaisType;
+use AppBundle\Factory\EssaiFactory;
 use AppBundle\Services\CsvToArray;
-use Doctrine\ORM\EntityManager;
+use AppBundle\Services\ValidatorToArray;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -178,118 +178,32 @@ class EssaisController extends Controller
         return new JsonResponse($essais);
     }
 
-    /**
-     * @Route("/essai/save/{id}", name="saveEssai", options={"expose"=true})
-     * @Security("has_role('ROLE_ARC')")
-     * @param Request $request
-     * @param null $id
-     * @return JsonResponse
-     */
-    public function saveEssaiAction(Request $request, $id = null)
+	/**
+	 * @Route("/essai/save/{id}", name="saveEssai", options={"expose"=true})
+	 * @Security("has_role('ROLE_ARC')")
+	 * @param Request $request
+	 * @param null $id
+	 * @param EssaiFactory $essaiFactory
+	 * @return JsonResponse
+	 */
+    public function saveEssaiAction(Request $request, $id = null, EssaiFactory $essaiFactory)
     {
         $em = $this->getDoctrine()->getManager();
 
         $essai = $em->getRepository(Essais::class)->find($id);
         if (!$essai) {
             $essai = new Essais();
+            $em->persist($essai);
             $new = true;
         }
 
-        $form = $this->get('form.factory')->create(EssaisType::class, $essai);
-        $form->handleRequest($request);
-        $em->persist($essai);
-
-        $params = $request->request->get("appbundle_essais");
-
-        if (isset($params["detail"])) {
-            $essaiDetail = $em->getRepository(EssaiDetail::class)->find($params["detail"]["id"]);
-
-            if (!$essaiDetail) {
-                $essaiDetail = new EssaiDetail();
-            }
-
-            $essaiDetail->setCrInc(($params["detail"]["crInc"] != '') ? $params["detail"]["crInc"] : null);
-            $essaiDetail->setCrNonInc(($params["detail"]["crNonInc"] != '') ? $params["detail"]["crNonInc"] : null);
-            $essaiDetail->setObjectif(($params["detail"]["objectif"] != '') ? $params["detail"]["objectif"] : null);
-            $essaiDetail->setCalendar(($params["detail"]["calendar"] != '')?  $params["detail"]["calendar"] : null);
-            $essai->setDetail($essaiDetail);
-        }
-
-        if (isset($params["tags"]) && is_string($params["tags"][0])) {
-            $essai->clearTags();
-
-            foreach ($params["tags"] as $tag) {
-
-                if ($tag != '' and $tag != null) {
-                    $tagExist = $em->getRepository(Tag::class)->findOneBy(["nom" => $tag]);
-
-                    if (!$tagExist) {
-                        $tagExist = new Tag();
-                        $tagExist->setNom($tag);
-                        $em->persist($tagExist);
-                        $em->flush();
-                    }
-
-                    $essai->addTag($tagExist);
-                }
-            }
-        } elseif (!isset($params["tags"])) {
-            $essai->clearTags();
-        }
-
-        $medecin = $em->getRepository(Medecin::class)->find(isset($params["medecin"]["id"]) ? $params["medecin"]["id"] : 0);
-        $essai->setMedecin($medecin);
-
-        $arc = $em->getRepository(Arc::class)->find(isset($params["arc"]["id"]) ? $params["arc"]["id"] : 0);
-        $essai->setArc($arc);
-
-        foreach ($params as $key => $value) {
-            if (is_array($value) || $value == '') {
-                unset($params[$key]);
-            }
-        }
-
-        if (isset($params["eudraCtNd"]) and $params["eudraCtNd"] == "true") {
-            $essai->setEudraCtNd(true);
-        } else {
-            $essai->setEudraCtNd(false);
-        }
-
-        if (isset($params["ctNd"]) and $params["ctNd"] == "true") {
-            $essai->setCtNd(true);
-        } else {
-            $essai->setCtNd(false);
-        }
-
-        if (isset($params["cancer"]) and $params["cancer"] == "true") {
-            $essai->setCancer(true);
-        } else {
-            $essai->setCancer(false);
-        }
-
-        if (isset($params["sigaps"]) and $params["sigaps"] == "true") {
-            $essai->setSigaps(true);
-        } else {
-            $essai->setSigaps(false);
-        }
-
-        if (isset($params["sigrec"]) and $params["sigrec"] == "true") {
-            $essai->setSigrec(true);
-        } else {
-            $essai->setSigrec(false);
-        }
-
-        if (isset($params["emrc"]) and $params["emrc"] == "true") {
-            $essai->setEmrc(true);
-        } else {
-            $essai->setEmrc(false);
-        }
+        $essai = $essaiFactory->hydrate($essai, $request->request->get("appbundle_essais"));
 
         $checkEssaiExist = $em->getRepository(Essais::class)->findBy(['nom' => $essai->getNom()]);
 
-        if ($checkEssaiExist && !$essai->getId()) {
-            return new JsonResponse(["success" => false, "message" => "Ce protocole existe déjà."]);
-        }
+	    if ($checkEssaiExist && !$essai->getId()) {
+		    return new JsonResponse(["success" => false, "message" => "Ce protocole existe déjà."]);
+	    }
 
         if (isset($new) && $new) {
             $em->persist($essai);
@@ -396,129 +310,12 @@ class EssaisController extends Controller
         return new BinaryFileResponse($file_path);
     }
 
-
-    /**
-     * @param CsvToArray $csvToArray
-     * @param bool $checkIfExist
-     * @param bool $truncate
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function importAction(CsvToArray $csvToArray, $checkIfExist = true, $truncate = true)
-    {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $emEssai = $em->getRepository(Essais::class);
-
-        if ($truncate) {
-            $em->createQuery('DELETE AppBundle:Essais e')->execute();
-        }
-
-        $file = $this->get('kernel')->getRootDir() . '/../bdd/essai.csv';
-        $essais = $csvToArray->convert($file, ";");
-
-        $bulkSize = 500;
-        $i = 0;
-        foreach ($essais as $e) {
-            $i++;
-            $essai = false;
-
-            foreach ($e as $k => $v) {
-                $e[$k] = trim($v);
-            }
-
-            if ($checkIfExist) {
-                $exist = $emEssai->findOneBy(["nom" => $e["Nom de l'essai"]]);
-                if ($exist) {
-                    $essai = $exist;
-                }
-            }
-
-            if (!$essai) {
-                $essai = new Essais();
-            }
-
-            $dateOuverture = \DateTime::createFromFormat('d/m/Y', $e["Date d'ouverture"]);
-            $dateFin = \DateTime::createFromFormat('d/m/Y', $e["Fin des inclusions"]);
-            $dateCloture = \DateTime::createFromFormat('d/m/Y', $e["Date Cloture centre"]);
-            $sigrec = (strtolower($e["Sigrec"]) == "vrai") ? true : false;
-            $sigaps = (strtolower($e["Sigaps"]) == "vrai") ? true : false;
-            $emrc = (strtolower($e["Emrc"]) == "vrai") ? true : false;
-            $cancer = (strtolower($e["Cancer"]) == "vrai") ? true : false;
-            $dateSignature = \DateTime::createFromFormat('d/m/Y', $e["Date signature convention"]);
-            $e["N° Eudract"] = ($e["N° Eudract"] == '') ? null : $e["N° Eudract"];
-            $e["N° Clinical trial"] = ($e["N° Clinical trial"] == '') ? null : $e["N° Clinical trial"];
-
-            if (!$dateOuverture) {
-                $dateOuverture = null;
-            }
-
-            if (!$dateFin) {
-                $dateFin = null;
-            }
-
-            if (!$dateCloture) {
-                $dateCloture = null;
-            }
-
-            if (!$dateSignature) {
-                $dateSignature = null;
-            }
-
-            if ($e["Nom de l'essai"] == '') {
-                continue;
-            }
-
-            $essai->setNom($e["Nom de l'essai"]);
-            $essai->setTitre($e["Tiitre de l'essai"]);
-            $essai->setNumeroCentre($e["Numero centre"]);
-            $essai->setDateOuv($dateOuverture);
-            $essai->setDateFinInc($dateFin);
-            $essai->setDateClose($dateCloture);
-            $essai->setStatut($e["Statut essai"]);
-            $essai->setTypeEssai($e["Type d'essai"]);
-            $essai->setStadeEss($e["Phase"]);
-            $essai->setProm($e["Promoteur"]);
-            $essai->setTypeProm($e["Type de promoteur"]);
-            $essai->setContactNom($e["Nom du contact"]);
-            $essai->setContactTel($e["Tel du contact"]);
-            $essai->setContactMail($e["Mail du contact"]);
-            $essai->setEcrfLink($e["Lien Ecrf"]);
-            $essai->setNotes($e["Remarque essai"]);
-            $essai->setUrcGes($e["gestion par l'URC"]);
-            $essai->setSigrec($sigrec);
-            $essai->setSigaps($sigaps);
-            $essai->setEmrc($emrc);
-            $essai->setCancer($cancer);
-            $essai->setTypeConv($e["Type Convention"]);
-            $essai->setDateSignConv($dateSignature);
-            $essai->setNumEudract($e["N° Eudract"]);
-            $essai->setNumCt($e["N° Clinical trial"]);
-            $essaiDetail = new EssaiDetail();
-            $essai->setDetail($essaiDetail);
-
-            if ($medecin = $em->getRepository(Medecin::class)->findOneBy(["nom" => $e["Médecin référent- NOM"], "prenom" => $e["Médecin référent-Prénom"]])) {
-                $essai->setMedecin($medecin);
-            }
-
-            $em->persist($essai);
-            $em->persist($essaiDetail);
-
-            if ($i % $bulkSize == 0) {
-                $em->flush();
-                $em->clear();
-            }
-        }
-
-        $em->flush();
-        $em->clear();
-
-        return $this->redirectToRoute("listeEssais");
-    }
-
-    private function orderByStatut(Essais $a, Essais $b)
+	/**
+	 * @param Essais $a
+	 * @param Essais $b
+	 * @return bool|int
+	 */
+	private function orderByStatut(Essais $a, Essais $b)
     {
         $statuts = array_keys(Essais::STATUT);
         $statutA = array_search($a->getStatut(), $statuts);
