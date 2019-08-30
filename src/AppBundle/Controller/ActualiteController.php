@@ -8,7 +8,9 @@ use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -22,7 +24,7 @@ class ActualiteController extends Controller
      * @Route("/actualite/ajouter", name="addActualite")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addActualiteAction(Request $request)
     {
@@ -51,7 +53,7 @@ class ActualiteController extends Controller
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param Actualite $actualite
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editActualiteAction(Request $request, Actualite $actualite)
     {
@@ -76,7 +78,7 @@ class ActualiteController extends Controller
      * @Route("/actualite/supprimer/{id}", name="deleteActualite", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param Actualite $actualite
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteActualiteAction(Actualite $actualite)
     {
@@ -92,7 +94,7 @@ class ActualiteController extends Controller
     /**
      * @Route("/actualites/", name="listeActualites", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeActualitesAction(Request $request)
     {

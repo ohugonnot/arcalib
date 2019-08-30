@@ -4,6 +4,7 @@ namespace AppBundle\Import;
 
 use AppBundle\Entity\Arc;
 use AppBundle\Entity\Service;
+use DateTime;
 
 class ArcImport implements ImportInterface
 {
@@ -44,8 +45,8 @@ class ArcImport implements ImportInterface
 				$arc = new Arc();
 			}
 
-			$datIn = \DateTime::createFromFormat('d/m/Y', $a["Date d'entrée"]);
-			$datOut = \DateTime::createFromFormat('d/m/Y', $a["Date de sortie"]);
+			$datIn = DateTime::createFromFormat('d/m/Y', $a["Date d'entrée"]);
+			$datOut = DateTime::createFromFormat('d/m/Y', $a["Date de sortie"]);
 
 			if (!$datIn) {
 				$datIn = null;

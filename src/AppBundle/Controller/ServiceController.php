@@ -4,12 +4,13 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Service;
 use AppBundle\Form\ServiceType;
-use AppBundle\Services\CsvToArray;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -23,7 +24,7 @@ class ServiceController extends Controller
      * @Route("/service/ajouter", name="addService")
      * @Security("has_role('ROLE_ARC')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addServiceAction(Request $request)
     {
@@ -51,7 +52,7 @@ class ServiceController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Service $service
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editServiceAction(Request $request, Service $service)
     {
@@ -76,7 +77,7 @@ class ServiceController extends Controller
 	 * @Route("/service/supprimer/{id}", name="deleteService", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Service $service
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteServiceAction(Service $service)
     {
@@ -93,7 +94,7 @@ class ServiceController extends Controller
     /**
      * @Route("/services/", name="listeServices", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeServicesAction(Request $request)
     {

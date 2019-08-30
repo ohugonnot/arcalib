@@ -11,7 +11,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -26,7 +29,7 @@ class FactureController extends Controller
      * @Route("/facture/ajouter", name="addFacture")
      * @Security("has_role('ROLE_ARC')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addFactureAction(Request $request)
     {
@@ -55,7 +58,7 @@ class FactureController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Facture $facture
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editFactureAction(Request $request, Facture $facture)
     {
@@ -83,7 +86,7 @@ class FactureController extends Controller
 	 * @Route("/facture/supprimer/{id}", name="deleteFacture", options={"expose"=true})
 	 * @Security("has_role('ROLE_ADMIN')")
 	 * @param Facture $facture
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteFactureAction(Facture $facture)
     {
@@ -99,10 +102,11 @@ class FactureController extends Controller
 // ------------------------------------------Liste FACTURE-----------------------------------------------------
 
     /**
+     * Todo : duplicate code content search
      * @Route("/factures/", name="listeFactures", options={"expose"=true})
      * @Security("has_role('ROLE_ARC')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeFacturesAction(Request $request)
     {
@@ -133,7 +137,7 @@ class FactureController extends Controller
      * @Route("/factures/export", name="exportFactures", options={"expose"=true})
      * @Security("has_role('ROLE_ARC')")
      * @param CsvToArray $export
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function exportFacturesAction(CsvToArray $export)
     {

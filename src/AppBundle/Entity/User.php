@@ -4,6 +4,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -137,7 +138,7 @@ class User extends BaseUser
     /**
      * Get logs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getLogs()
     {
@@ -172,7 +173,7 @@ class User extends BaseUser
     /**
      * Get todoAuteurs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTodoAuteurs()
     {
@@ -206,7 +207,7 @@ class User extends BaseUser
     /**
      * Get todoDestinataires
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTodoDestinataires()
     {
@@ -239,7 +240,7 @@ class User extends BaseUser
     /**
      * Get essais
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEssais()
     {

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -149,7 +150,7 @@ class Tag
     /**
      * Get essais
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEssais()
     {

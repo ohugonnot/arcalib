@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -69,7 +70,7 @@ class Visite
 
 
     /**
-     * @var \dateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
@@ -150,7 +151,7 @@ class Visite
     /**
      * Get date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDate()
     {
@@ -160,7 +161,7 @@ class Visite
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param DateTime $date
      *
      * @return Visite
      */

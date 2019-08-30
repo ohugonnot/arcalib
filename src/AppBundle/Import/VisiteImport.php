@@ -6,6 +6,7 @@ namespace AppBundle\Import;
 use AppBundle\Entity\Arc;
 use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Visite;
+use DateTime;
 
 class VisiteImport implements ImportInterface
 {
@@ -34,7 +35,7 @@ class VisiteImport implements ImportInterface
 				$p[$k] = trim($v);
 			}
 
-			$date = \DateTime::createFromFormat('d/m/Y', $p["Date visite"]);
+			$date = DateTime::createFromFormat('d/m/Y', $p["Date visite"]);
 			$fact = (strtolower($p["Facturé"]) == "vrai") ? true : false;;
 
 			if (!$date) {

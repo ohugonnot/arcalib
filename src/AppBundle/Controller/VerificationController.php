@@ -10,12 +10,14 @@ use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
 use AppBundle\Entity\ValidationErreur;
 use AppBundle\Entity\Visite;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * TODO REFACTO LE CONTROLLEUR EN MODE SERVICE
@@ -28,7 +30,7 @@ class VerificationController extends Controller
     /**
      * @Route("/verification/data/{api}", name="verificationData")
      * @param bool $api
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse|Response
      */
     public function verificationDataAction($api = false)
     {
@@ -44,26 +46,27 @@ class VerificationController extends Controller
         $factures = $em->getRepository(Facture::class)->findAll();
         $visites = $em->getRepository(Visite::class)->findAll();
 
+        /** @var Arc[] $arcs */
         foreach ($arcs as $arc) {
             $this->VerificationArc($arc);
         }
-
+        /** @var Essais[] $essais */
         foreach ($essais as $essai) {
             $this->VerificationEssai($essai);
         }
-
+        /** @var Inclusion[] $inclusions */
         foreach ($inclusions as $inclusion) {
             $this->VerificationInclusion($inclusion);
         }
-
+        /** @var Patient[] $patients */
         foreach ($patients as $patient) {
             $this->VerificationPatient($patient);
         }
-
+        /** @var Facture[] $factures */
         foreach ($factures as $facture) {
             $this->VerificationFacture($facture);
         }
-
+        /** @var Visite[] $visites */
         foreach ($visites as $visite) {
             $this->VerificationVisite($visite);
         }
@@ -247,7 +250,7 @@ class VerificationController extends Controller
             $this->erreurs["patient"][$patient->getId()][1] = "p1-La date de naissance du patient n'est pas documentée";
         }
 
-        if ($patient->getDatNai() <= \DateTime::createFromFormat('d/m/Y', '01/01/1920')) {
+        if ($patient->getDatNai() <= DateTime::createFromFormat('d/m/Y', '01/01/1920')) {
             $this->erreurs["patient"][$patient->getId()][2] = "p2-Vérifier la date de naissance du patient: DDN<1920";
         }
 
@@ -309,7 +312,7 @@ class VerificationController extends Controller
             $this->erreurs["visite"][$visite->getId()][3] = "v3-Le type de la visite n'a pas été documenté";
         }
 
-        if ($visite->getDate() <= \DateTime::createFromFormat('d/m/Y', '01/01/2010')) {
+        if ($visite->getDate() <= DateTime::createFromFormat('d/m/Y', '01/01/2010')) {
             $this->erreurs["visite"][$visite->getId()][4] = "v4-La date de la visite < 2010. Confirmez?";
         }
     }

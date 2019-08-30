@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,7 +51,7 @@ class Todo
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="createdAt", type="date", nullable=true)
      */
@@ -80,7 +82,7 @@ class Todo
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateFin", type="date", nullable=true)
      */
@@ -104,7 +106,7 @@ class Todo
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @Assert\Expression(
      *     "this.getDateFin() >= this.getDateAlerte() or this.getDateAlerte() == null",
      *     message="La date d'alerte doit être antérieur à la date de l'échéance"
@@ -165,7 +167,7 @@ class Todo
     /**
      * Get createdAt
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -175,7 +177,7 @@ class Todo
     /**
      * Set createdAt
      *
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return Todo
      */
@@ -333,7 +335,7 @@ class Todo
     /**
      * Get dateAlerte
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateAlerte()
     {
@@ -345,7 +347,7 @@ class Todo
     /**
      * Set dateAlerte
      *
-     * @param \DateTime $dateAlerte
+     * @param DateTime $dateAlerte
      *
      * @return Todo
      */
@@ -408,7 +410,7 @@ class Todo
     /**
      * Get destinataires
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDestinataires()
     {
@@ -418,7 +420,7 @@ class Todo
     /**
      * Get dateFin
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateFin()
     {
@@ -428,7 +430,7 @@ class Todo
     /**
      * Set dateFin
      *
-     * @param \DateTime $dateFin
+     * @param DateTime $dateFin
      *
      * @return Todo
      */

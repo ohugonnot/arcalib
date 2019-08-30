@@ -25,17 +25,17 @@ class LogManager
         $this->tokenStorage = $tokenStorage;
     }
 
+
     /**
-     * Return roles.
-     *
      * @param $name
      * @param $entity
      * @param $action
      * @param $info
      * @param null $changeSet
      * @return bool
+     * @throws \Exception
      */
-    public function save($name, $entity = null, $action, $info, $changeSet = null)
+    public function save($name, $entity, $action, $info, $changeSet = null)
     {
         if ($this->tokenStorage->getToken() != null) {
             $this->user = $this->tokenStorage->getToken()->getUser() ?? null;

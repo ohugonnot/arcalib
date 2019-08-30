@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -27,7 +29,7 @@ class DocumentController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return RedirectResponse|Response|NotFoundHttpException
 	 */
     public function addDocumentAction(Request $request, Inclusion $inclusion)
     {
@@ -58,7 +60,7 @@ class DocumentController extends Controller
 	 * @Route("/documents/editer/{id}", name="editDocument", options={"expose"=true})
 	 * @param Request $request
 	 * @param Document $document
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editDocumentAction(Request $request, Document $document)
     {
@@ -119,7 +121,7 @@ class DocumentController extends Controller
 	/**
 	 * @Route("/documents/inclusion/{id}/voir", name="voirDocument", options={"expose"=true})
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 * @return Response|RedirectResponse
 	 */
     public function firstDocumentAction(Inclusion $inclusion)
     {
@@ -141,7 +143,7 @@ class DocumentController extends Controller
 	 * @Route("/documents/supprimer/{id}", name="deleteDocument", options={"expose"=true})
 	 * @Security("has_role('ROLE_ADMIN')")
 	 * @param Document $document
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteDocumentAction(Document $document)
     {
@@ -159,7 +161,7 @@ class DocumentController extends Controller
 	 * @Route("/documents/inclusion/{id}", name="inclusion_list_documents", options={"expose"=true})
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return Response
 	 */
     public function listeDocumentsInclusionAction(Request $request, Inclusion $inclusion)
     {
@@ -190,6 +192,7 @@ class DocumentController extends Controller
     }
 
 	/**
+     * TODO : duplicate code gestion File
 	 * @Route("/documents/upload/pdf/{id}", name="uploadDocumentPDF", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request

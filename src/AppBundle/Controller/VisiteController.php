@@ -2,17 +2,15 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Arc;
-use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Visite;
 use AppBundle\Factory\VisiteFactory;
-use AppBundle\Form\VisiteType;
-use AppBundle\Services\CsvToArray;
-use Doctrine\ORM\EntityManager;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -40,9 +38,10 @@ class VisiteController extends Controller
 //-----------------------------------LISTE VISITE  ->  listeVisites-------------------------
 
     /**
+     * Todo : duplicate code content search
      * @Route("/visites/", name="listeVisites")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeVisitesAction(Request $request)
     {
@@ -115,12 +114,13 @@ class VisiteController extends Controller
      * @param null $year
      * @param null $query
      * @return JsonResponse
+     * @throws Exception
      */
     public function searchVisitesAction(Request $request, $day = null, $month = null, $year = null, $query = null)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $date = new \DateTime();
+        $date = new DateTime();
         $date->setDate($year, $month, $day);
         $filters = $request->request->get("filters");
         $emVisite = $em->getRepository(Visite::class);

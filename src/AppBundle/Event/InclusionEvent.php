@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\Event;
 
 use AppBundle\Entity\Inclusion;

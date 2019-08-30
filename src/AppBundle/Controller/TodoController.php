@@ -4,12 +4,16 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Todo;
 use AppBundle\Form\TodoType;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -20,7 +24,8 @@ class TodoController extends Controller
     /**
      * @Route("/todos/", name="listeTodos", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
     public function listeTodosAction(Request $request)
     {
@@ -81,7 +86,7 @@ class TodoController extends Controller
             'attribuedTodos' => $attribuedTodos,
         ]);
 
-        $response->headers->setCookie(new Cookie('lastVisite', (new \DateTime())->format("Y-m-d  H:i:s"), time() + 3600 * 24 * 7));
+        $response->headers->setCookie(new Cookie('lastVisite', (new DateTime())->format("Y-m-d  H:i:s"), time() + 3600 * 24 * 7));
 
         return $response;
     }
@@ -91,7 +96,8 @@ class TodoController extends Controller
     /**
      * @Route("/todo/ajouter", name="addTodo")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function addTodoAction(Request $request)
     {
@@ -102,7 +108,7 @@ class TodoController extends Controller
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $todo->setAuteur($this->getUser())->setCreatedAt(new \DateTime());
+            $todo->setAuteur($this->getUser())->setCreatedAt(new DateTime());
             $em->persist($todo);
             $em->flush();
 
@@ -120,7 +126,7 @@ class TodoController extends Controller
 	 * @Route("/todo/editer/{id}", name="editTodo")
 	 * @param Request $request
 	 * @param Todo $todo
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editTodoAction(Request $request, Todo $todo)
     {
@@ -155,7 +161,7 @@ class TodoController extends Controller
 	/**
 	 * @Route("/todo/supprimer/{id}", name="deleteTodo", options={"expose"=true})
 	 * @param Todo $todo
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteTodoAction(Todo $todo)
     {

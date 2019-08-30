@@ -5,10 +5,14 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Arc;
 use AppBundle\Form\ArcType;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -20,7 +24,7 @@ class ArcController extends Controller
      * @Route("/arc/ajouter", name="addArc")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addArcAction(Request $request)
     {
@@ -47,7 +51,7 @@ class ArcController extends Controller
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param Arc $arc
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editArcAction(Request $request, Arc $arc)
     {
@@ -71,9 +75,9 @@ class ArcController extends Controller
      * @Route("/arc/delete/{id}", name="deleteArc", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param Arc $arc
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return RedirectResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function deleteArcAction(Arc $arc)
     {
@@ -90,7 +94,7 @@ class ArcController extends Controller
     /**
      * @Route("/arcs/", name="listeArcs", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeArcsAction(Request $request)
     {

@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -99,7 +101,7 @@ class Patient
     private $prenom;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatNai", type="date")
      */
@@ -123,7 +125,7 @@ class Patient
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatDiag", type="date", nullable=true)
      */
@@ -144,7 +146,7 @@ class Patient
     private $cancer;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatLast", type="date", nullable=true)
      */
@@ -168,7 +170,7 @@ class Patient
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatDeces", type="date", nullable=true)
      */
@@ -300,7 +302,7 @@ class Patient
     /**
      * Get datNai
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatNai()
     {
@@ -310,7 +312,7 @@ class Patient
     /**
      * Set datNai
      *
-     * @param \DateTime $datNai
+     * @param DateTime $datNai
      *
      * @return Patient
      */
@@ -372,7 +374,7 @@ class Patient
     /**
      * Get datDiag
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatDiag()
     {
@@ -382,7 +384,7 @@ class Patient
     /**
      * Set datDiag
      *
-     * @param \DateTime $datDiag
+     * @param DateTime $datDiag
      *
      * @return Patient
      */
@@ -420,7 +422,7 @@ class Patient
     /**
      * Get datLast
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatLast()
     {
@@ -430,7 +432,7 @@ class Patient
     /**
      * Set datLast
      *
-     * @param \DateTime $datLast
+     * @param DateTime $datLast
      *
      * @return Patient
      */
@@ -516,7 +518,7 @@ class Patient
     /**
      * Get datDeces
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatDeces()
     {
@@ -526,7 +528,7 @@ class Patient
     /**
      * Set datDeces
      *
-     * @param \DateTime $datDeces
+     * @param DateTime $datDeces
      *
      * @return Patient
      */
@@ -623,7 +625,7 @@ class Patient
     /**
      * Get inclusions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getInclusions()
     {

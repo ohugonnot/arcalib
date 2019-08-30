@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -76,35 +78,35 @@ class Inclusion
     private $idInterne;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatScr", type="date", nullable=true)
      */
     private $datScr;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatCst", type="date", nullable=true)
      */
     private $datCst;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatInc", type="date", nullable=true)
      */
     private $datInc;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatRan", type="date", nullable=true)
      */
     private $datRan;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatJ0", type="date", nullable=true)
      */
@@ -125,7 +127,7 @@ class Inclusion
     private $braTrt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatOut", type="date", nullable=true)
      */
@@ -296,7 +298,7 @@ class Inclusion
     /**
      * Get datScr
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatScr()
     {
@@ -306,7 +308,7 @@ class Inclusion
     /**
      * Set datScr
      *
-     * @param \DateTime $datScr
+     * @param DateTime $datScr
      *
      * @return inclusion
      */
@@ -320,7 +322,7 @@ class Inclusion
     /**
      * Get datCst
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatCst()
     {
@@ -330,7 +332,7 @@ class Inclusion
     /**
      * Set datCst
      *
-     * @param \DateTime $datCst
+     * @param DateTime $datCst
      *
      * @return inclusion
      */
@@ -344,7 +346,7 @@ class Inclusion
     /**
      * Get datInc
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatInc()
     {
@@ -354,7 +356,7 @@ class Inclusion
     /**
      * Set datInc
      *
-     * @param \DateTime $datInc
+     * @param DateTime $datInc
      *
      * @return inclusion
      */
@@ -368,7 +370,7 @@ class Inclusion
     /**
      * Get datRan
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatRan()
     {
@@ -378,7 +380,7 @@ class Inclusion
     /**
      * Set datRan
      *
-     * @param \DateTime $datRan
+     * @param DateTime $datRan
      *
      * @return inclusion
      */
@@ -392,7 +394,7 @@ class Inclusion
     /**
      * Get datJ0
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatJ0()
     {
@@ -402,7 +404,7 @@ class Inclusion
     /**
      * Set datJ0
      *
-     * @param \DateTime $datJ0
+     * @param DateTime $datJ0
      *
      * @return inclusion
      */
@@ -464,7 +466,7 @@ class Inclusion
     /**
      * Get datOut
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatOut()
     {
@@ -474,7 +476,7 @@ class Inclusion
     /**
      * Set datOut
      *
-     * @param \DateTime $datOut
+     * @param DateTime $datOut
      *
      * @return inclusion
      */
@@ -686,7 +688,7 @@ class Inclusion
     /**
      * Get visites
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getVisites()
     {
@@ -817,7 +819,7 @@ class Inclusion
     /**
      * Get documents
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDocuments()
     {

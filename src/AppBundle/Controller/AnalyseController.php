@@ -5,9 +5,12 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Essais;
 use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Visite;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * TODO REFACTO LE CONTROLLEUR EN MODE SERVICE
@@ -20,21 +23,22 @@ class AnalyseController extends Controller
     /**
      * @Route("/analyse/graphiques", name="analyseGraphique")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
     public function analyseGraphiqueAction(Request $request)
     {
         $inclusionMedecin = $this->inclusionByMedecin();
         $inclusionByYear = $this->inclusionByYear();
-        $lastYear = new \DateTime();
+        $lastYear = new DateTime();
         $lastYear->modify('-12 month');
-        $endMonth = new \DateTime();
+        $endMonth = new DateTime();
         $endMonth->modify('last day of this month');
 
         if ($request->isMethod('POST')) {
 
-            $debut = \DateTime::createFromFormat("d/m/Y", $request->get("dateDebut"));
-            $fin = \DateTime::createFromFormat("d/m/Y", $request->get("dateFin"));
+            $debut = DateTime::createFromFormat("d/m/Y", $request->get("dateDebut"));
+            $fin = DateTime::createFromFormat("d/m/Y", $request->get("dateFin"));
 
             $inclusionsArc = $dateArcVisites = $dateArc = $dateMedecin = $dateProtocole = $dateVisites = $inclusionsService = $inclusionsMedecin = null;
 
@@ -78,7 +82,7 @@ class AnalyseController extends Controller
         ]);
     }
 
-    public function inclusionByMedecin(?\DateTime $debut = null, ?\DateTime $fin = null, $order = false)
+    public function inclusionByMedecin(?DateTime $debut = null, ?DateTime $fin = null, $order = false)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -131,7 +135,7 @@ class AnalyseController extends Controller
         return $inclusionMedecin;
     }
 
-    public function inclusionByArc(?\DateTime $debut = null, ?\DateTime $fin = null)
+    public function inclusionByArc(?DateTime $debut = null, ?DateTime $fin = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -199,7 +203,7 @@ class AnalyseController extends Controller
 
 // Creation du vecteurs medecin, date, inclusion--CANVAS 3-----------------------------------------------------------------------------
 
-    public function inclusionMedecinByDate(?\DateTime $debut, ?\DateTime $fin)
+    public function inclusionMedecinByDate(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -267,7 +271,7 @@ class AnalyseController extends Controller
         return $dateMedecin;
     }
 
-    public function inclusionArcByDate(?\DateTime $debut, ?\DateTime $fin)
+    public function inclusionArcByDate(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -344,7 +348,7 @@ class AnalyseController extends Controller
 
 // Inclusion par médecin----CANVAS 1---------------------------------------------------------------------------
 
-    public function inclusionProtocoleByDate(?\DateTime $debut, ?\DateTime $fin)
+    public function inclusionProtocoleByDate(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -373,8 +377,8 @@ class AnalyseController extends Controller
 
 	/**
 	 * @param $valuesByMonth
-	 * @param $debut \DateTime
-	 * @param $fin \DateTime
+	 * @param $debut DateTime
+	 * @param $fin DateTime
 	 * @return array
 	 */
 	private function orderByDate($valuesByMonth, $debut, $fin) {
@@ -422,7 +426,7 @@ class AnalyseController extends Controller
         return $date;
     }
 
-    public function visiteProtocoleByDate(?\DateTime $debut, ?\DateTime $fin)
+    public function visiteProtocoleByDate(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -451,7 +455,7 @@ class AnalyseController extends Controller
         return $this->orderByDate($visitesByMonth, $debut, $fin);
     }
 
-    public function visiteArcByDate(?\DateTime $debut, ?\DateTime $fin)
+    public function visiteArcByDate(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -481,7 +485,7 @@ class AnalyseController extends Controller
 
 // Inclusion par service/ mois---cenvas 5------------------------------------------------------------------------
 
-    public function inclusionsByService(?\DateTime $debut, ?\DateTime $fin)
+    public function inclusionsByService(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -508,7 +512,7 @@ class AnalyseController extends Controller
     }
 
 
-    public function inclusionsByProtocole(?\DateTime $debut, ?\DateTime $fin)
+    public function inclusionsByProtocole(?DateTime $debut, ?DateTime $fin)
     {
         if (!$debut && !$fin) {
             return false;
@@ -535,7 +539,7 @@ class AnalyseController extends Controller
 
     /**
      * @Route("/analyse/tableau", name="analyseTableau")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function analyseTableauAction()
     {

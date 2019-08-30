@@ -9,7 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -21,7 +23,7 @@ class AnnuaireController extends Controller
     /**
      * @Route("/annuaire/ajouter", name="addAnnuaire")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addAnnuaireAction(Request $request)
     {
@@ -47,7 +49,7 @@ class AnnuaireController extends Controller
      * @Route("/annuaire/editer/{id}", name="editAnnuaire", options={"expose"=true})
      * @param Request $request
      * @param Annuaire $annuaire
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAnnuaireAction(Request $request, Annuaire $annuaire)
     {
@@ -71,7 +73,7 @@ class AnnuaireController extends Controller
      * @Route("/annuaire/supprimer/{id}", name="deleteAnnuaire", options={"expose"=true})
      * @Security("has_role('ROLE_ARC')")
      * @param Annuaire $annuaire
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAnnuaireAction(Annuaire $annuaire)
     {
@@ -88,7 +90,7 @@ class AnnuaireController extends Controller
     /**
      * @Route("/annuaires/", name="listeAnnuaires", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeAnnuairesAction(Request $request)
     {

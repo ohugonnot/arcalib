@@ -6,6 +6,7 @@ use AppBundle\Entity\LibCim10;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
 use AppBundle\Form\PatientType;
+use DateTime;
 
 class PatientFactory implements FactoryInterface
 {
@@ -34,26 +35,26 @@ class PatientFactory implements FactoryInterface
 		}
 
 		if (isset($params["datNai"])) {
-			$datNai = \DateTime::createFromFormat('d/m/Y', $params["datNai"])->settime(0,0);
+			$datNai = DateTime::createFromFormat('d/m/Y', $params["datNai"])->settime(0,0);
 			if($datNai != $patient->getDatNai()) {
 				$patient->setDatNai($datNai);
 			}
 		}
 
 		if (isset($params["datDiag"])) {
-			$datDiag = \DateTime::createFromFormat('d/m/Y', $params["datDiag"])->settime(0,0);
+			$datDiag = DateTime::createFromFormat('d/m/Y', $params["datDiag"])->settime(0,0);
 			if($datDiag != $patient->getDatDiag()) {
 				$patient->setDatDiag($datDiag);
 			}
 		}
 		if (isset($params["datLast"])) {
-			$datLast = \DateTime::createFromFormat('d/m/Y', $params["datLast"])->settime(0,0);
+			$datLast = DateTime::createFromFormat('d/m/Y', $params["datLast"])->settime(0,0);
 			if($datLast != $patient->getDatLast()) {
 				$patient->setDatLast($datLast);
 			}
 		}
 		if (isset($params["datDeces"])) {
-			$datDeces = \DateTime::createFromFormat('d/m/Y', $params["datDeces"])->settime(0,0);
+			$datDeces = DateTime::createFromFormat('d/m/Y', $params["datDeces"])->settime(0,0);
 			if($datDeces != $patient->getDatDeces()) {
 				$patient->setDatDeces($datDeces);
 			}

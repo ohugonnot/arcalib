@@ -5,6 +5,7 @@ namespace AppBundle\Import;
 use AppBundle\Entity\EssaiDetail;
 use AppBundle\Entity\Essais;
 use AppBundle\Entity\Medecin;
+use DateTime;
 
 class EssaiImport implements ImportInterface
 {
@@ -48,14 +49,14 @@ class EssaiImport implements ImportInterface
 				$essai = new Essais();
 			}
 
-			$dateOuverture = \DateTime::createFromFormat('d/m/Y', $e["Date d'ouverture"]);
-			$dateFin = \DateTime::createFromFormat('d/m/Y', $e["Fin des inclusions"]);
-			$dateCloture = \DateTime::createFromFormat('d/m/Y', $e["Date Cloture centre"]);
+			$dateOuverture = DateTime::createFromFormat('d/m/Y', $e["Date d'ouverture"]);
+			$dateFin = DateTime::createFromFormat('d/m/Y', $e["Fin des inclusions"]);
+			$dateCloture = DateTime::createFromFormat('d/m/Y', $e["Date Cloture centre"]);
 			$sigrec = (strtolower($e["Sigrec"]) == "vrai") ? true : false;
 			$sigaps = (strtolower($e["Sigaps"]) == "vrai") ? true : false;
 			$emrc = (strtolower($e["Emrc"]) == "vrai") ? true : false;
 			$cancer = (strtolower($e["Cancer"]) == "vrai") ? true : false;
-			$dateSignature = \DateTime::createFromFormat('d/m/Y', $e["Date signature convention"]);
+			$dateSignature = DateTime::createFromFormat('d/m/Y', $e["Date signature convention"]);
 			$e["N° Eudract"] = ($e["N° Eudract"] == '') ? null : $e["N° Eudract"];
 			$e["N° Clinical trial"] = ($e["N° Clinical trial"] == '') ? null : $e["N° Clinical trial"];
 

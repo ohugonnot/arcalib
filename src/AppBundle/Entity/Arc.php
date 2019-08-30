@@ -2,6 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,13 +32,13 @@ class Arc
     private $nomArc;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(name="DatIn", type="date", nullable=true)
      */
     private $datIn;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DatOut", type="date", nullable=true)
      */
@@ -112,9 +115,9 @@ class Arc
      */
     public function __construct()
     {
-        $this->inclusions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->essais = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->visites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->inclusions = new ArrayCollection();
+        $this->essais = new ArrayCollection();
+        $this->visites = new ArrayCollection();
     }
 
 // -------------------------------------------------Ici les GET et SET------------------------------------------
@@ -156,7 +159,7 @@ class Arc
     /**
      * Get datIn
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatIn()
     {
@@ -166,7 +169,7 @@ class Arc
     /**
      * Set datIn
      *
-     * @param \DateTime $datIn
+     * @param DateTime $datIn
      *
      * @return Arc
      */
@@ -180,7 +183,7 @@ class Arc
     /**
      * Get datOut
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatOut()
     {
@@ -190,7 +193,7 @@ class Arc
     /**
      * Set datOut
      *
-     * @param \DateTime $datOut
+     * @param DateTime $datOut
      *
      * @return Arc
      */
@@ -375,7 +378,7 @@ class Arc
     /**
      * Get inclusions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getInclusions()
     {
@@ -413,7 +416,7 @@ class Arc
     /**
      * Get essais
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEssais()
     {
@@ -451,7 +454,7 @@ class Arc
     /**
      * Get visites
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getVisites()
     {

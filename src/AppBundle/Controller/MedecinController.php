@@ -10,7 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -21,7 +23,7 @@ class MedecinController extends Controller
      * @Route("/medecin/ajouter", name="addMedecin")
      * @Security("has_role('ROLE_ARC')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addMedecinAction(Request $request)
     {
@@ -47,7 +49,7 @@ class MedecinController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Medecin $medecin
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editMedecinAction(Request $request, Medecin $medecin)
     {
@@ -76,7 +78,7 @@ class MedecinController extends Controller
 	 * @Route("/medecin/supprimer/{id}", name="deleteMedecin", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Medecin $medecin
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteMedecinAction(Medecin $medecin)
     {
@@ -91,7 +93,7 @@ class MedecinController extends Controller
     /**
      * @Route("/medecins/", name="listeMedecins", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeMedecinsAction(Request $request)
     {

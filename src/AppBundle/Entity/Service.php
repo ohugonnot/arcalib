@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -134,7 +135,7 @@ class Service
     /**
      * Get medecins
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMedecins()
     {
@@ -170,7 +171,7 @@ class Service
     /**
      * Get arcs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getArcs()
     {
@@ -205,7 +206,7 @@ class Service
     /**
      * Get inclusions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getInclusions()
     {
@@ -239,7 +240,7 @@ class Service
     /**
      * Get essais
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEssais()
     {

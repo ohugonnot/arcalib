@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -107,14 +109,14 @@ class Medecin
     private $email;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateEntre", type="date", nullable=true)
      */
     private $dateEntre;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateSortie", type="date", nullable=true)
      */
@@ -427,7 +429,7 @@ class Medecin
     /**
      * Get patients
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPatients()
     {
@@ -467,7 +469,7 @@ class Medecin
     /**
      * Get inclusions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getInclusions()
     {
@@ -507,7 +509,7 @@ class Medecin
     /**
      * Get essais
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEssais()
     {
@@ -565,7 +567,7 @@ class Medecin
     /**
      * Get dateEntre
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateEntre()
     {
@@ -575,7 +577,7 @@ class Medecin
     /**
      * Set dateEntre
      *
-     * @param \DateTime $dateEntre
+     * @param DateTime $dateEntre
      *
      * @return Medecin
      */
@@ -590,7 +592,7 @@ class Medecin
     /**
      * Get dateSortie
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateSortie()
     {
@@ -600,7 +602,7 @@ class Medecin
     /**
      * Set dateSortie
      *
-     * @param \DateTime $dateSortie
+     * @param DateTime $dateSortie
      *
      * @return Medecin
      */

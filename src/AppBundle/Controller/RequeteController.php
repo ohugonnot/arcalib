@@ -9,20 +9,22 @@ use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Patient;
 use AppBundle\Entity\Service;
 use AppBundle\Entity\Visite;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Symfony\Component\HttpFoundation\Response;
+use \DateTime;
 
 /**
  * @Route("/arcalib")
  */
 class RequeteController extends Controller
 {
-    // ------------------------------------------Requete recherche----------------------------------------------------- 
+    // ------------------------------------------Requete recherche-----------------------------------------------------
     /**
      * @Route("/recherche", name="recherche")
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
+     * @return Response
+     * @throws Exception
      */
     public function requetesAction()
     {
@@ -45,7 +47,7 @@ class RequeteController extends Controller
             $visiteByDay[$visite->getDate()->format("Y-m-d")][] = $visite;
         }
 
-        $today = (new \DateTime())->format('Y-m-d');
+        $today = (new DateTime())->format('Y-m-d');
         if (!isset($visiteByDay[$today])) {
             $visiteByDay[$today] = [];
         }
@@ -65,7 +67,7 @@ class RequeteController extends Controller
 
     /**
      * @Route("/requetes", name="requetes")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction()
     {

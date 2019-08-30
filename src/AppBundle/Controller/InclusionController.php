@@ -12,6 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/arcalib")
@@ -38,9 +40,10 @@ class InclusionController extends Controller
     // ------------------------------------------Liste Inclusion-----------------------------------------------------  
 
     /**
+     * Todo : duplicate code search
      * @Route("/inclusions/", name="listeInclusions")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeInclusionsAction(Request $request)
     {
@@ -174,7 +177,7 @@ class InclusionController extends Controller
      * @Route("/inclusions/export", name="exportInclusions", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param CsvToArray $export
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function exportInclusionsAction(CsvToArray $export)
     {
@@ -190,7 +193,7 @@ class InclusionController extends Controller
      * @Route("/inclusions/export/all", name="exportInclusionsProtocole", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param CsvToArray $export
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function exportInclusionsProtocoleAction(CsvToArray $export)
     {

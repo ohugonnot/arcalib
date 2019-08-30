@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -66,7 +68,7 @@ class LibCim10
      */
     public function __construct()
     {
-        $this->patients = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->patients = new ArrayCollection();
 
     }
 //-------------------------------Get et Set---------------------------------------------
@@ -208,7 +210,7 @@ class LibCim10
     /**
      * Get patients
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPatients()
     {

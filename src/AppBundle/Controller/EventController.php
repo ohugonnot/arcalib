@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/arcalib")
@@ -24,7 +26,7 @@ class EventController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return RedirectResponse|Response|NotFoundHttpException
 	 */
     public function addEventAction(Request $request, Inclusion $inclusion)
     {
@@ -56,7 +58,7 @@ class EventController extends Controller
      * @Route("/events/editer/{id}", name="editEvent", options={"expose"=true})
      * @param Request $request
      * @param Event $event
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editEventAction(Request $request, Event $event)
     {
@@ -97,7 +99,7 @@ class EventController extends Controller
 	/**
 	 * @Route("/event/inclusion/{id}/voir", name="voirEvent", options={"expose"=true})
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 * @return Response|RedirectResponse
 	 */
     public function firstEventAction(Inclusion $inclusion)
     {
@@ -117,7 +119,7 @@ class EventController extends Controller
      * @Route("/events/supprimer/{id}", name="deleteEvent", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param Event $event
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteDocumentAction(Event $event)
     {
@@ -134,7 +136,7 @@ class EventController extends Controller
 	 * @Route("/events/inclusion/{id}", name="listeEvents", options={"expose"=true})
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return Response
 	 */
     public function listeEventInclusionAction(Request $request, Inclusion $inclusion)
     {

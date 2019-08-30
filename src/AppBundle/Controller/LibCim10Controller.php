@@ -10,7 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -22,7 +24,7 @@ class LibCim10Controller extends Controller
      * @Route("/libcim10/ajouter", name="addLibCim10")
      * @Security("has_role('ROLE_ARC')")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addLibCim10Action(Request $request)
     {
@@ -51,7 +53,7 @@ class LibCim10Controller extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param LibCim10 $libCim10
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editLibCim10Action(Request $request, LibCim10 $libCim10)
     {
@@ -81,7 +83,7 @@ class LibCim10Controller extends Controller
 	 * @Route("/libcim10/supprimer/{id}", name="deleteLibCim10", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param LibCim10 $libCim10
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteLibCim10Action(LibCim10 $libCim10)
     {
@@ -98,7 +100,7 @@ class LibCim10Controller extends Controller
     /**
      * @Route("/libcim10s/", name="listeLibCim10s", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeLibcim10sAction(Request $request)
     {
