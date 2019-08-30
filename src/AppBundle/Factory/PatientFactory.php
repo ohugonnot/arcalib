@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: folken
- * Date: 02/05/2019
- * Time: 17:34
- */
 
 namespace AppBundle\Factory;
-
 
 use AppBundle\Entity\LibCim10;
 use AppBundle\Entity\Medecin;
@@ -75,14 +68,5 @@ class PatientFactory implements FactoryInterface
 		$this->validate($patient);
 
 		return $patient;
-	}
-
-	public function validate($patient)
-	{
-		$errors = $this->validator->validate($patient);
-
-		if ($errors->count()) {
-			$this->logger->error("Patient non cohérent", $this->validatorToArray->toArray($errors));
-		}
 	}
 }

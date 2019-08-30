@@ -9,8 +9,6 @@ use AppBundle\Entity\Service;
 use AppBundle\Entity\Tag;
 use AppBundle\Factory\EssaiFactory;
 use AppBundle\Services\CsvToArray;
-use AppBundle\Services\ValidatorToArray;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -186,7 +184,7 @@ class EssaisController extends Controller
 	 * @param EssaiFactory $essaiFactory
 	 * @return JsonResponse
 	 */
-    public function saveEssaiAction(Request $request, $id = null, EssaiFactory $essaiFactory)
+    public function saveEssaiAction(Request $request, EssaiFactory $essaiFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -199,18 +197,12 @@ class EssaisController extends Controller
 
         $essai = $essaiFactory->hydrate($essai, $request->request->get("appbundle_essais"));
 
-        $checkEssaiExist = $em->getRepository(Essais::class)->findBy(['nom' => $essai->getNom()]);
+        if (isset($essai->errorsMessage) && $essai->errorsMessage)
+            return new JsonResponse(["success" => false, "message" => $essai->errorsMessage]);
 
-	    if ($checkEssaiExist && !$essai->getId()) {
-		    return new JsonResponse(["success" => false, "message" => "Ce protocole existe déjà."]);
-	    }
-
-        if (isset($new) && $new) {
+        if (isset($new) && $new)
             $em->persist($essai);
-            $em->flush();
-        } else {
-            $em->flush();
-        }
+        $em->flush();
 
         return new JsonResponse(["success" => true, "protocole" => ["id" => $essai->getId()]]);
     }

@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: folken
- * Date: 02/05/2019
- * Time: 18:28
- */
 
 namespace AppBundle\Factory;
-
 
 use AppBundle\Entity\Arc;
 use AppBundle\Entity\Inclusion;
@@ -56,14 +49,5 @@ class VisiteFactory implements FactoryInterface
 		$this->validate($visite);
 
 		return $visite;
-	}
-
-	public function validate($visite)
-	{
-		$errors = $this->validator->validate($visite);
-
-		if ($errors->count()) {
-			$this->logger->error("Visite non cohérente", $this->validatorToArray->toArray($errors));
-		}
 	}
 }

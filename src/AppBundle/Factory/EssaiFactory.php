@@ -116,13 +116,4 @@ class EssaiFactory implements FactoryInterface
 		
 		return $essai;
 	}
-
-	public function validate($essai)
-	{
-		$errors = $this->validator->validate($essai);
-
-		if ($errors->count()) {
-			$this->logger->error("Protocole non cohérent", $this->validatorToArray->toArray($errors));
-		}
-	}
 }

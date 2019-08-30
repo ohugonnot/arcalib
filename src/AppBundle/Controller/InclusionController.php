@@ -102,7 +102,7 @@ class InclusionController extends Controller
 	 * @param InclusionFactory $inclusionFactory
 	 * @return JsonResponse
 	 */
-    public function saveInclusionAction(Request $request, $id = null, InclusionFactory $inclusionFactory)
+    public function saveInclusionAction(Request $request, InclusionFactory $inclusionFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
         $inclusion = $em->getRepository(Inclusion::class)->find($id);
@@ -112,23 +112,21 @@ class InclusionController extends Controller
             $new = true;
         }
         
-        $inclusion = $inclusionFactory->hydrate(
-        	$inclusion,
-	        $request->request->get("appbundle_inclusion")
-        );
+        $inclusion = $inclusionFactory->hydrate($inclusion, $request->request->get("appbundle_inclusion"));
+
+        if (isset($inclusion->errorsMessage) && $inclusion->errorsMessage)
+            return new JsonResponse(["success" => false, "message" => $inclusion->errorsMessage]);
 
         if (isset($new) && $new) {
             $em->persist($inclusion);
-            $em->flush();
             $mailer = $this->get(SendMail::class);
             $mailer->sendEmail("default", [
                 'sujet' => "Création d'une inclusion",
                 "inclusion" => $inclusion,
                 "user" => $this->getUser()
             ]);
-        } else {
-            $em->flush();
         }
+        $em->flush();
 
         return new JsonResponse(["success" => true, "inclusion" => ["id" => $inclusion->getId()]]);
     }

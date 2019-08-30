@@ -1,20 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: folken
- * Date: 02/05/2019
- * Time: 17:08
- */
 
 namespace AppBundle\Factory;
-
 
 use AppBundle\Services\ValidatorToArray;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 trait Factory
@@ -65,4 +59,21 @@ trait Factory
 		$this->formFactory = $formFactory;;
 		$this->requestStack = $requestStack;
 	}
+    public function validate($entity)
+    {
+        $errors = $this->validator->validate($entity);
+
+        if ($errors->count()) {
+            $this->logger->error(get_class($entity)." non cohérent", $this->validatorToArray->toArray($errors));
+        }
+
+        $errorsMessage = [];
+        /* @var ConstraintViolation $error */
+        foreach ($errors as $error) {
+            if ($error->getConstraint() instanceof File)
+                continue;
+            $errorsMessage[] = $error->getMessage();
+        }
+        $entity->errorsMessage = implode("<br>",$errorsMessage);
+    }
 }

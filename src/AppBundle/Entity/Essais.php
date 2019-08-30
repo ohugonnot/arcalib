@@ -6,12 +6,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Essais
  *
  * @ORM\Table(name="essais")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EssaisRepository")
+ * @UniqueEntity("numCt", message="N° Clinical Trial {{ value }} est déjà utilisée.")
+ * @UniqueEntity("nom", message="Nom {{ value }} est déjà utilisée.")
+ * @UniqueEntity("numEudract", message="N° Eudra CT {{ value }} est déjà utilisée.")
  */
 class Essais
 {

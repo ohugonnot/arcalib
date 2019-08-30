@@ -85,7 +85,7 @@ class VisiteController extends Controller
 	 * @param VisiteFactory $visiteFactory
 	 * @return JsonResponse
 	 */
-    public function saveVisitetAction(Request $request, $id = null, VisiteFactory $visiteFactory)
+    public function saveVisitetAction(Request $request, VisiteFactory $visiteFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
         $visite = $em->getRepository(Visite::class)->find($id);
@@ -96,12 +96,12 @@ class VisiteController extends Controller
 
         $visite = $visiteFactory->hydrate($visite, $request->request->get("appbundle_visite"));
 
-        if (isset($new) && $new) {
+        if (isset($visite->errorsMessage) && $visite->errorsMessage)
+            return new JsonResponse(["success" => false, "message" => $visite->errorsMessage]);
+
+        if (isset($new) && $new)
             $em->persist($visite);
-            $em->flush();
-        } else {
-            $em->flush();
-        }
+        $em->flush();
 
         return new JsonResponse(["success" => true, "visite" => ["id" => $visite->getId()]]);
     }
