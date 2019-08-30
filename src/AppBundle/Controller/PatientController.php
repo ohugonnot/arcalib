@@ -125,7 +125,7 @@ class PatientController extends Controller
 	 * @param PatientFactory $patientFactory
 	 * @return JsonResponse
 	 */
-    public function savePatientAction(Request $request, $id = null, PatientFactory $patientFactory)
+    public function savePatientAction(Request $request, PatientFactory $patientFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository(Patient::class)->find($id);
@@ -137,22 +137,11 @@ class PatientController extends Controller
 
 	    $patient = $patientFactory->hydrate($patient, $request->request->get("appbundle_patient"));
 
-        $checkPatientExist = $em->getRepository(Patient::class)->alreadyExist([
-            'nom' => $patient->getNom(),
-            'prenom' => $patient->getPrenom(),
-            'datNai' => $patient->getDatNai(),
-        ]);
+        if (isset($patient->errorsMessage) && $patient->errorsMessage)
+            return new JsonResponse(["success" => false, "message" => $patient->errorsMessage]);
 
-        if ($checkPatientExist && !$patient->getId()) {
-            return new JsonResponse(["success" => false, "message" => "Ce patient existe déjà."]);
-        }
-        if (isset($new) && $new) {
+        if (isset($new) && $new)
             $em->persist($patient);
-            $em->flush();
-        } else {
-            $em->flush();
-        }
-
         $em->flush();
 
         return new JsonResponse(["success" => true, "patient" => ["id" => $patient->getId()]]);

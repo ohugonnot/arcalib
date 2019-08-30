@@ -10,7 +10,6 @@ parameters:
 
 framework:
     #esi: ~
-    translator: ~
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'

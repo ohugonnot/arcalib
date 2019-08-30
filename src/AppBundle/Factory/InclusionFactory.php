@@ -116,13 +116,4 @@ class InclusionFactory implements FactoryInterface
 		
 		return $inclusion;
 	}
-
-	public function validate($inclusion)
-	{
-		$errors = $this->validator->validate($inclusion);
-
-		if ($errors->count()) {
-			$this->logger->error("Inclusion non cohérente", $this->validatorToArray->toArray($errors));
-		}
-	}
 }
