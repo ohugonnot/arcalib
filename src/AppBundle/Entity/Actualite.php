@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,7 +23,7 @@ class Actualite
     private $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
@@ -63,7 +64,7 @@ class Actualite
     /**
      * Get date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDate()
     {
@@ -73,7 +74,7 @@ class Actualite
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param DateTime $date
      *
      * @return Actualite
      */

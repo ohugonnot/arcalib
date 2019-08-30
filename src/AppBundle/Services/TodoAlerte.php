@@ -4,7 +4,9 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\Todo;
 use AppBundle\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -34,6 +36,7 @@ class TodoAlerte
 
     /**
      * @return array
+     * @throws Exception
      */
     public function getAlertes()
     {
@@ -54,15 +57,17 @@ class TodoAlerte
         return $alertes;
     }
 
+
     /**
      * @return array
+     * @throws Exception
      */
     public function getNewTodos()
     {
         $lastVisite = $this->requestStack->getCurrentRequest()->cookies->get("lastVisite");
 
         if ($lastVisite) {
-            $lastVisite = new \DateTime($lastVisite);
+            $lastVisite = new DateTime($lastVisite);
         }
 
         $token = $this->storage->getToken();

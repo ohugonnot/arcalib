@@ -10,12 +10,13 @@ use AppBundle\Entity\Patient;
 use AppBundle\Entity\Service;
 use AppBundle\Factory\PatientFactory;
 use AppBundle\Services\CsvToArray;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/arcalib")
@@ -28,7 +29,7 @@ class PatientController extends Controller
      * @Route("/inclusion/editer/{id}", name="editInclusion", options={"expose"=true})
      * @Route("/patient", name="patient", options={"expose"=true})
      * @param null $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function patientAction($id = null)
     {
@@ -72,9 +73,10 @@ class PatientController extends Controller
     // ------------------------------------------Liste Patient-----------------------------------------------------
 
     /**
+     * Todo : duplicate code content search
      * @Route("/patients/", name="listePatients")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listePatientsAction(Request $request)
     {
@@ -184,7 +186,7 @@ class PatientController extends Controller
      * @Route("/patients/export", name="exportPatients", options={"expose"=true})
      * @Security("has_role('ROLE_ARC')")
      * @param CsvToArray $export
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function exportPatientsAction(CsvToArray $export)
     {

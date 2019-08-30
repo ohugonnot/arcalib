@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/arcalib")
@@ -42,7 +44,7 @@ class EssaisController extends Controller
      * @Route("/protocole", name="protocole", options={"expose"=true})
      * @param Request $request
      * @param null $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function protocoleAction(Request $request, $id = null)
     {
@@ -76,9 +78,10 @@ class EssaisController extends Controller
     }
 
     /**
+     * TODO : duplicate code content search
      * @Route("/essais/", name="listeEssais", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeEssaisAction(Request $request)
     {
@@ -211,7 +214,7 @@ class EssaisController extends Controller
      * @Route("/essais/export", name="exportEssais", options={"expose"=true})
      * @Security("has_role('ROLE_ARC')")
      * @param CsvToArray $export
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function exportEssaisAction(CsvToArray $export)
     {

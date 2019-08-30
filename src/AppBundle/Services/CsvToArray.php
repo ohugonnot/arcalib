@@ -145,6 +145,12 @@ class CsvToArray
 
     //extractions  de la page inclusion
 
+    /**
+     * TODO : duplicate code content
+     * @param $values
+     * @param $entity
+     * @return array
+     */
     public function inclusions($values, $entity)
     {
         /** @var $entity Inclusion */
@@ -212,6 +218,13 @@ class CsvToArray
     }
 
     //extractions  des factures
+
+    /**
+     * TODO : duplicate code content
+     * @param $values
+     * @param $entity
+     * @return array
+     */
     public function inclusionsProtocole($values, $entity)
     {
         /** @var $entity Inclusion */

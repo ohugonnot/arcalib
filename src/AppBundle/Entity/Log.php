@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,7 +23,7 @@ class Log
     private $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="createdAt", type="datetime")
      */
@@ -82,7 +83,7 @@ class Log
     /**
      * Get createdAt
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -92,7 +93,7 @@ class Log
     /**
      * Set createdAt
      *
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return Log
      */

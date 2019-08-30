@@ -7,7 +7,9 @@ use AppBundle\Form\UserTypeAdmin;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -19,7 +21,7 @@ class UserController extends Controller
     /**
      * @Route("/utilisateur/ajouter", name="addUser")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addUserAction(Request $request)
     {
@@ -47,7 +49,7 @@ class UserController extends Controller
 	 * @Route("/utilisateur/editer/{id}", name="editUser")
 	 * @param Request $request
 	 * @param User $user
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editUserAction(Request $request, User $user)
     {
@@ -77,7 +79,7 @@ class UserController extends Controller
 	/**
 	 * @Route("/utilisateur/supprimer/{id}", name="deleteUser", options={"expose"=true})
 	 * @param User $user
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteUserAction(User $user)
     {
@@ -94,7 +96,7 @@ class UserController extends Controller
     /**
      * @Route("/utilisateurs/", name="listeUsers", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeUsersAction(Request $request)
     {

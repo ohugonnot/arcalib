@@ -3,7 +3,6 @@
 
 namespace AppBundle\EventListener;
 
-
 use AppBundle\Entity\Log;
 use AppBundle\Services\LogManager;
 use Doctrine\Common\EventSubscriber;

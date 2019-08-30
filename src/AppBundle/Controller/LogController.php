@@ -6,7 +6,9 @@ use AppBundle\Entity\Log;
 use AppBundle\Form\LogType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -18,7 +20,7 @@ class LogController extends Controller
     /**
      * @Route("/log/ajouter", name="addLog")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addLogAction(Request $request)
     {
@@ -45,7 +47,7 @@ class LogController extends Controller
 	 * @Route("/log/editer/{id}", name="editLog")
 	 * @param Request $request
 	 * @param Log $log
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editLogAction(Request $request, Log $log)
     {
@@ -68,7 +70,7 @@ class LogController extends Controller
 	/**
 	 * @Route("/log/supprimer/{id}", name="deleteLog", options={"expose"=true})
 	 * @param Log $log
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteLogAction(Log $log)
     {
@@ -85,7 +87,7 @@ class LogController extends Controller
     /**
      * @Route("/logs/", name="listeLogs", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeLogsAction(Request $request)
     {

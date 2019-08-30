@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -24,7 +25,7 @@ class TraitementController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return RedirectResponse|Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
     public function addTraitementAction(Request $request, Inclusion $inclusion)
     {
@@ -56,7 +57,7 @@ class TraitementController extends Controller
      * @Route("/traitements/editer/{id}", name="editTraitement", options={"expose"=true})
      * @param Request $request
      * @param Traitement $traitement
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editTraitementAction(Request $request, Traitement $traitement)
     {
@@ -102,7 +103,7 @@ class TraitementController extends Controller
 	/**
 	 * @Route("/traitement/inclusion/{id}/voir", name="voirTraitement", options={"expose"=true})
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 * @return Response|RedirectResponse
 	 */
     public function firstTraitementAction(Inclusion $inclusion)
     {
@@ -122,7 +123,7 @@ class TraitementController extends Controller
      * @Route("/traitements/supprimer/{id}", name="deleteTraitement", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param Traitement $traitement
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteDocumentAction(Traitement $traitement)
     {
@@ -139,7 +140,7 @@ class TraitementController extends Controller
 	 * @Route("/traitements/inclusion/{id}", name="listeTraitements", options={"expose"=true})
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return Response
 	 */
     public function listeTraitementInclusionAction(Request $request, Inclusion $inclusion)
     {

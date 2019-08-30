@@ -3,9 +3,8 @@
 
 namespace AppBundle\Entity;
 
-
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TraitementRepository")
@@ -109,36 +108,36 @@ class Traitement
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getAttributionAt(): ?\DateTime
+    public function getAttributionAt(): ?DateTime
     {
         return $this->attributionAt;
     }
 
     /**
-     * @param \DateTime|null $attributionAt
+     * @param DateTime|null $attributionAt
      * @return Traitement
      */
-    public function setAttributionAt(?\DateTime $attributionAt)
+    public function setAttributionAt(?DateTime $attributionAt)
     {
         $this->attributionAt = $attributionAt;
         return $this;
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getPriseAt(): ?\DateTime
+    public function getPriseAt(): ?DateTime
     {
         return $this->priseAt;
     }
 
     /**
-     * @param \DateTime|null $priseAt
+     * @param DateTime|null $priseAt
      * @return Traitement
      */
-    public function setPriseAt(?\DateTime $priseAt)
+    public function setPriseAt(?DateTime $priseAt)
     {
         $this->priseAt = $priseAt;
         return $this;
@@ -168,18 +167,18 @@ class Traitement
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getPeremptionAt(): ?\DateTime
+    public function getPeremptionAt(): ?DateTime
     {
         return $this->peremptionAt;
     }
 
     /**
-     * @param \DateTime|null $peremptionAt
+     * @param DateTime|null $peremptionAt
      * @return Traitement
      */
-    public function setPeremptionAt(?\DateTime $peremptionAt)
+    public function setPeremptionAt(?DateTime $peremptionAt)
     {
         $this->peremptionAt = $peremptionAt;
         return $this;
@@ -230,18 +229,18 @@ class Traitement
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getRetourAt(): ?\DateTime
+    public function getRetourAt(): ?DateTime
     {
         return $this->retourAt;
     }
 
     /**
-     * @param \DateTime|null $retourAt
+     * @param DateTime|null $retourAt
      * @return Traitement
      */
-    public function setRetourAt(?\DateTime $retourAt)
+    public function setRetourAt(?DateTime $retourAt)
     {
         $this->retourAt = $retourAt;
         return $this;

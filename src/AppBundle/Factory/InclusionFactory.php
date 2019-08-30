@@ -4,6 +4,7 @@ namespace AppBundle\Factory;
 
 use AppBundle\Entity\Inclusion;
 use AppBundle\Form\InclusionType;
+use DateTime;
 
 class InclusionFactory implements FactoryInterface
 {
@@ -76,37 +77,37 @@ class InclusionFactory implements FactoryInterface
 		}
 
 		if (isset($params["datCst"])) {
-			$datCst = \DateTime::createFromFormat('d/m/Y', $params["datCst"])->settime(0, 0);
+			$datCst = DateTime::createFromFormat('d/m/Y', $params["datCst"])->settime(0, 0);
 			if ($datCst != $inclusion->getDatCst()) {
 				$inclusion->setDatCst($datCst);
 			}
 		}
 		if (isset($params["datScr"])) {
-			$datScr = \DateTime::createFromFormat('d/m/Y', $params["datScr"])->settime(0, 0);
+			$datScr = DateTime::createFromFormat('d/m/Y', $params["datScr"])->settime(0, 0);
 			if ($datScr != $inclusion->getDatScr()) {
 				$inclusion->setDatScr($datScr);
 			}
 		}
 		if (isset($params["datInc"])) {
-			$datInc = \DateTime::createFromFormat('d/m/Y', $params["datInc"])->settime(0, 0);
+			$datInc = DateTime::createFromFormat('d/m/Y', $params["datInc"])->settime(0, 0);
 			if ($datInc != $inclusion->getDatInc()) {
 				$inclusion->setDatInc($datInc);
 			}
 		}
 		if (isset($params["datRan"])) {
-			$datRan = \DateTime::createFromFormat('d/m/Y', $params["datRan"])->settime(0, 0);
+			$datRan = DateTime::createFromFormat('d/m/Y', $params["datRan"])->settime(0, 0);
 			if ($datRan != $inclusion->getDatRan()) {
 				$inclusion->setDatRan($datRan);
 			}
 		}
 		if (isset($params["datJ0"])) {
-			$datJ0 = \DateTime::createFromFormat('d/m/Y', $params["datJ0"])->settime(0, 0);
+			$datJ0 = DateTime::createFromFormat('d/m/Y', $params["datJ0"])->settime(0, 0);
 			if ($datJ0 != $inclusion->getDatJ0()) {
 				$inclusion->setDatJ0($datJ0);
 			}
 		}
 		if (isset($params["datOut"])) {
-			$datOut = \DateTime::createFromFormat('d/m/Y', $params["datOut"])->settime(0, 0);
+			$datOut = DateTime::createFromFormat('d/m/Y', $params["datOut"])->settime(0, 0);
 			if ($datOut != $inclusion->getDatOut()) {
 				$inclusion->setDatOut($datOut);
 			}

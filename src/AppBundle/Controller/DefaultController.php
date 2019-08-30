@@ -11,16 +11,18 @@ use AppBundle\Import\ServiceImport;
 use AppBundle\Import\VisiteImport;
 use AppBundle\Services\AnonymisationPatient;
 use AppBundle\Services\ViderCache;
+use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
 
     /**
      * @Route("/mentions-legales", name="mentionsLegales")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function mentionsLegalesAction()
     {
@@ -29,7 +31,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/support", name="support")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function supportAction()
     {
@@ -70,7 +72,7 @@ class DefaultController extends Controller
 	 * @param PatientImport $patientImport
 	 * @param VisiteImport $visiteImport
 	 * @param EssaiImport $essaiImport
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @throws NonUniqueResultException
 	 */
 	public function importAll(ArcImport $arcImport,
 	                          ServiceImport $serviceImport,

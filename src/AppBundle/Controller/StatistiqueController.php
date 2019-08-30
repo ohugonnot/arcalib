@@ -10,6 +10,7 @@ use AppBundle\Entity\Visite;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -20,7 +21,7 @@ class StatistiqueController extends Controller
     /**
      * @Route("/analyse/statistiques", name="analyseStatistique")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function analyseStatistiqueAction(Request $request)
     {

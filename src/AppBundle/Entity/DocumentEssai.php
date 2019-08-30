@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -47,7 +48,7 @@ class DocumentEssai
     private $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date", type="date")
      */
@@ -100,7 +101,7 @@ class DocumentEssai
     /**
      * Get date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDate()
     {
@@ -110,7 +111,7 @@ class DocumentEssai
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param DateTime $date
      *
      * @return DocumentEssai
      */

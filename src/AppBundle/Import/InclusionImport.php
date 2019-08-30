@@ -7,6 +7,7 @@ use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
 use AppBundle\Entity\Service;
+use DateTime;
 
 class InclusionImport implements ImportInterface
 {
@@ -38,12 +39,12 @@ class InclusionImport implements ImportInterface
 				$inc[$k] = trim($v);
 			}
 
-			$datScr = \DateTime::createFromFormat('d/m/Y', $inc["Date du screen"]);
-			$datCst = \DateTime::createFromFormat('d/m/Y', $inc["Date du consentement"]);
-			$datInc = \DateTime::createFromFormat('d/m/Y', $inc["Date d'inclusion"]);
-			$datRan = \DateTime::createFromFormat('d/m/Y', $inc["Date de randomisation"]);
-			$datJ0 = \DateTime::createFromFormat('d/m/Y', $inc["Date J0"]);
-			$datOut = \DateTime::createFromFormat('d/m/Y', $inc["Date de sortie"]);
+			$datScr = DateTime::createFromFormat('d/m/Y', $inc["Date du screen"]);
+			$datCst = DateTime::createFromFormat('d/m/Y', $inc["Date du consentement"]);
+			$datInc = DateTime::createFromFormat('d/m/Y', $inc["Date d'inclusion"]);
+			$datRan = DateTime::createFromFormat('d/m/Y', $inc["Date de randomisation"]);
+			$datJ0 = DateTime::createFromFormat('d/m/Y', $inc["Date J0"]);
+			$datOut = DateTime::createFromFormat('d/m/Y', $inc["Date de sortie"]);
 
 			$booRa = (strtolower($inc["Randomisation NA"]) == "vrai") ? true : false;
 
@@ -95,22 +96,23 @@ class InclusionImport implements ImportInterface
 			$inclusion->setBraTrt($inc["Bras de traitement"]);
 			$inclusion->setMotifSortie($inc["Cause de sortie"]);
 
-			if ($medecin = $this->entityManager->getRepository(Medecin::class)->findOneBy(["NomPrenomConcat" => $inc["Médecin responsable de l'Inclusion"]])) {
+            /** @var Medecin $medecin */
+            if ($medecin = $this->entityManager->getRepository(Medecin::class)->findOneBy(["NomPrenomConcat" => $inc["Médecin responsable de l'Inclusion"]])) {
 				$inclusion->setMedecin($medecin);
 			}
-
+            /** @var Patient $patient */
 			if ($patient = $this->entityManager->getRepository(Patient::class)->findOneBy(["idInterne" => $inc["Id Patient"]])) {
 				$inclusion->setPatient($patient);
 			}
-
+            /** @var Essais $essai */
 			if ($essai = $this->entityManager->getRepository(Essais::class)->findOneBy(["nom" => $inc["Protocole"]])) {
 				$inclusion->setEssai($essai);
 			}
-
+            /** @var Service $service */
 			if ($service = $this->entityManager->getRepository(Service::class)->findOneBy(["nom" => $inc["service"]])) {
 				$inclusion->setService($service);
 			}
-
+            /** @var Arc $arc */
 			if ($arc = $this->entityManager->getRepository(Arc::class)->findOneBy(["iniArc" => $inc["ArcInc"]])) {
 				$inclusion->setArc($arc);
 			}

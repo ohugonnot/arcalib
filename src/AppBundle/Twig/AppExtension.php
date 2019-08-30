@@ -5,8 +5,11 @@ namespace AppBundle\Twig;
 use AppBundle\Entity\Document;
 use AppBundle\Entity\Essais;
 use AppBundle\Entity\Visite;
+use DateTime;
+use Exception;
+use Twig\Extension\AbstractExtension;
 
-class AppExtension extends \Twig_Extension
+class AppExtension extends AbstractExtension
 {
     public function getFilters()
     {
@@ -31,23 +34,24 @@ class AppExtension extends \Twig_Extension
     }
 
     /**
-     * @param \DateTime|null $date
-     * @param \DateTime|null $deces
+     * @param DateTime|null $date
+     * @param DateTime|null $deces
      * @return int|null
+     * @throws Exception
      */
-    public function getAge(?\DateTime $date, ?\DateTime $deces): ?int
+    public function getAge(?DateTime $date, ?DateTime $deces): ?int
     {
-        if (!$date instanceof \DateTime) {
+        if (!$date instanceof DateTime) {
             return null;
         }
 
-        if ($deces instanceof \DateTime) {
+        if ($deces instanceof DateTime) {
             $referenceDate = $deces->format("d-m-Y");
         } else {
             $referenceDate = date('d-m-Y');
         }
 
-        $referenceDateTimeObject = new \DateTime($referenceDate);
+        $referenceDateTimeObject = new DateTime($referenceDate);
 
         $diff = $referenceDateTimeObject->diff($date);
 
@@ -71,6 +75,7 @@ class AppExtension extends \Twig_Extension
     /**
      * @param Visite $visite
      * @return string
+     * @throws Exception
      */
     public function visiteClass(Visite $visite): string
     {
@@ -79,7 +84,7 @@ class AppExtension extends \Twig_Extension
             return "";
         }
 
-        $now = new \DateTime();
+        $now = new DateTime();
         $interval = $now->diff($date);
         if ($interval->format('%R%a') > 30) {
             return "more-30-days";

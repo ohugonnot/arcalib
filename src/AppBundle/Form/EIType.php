@@ -7,7 +7,6 @@ use AppBundle\Entity\CTCAESoc;
 use AppBundle\Entity\CTCAETerm;
 use AppBundle\Entity\EI;
 use AppBundle\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

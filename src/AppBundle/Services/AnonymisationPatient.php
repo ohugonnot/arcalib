@@ -5,7 +5,9 @@ namespace AppBundle\Services;
 use AppBundle\Entity\Document;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AnonymisationPatient
@@ -26,10 +28,11 @@ class AnonymisationPatient
 		$this->container = $container;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function generateCustomPatient()
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function generateCustomPatient()
 	{
 		set_time_limit(100);
 		if ($this->container->getParameter('kernel.environment') != "dev") {
@@ -47,7 +50,7 @@ class AnonymisationPatient
 
 			$patient->setNom($jsonCustomPatient["results"][$k]["name"]["last"]);
 			$patient->setPrenom($jsonCustomPatient["results"][$k]["name"]["first"]);
-			$patient->setdatNai(new \DateTime($jsonCustomPatient["results"][$k]["dob"]["date"]));
+			$patient->setdatNai(new DateTime($jsonCustomPatient["results"][$k]["dob"]["date"]));
 			$patient->setSexe(($jsonCustomPatient["results"][$k]["gender"] == "female") ? "F" : "H");
 		}
 		$this->entityManager->flush();

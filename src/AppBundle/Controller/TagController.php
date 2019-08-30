@@ -7,7 +7,9 @@ use AppBundle\Form\TagType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/arcalib")
@@ -19,7 +21,7 @@ class TagController extends Controller
     /**
      * @Route("/tag/ajouter", name="addTag")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function addTagAction(Request $request)
     {
@@ -46,7 +48,7 @@ class TagController extends Controller
 	 * @Route("/tag/editer/{id}", name="editTag")
 	 * @param Request $request
 	 * @param Tag $tag
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editTagAction(Request $request, Tag $tag)
     {
@@ -76,7 +78,7 @@ class TagController extends Controller
 	 * @Route("/tag/supprimer/{id}", name="deleteTag", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Tag $tag
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteTagAction(Tag $tag)
     {
@@ -93,7 +95,7 @@ class TagController extends Controller
     /**
      * @Route("/tags/", name="listeTags", options={"expose"=true})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listeTagsAction(Request $request)
     {

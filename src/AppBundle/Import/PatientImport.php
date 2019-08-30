@@ -5,6 +5,8 @@ namespace AppBundle\Import;
 use AppBundle\Entity\LibCim10;
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Patient;
+use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 
 class PatientImport implements ImportInterface
 {
@@ -13,7 +15,7 @@ class PatientImport implements ImportInterface
 	/**
 	 * @param bool $checkIfExist
 	 * @param bool $truncate
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @throws NonUniqueResultException
 	 */
 	public function import(bool $checkIfExist = true, bool $truncate = true): void
 	{
@@ -41,10 +43,10 @@ class PatientImport implements ImportInterface
 				$p[$k] = trim($v);
 			}
 
-			$datNai = \DateTime::createFromFormat('d/m/Y', $p["Date de naissance"]);
-			$datDiag = \DateTime::createFromFormat('d/m/Y', $p["Date du diagnostic"]);
-			$datLast = \DateTime::createFromFormat('d/m/Y', $p["Date dernières nouvelles"]);
-			$datDeces = \DateTime::createFromFormat('d/m/Y', $p["Date  Décès"]);
+			$datNai = DateTime::createFromFormat('d/m/Y', $p["Date de naissance"]);
+			$datDiag = DateTime::createFromFormat('d/m/Y', $p["Date du diagnostic"]);
+			$datLast = DateTime::createFromFormat('d/m/Y', $p["Date dernières nouvelles"]);
+			$datDeces = DateTime::createFromFormat('d/m/Y', $p["Date  Décès"]);
 			$cancer = (strtolower($p["Cancer O/N"]) == "vrai") ? true : false;;
 
 			if (!$datNai) {

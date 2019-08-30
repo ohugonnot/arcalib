@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -27,7 +29,7 @@ class DocumentEssaiController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Essais $essai
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return RedirectResponse|Response|NotFoundHttpException
 	 */
     public function addDocumentEssaiAction(Request $request, Essais $essai)
     {
@@ -58,7 +60,7 @@ class DocumentEssaiController extends Controller
 	 * @Route("/documentEssais/editer/{id}", name="editDocumentEssai", options={"expose"=true})
 	 * @param Request $request
 	 * @param DocumentEssai $documentEssai
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return RedirectResponse|Response
 	 */
     public function editDocumentEssaiAction(Request $request, DocumentEssai $documentEssai)
     {
@@ -119,7 +121,7 @@ class DocumentEssaiController extends Controller
 	/**
 	 * @Route("/documentEssais/essai/{id}/voir", name="voirDocumentEssai", options={"expose"=true})
 	 * @param Essais $essai
-	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 * @return Response|RedirectResponse
 	 */
     public function firstDocumentEssaiAction(Essais $essai)
     {
@@ -141,7 +143,7 @@ class DocumentEssaiController extends Controller
 	 * @Route("/documentEssais/supprimer/{id}", name="deleteDocumentEssai", options={"expose"=true})
 	 * @Security("has_role('ROLE_ADMIN')")
 	 * @param DocumentEssai $documentEssai
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return RedirectResponse
 	 */
     public function deleteDocumentEssaiAction(DocumentEssai $documentEssai)
     {
@@ -159,7 +161,7 @@ class DocumentEssaiController extends Controller
 	 * @Route("/documentEssais/inclusion/{id}", name="listeDocumentEssais", options={"expose"=true})
 	 * @param Request $request
 	 * @param Essais $essai
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return Response
 	 */
     public function listeDocumentEssaisInclusionAction(Request $request, Essais $essai)
     {
@@ -190,6 +192,7 @@ class DocumentEssaiController extends Controller
     }
 
 	/**
+     * TODO : code duplicate content gestion file
 	 * @Route("/documentEssais/upload/pdf/{id}", name="uploadDocumentEssaiPDF", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request

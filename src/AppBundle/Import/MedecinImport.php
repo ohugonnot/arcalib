@@ -4,6 +4,7 @@ namespace AppBundle\Import;
 
 use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Service;
+use DateTime;
 
 class MedecinImport implements ImportInterface
 {
@@ -17,7 +18,7 @@ class MedecinImport implements ImportInterface
 			$this->entityManager->createQuery('DELETE AppBundle:Medecin m')->execute();
 		}
 
-		$file = $this->get('kernel')->getRootDir() . '/../bdd/medecin.csv';
+		$file = $this->kernel->getRootDir() . '/../bdd/medecin.csv';
 		$medecins = $this->csvToArray->convert($file, ";");
 
 		$bulkSize = 500;
@@ -46,8 +47,8 @@ class MedecinImport implements ImportInterface
 				$medecin = new Medecin();
 			}
 
-			$dateEntre = \DateTime::createFromFormat('d/m/Y', $m["date d'entrée"]);
-			$dateSortie = \DateTime::createFromFormat('d/m/Y', $m["Date départ"]);
+			$dateEntre = DateTime::createFromFormat('d/m/Y', $m["date d'entrée"]);
+			$dateSortie = DateTime::createFromFormat('d/m/Y', $m["Date départ"]);
 
 			if (!$dateEntre) {
 				$dateEntre = null;

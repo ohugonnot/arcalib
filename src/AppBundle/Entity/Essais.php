@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -207,7 +209,7 @@ class Essais
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DateOuv", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
@@ -216,7 +218,7 @@ class Essais
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DateFinInc", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
@@ -225,7 +227,7 @@ class Essais
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DateClose", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
@@ -383,7 +385,7 @@ class Essais
     private $typeConv;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="DateSignConv", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
@@ -756,7 +758,7 @@ class Essais
     /**
      * Get dateOuv
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateOuv()
     {
@@ -766,7 +768,7 @@ class Essais
     /**
      * Set dateOuv
      *
-     * @param \DateTime $dateOuv
+     * @param DateTime $dateOuv
      *
      * @return Essais
      */
@@ -780,7 +782,7 @@ class Essais
     /**
      * Get dateFinInc
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateFinInc()
     {
@@ -790,7 +792,7 @@ class Essais
     /**
      * Set dateFinInc
      *
-     * @param \DateTime $dateFinInc
+     * @param DateTime $dateFinInc
      *
      * @return Essais
      */
@@ -804,7 +806,7 @@ class Essais
     /**
      * Get dateClose
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateClose()
     {
@@ -814,7 +816,7 @@ class Essais
     /**
      * Set dateClose
      *
-     * @param \DateTime $dateClose
+     * @param DateTime $dateClose
      *
      * @return Essais
      */
@@ -1213,7 +1215,7 @@ class Essais
     /**
      * Get dateSignConv
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateSignConv()
     {
@@ -1223,7 +1225,7 @@ class Essais
     /**
      * Set dateSignConv
      *
-     * @param \DateTime $dateSignConv
+     * @param DateTime $dateSignConv
      *
      * @return Essais
      */
@@ -1409,7 +1411,7 @@ class Essais
     /**
      * Get inclusions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getInclusions()
     {
@@ -1445,7 +1447,7 @@ class Essais
     /**
      * Get factures
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFactures()
     {
@@ -1488,7 +1490,7 @@ class Essais
     /**
      * Get tags
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTags()
     {
@@ -1551,7 +1553,7 @@ class Essais
     /**
      * Get annuaires
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAnnuaires()
     {
@@ -1633,7 +1635,7 @@ class Essais
     /**
      * Get users
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUsers()
     {
@@ -1667,7 +1669,7 @@ class Essais
     /**
      * Get services
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getServices()
     {
@@ -1702,7 +1704,7 @@ class Essais
     /**
      * Get documents
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDocuments()
     {

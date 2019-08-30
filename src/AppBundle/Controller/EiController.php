@@ -14,6 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/arcalib")
@@ -27,7 +29,7 @@ class EiController extends Controller
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return RedirectResponse|Response|NotFoundHttpException
 	 */
     public function addEiAction(Request $request, Inclusion $inclusion)
     {
@@ -97,7 +99,7 @@ class EiController extends Controller
      * @Route("/eis/editer/{id}", name="editEi", options={"expose"=true})
      * @param Request $request
      * @param Ei $ei
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editEiAction(Request $request, Ei $ei)
     {
@@ -138,7 +140,7 @@ class EiController extends Controller
 	/**
 	 * @Route("/ei/inclusion/{id}/voir", name="voirEi", options={"expose"=true})
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response|RedirectResponse
+	 * @return Response|RedirectResponse
 	 */
     public function firstEiAction(Inclusion $inclusion)
     {
@@ -158,7 +160,7 @@ class EiController extends Controller
      * @Route("/eis/supprimer/{id}", name="deleteEi", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
      * @param Ei $ei
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteDocumentAction(Ei $ei)
     {
@@ -175,7 +177,7 @@ class EiController extends Controller
 	 * @Route("/eis/inclusion/{id}", name="listeEis", options={"expose"=true})
 	 * @param Request $request
 	 * @param Inclusion $inclusion
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return Response
 	 */
     public function listeEiInclusionAction(Request $request, Inclusion $inclusion)
     {

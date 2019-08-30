@@ -6,6 +6,7 @@ use AppBundle\Entity\Arc;
 use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Visite;
 use AppBundle\Form\VisiteType;
+use DateTime;
 
 class VisiteFactory implements FactoryInterface
 {
@@ -36,7 +37,7 @@ class VisiteFactory implements FactoryInterface
 		}
 
 		if (isset($params["date"])) {
-			$date = \DateTime::createFromFormat('d/m/Y', $params["date"]);
+			$date = DateTime::createFromFormat('d/m/Y', $params["date"]);
 			$visite->setDate($date);
 		}
 

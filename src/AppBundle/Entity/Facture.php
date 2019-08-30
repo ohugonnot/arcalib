@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,7 +57,7 @@ class Facture
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
@@ -168,7 +169,7 @@ class Facture
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateCaisse", type="date", nullable=true)
      */
@@ -192,7 +193,7 @@ class Facture
 
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="dateEncaissement", type="date", nullable=true)
      */
@@ -231,7 +232,7 @@ class Facture
     /**
      * Get date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDate()
     {
@@ -241,7 +242,7 @@ class Facture
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param DateTime $date
      *
      * @return facture
      */
@@ -351,7 +352,7 @@ class Facture
     /**
      * Get dateCaisse
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateCaisse()
     {
@@ -361,7 +362,7 @@ class Facture
     /**
      * Set dateCaisse
      *
-     * @param \DateTime $dateCaisse
+     * @param DateTime $dateCaisse
      *
      * @return facture
      */
@@ -642,7 +643,7 @@ class Facture
     /**
      * Get dateEncaissement
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateEncaissement()
     {
@@ -652,7 +653,7 @@ class Facture
     /**
      * Set dateEncaissement
      *
-     * @param \DateTime $dateEncaissement
+     * @param DateTime $dateEncaissement
      *
      * @return Facture
      */

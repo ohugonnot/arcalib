@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\Event;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
