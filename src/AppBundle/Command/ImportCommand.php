@@ -16,11 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ImportCommand extends ContainerAwareCommand
 {
-
-    /**
-     * @var null|string
-     */
-    private $name;
     /**
      * @var CsvToArray
      */
@@ -34,6 +29,7 @@ class ImportCommand extends ContainerAwareCommand
     {
         parent::__construct($name);
         $this->csvToArray = $csvToArray;
+        $this->container = $container;
     }
 
     protected function configure()
@@ -50,6 +46,7 @@ class ImportCommand extends ContainerAwareCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -68,6 +65,7 @@ class ImportCommand extends ContainerAwareCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @throws \Exception
      */
     protected function import(InputInterface $input, OutputInterface $output)
     {

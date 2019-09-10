@@ -26,6 +26,7 @@ class LogoutListener implements LogoutHandlerInterface
      * @param Request $Request
      * @param Response $Response
      * @param TokenInterface $tokenStorage
+     * @throws \Exception
      */
     public function logout(Request $Request, Response $Response, TokenInterface $tokenStorage)
     {

@@ -201,6 +201,8 @@ class EssaisRepository extends EntityRepository
             ->addSelect('a')
             ->leftJoin('e.inclusions', 'i')
             ->addSelect('i')
+            ->leftJoin('e.fils', 'fil')
+            ->addSelect('fil')
             ->leftJoin('e.factures', 'f')
             ->addSelect('f')
             ->leftJoin('e.detail', 'd')
@@ -250,6 +252,11 @@ class EssaisRepository extends EntityRepository
                 $services[] = $v2["id"];
             }
             $results[$key]["services"] = $services;
+            foreach ($results[$key]["fils"] as $k2 => $v2) {
+                if ($v2["date"] != null) {
+                    $results[$key]["fils"][$k2]["date"] = $v2["date"]->format('d/m/Y');
+                }
+            }
         }
 
         if (!empty($results)) {

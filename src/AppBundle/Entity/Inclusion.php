@@ -135,14 +135,14 @@ class Inclusion
 
 
     /**
-     * @var \string
+     * @var string
      *
      * @ORM\Column(name="Statut", type="string", nullable=true)
      */
     private $statut;
 
     /**
-     * @var \string
+     * @var string
      *
      * @ORM\Column(name="MotifSortie", type="string", nullable=true)
      */
@@ -834,6 +834,7 @@ class Inclusion
     {
         if(!$this->traitements->contains($traitement)) {
             $this->traitements[] = $traitement;
+            $traitement->setInclusion($this);
         }
         return $this;
     }

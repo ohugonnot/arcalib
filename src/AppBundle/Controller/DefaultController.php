@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-
     /**
      * @Route("/mentions-legales", name="mentionsLegales")
      * @return Response
@@ -38,11 +37,12 @@ class DefaultController extends Controller
         return $this->render('pages/support.html.twig');
     }
 
-	/**
-	 * @Route("/create/custom/patient", name="createCustomPatient")
-	 * @param AnonymisationPatient $anonymisationPatient
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/create/custom/patient", name="createCustomPatient")
+     * @param AnonymisationPatient $anonymisationPatient
+     * @return JsonResponse
+     * @throws \Exception
+     */
     public function generateCustomPatient(AnonymisationPatient $anonymisationPatient)
     {
         $isAnonym = $anonymisationPatient->generateCustomPatient();
@@ -50,7 +50,6 @@ class DefaultController extends Controller
 
         return new JsonResponse(["Message" => $message]);
     }
-
 
 	/**
 	 * @Route("/vider/cache", name="viderCache")

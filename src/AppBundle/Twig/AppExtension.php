@@ -8,19 +8,20 @@ use AppBundle\Entity\Visite;
 use DateTime;
 use Exception;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
     public function getFilters()
     {
 
-        return array(
-            new \Twig_SimpleFilter('values', array($this, 'values')),
-            new \Twig_SimpleFilter('age', array($this, 'getAge')),
-            new \Twig_SimpleFilter('nbInclusions', array($this, 'nbInclusions')),
-            new \Twig_SimpleFilter('visiteClass', array($this, 'visiteClass')),
-            new \Twig_SimpleFilter('getUrlDocument', array($this, 'getUrlDocument')),
-        );
+        return [
+            new TwigFilter('values', [$this, 'values']),
+            new TwigFilter('age', [$this, 'getAge']),
+            new TwigFilter('nbInclusions', [$this, 'nbInclusions']),
+            new TwigFilter('visiteClass', [$this, 'visiteClass']),
+            new TwigFilter('getUrlDocument', [$this, 'getUrlDocument']),
+        ];
     }
 
     /**
