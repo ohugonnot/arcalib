@@ -13,7 +13,7 @@ class ViderCache
 		$process = new Process('chmod -R 777 ./../var/cache');
 		$process->run();
 		if (!$process->isSuccessful()) {
-			throw new ProcessFailedException($process);
+		//	throw new ProcessFailedException($process);
 		}
 		$message[] = $process->getOutput();
 
@@ -34,7 +34,7 @@ class ViderCache
 		$process = new Process('chmod -R 777 ./../var/cache');
 		$process->run();
 		if (!$process->isSuccessful()) {
-			throw new ProcessFailedException($process);
+		    //	throw new ProcessFailedException($process);
 		}
 		$message[] = $process->getOutput();
 

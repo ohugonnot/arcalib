@@ -68,6 +68,7 @@ class RequeteController extends Controller
     /**
      * @Route("/requetes", name="requetes")
      * @return Response
+     * @throws Exception
      */
     public function indexAction()
     {

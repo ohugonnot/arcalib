@@ -8,6 +8,7 @@ use AppBundle\Entity\Medecin;
 use AppBundle\Entity\Service;
 use AppBundle\Entity\Tag;
 use AppBundle\Factory\EssaiFactory;
+use AppBundle\Factory\FilFactorty;
 use AppBundle\Services\CsvToArray;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -141,6 +142,42 @@ class EssaisController extends Controller
         $emEssai = $em->getRepository(Essais::class);
         $essai = $emEssai->findArray($id, $user);
         return new JsonResponse($essai);
+    }
+
+    /**
+     * @Route("/essai/{id}/fils/save", name="saveFil", options={"expose"=true})
+     * @param FilFactorty $filFactorty
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function saveFils(FilFactorty $filFactorty, Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var Essais $essai */
+        $essai = $em->getRepository(Essais::class)->find($id);
+        $fils = $request->request->get("appbundle_fils") ?? [];
+        $ids = [];
+        foreach ($fils as $k=>$fil)
+        {
+           $filEntity = $filFactorty->hydrate(null, $fil, $k);
+
+           if (isset($filEntity->errorsMessage) && $filEntity->errorsMessage)
+                return new JsonResponse(["success" => false, "message" => $filEntity->errorsMessage]);
+
+           if (!$filEntity->getId()) {
+               $em->persist($filEntity);
+               $essai->addFil($filEntity);
+               $em->flush();
+           }
+           $ids[] = $filEntity->getId();
+        }
+        foreach($essai->getFils() as $fil) {
+            if(!in_array($fil->getId(),$ids))
+                $em->remove($fil);
+        }
+        $em->flush();
+        return new JsonResponse(["success" => true, 'ids' => $ids]);
     }
 
     /**

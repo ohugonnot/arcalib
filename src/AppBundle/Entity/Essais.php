@@ -21,7 +21,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Essais
 {
-
     // Ce qui sera sauver en base
     const FAISABILITE_EN_ATTENTE = "Faisabilité en attente";
     const CONVENTION_SIGNATURE = "Convention signature";
@@ -36,7 +35,7 @@ class Essais
     const REFUS = "Refus";
 
     // Ce qu'on pourra lire dans les selecteurs sur l'outil
-    CONST STATUT = [
+    const STATUT = [
         'Faisabilité en attente' => self::FAISABILITE_EN_ATTENTE,
         'Convention signature' => self::CONVENTION_SIGNATURE,
         'Attente de MEP' => self::ATTENTE_DE_MEP,
@@ -58,7 +57,7 @@ class Essais
     const COLLECTION_BIOLOGIQUE = "Collection biologique";
     const NA = "NA";
 
-    CONST TYPE = [
+    const TYPE = [
         'Observationelle' => self::OBSERVATIONELLE,
         'Interv-type 1' => self::INTERV_TYPE_1,
         'Interv-type 2' => self::INTERV_TYPE_2,
@@ -75,7 +74,7 @@ class Essais
     const PHASE_III = "Phase III";
     const PHASE_IV = "Phase IV";
 
-    CONST PHASE = [
+    const PHASE = [
         'Phase I' => self::PHASE_I,
         'Phase II' => self::PHASE_II,
         'Phase II-III' => self::PHASE_II_III,
@@ -85,12 +84,11 @@ class Essais
         'NA' => self::NA,
     ];
 
-
     const HOSPITALIER = "Hospitalier";
     const SOCIETE_SAVANTE = "Société savante";
     const INDUSTRIEL = "Industriel";
 
-    CONST PROM = [
+    const PROM = [
         'Hospitalier' => self::HOSPITALIER,
         'Société savante' => self::SOCIETE_SAVANTE,
         'Industriel' => self::INDUSTRIEL,
@@ -101,7 +99,7 @@ class Essais
     const INTERNE = "Interne";
     const EXTERNE = "Externe";
 
-    CONST AUTO_PROM = [
+    const AUTO_PROM = [
         'Interne' => self::INTERNE,
         'Externe' => self::EXTERNE,
         'Autre' => self::AUTRE,
@@ -111,13 +109,12 @@ class Essais
     const NON = "Non";
     const PARTIEL = "Partiel";
 
-    CONST URCGES = [
+    const URCGES = [
         'Oui' => self::OUI,
         'Non' => self::NON,
         'Partiel' => self::PARTIEL,
         'NA' => self::NA,
     ];
-
 
     const DIRECT = "Direct";
     const DOUBLE_AVEC_SURCOUT = "Double avec Surcout";
@@ -125,7 +122,7 @@ class Essais
     const CONVENTION_UNIQUE = "Convention unique";
     const PAS_DE_CONVENTION = "Pas de convention";
 
-    CONST TYPE_CONV = [
+    const TYPE_CONV = [
         'Direct' => self::DIRECT,
         'Double avec Surcout' => self::DOUBLE_AVEC_SURCOUT,
         'Tripartite avec IP observateur' => self::TRIPARTITE_AVEC_IP_OBSERVATEUR,
@@ -144,7 +141,6 @@ class Essais
      */
     private $id;
 
-
     /**
      * @var string
      *
@@ -152,7 +148,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $nom;
-
 
     /**
      * @var string
@@ -162,7 +157,6 @@ class Essais
      */
     private $statut;
 
-
     /**
      * @var string
      *
@@ -170,7 +164,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $titre;
-
 
     /**
      * @var string
@@ -180,7 +173,6 @@ class Essais
      */
     private $numeroInterne;
 
-
     /**
      * @var string
      *
@@ -188,7 +180,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $numeroCentre;
-
 
     /**
      * @var string
@@ -198,7 +189,6 @@ class Essais
      */
     private $typeEssai;
 
-
     /**
      * @var string
      *
@@ -206,7 +196,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $stadeEss;
-
 
     /**
      * @var DateTime
@@ -216,7 +205,6 @@ class Essais
      */
     private $dateOuv;
 
-
     /**
      * @var DateTime
      *
@@ -224,7 +212,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $dateFinInc;
-
 
     /**
      * @var DateTime
@@ -234,7 +221,6 @@ class Essais
      */
     private $dateClose;
 
-
     /**
      * @var string
      *
@@ -242,7 +228,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $typeProm;
-
 
     /**
      * @var string
@@ -252,7 +237,6 @@ class Essais
      */
     private $autoProm;
 
-
     /**
      * @var string
      *
@@ -261,9 +245,7 @@ class Essais
      */
     private $prom;
 
-
 // -----------coordonnées du contact---------------------
-
     /**
      * @var string
      *
@@ -271,7 +253,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $contactNom;
-
 
     /**
      * @var string
@@ -283,7 +264,6 @@ class Essais
      */
     private $contactMail;
 
-
     /**
      * @var string
      *
@@ -292,10 +272,7 @@ class Essais
      */
     private $contactTel;
 
-
 // -----------Divers----------------------------------------
-
-
     /**
      * @var string
      *
@@ -304,7 +281,6 @@ class Essais
      */
     private $ecrfLink;
 
-
     /**
      * @var string
      *
@@ -312,7 +288,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $notes;
-
 
 //------------------------Gestion/ finances---------
     /**
@@ -323,7 +298,6 @@ class Essais
      */
     private $urcGes;
 
-
     /**
      * @var bool
      *
@@ -331,7 +305,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $sigrec;
-
 
     /**
      * @var bool
@@ -341,7 +314,6 @@ class Essais
      */
     private $sigaps;
 
-
     /**
      * @var bool
      *
@@ -349,7 +321,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $emrc;
-
 
     /**
      * @var bool
@@ -374,7 +345,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $cancer;
-
 
     /**
      * @var string
@@ -416,7 +386,6 @@ class Essais
      */
     private $intLink;
 
-
     /**
      * @var integer
      * @Assert\GreaterThan(0)
@@ -424,77 +393,6 @@ class Essais
      * @Serializer\Groups({"protocole"})
      */
     private $objectif;
-
-
-//****************************variables de Liaisons********************************************
-
-// Ici la relation  n Essais, n Tags
-    /**
-     * Many Groups have Many Users.
-     * @ORM\ManyToMany(targetEntity="Tag", mappedBy="essais", fetch="EXTRA_LAZY")
-     * @ORM\OrderBy({"nom" = "ASC"})
-     * @Serializer\Groups({"protocole"})
-     */
-    private $tags;
-
-// Ici la relation  1 Essai, 1 ARC mais 1 ARc  N Essais
-    /**
-     * @ORM\ManyToOne(targetEntity="Arc", inversedBy="essais" , cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Serializer\Exclude
-     */
-    private $arc;
-
-
-// Ici la relation  1 Essai, 1 Medecin mais 1 Medecin  N Essais
-    /**
-     * @ORM\ManyToOne(targetEntity="Medecin", inversedBy="essais" , cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Serializer\Exclude
-     */
-    private $medecin;
-
-
-// Ici la relation  1 Essai, many Inclusions mais 1 Inclusion est lié a 1 essai
-    /**
-     * @ORM\OneToMany(targetEntity="Inclusion", mappedBy="essai", cascade={"all"})
-     * @ORM\OrderBy({"numInc" = "ASC"})
-     * @Serializer\Exclude
-     */
-    private $inclusions;
-
-
-// Ici la relation 1 essai, many factures
-    /**
-     * @ORM\OneToMany(targetEntity="Facture", mappedBy="essai", cascade={"all"})
-     * @Serializer\Exclude
-     */
-    private $factures;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Annuaire", mappedBy="essai", cascade={"all"})
-     * @Serializer\Exclude
-     */
-    private $annuaires;
-
-    /**
-     * @ORM\OneToOne(targetEntity="EssaiDetail", inversedBy="essai", cascade={"all"})
-     * @ORM\JoinColumn(name="detail_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $detail;
-
-
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="essais" , cascade={"persist"}, fetch="EXTRA_LAZY"))
-     */
-    private $users;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Service", inversedBy="essais" , cascade={"persist"}, fetch="EXTRA_LAZY"))
-     * @ORM\JoinTable(name="services_essais")
-     * @ORM\OrderBy({"nom" = "ASC"})
-     */
-    private $services;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -526,12 +424,83 @@ class Essais
      */
     private $procedurePDF;
 
+//****************************variables de Liaisons********************************************
+
+// Ici la relation  n Essais, n Tags
+    /**
+     * Many Groups have Many Users.
+     * @ORM\ManyToMany(targetEntity="Tag", mappedBy="essais", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"nom" = "ASC"})
+     * @Serializer\Groups({"protocole"})
+     */
+    private $tags;
+
+// Ici la relation  1 Essai, 1 ARC mais 1 ARc  N Essais
+    /**
+     * @ORM\ManyToOne(targetEntity="Arc", inversedBy="essais" , cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Serializer\Exclude
+     */
+    private $arc;
+
+// Ici la relation  1 Essai, 1 Medecin mais 1 Medecin  N Essais
+    /**
+     * @ORM\ManyToOne(targetEntity="Medecin", inversedBy="essais" , cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Serializer\Exclude
+     */
+    private $medecin;
+
+// Ici la relation  1 Essai, many Inclusions mais 1 Inclusion est lié a 1 essai
+    /**
+     * @ORM\OneToMany(targetEntity="Inclusion", mappedBy="essai", cascade={"all"})
+     * @ORM\OrderBy({"numInc" = "ASC"})
+     * @Serializer\Exclude
+     */
+    private $inclusions;
+
+// Ici la relation 1 essai, many factures
+    /**
+     * @ORM\OneToMany(targetEntity="Facture", mappedBy="essai", cascade={"all"})
+     * @Serializer\Exclude
+     */
+    private $factures;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Annuaire", mappedBy="essai", cascade={"all"})
+     * @Serializer\Exclude
+     */
+    private $annuaires;
+
+    /**
+     * @ORM\OneToOne(targetEntity="EssaiDetail", inversedBy="essai", cascade={"all"})
+     * @ORM\JoinColumn(name="detail_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $detail;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="essais" , cascade={"persist"}, fetch="EXTRA_LAZY"))
+     */
+    private $users;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Service", inversedBy="essais" , cascade={"persist"}, fetch="EXTRA_LAZY"))
+     * @ORM\JoinTable(name="services_essais")
+     * @ORM\OrderBy({"nom" = "ASC"})
+     */
+    private $services;
 
     /**
      * @ORM\OneToMany(targetEntity="DocumentEssai", mappedBy="essai", cascade={"all"})
      * @ORM\OrderBy({"date" = "ASC"})
      */
     private $documents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Fil", mappedBy="essai", cascade={"all"})
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $fils;
 
     /**
      * Constructor
@@ -545,6 +514,7 @@ class Essais
         $this->users = new ArrayCollection();
         $this->services = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->fils = new ArrayCollection();
     }
 
     public function getSynopsis()
@@ -1709,5 +1679,41 @@ class Essais
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * Add Fil
+     *
+     * @param Fil $fil
+     *
+     * @return Essais
+     */
+    public function addFil(Fil $fil)
+    {
+        $this->fils[] = $fil;
+        $fil->setEssai($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove fil
+     *
+     * @param Fil $fil
+     */
+    public function removeFil(Fil $fil)
+    {
+        $this->fils->removeElement($fil);
+        $fil->setEssai(null);
+    }
+
+    /**
+     * Get fils
+     *
+     * @return Collection|Fil[]
+     */
+    public function getFils()
+    {
+        return $this->fils;
     }
 }
