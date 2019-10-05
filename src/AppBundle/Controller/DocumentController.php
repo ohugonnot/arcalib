@@ -82,7 +82,7 @@ class DocumentController extends Controller
             return $this->redirectToRoute("inclusion_list_documents", ["id" => $inclusion->getId()]);
         }
 
-        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => "DESC"]));
+$allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => "ASC"]));
         if ($allDocuments->contains($document)) {
             $index = $allDocuments->indexOf($document);
             $prev = $allDocuments->get($index - 1);
@@ -181,7 +181,7 @@ class DocumentController extends Controller
             $query, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             20/*limit per page*/,
-            array('defaultSortFieldName' => ['d.date'], 'defaultSortDirection' => 'desc')
+            array('defaultSortFieldName' => ['d.date'], 'defaultSortDirection' => 'ASC')
         );
 
         return $this->render('document/listeDocuments.html.twig', [
