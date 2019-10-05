@@ -1,0 +1,38 @@
+'Ce patient existe déjà !': 'Ce patient existe déjà !'   # FIXME
+
+'L''email ''{{ value }}'' n''est pas un email valide':
+    '': 'L''email ''{{ value }}'' n''est pas un email valide.'   # FIXME
+
+'La date d''alerte doit être antérieur à la date de l''échéance': 'La date d''alerte doit être antérieur à la date de l''échéance'   # FIXME
+'La date ne doit pas être nulle': 'La date ne doit pas être nulle'   # FIXME
+
+'Nom {{ value }} est déjà utilisée':
+    '': 'Nom {{ value }} est déjà utilisée.'   # FIXME
+
+'N° Clinical Trial {{ value }} est déjà utilisée':
+    '': 'N° Clinical Trial {{ value }} est déjà utilisée.'   # FIXME
+
+'N° Eudra CT {{ value }} est déjà utilisée':
+    '': 'N° Eudra CT {{ value }} est déjà utilisée.'   # FIXME
+
+'Si la cache alerte est coché il faut une date': 'Si la cache alerte est coché il faut une date'   # FIXME
+'Vous devez choisir au moins un déstinataire': 'Vous devez choisir au moins un déstinataire'   # FIXME
+
+fos_user:
+    email:
+        already_used: fos_user.email.already_used   # FIXME
+        blank: fos_user.email.blank   # FIXME
+        invalid: fos_user.email.invalid   # FIXME
+        long: fos_user.email.long   # FIXME
+        short: fos_user.email.short   # FIXME
+
+    password:
+        blank: fos_user.password.blank   # FIXME
+        mismatch: fos_user.password.mismatch   # FIXME
+        short: fos_user.password.short   # FIXME
+
+    username:
+        already_used: fos_user.username.already_used   # FIXME
+        blank: fos_user.username.blank   # FIXME
+        long: fos_user.username.long   # FIXME
+        short: fos_user.username.short   # FIXME
