@@ -140,7 +140,7 @@
                         {# Titre + Boutons #}
                         <div class="form-title d-flex align-items-center">
 
-                            Détails du protocole : [[ protocole.nom ]]
+                            Détails du protocole : [[ protocole.nom ]] <span v-if="protocole.id">- n°[[ protocole.id ]]</span>
 
 
                             <div class="ml-auto mr-1">
