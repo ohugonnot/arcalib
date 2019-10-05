@@ -214,21 +214,19 @@
                                 <div class="ml-auto">
 
                                     {#  # Prec #}
-                                    {% if prev != null %}
-
+                                    {% if prev == null %}{% set prev = {id: allDocumentEssais.last.id} %}{% endif %}
+                                    {% if prev.id|default(false) %}
                                         <a title="Précédent" class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocumentEssai', { id: prev.id }) }}">
                                             <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                         </a>
-
                                     {% endif %}
 
                                     {# Suiv #}
-                                    {% if next != null %}
-
+                                    {% if next == null %}{% set next = {id: allDocumentEssais.first.id} %}{% endif %}
+                                    {% if next.id|default(false) %}
                                         <a title='Suivant' class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocumentEssai', { id: next.id }) }}">
                                             <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                         </a>
-
                                     {% endif %}
                                     
                                     {# Add #}

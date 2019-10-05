@@ -24,7 +24,9 @@ class DocumentEssaiController extends Controller
 {
 
     // ------------------------------------------ADD Document-----------------------------------------------------
-	/**
+    const ORDER = "ASC";
+
+    /**
 	 * @Route("/documentEssais/essai/{id}/ajouter", name="addDocumentEssai", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
@@ -48,7 +50,7 @@ class DocumentEssaiController extends Controller
         }
 
         $emDocumentEssai = $em->getRepository(DocumentEssai::class);
-        $allDocumentEssais = new ArrayCollection($emDocumentEssai->findBy(["essai" => $essai], ["date" => "DESC"]));
+        $allDocumentEssais = new ArrayCollection($emDocumentEssai->findBy(["essai" => $essai], ["date" => self::ORDER]));
 
         return $this->render('documentEssai/editDocumentEssai.html.twig', [
             'form' => $form->createView(),
@@ -82,7 +84,7 @@ class DocumentEssaiController extends Controller
             return $this->redirectToRoute("listeDocumentEssais", ["id" => $essai->getId()]);
         }
 
-        $allDocumentEssais = new ArrayCollection($emDocumentEssai->findBy(["essai" => $essai], ["date" => "DESC"]));
+        $allDocumentEssais = new ArrayCollection($emDocumentEssai->findBy(["essai" => $essai], ["date" => self::ORDER]));
         if ($allDocumentEssais->contains($documentEssai)) {
             $index = $allDocumentEssais->indexOf($documentEssai);
             $prev = $allDocumentEssais->get($index - 1);
@@ -128,7 +130,7 @@ class DocumentEssaiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $emDocumentEssai = $em->getRepository(DocumentEssai::class);
 
-        $allDocumentEssais = new ArrayCollection($emDocumentEssai->findBy(["essai" => $essai], ["date" => "DESC"]));
+        $allDocumentEssais = new ArrayCollection($emDocumentEssai->findBy(["essai" => $essai], ["date" => self::ORDER]));
 
         if (!$allDocumentEssais->isEmpty()) {
             return $this->redirectToRoute('editDocumentEssai', ["id" => $allDocumentEssais->first()->getId()], 301);
@@ -181,7 +183,7 @@ class DocumentEssaiController extends Controller
             $query, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             20/*limit per page*/,
-            array('defaultSortFieldName' => ['d.date'], 'defaultSortDirection' => 'desc')
+            array('defaultSortFieldName' => ['d.date'], 'defaultSortDirection' => self::ORDER)
         );
 
         return $this->render('documentEssai/listeDocumentEssais.html.twig', [

@@ -24,7 +24,9 @@ class DocumentController extends Controller
 {
 
     // ------------------------------------------ADD Document-----------------------------------------------------
-	/**
+    const ORDER = "ASC";
+
+    /**
 	 * @Route("/documents/inclusion/{id}/ajouter", name="addDocument", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
 	 * @param Request $request
@@ -48,7 +50,7 @@ class DocumentController extends Controller
         }
 
         $emDocument = $em->getRepository(Document::class);
-        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => "DESC"]));
+        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => self::ORDER]));
 
         return $this->render('document/editDocument.html.twig', [
             'form' => $form->createView(),
@@ -82,7 +84,7 @@ class DocumentController extends Controller
             return $this->redirectToRoute("inclusion_list_documents", ["id" => $inclusion->getId()]);
         }
 
-$allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => "ASC"]));
+        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => self::ORDER]));
         if ($allDocuments->contains($document)) {
             $index = $allDocuments->indexOf($document);
             $prev = $allDocuments->get($index - 1);
@@ -128,7 +130,7 @@ $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusi
 	    $em = $this->getDoctrine()->getManager();
         $emDocument = $em->getRepository(Document::class);
 
-        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => "DESC"]));
+        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => self::ORDER]));
 
         if (!$allDocuments->isEmpty()) {
             return $this->redirectToRoute('editDocument', ["id" => $allDocuments->first()->getId()], 301);
@@ -181,7 +183,7 @@ $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusi
             $query, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             20/*limit per page*/,
-            array('defaultSortFieldName' => ['d.date'], 'defaultSortDirection' => 'ASC')
+            array('defaultSortFieldName' => ['d.date'], 'defaultSortDirection' => self::ORDER)
         );
 
         return $this->render('document/listeDocuments.html.twig', [
