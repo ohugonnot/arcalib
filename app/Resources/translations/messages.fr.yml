@@ -1,0 +1,177 @@
+'': ''   # FIXME
+' Initiales': ' Initiales'   # FIXME
+' Prénom': ' Prénom'   # FIXME
+'ARC référent': 'ARC référent'   # FIXME
+Action: Action   # FIXME
+Activée: Activée   # FIXME
+'Adresse Email': 'Adresse Email'   # FIXME
+'Adresse email': 'Adresse email'   # FIXME
+'Ajouter une visite': 'Ajouter une visite'   # FIXME
+Alerte: Alerte   # FIXME
+Auteur: Auteur   # FIXME
+Autre: Autre   # FIXME
+'Bras TT': 'Bras TT'   # FIXME
+CIM10Code: CIM10Code   # FIXME
+Calendrier: Calendrier   # FIXME
+'Cause décès (en texte)': 'Cause décès (en texte)'   # FIXME
+Classe: Classe   # FIXME
+Cloture: Cloture   # FIXME
+'Code CIM 10': 'Code CIM 10'   # FIXME
+Commentaire: Commentaire   # FIXME
+'Commentaires Résolution (optionel)': 'Commentaires Résolution (optionel)'   # FIXME
+'Compte Activé': 'Compte Activé'   # FIXME
+Contenu: Contenu   # FIXME
+'Critéres d''inclusion': 'Critéres d''inclusion'   # FIXME
+'Critéres de NON inclusion': 'Critéres de NON inclusion'   # FIXME
+Crédit/Débit: Crédit/Débit   # FIXME
+DECT: DECT   # FIXME
+Date: Date   # FIXME
+'Date Consentement': 'Date Consentement'   # FIXME
+'Date Encaissement': 'Date Encaissement'   # FIXME
+'Date Facture': 'Date Facture'   # FIXME
+'Date Inclusion': 'Date Inclusion'   # FIXME
+'Date J0': 'Date J0'   # FIXME
+'Date Randomisation': 'Date Randomisation'   # FIXME
+'Date Screen': 'Date Screen'   # FIXME
+'Date d''arrivée': 'Date d''arrivée'   # FIXME
+'Date d''attribution': 'Date d''attribution'   # FIXME
+'Date d''entrée': 'Date d''entrée'   # FIXME
+'Date de Naissance': 'Date de Naissance'   # FIXME
+'Date de diagnostic': 'Date de diagnostic'   # FIXME
+'Date de départ': 'Date de départ'   # FIXME
+'Date de l''alerte': 'Date de l''alerte'   # FIXME
+'Date de l''échéance': 'Date de l''échéance'   # FIXME
+'Date de l''évenement': 'Date de l''évenement'   # FIXME
+'Date de peremption': 'Date de peremption'   # FIXME
+'Date de prise': 'Date de prise'   # FIXME
+'Date de retour': 'Date de retour'   # FIXME
+'Date dernières nouvelles': 'Date dernières nouvelles'   # FIXME
+'Date décès': 'Date décès'   # FIXME
+'Date sortie d''etude': 'Date sortie d''etude'   # FIXME
+'Date visite': 'Date visite'   # FIXME
+Description: Description   # FIXME
+Destinataires: Destinataires   # FIXME
+Details: Details   # FIXME
+'Diagnostic (texte)': 'Diagnostic (texte)'   # FIXME
+Début: Début   # FIXME
+Détail: Détail   # FIXME
+'Détails de l''EI/EIG': 'Détails de l''EI/EIG'   # FIXME
+ESSAI: ESSAI   # FIXME
+'Encaissable le': 'Encaissable le'   # FIXME
+Enregistrer: Enregistrer   # FIXME
+'Enregistrer et inclure': 'Enregistrer et inclure'   # FIXME
+Evolution: Evolution   # FIXME
+Fax: Fax   # FIXME
+Fin: Fin   # FIXME
+'Fin des inclusions': 'Fin des inclusions'   # FIXME
+Fonction: Fonction   # FIXME
+'Gestion URC': 'Gestion URC'   # FIXME
+IPP: IPP   # FIXME
+'Inclure ': 'Inclure '   # FIXME
+'Initiales NOM-PR': 'Initiales NOM-PR'   # FIXME
+JMA: JMA   # FIXME
+'Label Court': 'Label Court'   # FIXME
+'Label Long': 'Label Long'   # FIXME
+'Lien Ecrf': 'Lien Ecrf'   # FIXME
+'Lien Serveur interne': 'Lien Serveur interne'   # FIXME
+Mail: Mail   # FIXME
+'Mise en place': 'Mise en place'   # FIXME
+'Montant HT (€)': 'Montant HT (€)'   # FIXME
+'Montant TTC (€)': 'Montant TTC (€)'   # FIXME
+'Motif de la sortie': 'Motif de la sortie'   # FIXME
+'Médecin référent': 'Médecin référent'   # FIXME
+Nom: Nom   # FIXME
+'Nom  du contact': 'Nom  du contact'   # FIXME
+'Nom de Naissance': 'Nom de Naissance'   # FIXME
+'Nom, Prénom': 'Nom, Prénom'   # FIXME
+Nombres: Nombres   # FIXME
+Non: Non   # FIXME
+Notes: Notes   # FIXME
+'N° /  Lot': 'N° /  Lot'   # FIXME
+'N° Centre': 'N° Centre'   # FIXME
+'N° Clinical Trial': 'N° Clinical Trial'   # FIXME
+'N° EudraCT': 'N° EudraCT'   # FIXME
+'N° Facture': 'N° Facture'   # FIXME
+'N° Interne': 'N° Interne'   # FIXME
+'N° MERRI': 'N° MERRI'   # FIXME
+'N° ORDRE': 'N° ORDRE'   # FIXME
+'N° RPPS': 'N° RPPS'   # FIXME
+'N° SIGAPS': 'N° SIGAPS'   # FIXME
+'N° SIRET': 'N° SIRET'   # FIXME
+'N° inclusion': 'N° inclusion'   # FIXME
+'N° visite(J/M/A)': 'N° visite(J/M/A)'   # FIXME
+N°facture: N°facture   # FIXME
+'Objectif de l''etude': 'Objectif de l''etude'   # FIXME
+Oui: Oui   # FIXME
+Payeur: Payeur   # FIXME
+Phase: Phase   # FIXME
+Portable: Portable   # FIXME
+Projet: Projet   # FIXME
+Promoteur: Promoteur   # FIXME
+'Promotion Interne/ Externe': 'Promotion Interne/ Externe'   # FIXME
+Protocole: Protocole   # FIXME
+Prénom: Prénom   # FIXME
+Receveur: Receveur   # FIXME
+'Responsable facture': 'Responsable facture'   # FIXME
+Retour: Retour   # FIXME
+Référents: Référents   # FIXME
+Secrétaire(s): Secrétaire(s)   # FIXME
+'Si EIG': 'Si EIG'   # FIXME
+'Si décès': 'Si décès'   # FIXME
+'Signature convention': 'Signature convention'   # FIXME
+Société: Société   # FIXME
+Statut: Statut   # FIXME
+Surcouts: Surcouts   # FIXME
+'TVA (€)': 'TVA (€)'   # FIXME
+Tags: Tags   # FIXME
+'Taux TVA %': 'Taux TVA %'   # FIXME
+Titre: Titre   # FIXME
+Traitement: Traitement   # FIXME
+Type: Type   # FIXME
+'Type convention': 'Type convention'   # FIXME
+'Type promoteur': 'Type promoteur'   # FIXME
+'Type étude': 'Type étude'   # FIXME
+Téléphone: Téléphone   # FIXME
+
+'Téléphone Port':
+    '': 'Téléphone Port.'   # FIXME
+
+'Téléphone secrétariat': 'Téléphone secrétariat'   # FIXME
+Utile: Utile   # FIXME
+Verificateur: Verificateur   # FIXME
+
+form:
+    password: form.password   # FIXME
+    password_confirmation: form.password_confirmation   # FIXME
+
+'Enregistrer le document': 'Enregistrer le document'
+Administratif: Administratif
+Screen: Screen
+Documents: Documents
+' ': ' '
+Versions: Versions
+Courriers: Courriers
+Newsletter: Newsletter
+Susar: Susar
+Procedures: Procedures
+Consentement: Consentement
+'Fiche Inclusion': 'Fiche Inclusion'
+'CR Consultation': 'CR Consultation'
+'CR Hospitalisation': 'CR Hospitalisation'
+'CR Operatoire': 'CR Operatoire'
+RCP: RCP
+Anatomopathologie: Anatomopathologie
+Scanner: Scanner
+IRM: IRM
+PetScan: PetScan
+Radio: Radio
+ECG: ECG
+'Bilan Biologique': 'Bilan Biologique'
+Chimiothérapie: Chimiothérapie
+Ordonnance: Ordonnance
+Randomisation: Randomisation
+'Fiche Visite': 'Fiche Visite'
+Questionnaire: Questionnaire
+Queries: Queries
+Autres: Autres
+Historique: Historique
