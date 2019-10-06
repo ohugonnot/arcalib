@@ -45,7 +45,6 @@ class ArcController extends Controller
     }
 
 // ------------------------------------------EDIT ARC-----------------------------------------------------
-
     /**
      * @Route("/arc/editer/{id}", name="editArc")
      * @Security("has_role('ROLE_ADMIN')")
@@ -70,7 +69,6 @@ class ArcController extends Controller
     }
 
 // ------------------------------------------SUPP ARC-----------------------------------------------------
-
     /**
      * @Route("/arc/delete/{id}", name="deleteArc", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
@@ -89,8 +87,7 @@ class ArcController extends Controller
         return $this->redirectToRoute("listeArcs");
     }
 
-    // ------------------------------------------LISTE ARC-----------------------------------------------------
-
+// ------------------------------------------LISTE ARC-----------------------------------------------------
     /**
      * @Route("/arcs/", name="listeArcs", options={"expose"=true})
      * @param Request $request
@@ -99,14 +96,12 @@ class ArcController extends Controller
     public function listeArcsAction(Request $request)
     {
         $search = $request->query->get("recherche");
-        if ($search == null) {
+        if (!$search)
             $search = '%%';
-        }
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
         $emArc = $em->getRepository(Arc::class);
-
         $query = $emArc->getQuery($search);
 
         $paginator = $this->get('knp_paginator');

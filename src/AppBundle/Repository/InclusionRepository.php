@@ -58,9 +58,10 @@ class InclusionRepository extends EntityRepository
             ->setParameter('searchId', $searchId)
             ->setParameter('search', '%' . $search . '%');
 
-        if($filters) {
+         if ($filters) {
             foreach($filters as $param => $value) {
-                if($value == null) continue;
+                 if ($value == null)
+                    continue;
                 $paramValue = $param.'_value';
                 $queryBuilder->andWhere("i.$param = :$paramValue")
                     ->setParameter($paramValue, $value);

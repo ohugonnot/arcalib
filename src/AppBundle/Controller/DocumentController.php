@@ -23,9 +23,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class DocumentController extends Controller
 {
 
-    // ------------------------------------------ADD Document-----------------------------------------------------
     const ORDER = "ASC";
 
+// ------------------------------------------ADD Document-----------------------------------------------------
     /**
 	 * @Route("/documents/inclusion/{id}/ajouter", name="addDocument", options={"expose"=true})
 	 * @Security("has_role('ROLE_ARC')")
@@ -42,7 +42,6 @@ class DocumentController extends Controller
         $form = $this->get('form.factory')->create(DocumentType::class, $document);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-
             $em->persist($document);
             $em->flush();
 
@@ -72,13 +71,13 @@ class DocumentController extends Controller
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
 
-        $form = $this->get('form.factory')->create(DocumentType::class, $document);
+        $form = $this->get('form.factory')->create(DocumentType::class, $document,['signer'=>$document->isSigner()]);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 
-            if (!$this->get('security.authorization_checker')->isGranted('ROLE_ARC')) {
+            if (!$this->get('security.authorization_checker')->isGranted('ROLE_ARC'))
                 throw $this->createAccessDeniedException('Vous n\'avez pas le droit de sauvegarder !');
-            }
+
             $em->flush();
 
             return $this->redirectToRoute("editDocument", ["id" => $document->getId()]);
@@ -110,11 +109,10 @@ class DocumentController extends Controller
     private function getUrlDocument(Document $document)
     {
         $pdf = $this->getDoctrine()->getManager()->getRepository(Document::class)->findPDF($this->getUser(), $document->getFile());
-        if ($pdf) {
+        if ($pdf)
             $file_path = $this->generateUrl('downloadDocumentPDF', array('pdf' => $document->getFile()), UrlGeneratorInterface::ABSOLUTE_URL);
-        } else {
+        else
             $file_path = null;
-        }
 
         return $file_path;
     }
@@ -133,9 +131,8 @@ class DocumentController extends Controller
 
         $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => self::ORDER]));
 
-        if (!$allDocuments->isEmpty()) {
+        if (!$allDocuments->isEmpty())
             return $this->redirectToRoute('editDocument', ["id" => $allDocuments->first()->getId()], 301);
-        }
 
         return $this->forward("AppBundle:Document:listeDocumentsInclusion", [
             "id" => $inclusion->getId()
@@ -169,9 +166,8 @@ class DocumentController extends Controller
     public function listeDocumentsInclusionAction(Request $request, Inclusion $inclusion)
     {
         $search = $request->query->get("recherche");
-        if ($search == null) {
+        if (!$search)
             $search = '%%';
-        }
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -218,7 +214,8 @@ class DocumentController extends Controller
 
         if ($document->getFile() != null) {
             $file_path = $path . '/' . $document->getFile();
-            if (file_exists($file_path)) unlink($file_path);
+            if (file_exists($file_path))
+                unlink($file_path);
         }
 
         $document->setFile($fileName);
@@ -241,7 +238,8 @@ class DocumentController extends Controller
         $path = $this->getBasePath() . $inclusion->getId();
         $file_path = $path . '/' . $document->getFile();
 
-        if (file_exists($file_path) && $document->getFile()) unlink($file_path);
+        if (file_exists($file_path) && $document->getFile())
+            unlink($file_path);
 
         $document->setFile(null);
         $em->flush();
@@ -256,7 +254,6 @@ class DocumentController extends Controller
 	 */
     public function getDocumentPDFAction(Document $document)
     {
-
         return new JsonResponse(["document" => $this->getUrlDocument($document)]);
     }
 
@@ -271,18 +268,16 @@ class DocumentController extends Controller
         $user = $this->getUser();
         $document = $em->getRepository(Document::class)->findPDF($user, $pdf);
 
-        if (!$document) {
+        if (!$document)
             throw $this->createNotFoundException("Pas de document trouvé avec le pdf : $pdf");
-        }
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
 
         $path = $this->getBasePath() . $inclusion->getId();
-        if (file_exists($path) . '/' . $pdf) {
+        if (file_exists($path) . '/' . $pdf)
             $file_path = $path . '/' . $pdf;
-        } else {
+        else
             throw $this->createNotFoundException('Le fichier pdf n\'à pas été trouvé sur le disque.');
-        }
 
         return new BinaryFileResponse($file_path);
     }
@@ -295,12 +290,13 @@ class DocumentController extends Controller
      */
     public function signerDocument(Document $document)
     {
-        if($this->getUser() != $document->getInclusion()->getMedecin())
+        if ($this->getUser() != $document->getInclusion()->getMedecin())
             $this->denyAccessUnlessGranted('ROLE_ADMIN', $document, "Vous n'avez pas les droits pour cette action");
 
         $em = $this->getDoctrine()->getManager();
-        $document->setIsSigner(!$document->isSigner());
+        $document->setSigner(!$document->isSigner());
         $document->setDateSignature(new \DateTime());
+        $document->setSignerBy($this->getUser());
         $em->flush();
 
         return $this->redirectToRoute("editDocument", ["id" => $document->getId()]);

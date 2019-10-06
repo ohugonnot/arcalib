@@ -91,7 +91,7 @@ class CTCAESoc
      */
     public function addTerm(CTCAETerm $term)
     {
-        if(!$this->terms->contains($term)) {
+         if (!$this->terms->contains($term)) {
             $this->terms[] = $term;
             $term->setSoc($this);
         }
@@ -104,7 +104,7 @@ class CTCAESoc
      */
     public function removeTerm(CTCAETerm $term)
     {
-        if($this->terms->contains($term)) {
+         if ($this->terms->contains($term)) {
             $this->terms->removeElement($term);
             $term->setSoc(null);
         }

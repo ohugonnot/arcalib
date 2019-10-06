@@ -745,7 +745,7 @@ class Inclusion
      */
     public function addTraitement(Traitement $traitement)
     {
-        if(!$this->traitements->contains($traitement)) {
+         if (!$this->traitements->contains($traitement)) {
             $this->traitements[] = $traitement;
             $traitement->setInclusion($this);
         }
@@ -758,9 +758,8 @@ class Inclusion
      */
     public function removeTraitement(Traitement $traitement)
     {
-        if($this->traitements->contains($traitement)) {
+         if ($this->traitements->contains($traitement))
             $this->traitements->removeElement($traitement);
-        }
         return $this;
     }
 

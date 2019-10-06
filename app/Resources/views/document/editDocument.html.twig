@@ -88,10 +88,10 @@
 
                             {% endif %}
 
-                            <div class="ml-auto mr-1 {% if form.vars.value.isSigner %}d-none {% endif %}">
+                            <div class="ml-auto mr-1">
 
                                 {# Supprimer #}
-                                {% if form.vars.value.id %}
+                                {% if form.vars.value.id and not form.vars.value.signer %}
                                     {% include 'include/liste/btn-supprimer.html.twig' with {
                                         title : "Supprimer le document",
                                         route_delete : 'deleteDocument',
@@ -125,7 +125,7 @@
 
                                 {{ form_errors(form.date) }}
 
-                                {% if form.vars.value.isSigner %}
+                                {% if form.vars.value.signer %}
                                     {{ form_widget(form.date, { 'attr': { 'class': 'form-control form-control-sm', 'readonly': true } }) }}
                                 {% else %}
                                     {{ form_widget(form.date, { 'attr': { 'class': 'form-control form-control-sm js-datepicker' } }) }}
@@ -144,7 +144,7 @@
 
                                 {{ form_errors(form.jma) }}
 
-                                {% if form.vars.value.isSigner %}
+                                {% if form.vars.value.signer %}
                                     {{ form_widget(form.jma, { 'attr': { 'class': 'form-control form-control-sm', 'readonly': true } }) }}
                                 {% else %}
                                     {{ form_widget(form.jma, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
@@ -163,8 +163,8 @@
 
                                 {{ form_errors(form.type) }}
 
-                                {% if form.vars.value.isSigner %}
-                                    {{ form_widget(form.type, { 'attr': { 'class': 'form-control form-control-sm', "required": "required", 'readonly': true, 'disabled': true } }) }}
+                                {% if form.vars.value.signer %}
+                                    {{ form_widget(form.type, { 'attr': { 'class': 'form-control form-control-sm', "required": "required", 'readonly': true } }) }}
                                 {% else %}
                                     {{ form_widget(form.type, { 'attr': { 'class': 'form-control form-control-sm', "required": "required" } }) }}
                                 {% endif %}
@@ -172,26 +172,7 @@
                             </div>
 
                         </div>
-                        
-                        {# Description #}
-                        <div class="form-row form-group">
 
-                            <div class="col">
-
-                                {{ form_label(form.description) }}
-
-                                {{ form_errors(form.description) }}
-
-                                {% if form.vars.value.isSigner %}
-                                    {{ form_widget(form.description, { 'attr': { 'class': 'form-control form-control-sm',"rows" : 12, 'readonly': true  } }) }}
-                                {% else %}
-                                    {{ form_widget(form.description, { 'attr': { 'class': 'form-control form-control-sm',"rows" : 12 } }) }}
-                                {% endif %}
-
-                            </div>
-
-                        </div>
-                        
                         {# Auteur #}
                         <div class="form-row form-group">
 
@@ -201,11 +182,40 @@
 
                                 {{ form_errors(form.auteur) }}
 
-                                {% if form.vars.value.isSigner %}
+                                {% if form.vars.value.signer %}
                                     {{ form_widget(form.auteur, { 'attr': { 'class': 'form-control form-control-sm', 'readonly': true } }) }}
                                 {% else %}
                                     {{ form_widget(form.auteur, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
                                 {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        {# Description #}
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.description) }}
+
+                                {{ form_errors(form.description) }}
+
+                                {{ form_widget(form.description, { 'attr': { 'class': 'form-control form-control-sm',"rows" : 12 } }) }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-group">
+
+                            <div class="col">
+
+                                {{ form_label(form.archive) }}
+
+                                {{ form_errors(form.archive) }}
+
+                                {{ form_widget(form.archive) }}
 
                             </div>
 
@@ -231,7 +241,7 @@
 
                         <div class="col-6 col-arcoffice col-arcoffice-document p-0 {% if url == null %}col-arcoffice-document-add{% endif %}">
 
-                            <div data-id='{{ form.vars.value.id }}' id="viewer" class="{% if url != null or form.vars.value.isSigner %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
+                            <div data-id='{{ form.vars.value.id }}' id="viewer" class="{% if url != null or form.vars.value.signer %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
 
                                 <div id="viewer-content">
 
@@ -286,7 +296,7 @@
                                         </a>
 
                                         {# Supprimer le PDF en cours #}
-                                        {% if not form.vars.value.isSigner %}
+                                        {% if not form.vars.value.signer %}
                                         <a id='remove-pdf-button' data-id="{{ form.vars.value.id }}" class="btn btn-sm btn-outline-danger title-tooltip arcoffice-buttons_delete-doc remove-document-button" href="#" title="Supprimer le PDF">
                                            <i class="fa fa-trash" aria-hidden="true"></i>
                                         </a>
@@ -301,7 +311,7 @@
                                     </div>
 
                                     <div style='text-align: right' class="col">
-                                        {% if (app.user == inclusion.medecin or is_granted('ROLE_ADMIN')) and not form.vars.value.isSigner %}
+                                        {% if (app.user == inclusion.medecin or is_granted('ROLE_ADMIN')) and not form.vars.value.signer  %}
                                             <a class="mt-2 btn btn-sm btn-outline-danger title-tooltip" href="{{ path("signerDocument", {id: form.vars.value.id}) }}" >
                                                 <i class="fa fa-check-square-o"></i> <span>Signer le document</span>
                                             </a>
@@ -336,7 +346,7 @@
                                     </thead>
                                     <tbody>
                                         {% for document in allDocuments %}
-                                            <tr {% if document.id == form.vars.value.id %}class="is-active"{% endif %}>
+                                            <tr class="{% if document.id == form.vars.value.id %}is-active {% endif %}{% if document.archive %}text-danger{% endif %}">
                                                 <td>
                                                     <a href="{{ path("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}</a>
                                                 </td>
@@ -345,7 +355,7 @@
                                                     {% if document.file == null %}<i class='fa fa-ban mr-1 text-danger title-tooltip' data-placement="top" title="Aucun PDF"></i>{% endif %} {{ document.type }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {% if document.isSigner %}<i class='fa fa-check-square-o title-tooltip' {% if document.dateSignature %}title="Signé le {{ document.dateSignature|date("d/m/Y") }}"{% endif %}></i>{% endif %}
+                                                    {% if document.signer %}<i class='fa fa-check-square-o title-tooltip' {% if document.dateSignature %}title="Signé le {{ document.dateSignature|date("d/m/Y") }} par {{ document.signerBy.username|default('') }}"{% endif %}></i>{% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}

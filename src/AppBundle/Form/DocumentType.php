@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Document;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,24 +29,32 @@ class DocumentType extends AbstractType
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
                 'attr' => ['class' => 'js-datepicker', 'autocomplete' => 'off'],
-                'label' => "Date"
+                'label' => "Date",
+                "disabled" => $options['signer'],
             ])
             ->add('type', ChoiceType::class, [
                 "required" => false,
                 'choices' => Document::TYPE,
                 'label' => "Type",
+                "disabled" => $options['signer'],
             ])
             ->add('jma', TextType::class, [
                 "required" => false,
                 'label' => "JMA",
+                "disabled" => $options['signer'],
+            ])
+            ->add('auteur', TextType::class, [
+                "required" => false,
+                'label' => "Auteur",
+                "disabled" => $options['signer'],
             ])
             ->add('description', TextareaType::class, [
                 "required" => false,
                 'label' => "Description",
             ])
-            ->add('auteur', TextType::class, [
+            ->add('archive', CheckboxType::class, [
                 "required" => false,
-                'label' => "Auteur",
+                'label' => "Archive ",
             ])
             // ->add('file', FileType::class)
             ->add('envoyer', SubmitType::class, array(
@@ -59,7 +68,8 @@ class DocumentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Document::class
+            'data_class' => Document::class,
+            'signer' => false,
         ));
     }
 

@@ -18,8 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AnnuaireController extends Controller
 {
-
-    // ------------------------------------------ADD ANNUAIRE-----------------------------------------------------
+// ------------------------------------------ADD ANNUAIRE-----------------------------------------------------
     /**
      * @Route("/annuaire/ajouter", name="addAnnuaire")
      * @param Request $request
@@ -44,7 +43,6 @@ class AnnuaireController extends Controller
     }
 
 // ------------------------------------------Edit ANNUAIRE-----------------------------------------------------
-
     /**
      * @Route("/annuaire/editer/{id}", name="editAnnuaire", options={"expose"=true})
      * @param Request $request
@@ -68,7 +66,6 @@ class AnnuaireController extends Controller
     }
 
 // ------------------------------------------delete ANNUAIRE-----------------------------------------------------
-
     /**
      * @Route("/annuaire/supprimer/{id}", name="deleteAnnuaire", options={"expose"=true})
      * @Security("has_role('ROLE_ARC')")
@@ -85,7 +82,6 @@ class AnnuaireController extends Controller
     }
 
 // ------------------------------------------Liste ANNUAIRE-----------------------------------------------------
-
     /**
      * @Route("/annuaires/", name="listeAnnuaires", options={"expose"=true})
      * @param Request $request
@@ -94,9 +90,8 @@ class AnnuaireController extends Controller
     public function listeAnnuairesAction(Request $request)
     {
         $search = $request->query->get("recherche");
-        if ($search == null) {
+        if (!$search)
             $search = '%%';
-        }
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -117,7 +112,6 @@ class AnnuaireController extends Controller
     }
 
 // ------------------------------------------Search ANNUAIRE-----------------------------------------------------
-
     /**
      * @Route("/annuaire/recherche/{query}", name="searchAnnuaires", options={"expose"=true})
      * @param null $query
