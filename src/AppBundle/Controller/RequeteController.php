@@ -82,7 +82,6 @@ class RequeteController extends Controller
         $essaiEnAttente = $emEssai->findEssaiEnAttente();
         $visiteConfirmeeTheorique = $emVisite->findConfirmeeTheoriqueDepassee($user);
 
-
         return $this->render('requetes/index.html.twig', [
             "patientLastNews" => $patientLastNews,
             "patientVisite30Days" => $patientVisite30Days,

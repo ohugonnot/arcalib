@@ -34,7 +34,6 @@ class VisiteController extends Controller
         return new JsonResponse(true);
     }
 
-
 //-----------------------------------LISTE VISITE  ->  listeVisites-------------------------
 
     /**

@@ -156,7 +156,6 @@ class EssaisType extends AbstractType
              * },
              * // use the User.username property as the visible option string
              * 'choice_label' => 'id',
-             *
              * // used to render a select box, check boxes or radios
              * 'multiple' => true,
              * 'by_reference' => false,
@@ -196,6 +195,5 @@ class EssaisType extends AbstractType
     {
         return 'appbundle_essais';
     }
-
 
 }

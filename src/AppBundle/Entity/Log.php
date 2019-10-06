@@ -15,7 +15,6 @@ class Log
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,42 +23,36 @@ class Log
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="entity", type="string", length=255, nullable=true)
      */
     private $entity;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="entityId", type="integer", nullable=true)
      */
     private $entityId;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="action", type="string", length=255, nullable=true)
      */
     private $action;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="info", type="text", nullable=true)
      */
     private $info;
 
     /**
      * @var string
-     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $changeSet;
@@ -72,7 +65,6 @@ class Log
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -82,7 +74,6 @@ class Log
 
     /**
      * Get createdAt
-     *
      * @return DateTime
      */
     public function getCreatedAt()
@@ -92,9 +83,7 @@ class Log
 
     /**
      * Set createdAt
-     *
      * @param DateTime $createdAt
-     *
      * @return Log
      */
     public function setCreatedAt($createdAt)
@@ -106,7 +95,6 @@ class Log
 
     /**
      * Get entity
-     *
      * @return string
      */
     public function getEntity()
@@ -116,9 +104,7 @@ class Log
 
     /**
      * Set entity
-     *
      * @param string $entity
-     *
      * @return Log
      */
     public function setEntity($entity)
@@ -130,7 +116,6 @@ class Log
 
     /**
      * Get action
-     *
      * @return string
      */
     public function getAction()
@@ -140,9 +125,7 @@ class Log
 
     /**
      * Set action
-     *
      * @param string $action
-     *
      * @return Log
      */
     public function setAction($action)
@@ -154,7 +137,6 @@ class Log
 
     /**
      * Get info
-     *
      * @return string
      */
     public function getInfo()
@@ -164,9 +146,7 @@ class Log
 
     /**
      * Set info
-     *
      * @param string $info
-     *
      * @return Log
      */
     public function setInfo($info)
@@ -178,7 +158,6 @@ class Log
 
     /**
      * Get user
-     *
      * @return User
      */
     public function getUser()
@@ -188,9 +167,7 @@ class Log
 
     /**
      * Set user
-     *
      * @param User $user
-     *
      * @return Log
      */
     public function setUser(?User $user = null)
@@ -202,7 +179,6 @@ class Log
 
     /**
      * Get entityId
-     *
      * @return integer
      */
     public function getEntityId()
@@ -212,9 +188,7 @@ class Log
 
     /**
      * Set entityId
-     *
      * @param integer $entityId
-     *
      * @return Log
      */
     public function setEntityId($entityId)

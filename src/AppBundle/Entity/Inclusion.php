@@ -60,10 +60,8 @@ class Inclusion
         'Inconnu' => self::INCONNU,
     ];
 
-
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -72,99 +70,84 @@ class Inclusion
 
     /**
      * @var int
-     *
      * @ORM\Column(name="idInterne", type="integer", unique=true, nullable=true)
      */
     private $idInterne;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatScr", type="date", nullable=true)
      */
     private $datScr;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatCst", type="date", nullable=true)
      */
     private $datCst;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatInc", type="date", nullable=true)
      */
     private $datInc;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatRan", type="date", nullable=true)
      */
     private $datRan;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatJ0", type="date", nullable=true)
      */
     private $datJ0;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="NumInc", type="string", length=50, nullable=true)
      */
     private $numInc;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="BraTrt", type="string", length=50, nullable=true)
      */
     private $braTrt;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatOut", type="date", nullable=true)
      */
     private $datOut;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="Statut", type="string", nullable=true)
      */
     private $statut;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="MotifSortie", type="string", nullable=true)
      */
     private $motifSortie;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="note", type="text", nullable=true)
      */
     private $note;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="booRa", type="boolean", nullable=true)
      */
     private $booRa;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="booBras", type="boolean", nullable=true)
      */
     private $booBras;
@@ -233,8 +216,6 @@ class Inclusion
      */
     private $events;
 
-
-
     /**------------------------constructor----------------------------- */
 
     /**
@@ -252,7 +233,6 @@ class Inclusion
     /**------------------------Get et set variables----------------------------- */
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -294,10 +274,8 @@ class Inclusion
         return $this;
     }
 
-
     /**
      * Get datScr
-     *
      * @return DateTime
      */
     public function getDatScr()
@@ -307,9 +285,7 @@ class Inclusion
 
     /**
      * Set datScr
-     *
      * @param DateTime $datScr
-     *
      * @return inclusion
      */
     public function setDatScr($datScr)
@@ -321,7 +297,6 @@ class Inclusion
 
     /**
      * Get datCst
-     *
      * @return DateTime
      */
     public function getDatCst()
@@ -331,9 +306,7 @@ class Inclusion
 
     /**
      * Set datCst
-     *
      * @param DateTime $datCst
-     *
      * @return inclusion
      */
     public function setDatCst($datCst)
@@ -345,7 +318,6 @@ class Inclusion
 
     /**
      * Get datInc
-     *
      * @return DateTime
      */
     public function getDatInc()
@@ -355,9 +327,7 @@ class Inclusion
 
     /**
      * Set datInc
-     *
      * @param DateTime $datInc
-     *
      * @return inclusion
      */
     public function setDatInc($datInc)
@@ -369,7 +339,6 @@ class Inclusion
 
     /**
      * Get datRan
-     *
      * @return DateTime
      */
     public function getDatRan()
@@ -379,9 +348,7 @@ class Inclusion
 
     /**
      * Set datRan
-     *
      * @param DateTime $datRan
-     *
      * @return inclusion
      */
     public function setDatRan($datRan)
@@ -393,7 +360,6 @@ class Inclusion
 
     /**
      * Get datJ0
-     *
      * @return DateTime
      */
     public function getDatJ0()
@@ -403,9 +369,7 @@ class Inclusion
 
     /**
      * Set datJ0
-     *
      * @param DateTime $datJ0
-     *
      * @return inclusion
      */
     public function setDatJ0($datJ0)
@@ -417,7 +381,6 @@ class Inclusion
 
     /**
      * Get numInc
-     *
      * @return string
      */
     public function getNumInc()
@@ -427,9 +390,7 @@ class Inclusion
 
     /**
      * Set numInc
-     *
      * @param string $numInc
-     *
      * @return inclusion
      */
     public function setNumInc($numInc)
@@ -441,7 +402,6 @@ class Inclusion
 
     /**
      * Get braTrt
-     *
      * @return string
      */
     public function getBraTrt()
@@ -451,9 +411,7 @@ class Inclusion
 
     /**
      * Set braTrt
-     *
      * @param string $braTrt
-     *
      * @return inclusion
      */
     public function setBraTrt($braTrt)
@@ -465,7 +423,6 @@ class Inclusion
 
     /**
      * Get datOut
-     *
      * @return DateTime
      */
     public function getDatOut()
@@ -475,9 +432,7 @@ class Inclusion
 
     /**
      * Set datOut
-     *
      * @param DateTime $datOut
-     *
      * @return inclusion
      */
     public function setDatOut($datOut)
@@ -489,7 +444,6 @@ class Inclusion
 
     /**
      * Get statut
-     *
      * @return string
      */
     public function getStatut()
@@ -499,9 +453,7 @@ class Inclusion
 
     /**
      * Set statut
-     *
      * @param string $statut
-     *
      * @return Inclusion
      */
     public function setStatut($statut)
@@ -513,7 +465,6 @@ class Inclusion
 
     /**
      * Get motifSortie
-     *
      * @return string
      */
     public function getMotifSortie()
@@ -523,9 +474,7 @@ class Inclusion
 
     /**
      * Set motifSortie
-     *
      * @param string $motifSortie
-     *
      * @return Inclusion
      */
     public function setMotifSortie($motifSortie)
@@ -537,7 +486,6 @@ class Inclusion
 
     /**
      * Get note
-     *
      * @return string
      */
     public function getNote()
@@ -547,9 +495,7 @@ class Inclusion
 
     /**
      * Set note
-     *
      * @param string $note
-     *
      * @return Inclusion
      */
     public function setNote($note)
@@ -559,12 +505,10 @@ class Inclusion
         return $this;
     }
 
-
     /**------------------------get/ Set des liens----------------------------- */
 
     /**
      * Get medecin
-     *
      * @return medecin
      */
     public function getMedecin()
@@ -574,9 +518,7 @@ class Inclusion
 
     /**
      * Set medecin
-     *
      * @param medecin $medecin
-     *
      * @return Inclusion
      */
     public function setMedecin(medecin $medecin = null)
@@ -588,7 +530,6 @@ class Inclusion
 
     /**
      * Get arc
-     *
      * @return Arc
      */
     public function getArc()
@@ -598,9 +539,7 @@ class Inclusion
 
     /**
      * Set arc
-     *
      * @param Arc $arc
-     *
      * @return Inclusion
      */
     public function setArc(Arc $arc = null)
@@ -611,7 +550,6 @@ class Inclusion
 
     /**
      * Get patient
-     *
      * @return Patient
      */
     public function getPatient()
@@ -621,9 +559,7 @@ class Inclusion
 
     /**
      * Set patient
-     *
      * @param Patient $patient
-     *
      * @return Inclusion
      */
     public function setPatient(Patient $patient = null)
@@ -635,7 +571,6 @@ class Inclusion
 
     /**
      * Get essai
-     *
      * @return Essais
      */
     public function getEssai()
@@ -645,9 +580,7 @@ class Inclusion
 
     /**
      * Set essai
-     *
      * @param Essais $essai
-     *
      * @return Inclusion
      */
     public function setEssai(Essais $essai = null)
@@ -661,9 +594,7 @@ class Inclusion
 
     /**
      * Add visite
-     *
      * @param Visite $visite
-     *
      * @return Inclusion
      */
     public function addVisite(Visite $visite)
@@ -676,7 +607,6 @@ class Inclusion
 
     /**
      * Remove visite
-     *
      * @param Visite $visite
      */
     public function removeVisite(Visite $visite)
@@ -687,7 +617,6 @@ class Inclusion
 
     /**
      * Get visites
-     *
      * @return Collection
      */
     public function getVisites()
@@ -697,7 +626,6 @@ class Inclusion
 
     /**
      * Get service
-     *
      * @return Service
      */
     public function getService()
@@ -707,9 +635,7 @@ class Inclusion
 
     /**
      * Set service
-     *
      * @param Service $service
-     *
      * @return Inclusion
      */
     public function setService(Service $service = null)
@@ -721,7 +647,6 @@ class Inclusion
 
     /**
      * Get booRa
-     *
      * @return boolean
      */
     public function getBooRa()
@@ -731,9 +656,7 @@ class Inclusion
 
     /**
      * Set booRa
-     *
      * @param boolean $booRa
-     *
      * @return Inclusion
      */
     public function setBooRa($booRa)
@@ -745,7 +668,6 @@ class Inclusion
 
     /**
      * Get booBras
-     *
      * @return boolean
      */
     public function getBooBras()
@@ -755,9 +677,7 @@ class Inclusion
 
     /**
      * Set booBras
-     *
      * @param boolean $booBras
-     *
      * @return Inclusion
      */
     public function setBooBras($booBras)
@@ -769,7 +689,6 @@ class Inclusion
 
     /**
      * Get idInterne
-     *
      * @return integer
      */
     public function getIdInterne()
@@ -779,9 +698,7 @@ class Inclusion
 
     /**
      * Set idInterne
-     *
      * @param integer $idInterne
-     *
      * @return Inclusion
      */
     public function setIdInterne($idInterne)
@@ -793,9 +710,7 @@ class Inclusion
 
     /**
      * Add document
-     *
      * @param Document $document
-     *
      * @return Inclusion
      */
     public function addDocument(Document $document)
@@ -808,7 +723,6 @@ class Inclusion
 
     /**
      * Remove document
-     *
      * @param Document $document
      */
     public function removeDocument(Document $document)
@@ -818,7 +732,6 @@ class Inclusion
 
     /**
      * Get documents
-     *
      * @return Collection
      */
     public function getDocuments()

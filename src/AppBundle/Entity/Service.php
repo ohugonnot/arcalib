@@ -18,7 +18,6 @@ class Service
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,7 +26,6 @@ class Service
 
     /**
      * @var string
-     *
      * @ORM\Column(name="nom", type="string", length=150, nullable=true)
      */
     private $nom;
@@ -68,7 +66,6 @@ class Service
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -78,7 +75,6 @@ class Service
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNom()
@@ -86,14 +82,11 @@ class Service
         return $this->nom;
     }
 
-
     // -------------------------------------------CONSTRUCT----------------------------
 
     /**
      * Set nom
-     *
      * @param string $nom
-     *
      * @return Service
      */
     public function setNom($nom)
@@ -103,15 +96,11 @@ class Service
         return $this;
     }
 
-
-
     // -------------------------------------------medecins----------------------------
 
     /**
      * Add medecin
-     *
      * @param Medecin $medecin
-     *
      * @return Service
      */
     public function addMedecin(Medecin $medecin)
@@ -123,7 +112,6 @@ class Service
 
     /**
      * Remove medecin
-     *
      * @param Medecin $medecin
      */
     public function removeMedecin(Medecin $medecin)
@@ -134,7 +122,6 @@ class Service
 
     /**
      * Get medecins
-     *
      * @return Collection
      */
     public function getMedecins()
@@ -145,9 +132,7 @@ class Service
 
     /**
      * Add arc
-     *
      * @param Arc $arc
-     *
      * @return Service
      */
     public function addArc(Arc $arc)
@@ -159,7 +144,6 @@ class Service
 
     /**
      * Remove arc
-     *
      * @param Arc $arc
      */
     public function removeArc(Arc $arc)
@@ -170,7 +154,6 @@ class Service
 
     /**
      * Get arcs
-     *
      * @return Collection
      */
     public function getArcs()
@@ -180,9 +163,7 @@ class Service
 
     /**
      * Add inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Service
      */
     public function addInclusion(Inclusion $inclusion)
@@ -194,7 +175,6 @@ class Service
 
     /**
      * Remove inclusion
-     *
      * @param Inclusion $inclusion
      */
     public function removeInclusion(Inclusion $inclusion)
@@ -205,7 +185,6 @@ class Service
 
     /**
      * Get inclusions
-     *
      * @return Collection
      */
     public function getInclusions()
@@ -215,9 +194,7 @@ class Service
 
     /**
      * Add essai
-     *
      * @param Essais $essai
-     *
      * @return Service
      */
     public function addEssai(Essais $essai)
@@ -229,7 +206,6 @@ class Service
 
     /**
      * Remove essai
-     *
      * @param Essais $essai
      */
     public function removeEssai(Essais $essai)
@@ -239,7 +215,6 @@ class Service
 
     /**
      * Get essais
-     *
      * @return Collection
      */
     public function getEssais()

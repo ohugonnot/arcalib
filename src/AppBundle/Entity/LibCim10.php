@@ -19,7 +19,6 @@ class LibCim10
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -28,28 +27,24 @@ class LibCim10
 
     /**
      * @var string
-     *
      * @ORM\Column(name="cim10code", type="string", length=20, nullable=true)
      */
     private $cim10code;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="libCourt", type="string", length=100, nullable=true)
      */
     private $libCourt;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="libLong", type="string", length=255, nullable=true)
      */
     private $libLong;
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="utile", type="boolean", nullable=true)
      */
     private $utile;
@@ -75,7 +70,6 @@ class LibCim10
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -85,7 +79,6 @@ class LibCim10
 
     /**
      * Get cim10code
-     *
      * @return string
      */
     public function getCim10code()
@@ -95,9 +88,7 @@ class LibCim10
 
     /**
      * Set cim10code
-     *
      * @param string $cim10code
-     *
      * @return LibCim10
      */
     public function setCim10code($cim10code)
@@ -109,7 +100,6 @@ class LibCim10
 
     /**
      * Get libCourt
-     *
      * @return string
      */
     public function getLibCourt()
@@ -119,9 +109,7 @@ class LibCim10
 
     /**
      * Set libCourt
-     *
      * @param string $libCourt
-     *
      * @return LibCim10
      */
     public function setLibCourt($libCourt)
@@ -133,7 +121,6 @@ class LibCim10
 
     /**
      * Get libLong
-     *
      * @return string
      */
     public function getLibLong()
@@ -143,9 +130,7 @@ class LibCim10
 
     /**
      * Set libLong
-     *
      * @param string $libLong
-     *
      * @return LibCim10
      */
     public function setLibLong($libLong)
@@ -157,7 +142,6 @@ class LibCim10
 
     /**
      * Get utile
-     *
      * @return bool
      */
     public function getUtile()
@@ -167,9 +151,7 @@ class LibCim10
 
     /**
      * Set utile
-     *
      * @param boolean $utile
-     *
      * @return LibCim10
      */
     public function setUtile($utile)
@@ -179,14 +161,11 @@ class LibCim10
         return $this;
     }
 
-
 //-------------------------------Liens---------------------------------------------
 
     /**
      * Add patient
-     *
      * @param Patient $patient
-     *
      * @return LibCim10
      */
     public function addPatient(Patient $patient)
@@ -198,7 +177,6 @@ class LibCim10
 
     /**
      * Remove patient
-     *
      * @param Patient $patient
      */
     public function removePatient(Patient $patient)
@@ -209,7 +187,6 @@ class LibCim10
 
     /**
      * Get patients
-     *
      * @return Collection
      */
     public function getPatients()

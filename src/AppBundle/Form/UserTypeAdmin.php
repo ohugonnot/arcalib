@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Essais;
+use AppBundle\Entity\Medecin;
 use AppBundle\Entity\User;
 use AppBundle\Services\RolesHelper;
 use Doctrine\ORM\EntityRepository;
@@ -69,10 +70,22 @@ class UserTypeAdmin extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
             ))
+            ->add('medecin', EntityType::class, array(
+                'class' => Medecin::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nom', 'ASC');
+                },
+                'choice_label' => function (Medecin $medecin = null) {
+                    return $medecin ? $medecin->getNomPrenom() : '';
+                },
+                'required' => false,
+                'multiple' => false,
+                'expanded' => false,
+            ))
             ->add("enabled", null, ["label" => "Compte Activé"])
             ->remove("current_password");
     }
-
 
     public function getParent()
     {

@@ -53,14 +53,28 @@ class UserController extends Controller
 	 */
     public function editUserAction(Request $request, User $user)
     {
-        $em = $this->getDoctrine()->getManager();
         $form = $this->get('form.factory')->create(UserTypeAdmin::class, $user);
+
+        if($this->getUser() != $user)
+            $this->denyAccessUnlessGranted('ROLE_ADMIN', $user, "Vous n'avez pas les droits pour cette action");
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $userManager = $this->get('fos_user.user_manager');
-            $userManager->updateUser($user);
-            $em->flush();
 
+            $alreadyExist = false;
+            if($medecin = $user->getMedecin())
+                $alreadyExist = $userManager->findUserBy(["medecin"=>$medecin]);
+
+            if($alreadyExist && $alreadyExist != $user) {
+                $this->addFlash(
+                    'danger',
+                    'Il existe déjà un utilisateur pour ce médecin c\'est '. $alreadyExist->getUsername()
+                );
+                return $this->render('@FOSUser/Profile/edit.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+            $userManager->updateUser($user);
             $this->addFlash(
                 'success',
                 'Les informations de l\'utilisateur ont bien été modifiées.'

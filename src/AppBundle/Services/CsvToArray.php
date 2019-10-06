@@ -26,7 +26,6 @@ class CsvToArray
         $this->em = $em;
     }
 
-
     public function convert($filename, $delimiter = ';')
     {
         if (!file_exists($filename) || !is_readable($filename)) {
@@ -54,7 +53,6 @@ class CsvToArray
     {
         $this->name = $name;
         $this->titles = $this->getEntityColumn($listes[0]);
-
 
         $response = new StreamedResponse();
         $response->setCallback(function () use ($listes) {
@@ -163,7 +161,6 @@ class CsvToArray
         return array_merge([$patientNomPrenom, $patientInitial, $essaiNom, $medecinRef, $service], $values);
     }
 
-
     public function inclusionsTitles($values)
     {
 
@@ -179,13 +176,11 @@ class CsvToArray
         return array_merge($values, [$libCim10]);
     }
 
-
     public function patientsTitles($values)
     {
 
         return array_merge($values, ["Code CIM10"]);
     }
-
 
     //extractions  de la page Essais
     public function essais($values, $entity)

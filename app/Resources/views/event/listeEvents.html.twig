@@ -73,10 +73,7 @@
 
     {% endblock fil_ariane %}
 
-
-    
     {% block content %}
-
 
         {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
 
@@ -86,12 +83,10 @@
 
                 <div class="row">
 
-
                     <h4 class="text-center">Liste des {{ events.getTotalItemCount }} events pour l'inclusion
                         N° {{ inclusion.numInc }} - <a
                                 href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
                     </h4>
-
 
                     {# Liste des events #}
 

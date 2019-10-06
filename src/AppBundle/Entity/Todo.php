@@ -42,68 +42,53 @@ class Todo
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="createdAt", type="date", nullable=true)
      */
     private $createdAt;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="titre", type="string", length=255, nullable=true)
      */
     private $titre;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="texte", type="text", nullable=true)
      */
     private $texte;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="resolution", type="text", nullable=true)
      */
     private $resolution;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="dateFin", type="date", nullable=true)
      */
     private $dateFin;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="importance", type="string", length=30, nullable=true)
      */
     private $importance;
 
-
     /**
      * @var bool
-     *
      * @ORM\Column(name="alerte", type="boolean", nullable=true)
      */
     private $alerte;
-
 
     /**
      * @var DateTime
@@ -119,13 +104,11 @@ class Todo
      */
     private $dateAlerte;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="todoAuteurs")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $auteur;
-
 
     /**
      * @Assert\Count(
@@ -136,7 +119,6 @@ class Todo
      * @ORM\JoinTable(name="users_todos")
      */
     private $destinataires;
-
 
     /**
      * @var string
@@ -156,7 +138,6 @@ class Todo
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -166,7 +147,6 @@ class Todo
 
     /**
      * Get createdAt
-     *
      * @return DateTime
      */
     public function getCreatedAt()
@@ -176,9 +156,7 @@ class Todo
 
     /**
      * Set createdAt
-     *
      * @param DateTime $createdAt
-     *
      * @return Todo
      */
     public function setCreatedAt($createdAt)
@@ -190,7 +168,6 @@ class Todo
 
     /**
      * Get importance
-     *
      * @return string
      */
     public function getImportance()
@@ -200,9 +177,7 @@ class Todo
 
     /**
      * Set importance
-     *
      * @param string $importance
-     *
      * @return Todo
      */
     public function setImportance($importance)
@@ -214,7 +189,6 @@ class Todo
 
     /**
      * Get titre
-     *
      * @return string
      */
     public function getTitre()
@@ -224,9 +198,7 @@ class Todo
 
     /**
      * Set titre
-     *
      * @param string $titre
-     *
      * @return Todo
      */
     public function setTitre($titre)
@@ -238,7 +210,6 @@ class Todo
 
     /**
      * Get texte
-     *
      * @return string
      */
     public function getTexte()
@@ -248,9 +219,7 @@ class Todo
 
     /**
      * Set texte
-     *
      * @param string $texte
-     *
      * @return Todo
      */
     public function setTexte($texte)
@@ -262,7 +231,6 @@ class Todo
 
     /**
      * Get resolution
-     *
      * @return string
      */
     public function getResolution()
@@ -272,9 +240,7 @@ class Todo
 
     /**
      * Set texte
-     *
      * @param string $resolution
-     *
      * @return Todo
      */
     public function setResolution($resolution)
@@ -286,7 +252,6 @@ class Todo
 
     /**
      * Get niveauResolution
-     *
      * @return string
      */
     public function getNiveauResolution()
@@ -296,9 +261,7 @@ class Todo
 
     /**
      * Set niveauResolution
-     *
      * @param string $niveauResolution
-     *
      * @return Todo
      */
     public function setNiveauResolution($niveauResolution)
@@ -310,7 +273,6 @@ class Todo
 
     /**
      * Get alerte
-     *
      * @return bool
      */
     public function getAlerte()
@@ -320,9 +282,7 @@ class Todo
 
     /**
      * Set alerte
-     *
      * @param boolean $alerte
-     *
      * @return Todo
      */
     public function setAlerte($alerte)
@@ -334,7 +294,6 @@ class Todo
 
     /**
      * Get dateAlerte
-     *
      * @return DateTime
      */
     public function getDateAlerte()
@@ -346,9 +305,7 @@ class Todo
 
     /**
      * Set dateAlerte
-     *
      * @param DateTime $dateAlerte
-     *
      * @return Todo
      */
     public function setDateAlerte($dateAlerte)
@@ -360,7 +317,6 @@ class Todo
 
     /**
      * Get auteur
-     *
      * @return User
      */
     public function getAuteur()
@@ -370,9 +326,7 @@ class Todo
 
     /**
      * Set auteur
-     *
      * @param User $auteur
-     *
      * @return Todo
      */
     public function setAuteur(User $auteur = null)
@@ -385,9 +339,7 @@ class Todo
 
     /**
      * Add destinataire
-     *
      * @param User $destinataire
-     *
      * @return Todo
      */
     public function addDestinataire(User $destinataire)
@@ -399,7 +351,6 @@ class Todo
 
     /**
      * Remove destinataire
-     *
      * @param User $destinataire
      */
     public function removeDestinataire(User $destinataire)
@@ -409,7 +360,6 @@ class Todo
 
     /**
      * Get destinataires
-     *
      * @return Collection
      */
     public function getDestinataires()
@@ -419,7 +369,6 @@ class Todo
 
     /**
      * Get dateFin
-     *
      * @return DateTime
      */
     public function getDateFin()
@@ -429,9 +378,7 @@ class Todo
 
     /**
      * Set dateFin
-     *
      * @param DateTime $dateFin
-     *
      * @return Todo
      */
     public function setDateFin($dateFin)

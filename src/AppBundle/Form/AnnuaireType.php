@@ -52,7 +52,6 @@ class AnnuaireType extends AbstractType
             ));;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -70,6 +69,5 @@ class AnnuaireType extends AbstractType
     {
         return 'appbundle_annuaire';
     }
-
 
 }

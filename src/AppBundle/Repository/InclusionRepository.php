@@ -193,7 +193,6 @@ class InclusionRepository extends EntityRepository
         return $results;
     }
 
-
     /**
      * @param $query
      * @param $filters

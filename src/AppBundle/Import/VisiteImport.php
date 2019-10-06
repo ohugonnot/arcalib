@@ -2,7 +2,6 @@
 
 namespace AppBundle\Import;
 
-
 use AppBundle\Entity\Arc;
 use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Visite;

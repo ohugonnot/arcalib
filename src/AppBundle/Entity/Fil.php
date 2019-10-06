@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Fil
- *
  * @ORM\Table(name="fil")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FilRepository")
  */
@@ -33,7 +32,6 @@ class Fil
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -42,14 +40,12 @@ class Fil
 
     /**
      * @var string|null
-     *
      * @ORM\Column(name="type", type="string", length=255, nullable=true)
      */
     private $type;
 
     /**
      * @var string|null
-     *
      * @ORM\Column(name="texte", type="text", nullable=true)
      */
     private $texte;
@@ -69,7 +65,6 @@ class Fil
 
     /**
      * Get id.
-     *
      * @return int
      */
     public function getId()
@@ -79,9 +74,7 @@ class Fil
 
     /**
      * Set type.
-     *
      * @param string|null $type
-     *
      * @return Fil
      */
     public function setType($type = null)
@@ -93,7 +86,6 @@ class Fil
 
     /**
      * Get type.
-     *
      * @return string|null
      */
     public function getType()
@@ -103,9 +95,7 @@ class Fil
 
     /**
      * Set texte.
-     *
      * @param string|null $texte
-     *
      * @return Fil
      */
     public function setTexte($texte = null)
@@ -117,7 +107,6 @@ class Fil
 
     /**
      * Get texte.
-     *
      * @return string|null
      */
     public function getTexte()
@@ -127,9 +116,7 @@ class Fil
 
     /**
      * Set date.
-     *
      * @param \DateTime $date
-     *
      * @return Fil
      */
     public function setDate($date)
@@ -141,7 +128,6 @@ class Fil
 
     /**
      * Get date.
-     *
      * @return \DateTime
      */
     public function getDate()
@@ -151,7 +137,6 @@ class Fil
 
     /**
      * Get inclusion
-     *
      * @return Essais
      */
     public function getEssai()
@@ -161,9 +146,7 @@ class Fil
 
     /**
      * Set inclusion
-     *
      * @param Essais $essai
-     *
      * @return Fil
      */
     public function setEssai(Essais $essai = null)

@@ -15,7 +15,6 @@ class Actualite
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,36 +23,30 @@ class Actualite
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
     private $date;
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="enabled", type="boolean")
      */
     private $enabled = true;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="text", type="text", nullable=true)
      */
     private $text;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="titre", type="string", length=255)
      */
     private $titre;
 
-
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -63,7 +56,6 @@ class Actualite
 
     /**
      * Get date
-     *
      * @return DateTime
      */
     public function getDate()
@@ -73,9 +65,7 @@ class Actualite
 
     /**
      * Set date
-     *
      * @param DateTime $date
-     *
      * @return Actualite
      */
     public function setDate($date)
@@ -87,7 +77,6 @@ class Actualite
 
     /**
      * Get enabled
-     *
      * @return bool
      */
     public function getEnabled()
@@ -97,9 +86,7 @@ class Actualite
 
     /**
      * Set enabled
-     *
      * @param boolean $enabled
-     *
      * @return Actualite
      */
     public function setEnabled($enabled)
@@ -111,7 +98,6 @@ class Actualite
 
     /**
      * Get text
-     *
      * @return string
      */
     public function getText()
@@ -121,9 +107,7 @@ class Actualite
 
     /**
      * Set text
-     *
      * @param string $text
-     *
      * @return Actualite
      */
     public function setText($text)
@@ -135,7 +119,6 @@ class Actualite
 
     /**
      * Get titre
-     *
      * @return string
      */
     public function getTitre()
@@ -145,9 +128,7 @@ class Actualite
 
     /**
      * Set titre
-     *
      * @param string $titre
-     *
      * @return Actualite
      */
     public function setTitre($titre)
@@ -157,4 +138,3 @@ class Actualite
         return $this;
     }
 }
-

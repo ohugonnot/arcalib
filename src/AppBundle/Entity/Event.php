@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AppBundle\Entity;
-
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,7 +33,6 @@ class Event
      * @ORM\Column(type="text", nullable=true)
      */
     private $detail;
-
 
     /**
      * @return mixed

@@ -22,7 +22,6 @@ class Facture
         'Débit' => self::DEBIT,
     ];
 
-
     const TVA = "TVA";
     const NO_TVA = 'Non assujeti TVA';
 
@@ -45,40 +44,31 @@ class Facture
         'Contentieux' => self::CONTENTIEUX,
     ];
 
-
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
     private $date;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="numero", type="string", length=20, nullable=true)
      */
     private $numero;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="numInterne", type="string", length=255, nullable=true)
      */
     private $numInterne;
-
 
 //---------------------------Lien avec Essai-------------------------------
     /**
@@ -91,110 +81,84 @@ class Facture
 
     /**
      * @var string
-     *
      * @ORM\Column(name="projet", type="string", length=255, nullable=true)
      */
     private $projet;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="creditDebit", type="string", length=255, nullable=true)
      */
     private $creditDebit;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="Payeur", type="string", length=50, nullable=true)
      */
     private $payeur;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="receveur", type="string", length=30, nullable=true)
      */
     private $receveur;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="montantHt", type="decimal", precision=8, scale=2, nullable=true)
      */
     private $montantHt;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="taxTVA", type="decimal", precision=8, scale=2, nullable=true)
      */
     private $taxTVA;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="type", type="string", length=255, nullable=true)
      */
     private $type;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="TVA", type="decimal", precision=8, scale=2, nullable=true)
      */
     private $TVA;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="montantTtc", type="decimal", precision=8, scale=2, nullable=true)
      */
     private $montantTtc;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="statut", type="string", length=20, nullable=true)
      */
     private $statut;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="dateCaisse", type="date", nullable=true)
      */
     private $dateCaisse;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="note", type="text", nullable=true)
      */
     private $note;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="responsable", type="string", length=50, nullable=true)
      */
     private $responsable;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="dateEncaissement", type="date", nullable=true)
      */
     private $dateEncaissement;
@@ -216,12 +180,10 @@ class Facture
         return $this;
     }
 
-
 //--------------------------GET et SET-------------------------------
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -231,7 +193,6 @@ class Facture
 
     /**
      * Get date
-     *
      * @return DateTime
      */
     public function getDate()
@@ -241,9 +202,7 @@ class Facture
 
     /**
      * Set date
-     *
      * @param DateTime $date
-     *
      * @return facture
      */
     public function setDate($date)
@@ -255,7 +214,6 @@ class Facture
 
     /**
      * Get numero
-     *
      * @return string
      */
     public function getNumero()
@@ -265,9 +223,7 @@ class Facture
 
     /**
      * Set numero
-     *
      * @param string $numero
-     *
      * @return facture
      */
     public function setNumero($numero)
@@ -279,7 +235,6 @@ class Facture
 
     /**
      * Get montantHt
-     *
      * @return string
      */
     public function getMontantHt()
@@ -289,9 +244,7 @@ class Facture
 
     /**
      * Set montantHt
-     *
      * @param string $montantHt
-     *
      * @return facture
      */
     public function setMontantHt($montantHt)
@@ -303,7 +256,6 @@ class Facture
 
     /**
      * Get montantTtc
-     *
      * @return string
      */
     public function getMontantTtc()
@@ -385,9 +337,7 @@ class Facture
 
     /**
      * Set note
-     *
      * @param string $note
-     *
      * @return facture
      */
     public function setNote($note)
@@ -399,7 +349,6 @@ class Facture
 
     /**
      * Get payeur
-     *
      * @return string
      */
     public function getPayeur()
@@ -409,9 +358,7 @@ class Facture
 
     /**
      * Set payeur
-     *
      * @param string $payeur
-     *
      * @return Facture
      */
     public function setPayeur($payeur)
@@ -423,7 +370,6 @@ class Facture
 
     /**
      * Get receveur
-     *
      * @return string
      */
     public function getReceveur()
@@ -433,9 +379,7 @@ class Facture
 
     /**
      * Set receveur
-     *
      * @param string $receveur
-     *
      * @return Facture
      */
     public function setReceveur($receveur)
@@ -447,7 +391,6 @@ class Facture
 
     /**
      * Get responsable
-     *
      * @return string
      */
     public function getResponsable()
@@ -457,9 +400,7 @@ class Facture
 
     /**
      * Set responsable
-     *
      * @param string $responsable
-     *
      * @return Facture
      */
     public function setResponsable($responsable)
@@ -469,12 +410,10 @@ class Facture
         return $this;
     }
 
-
 //-------------------------------------Lien ESsai GET  SET------------------------------
 
     /**
      * Get essai
-     *
      * @return Essais
      */
     public function getEssai()
@@ -484,9 +423,7 @@ class Facture
 
     /**
      * Set essai
-     *
      * @param Essais $essai
-     *
      * @return Facture
      */
     public function setEssai(Essais $essai = null)
@@ -498,7 +435,6 @@ class Facture
 
     /**
      * Get numInterne
-     *
      * @return string
      */
     public function getNumInterne()
@@ -508,9 +444,7 @@ class Facture
 
     /**
      * Set numInterne
-     *
      * @param string $numInterne
-     *
      * @return Facture
      */
     public function setNumInterne($numInterne)
@@ -522,7 +456,6 @@ class Facture
 
     /**
      * Get taxTVA
-     *
      * @return string
      */
     public function getTaxTVA()
@@ -532,9 +465,7 @@ class Facture
 
     /**
      * Set taxTVA
-     *
      * @param string $taxTVA
-     *
      * @return Facture
      */
     public function setTaxTVA($taxTVA)
@@ -546,7 +477,6 @@ class Facture
 
     /**
      * Get tVA
-     *
      * @return string
      */
     public function getTVA()
@@ -556,9 +486,7 @@ class Facture
 
     /**
      * Set tVA
-     *
      * @param string $tVA
-     *
      * @return Facture
      */
     public function setTVA($tVA)
@@ -570,7 +498,6 @@ class Facture
 
     /**
      * Get projet
-     *
      * @return string
      */
     public function getProjet()
@@ -580,9 +507,7 @@ class Facture
 
     /**
      * Set projet
-     *
      * @param string $projet
-     *
      * @return Facture
      */
     public function setProjet($projet)
@@ -594,7 +519,6 @@ class Facture
 
     /**
      * Get creditDebit
-     *
      * @return string
      */
     public function getCreditDebit()
@@ -604,9 +528,7 @@ class Facture
 
     /**
      * Set creditDebit
-     *
      * @param string $creditDebit
-     *
      * @return Facture
      */
     public function setCreditDebit($creditDebit)
@@ -618,7 +540,6 @@ class Facture
 
     /**
      * Get type
-     *
      * @return string
      */
     public function getType()
@@ -628,9 +549,7 @@ class Facture
 
     /**
      * Set type
-     *
      * @param string $type
-     *
      * @return Facture
      */
     public function setType($type)
@@ -642,7 +561,6 @@ class Facture
 
     /**
      * Get dateEncaissement
-     *
      * @return DateTime
      */
     public function getDateEncaissement()
@@ -652,9 +570,7 @@ class Facture
 
     /**
      * Set dateEncaissement
-     *
      * @param DateTime $dateEncaissement
-     *
      * @return Facture
      */
     public function setDateEncaissement($dateEncaissement)

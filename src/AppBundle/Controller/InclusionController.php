@@ -67,7 +67,6 @@ class InclusionController extends Controller
             'statut' => $request->query->get("statut")
         ]);
 
-
         $paginator = $this->get('knp_paginator');
         $inclusions = $paginator->paginate(
             $query, /* query NOT result */
@@ -95,7 +94,6 @@ class InclusionController extends Controller
 
         return new JsonResponse($inclusion);
     }
-
 
 	/**
 	 * @Route("/inclusion/save/{id}", name="saveInclusion", options={"expose"=true})

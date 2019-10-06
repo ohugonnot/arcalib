@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Inclusion;

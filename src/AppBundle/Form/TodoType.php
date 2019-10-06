@@ -48,7 +48,6 @@ class TodoType extends AbstractType
         $formData = $builder->getData();
         $auteur = $formData->getAuteur();
 
-
         if (
             $user != $auteur
             && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
@@ -179,6 +178,5 @@ class TodoType extends AbstractType
     {
         return 'appbundle_todo';
     }
-
 
 }

@@ -43,7 +43,6 @@ trait Factory
 	 */
 	private $requestStack;
 
-
 	public function __construct(EntityManagerInterface $entityManager,
 	                            ValidatorInterface $validator,
 	                            LoggerInterface $logger,

@@ -72,10 +72,7 @@
 
     {% endblock fil_ariane %}
 
-
-    
     {% block content %}
-
 
         {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
 
@@ -85,12 +82,10 @@
 
                 <div class="row">
 
-
                     <h4 class="text-center">Liste des {{ eis.getTotalItemCount }} eis pour l'inclusion
                         N° {{ inclusion.numInc }} - <a
                                 href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
                     </h4>
-
 
                     {# Liste des eis #}
 
@@ -172,7 +167,6 @@
 
             </div>
 
-
             <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-ei-pdf" tabindex="-1" role="dialog"
                  aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
 
@@ -234,7 +228,6 @@
 
                                         {# Loader #}
 
-
                                     </div>
 
                                 </div>
@@ -261,7 +254,6 @@
                 </div>
 
             </div>
-
 
         </section>
 

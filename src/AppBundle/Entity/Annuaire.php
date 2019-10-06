@@ -53,7 +53,6 @@ class Annuaire
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -62,70 +61,60 @@ class Annuaire
 
     /**
      * @var string
-     *
      * @ORM\Column(name="nom", type="string", length=255)
      */
     private $nom;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
      */
     private $prenom;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="fonction", type="string", length=255, nullable=true)
      */
     private $fonction;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="societe", type="string", length=255, nullable=true)
      */
     private $societe;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="mail", type="string", length=255, nullable=true)
      */
     private $mail;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="telephone", type="string", length=50, nullable=true)
      */
     private $telephone;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="portable", type="string", length=50, nullable=true)
      */
     private $portable;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="fax", type="string", length=50, nullable=true)
      */
     private $fax;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="notes", type="text", nullable=true)
      */
     private $notes;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="autre", type="string", length=255, nullable=true)
      */
     private $autre;
@@ -136,10 +125,8 @@ class Annuaire
      */
     private $essai;
 
-
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -149,7 +136,6 @@ class Annuaire
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNom()
@@ -159,9 +145,7 @@ class Annuaire
 
     /**
      * Set nom
-     *
      * @param string $nom
-     *
      * @return Annuaire
      */
     public function setNom($nom)
@@ -173,7 +157,6 @@ class Annuaire
 
     /**
      * Get prenom
-     *
      * @return string
      */
     public function getPrenom()
@@ -183,9 +166,7 @@ class Annuaire
 
     /**
      * Set prenom
-     *
      * @param string $prenom
-     *
      * @return Annuaire
      */
     public function setPrenom($prenom)
@@ -197,7 +178,6 @@ class Annuaire
 
     /**
      * Get fonction
-     *
      * @return string
      */
     public function getFonction()
@@ -207,9 +187,7 @@ class Annuaire
 
     /**
      * Set fonction
-     *
      * @param string $fonction
-     *
      * @return Annuaire
      */
     public function setFonction($fonction)
@@ -221,7 +199,6 @@ class Annuaire
 
     /**
      * Get societe
-     *
      * @return string
      */
     public function getSociete()
@@ -231,9 +208,7 @@ class Annuaire
 
     /**
      * Set societe
-     *
      * @param string $societe
-     *
      * @return Annuaire
      */
     public function setSociete($societe)
@@ -245,7 +220,6 @@ class Annuaire
 
     /**
      * Get mail
-     *
      * @return string
      */
     public function getMail()
@@ -255,9 +229,7 @@ class Annuaire
 
     /**
      * Set mail
-     *
      * @param string $mail
-     *
      * @return Annuaire
      */
     public function setMail($mail)
@@ -269,7 +241,6 @@ class Annuaire
 
     /**
      * Get telephone
-     *
      * @return string
      */
     public function getTelephone()
@@ -279,9 +250,7 @@ class Annuaire
 
     /**
      * Set telephone
-     *
      * @param string $telephone
-     *
      * @return Annuaire
      */
     public function setTelephone($telephone)
@@ -293,7 +262,6 @@ class Annuaire
 
     /**
      * Get portable
-     *
      * @return string
      */
     public function getPortable()
@@ -303,9 +271,7 @@ class Annuaire
 
     /**
      * Set portable
-     *
      * @param string $portable
-     *
      * @return Annuaire
      */
     public function setPortable($portable)
@@ -317,7 +283,6 @@ class Annuaire
 
     /**
      * Get fax
-     *
      * @return string
      */
     public function getFax()
@@ -327,9 +292,7 @@ class Annuaire
 
     /**
      * Set fax
-     *
      * @param string $fax
-     *
      * @return Annuaire
      */
     public function setFax($fax)
@@ -341,7 +304,6 @@ class Annuaire
 
     /**
      * Get notes
-     *
      * @return string
      */
     public function getNotes()
@@ -351,9 +313,7 @@ class Annuaire
 
     /**
      * Set notes
-     *
      * @param string $notes
-     *
      * @return Annuaire
      */
     public function setNotes($notes)
@@ -365,7 +325,6 @@ class Annuaire
 
     /**
      * Get essai
-     *
      * @return Essais
      */
     public function getEssai()
@@ -375,9 +334,7 @@ class Annuaire
 
     /**
      * Set essai
-     *
      * @param Essais $essai
-     *
      * @return Annuaire
      */
     public function setEssai(Essais $essai = null)
@@ -389,7 +346,6 @@ class Annuaire
 
     /**
      * Get autre
-     *
      * @return string
      */
     public function getAutre()
@@ -399,9 +355,7 @@ class Annuaire
 
     /**
      * Set autre
-     *
      * @param string $autre
-     *
      * @return Annuaire
      */
     public function setAutre($autre)

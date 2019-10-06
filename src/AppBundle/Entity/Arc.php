@@ -17,7 +17,6 @@ class Arc
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -26,7 +25,6 @@ class Arc
 
     /**
      * @var string
-     *
      * @ORM\Column(name="NomArc", type="string", length=50)
      */
     private $nomArc;
@@ -39,28 +37,24 @@ class Arc
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatOut", type="date", nullable=true)
      */
     private $datOut;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="IniArc", type="string", length=10, nullable=true)
      */
     private $iniArc;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Dect", type="string", length=20, nullable=true)
      */
     private $dect;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Tel", type="string", length=20, nullable=true)
      */
     private $tel;
@@ -73,14 +67,12 @@ class Arc
 
     /**
      * @var string
-     *
      * @ORM\Column(name="PwArc", type="string", length=20, nullable=true)
      */
     private $pwArc;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Droit", type="string", length=20, nullable=true)
      */
     private $droit;
@@ -107,7 +99,6 @@ class Arc
      */
     private $service;
 
-
     // -------------------------------------------------Constructor------------------------------------------
 
     /**
@@ -124,7 +115,6 @@ class Arc
 
     /**
      * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -134,7 +124,6 @@ class Arc
 
     /**
      * Get nomArc
-     *
      * @return string
      */
     public function getNomArc()
@@ -144,9 +133,7 @@ class Arc
 
     /**
      * Set nomArc
-     *
      * @param string $nomArc
-     *
      * @return Arc
      */
     public function setNomArc($nomArc)
@@ -158,7 +145,6 @@ class Arc
 
     /**
      * Get datIn
-     *
      * @return DateTime
      */
     public function getDatIn()
@@ -168,9 +154,7 @@ class Arc
 
     /**
      * Set datIn
-     *
      * @param DateTime $datIn
-     *
      * @return Arc
      */
     public function setDatIn($datIn)
@@ -182,7 +166,6 @@ class Arc
 
     /**
      * Get datOut
-     *
      * @return DateTime
      */
     public function getDatOut()
@@ -192,9 +175,7 @@ class Arc
 
     /**
      * Set datOut
-     *
      * @param DateTime $datOut
-     *
      * @return Arc
      */
     public function setDatOut($datOut)
@@ -206,7 +187,6 @@ class Arc
 
     /**
      * Get iniArc
-     *
      * @return string
      */
     public function getIniArc()
@@ -216,9 +196,7 @@ class Arc
 
     /**
      * Set iniArc
-     *
      * @param string $iniArc
-     *
      * @return Arc
      */
     public function setIniArc($iniArc)
@@ -230,7 +208,6 @@ class Arc
 
     /**
      * Get dect
-     *
      * @return string
      */
     public function getDect()
@@ -240,9 +217,7 @@ class Arc
 
     /**
      * Set dect
-     *
      * @param string $dect
-     *
      * @return Arc
      */
     public function setDect($dect)
@@ -254,7 +229,6 @@ class Arc
 
     /**
      * Get tel
-     *
      * @return string
      */
     public function getTel()
@@ -264,9 +238,7 @@ class Arc
 
     /**
      * Set tel
-     *
      * @param string $tel
-     *
      * @return Arc
      */
     public function setTel($tel)
@@ -278,7 +250,6 @@ class Arc
 
     /**
      * Get mail
-     *
      * @return string
      */
     public function getMail()
@@ -288,9 +259,7 @@ class Arc
 
     /**
      * Set mail
-     *
      * @param string $mail
-     *
      * @return Arc
      */
     public function setMail($mail)
@@ -302,7 +271,6 @@ class Arc
 
     /**
      * Get pwArc
-     *
      * @return string
      */
     public function getPwArc()
@@ -312,9 +280,7 @@ class Arc
 
     /**
      * Set pwArc
-     *
      * @param string $pwArc
-     *
      * @return Arc
      */
     public function setPwArc($pwArc)
@@ -326,7 +292,6 @@ class Arc
 
     /**
      * Get droit
-     *
      * @return string
      */
     public function getDroit()
@@ -336,9 +301,7 @@ class Arc
 
     /**
      * Set droit
-     *
      * @param string $droit
-     *
      * @return Arc
      */
     public function setDroit($droit)
@@ -352,9 +315,7 @@ class Arc
 
     /**
      * Add inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Arc
      */
     public function addInclusion(Inclusion $inclusion)
@@ -366,7 +327,6 @@ class Arc
 
     /**
      * Remove inclusion
-     *
      * @param Inclusion $inclusion
      */
     public function removeInclusion(Inclusion $inclusion)
@@ -377,7 +337,6 @@ class Arc
 
     /**
      * Get inclusions
-     *
      * @return Collection
      */
     public function getInclusions()
@@ -389,9 +348,7 @@ class Arc
 
     /**
      * Add essai
-     *
      * @param Essais $essai
-     *
      * @return Arc
      */
     public function addEssai(Essais $essai)
@@ -404,7 +361,6 @@ class Arc
 
     /**
      * Remove essai
-     *
      * @param Essais $essai
      */
     public function removeEssai(Essais $essai)
@@ -415,7 +371,6 @@ class Arc
 
     /**
      * Get essais
-     *
      * @return Collection
      */
     public function getEssais()
@@ -425,12 +380,9 @@ class Arc
 
 //------------------
 
-
     /**
      * Add visite
-     *
      * @param Visite $visite
-     *
      * @return Arc
      */
     public function addVisite(Visite $visite)
@@ -442,7 +394,6 @@ class Arc
 
     /**
      * Remove visite
-     *
      * @param Visite $visite
      */
     public function removeVisite(Visite $visite)
@@ -453,7 +404,6 @@ class Arc
 
     /**
      * Get visites
-     *
      * @return Collection
      */
     public function getVisites()
@@ -465,7 +415,6 @@ class Arc
 
     /**
      * Get service
-     *
      * @return Service
      */
     public function getService()
@@ -475,9 +424,7 @@ class Arc
 
     /**
      * Set service
-     *
      * @param Service $service
-     *
      * @return Arc
      */
     public function setService(Service $service = null)

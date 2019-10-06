@@ -42,5 +42,4 @@ class EssaiDetailType extends AbstractType
         return 'appbundle_essaidetail';
     }
 
-
 }

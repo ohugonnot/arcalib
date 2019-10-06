@@ -462,7 +462,6 @@
 
                             Inclusion
 
-
                             <div class="ml-auto mr-1" v-cloak>
 
                                 {# Supprimer #}
@@ -483,7 +482,6 @@
 
                                 </button>
 
-
                                 {# Nouvelle #}
                                 <button v-if='!disabled' @click='newInclusion' type="button"
                                         title='Ajouter une inclusion'
@@ -493,13 +491,11 @@
 
                                 </button>
 
-
                             </div>
 
                         </div>
 
                         <form>
-
 
                             {# Boutons de controle PDF #}
 
@@ -518,14 +514,12 @@
 
                                     </a> #}
 
-
                                     <a :href='firstDocument'
                                        title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]]   </i>
 
                                     </a>
-
 
                                     {# <a target='_blank' :href='addDocument' title='Ajouter un document'
                                        class="btn btn-sm btn-outline-primary title-tooltip">
@@ -535,7 +529,6 @@
                                     </a> #}
 
                                 </div>
-
 
                                 <div class="col">
 
@@ -715,7 +708,6 @@
 
                                         {% for value in constant('AppBundle\\Entity\\Inclusion::STATUT') %}
 
-
                                             {% if value == constant('AppBundle\\Entity\\Inclusion::OUI_EN_COURS') %}
 
                                                 <option v-if='!(inclusion.essai != null && ["{{ constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION') }}", "{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}", "{{ constant('AppBundle\\Entity\\Essais::REFUS') }}"].indexOf(inclusion.essai.statut) > -1)'>{{ value }}</option>
@@ -836,7 +828,6 @@
                                             id="medecin">
 
                                         <option value='null' selected></option>
-
 
                                         {% for medecin in medecins %}
 
@@ -1113,7 +1104,6 @@
                                                 Suivant<i class="fa fa-chevron-right"></i></button>
 
                                         </div>
-
 
                                     </div>
 

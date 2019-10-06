@@ -58,5 +58,4 @@ class EventType extends AbstractType
         return 'appbundle_traitement';
     }
 
-
 }

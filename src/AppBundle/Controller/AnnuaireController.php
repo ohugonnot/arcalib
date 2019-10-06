@@ -84,7 +84,6 @@ class AnnuaireController extends Controller
         return $this->redirectToRoute("listeAnnuaires");
     }
 
-
 // ------------------------------------------Liste ANNUAIRE-----------------------------------------------------
 
     /**

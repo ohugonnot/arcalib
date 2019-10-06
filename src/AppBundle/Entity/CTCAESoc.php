@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AppBundle\Entity;
-
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -44,7 +42,6 @@ class CTCAESoc
         $this->terms = new ArrayCollection();
         $this->eis = new ArrayCollection();
     }
-
 
     /**
      * @return EI[]|ArrayCollection
@@ -114,12 +111,10 @@ class CTCAESoc
         return $this;
     }
 
-
     public function getId(): int
     {
         return $this->id;
     }
-
 
     public function getNom(): string
     {

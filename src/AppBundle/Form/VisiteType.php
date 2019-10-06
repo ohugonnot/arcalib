@@ -73,7 +73,6 @@ class VisiteType extends AbstractType
 //-----------------------------------------------------------FIN--BOUTONS--------------------------------------------------------------
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -84,7 +83,6 @@ class VisiteType extends AbstractType
         ));
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -92,6 +90,5 @@ class VisiteType extends AbstractType
     {
         return 'appbundle_visite';
     }
-
 
 }

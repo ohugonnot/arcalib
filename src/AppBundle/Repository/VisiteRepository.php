@@ -20,7 +20,6 @@ use Exception;
 class VisiteRepository extends EntityRepository
 {
 
-
     /**
      * @param QueryBuilder $queryBuilder
      * @param User $user
@@ -42,7 +41,6 @@ class VisiteRepository extends EntityRepository
 
         return $queryBuilder;
     }
-
 
     /**
      * @param User $user
@@ -84,7 +82,6 @@ class VisiteRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-
     /**
      * @param $user
      * @return Visite[]
@@ -96,7 +93,6 @@ class VisiteRepository extends EntityRepository
         $now = (new DateTime())->setTime(0, 0);
         $interval = new DateInterval('P1W');
         $fin = $now->add($interval);
-
 
         $queryBuilder = $this->createQueryBuilder('v')
             ->addSelect("e", "a", "i","p")
@@ -125,7 +121,6 @@ class VisiteRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-
     /**
      * @param DateTime|null $date
      * @param array $filters
@@ -141,7 +136,6 @@ class VisiteRepository extends EntityRepository
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
-
         /** @var DateTime $date */
         if ($date) {
             $queryBuilder->andWhere("YEAR(v.date) = :year")
@@ -151,7 +145,6 @@ class VisiteRepository extends EntityRepository
                 ->andWhere("DAY(v.date) = :day")
                 ->setParameter("day", $date->format("d") );
         }
-
 
         if (isset($filters["statut"]) && $filters["statut"] != null) {
             $queryBuilder->andWhere("v.statut = :statut")

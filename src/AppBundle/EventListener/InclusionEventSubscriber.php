@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AppBundle\EventListener;
-
 
 use AppBundle\Event\ArcalibEvents;
 use AppBundle\Event\InclusionEvent;

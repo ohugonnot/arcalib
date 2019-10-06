@@ -35,7 +35,6 @@ security:
                  
             logout_on_user_change: true
 
-
     access_control:
         - { path: ^/arcalib/utilisateurs/, role: ROLE_ADMIN }
         - { path: ^/arcalib/utilisateur/, role: ROLE_ADMIN }

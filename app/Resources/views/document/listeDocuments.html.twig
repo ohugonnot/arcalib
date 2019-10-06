@@ -72,10 +72,7 @@
 
     {% endblock fil_ariane %}
 
-
-    
     {% block content %}
-
 
         {# Section Principale #--------------------------------------------------------------------------------------------------------------#}
 
@@ -85,12 +82,10 @@
 
                 <div class="row">
 
-
                     <h4 class="text-center">Liste des {{ documents.getTotalItemCount }} documents pour l'inclusion
                         N° {{ inclusion.numInc }} - <a
                                 href="{{ path("patient", {id: inclusion.patient.id }) }}">{{ inclusion.patient.nomPrenom }}</a>
                     </h4>
-
 
                     {# Liste des documents #}
 
@@ -101,36 +96,28 @@
                         <tr>
 
                             <th class='{% if documents.isSorted('d.date') %}sorted{% endif %}'>
-
                                 {{ knp_pagination_sortable(documents, 'Date', ['d.date']) }}
-
                             </th>
 
                             <th class='{% if documents.isSorted('d.type') %}sorted{% endif %}'>
-
                                 {{ knp_pagination_sortable(documents, 'Type', ['d.type']) }}
+                            </th>
 
                             <th class='{% if documents.isSorted('d.jma') %}sorted{% endif %}'>
-
                                 {{ knp_pagination_sortable(documents, 'JMA', ['d.jma']) }}
-
                             </th>
+
                             <th class='{% if documents.isSorted('d.auteur') %}sorted{% endif %}'>
-
                                 {{ knp_pagination_sortable(documents, 'Auteur', ['d.auteur']) }}
-
                             </th>
 
                             <th class='{% if documents.isSorted('d.description') %}sorted{% endif %}'>
-
                                 {{ knp_pagination_sortable(documents, 'Description', ['d.description']) }}
-
                             </th>
 
+                            <th>{{ knp_pagination_sortable(documents, 'Signature', ['d.dateSignature']) }}</th>
 
-                            <th> PDF
-
-                            </th>
+                            <th>PDF</th>
 
                         </tr>
 
@@ -152,51 +139,37 @@
 
                                 </td>
 
-
                                 <td class="type">{{ document.type }}</td>
 
                                 <td class="jma">{{ document.jma }}</td>
                                 <td class="jma">{{ document.auteur }}</td>
 
                                 <td class="jma">{{ document.description }}</td>
+                                <td>{% if document.isSigner %}<i class='fa fa-check-square-o'></i> le {{ document.dateSignature|date("d/m/Y") }}{% endif %}</td>
 
                                 {# PDFs #}
                                 <td>
-                                    {% if document.file != null %}
-
-                                        <button type="button" data-id='{{ document.id }}'
-                                                class="btn btn-sm btn-outline-info title-tooltip document-modal-button"
-                                                title='Voir le PDF'>
-
-                                            <i class="fa fa-file-text" aria-hidden="true"></i>
-
-                                        </button>
-                                        {#
-                                                                                    <a target='_blank' href='{{ document|getUrlDocument(pdf_document_directory_asset) }}' class="btn btn-sm btn-outline-info title-tooltip" title='Consulter les PDF'>
-
-                                                                                        <i class="fa fa-file-text" aria-hidden="true"></i>
-
-                                                                                    </a>
-
-
-                                                                                    <button data-id='{{ document.id }}' type="button" class="ml-2 btn btn-sm btn-outline-danger remove-document-button">
-
-                                                                                        <i aria-hidden="true" class="fa fa-trash"></i>
-
-                                                                                    </button>
-                                        #}
-                                    {% else %}
-
-                                        <button type="button" data-id='{{ document.id }}'
-                                                class="btn btn-sm btn-outline-info title-tooltip document-modal-button"
-                                                title='Ajouter un PDF'>
-
-                                            <i class="fa fa-question" aria-hidden="true"></i>
-
-                                        </button>
-
-                                    {% endif %}
-
+                                    {% if document.isSigner %}
+                                        {% if document.file %}
+                                            <a target='_blank' href='{{ path('downloadDocumentPDF', {pdf: document.file}) }}' class="btn btn-sm btn-outline-info title-tooltip" title='Consulter les PDF'>
+                                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                                            </a>
+                                        {% endif %}
+                                     {% else %}
+                                        {% if document.file != null %}
+                                            <button type="button" data-id='{{ document.id }}'
+                                                    class="btn btn-sm btn-outline-info title-tooltip document-modal-button"
+                                                    title='Voir le PDF'>
+                                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="button" data-id='{{ document.id }}'
+                                                    class="btn btn-sm btn-outline-info title-tooltip document-modal-button"
+                                                    title='Ajouter un PDF'>
+                                                <i class="fa fa-question" aria-hidden="true"></i>
+                                            </button>
+                                        {% endif %}
+                                     {% endif %}
 
                                 </td>
 
@@ -214,7 +187,6 @@
                 </div>
 
             </div>
-
 
             <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1" role="dialog"
                  aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
@@ -277,7 +249,6 @@
 
                                         {# Loader #}
 
-
                                     </div>
 
                                 </div>
@@ -304,7 +275,6 @@
                 </div>
 
             </div>
-
 
         </section>
 

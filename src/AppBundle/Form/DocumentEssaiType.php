@@ -67,5 +67,4 @@ class DocumentEssaiType extends AbstractType
         return 'appbundle_document';
     }
 
-
 }

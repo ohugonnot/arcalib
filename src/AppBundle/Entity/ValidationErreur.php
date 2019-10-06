@@ -14,7 +14,6 @@ class ValidationErreur
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,35 +22,30 @@ class ValidationErreur
 
     /**
      * @var string
-     *
      * @ORM\Column(name="type", type="string", length=255)
      */
     private $type;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="erreur", type="integer")
      */
     private $erreur;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="entite", type="integer")
      */
     private $entite;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="message", type="text", length=255, nullable=true)
      */
     private $message;
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -61,7 +55,6 @@ class ValidationErreur
 
     /**
      * Get type
-     *
      * @return string
      */
     public function getType()
@@ -71,9 +64,7 @@ class ValidationErreur
 
     /**
      * Set type
-     *
      * @param string $type
-     *
      * @return ValidationErreur
      */
     public function setType($type)
@@ -85,7 +76,6 @@ class ValidationErreur
 
     /**
      * Get erreur
-     *
      * @return int
      */
     public function getErreur()
@@ -95,9 +85,7 @@ class ValidationErreur
 
     /**
      * Set erreur
-     *
      * @param integer $erreur
-     *
      * @return ValidationErreur
      */
     public function setErreur($erreur)
@@ -109,7 +97,6 @@ class ValidationErreur
 
     /**
      * Get entite
-     *
      * @return int
      */
     public function getEntite()
@@ -119,9 +106,7 @@ class ValidationErreur
 
     /**
      * Set entite
-     *
      * @param integer $entite
-     *
      * @return ValidationErreur
      */
     public function setEntite($entite)
@@ -133,7 +118,6 @@ class ValidationErreur
 
     /**
      * Get message
-     *
      * @return string
      */
     public function getMessage()
@@ -143,10 +127,8 @@ class ValidationErreur
 
     /**
      * Set message
-     *
      * @param $message
      * @return string
-     *
      */
     public function setMessage($message)
     {
