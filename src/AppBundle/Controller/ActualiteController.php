@@ -28,11 +28,9 @@ class ActualiteController extends Controller
     public function addActualiteAction(Request $request)
     {
         $actualite = new Actualite();
-
         $form = $this->get('form.factory')->create(ActualiteType::class, $actualite);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($actualite);
             $em->flush();
@@ -45,8 +43,7 @@ class ActualiteController extends Controller
         ]);
     }
 
-// ------------------------------------------Edit ACTUALITE----------------------------------------------------- 
-
+// ------------------------------------------Edit ACTUALITE-----------------------------------------------------
     /**
      * @Route("/actualite/editer/{id}", name="editActualite")
      * @Security("has_role('ROLE_ADMIN')")
@@ -59,7 +56,6 @@ class ActualiteController extends Controller
         $form = $this->get('form.factory')->create(ActualiteType::class, $actualite);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
@@ -72,7 +68,6 @@ class ActualiteController extends Controller
     }
 
 // ------------------------------------------Supp ACTUALITE-----------------------------------------------------
-
     /**
      * @Route("/actualite/supprimer/{id}", name="deleteActualite", options={"expose"=true})
      * @Security("has_role('ROLE_ADMIN')")
@@ -89,7 +84,6 @@ class ActualiteController extends Controller
     }
 
 // ------------------------------------------Liste ACTUALITE-----------------------------------------------------
-
     /**
      * @Route("/actualites/", name="listeActualites", options={"expose"=true})
      * @param Request $request
@@ -98,9 +92,8 @@ class ActualiteController extends Controller
     public function listeActualitesAction(Request $request)
     {
         $search = $request->query->get("recherche");
-        if ($search == null) {
+        if (!$search)
             $search = '%%';
-        }
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();

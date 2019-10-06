@@ -55,17 +55,17 @@ class UserController extends Controller
     {
         $form = $this->get('form.factory')->create(UserTypeAdmin::class, $user);
 
-        if($this->getUser() != $user)
+         if ($this->getUser() != $user)
             $this->denyAccessUnlessGranted('ROLE_ADMIN', $user, "Vous n'avez pas les droits pour cette action");
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $userManager = $this->get('fos_user.user_manager');
 
             $alreadyExist = false;
-            if($medecin = $user->getMedecin())
+            if ($medecin = $user->getMedecin())
                 $alreadyExist = $userManager->findUserBy(["medecin"=>$medecin]);
 
-            if($alreadyExist && $alreadyExist != $user) {
+            if ($alreadyExist && $alreadyExist != $user) {
                 $this->addFlash(
                     'danger',
                     'Il existe déjà un utilisateur pour ce médecin c\'est '. $alreadyExist->getUsername()

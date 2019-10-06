@@ -72,6 +72,12 @@ class User extends BaseUser
      */
     private $medecin;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="signerBy", cascade={"all"})
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $documentSignatures;
+
     public function __construct()
     {
         parent::__construct();
@@ -80,6 +86,7 @@ class User extends BaseUser
         $this->logs = new ArrayCollection();
         $this->todoAuteurs = new ArrayCollection();
         $this->eis = new ArrayCollection();
+        $this->documentSignatures = new ArrayCollection();
     }
 
     /**
@@ -273,9 +280,39 @@ class User extends BaseUser
     public function setMedecin(?Medecin $medecin): User
     {
         $this->medecin = $medecin;
-        if($medecin)
+         if ($medecin)
             $medecin->setUser($this);
         return $this;
     }
 
+    /**
+     * Add document
+     * @param Document $document
+     * @return User
+     */
+    public function addDocument(Document $document)
+    {
+        $this->documentSignatures[] = $document;
+        $document->setSignerBy($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove document
+     * @param Document $document
+     */
+    public function removeDocument(Document $document)
+    {
+        $this->documentSignatures->removeElement($document);
+    }
+
+    /**
+     * Get documents
+     * @return Collection|Document[]
+     */
+    public function getDocuments()
+    {
+        return $this->documentSignatures;
+    }
 }

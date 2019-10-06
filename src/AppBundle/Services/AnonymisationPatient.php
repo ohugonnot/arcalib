@@ -44,9 +44,8 @@ class AnonymisationPatient
 
 		foreach ($patients as $k => $patient) {
 
-			if($patient->getNom() == "TEST") {
+			 if ($patient->getNom() == "TEST")
 				continue;
-			};
 
 			$patient->setNom($jsonCustomPatient["results"][$k]["name"]["last"]);
 			$patient->setPrenom($jsonCustomPatient["results"][$k]["name"]["first"]);
@@ -78,9 +77,8 @@ class AnonymisationPatient
 
 		foreach ($documents as $k => $document) {
 
-			if($document->getInclusion()->getPatient()->getNom() == "TEST") {
+			 if ($document->getInclusion()->getPatient()->getNom() == "TEST")
 				continue;
-			}
 			$document->setFile(null);
 		}
 		$this->entityManager->flush();

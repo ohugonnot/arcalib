@@ -39,9 +39,8 @@ class DoctrineEventListener implements EventSubscriber
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
+         if ($entity instanceof Log || isset($this->changeSet["lastLogin"]))
             return;
-        }
         $reflection = new \ReflectionClass($entity);
         $type = $reflection->getShortName();
 
@@ -56,16 +55,14 @@ class DoctrineEventListener implements EventSubscriber
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
+         if ($entity instanceof Log || isset($this->changeSet["lastLogin"]))
             return;
-        }
 
         $reflection = new \ReflectionClass($entity);
         $type = $reflection->getShortName();
 
-        if($entity instanceof Log) {
+         if ($entity instanceof Log)
             return;
-        }
 
         $this->logManager->save(
             ucfirst($type),
@@ -81,27 +78,24 @@ class DoctrineEventListener implements EventSubscriber
     public function preUpdate(PreUpdateEventArgs $args)
     {
         $entity = $args->getObject();
-        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
+         if ($entity instanceof Log || isset($this->changeSet["lastLogin"]))
             return;
-        }
 
         $this->changeSet = $args->getEntityChangeSet();
         foreach($this->changeSet as $key => $param) {
 
             foreach ($param as $key2 => $value)
-            if ($value instanceof \DateTime) {
+            if ($value instanceof \DateTime)
                 /** @var \DateTime $value */
                 $this->changeSet[$key][$key2] = $value->format("d-m-Y");
-            }
         }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        if($entity instanceof Log || isset($this->changeSet["lastLogin"])) {
+         if ($entity instanceof Log || isset($this->changeSet["lastLogin"]))
             return;
-        }
 
         $reflection = new \ReflectionClass($entity);
         $type = $reflection->getShortName();
@@ -117,39 +111,29 @@ class DoctrineEventListener implements EventSubscriber
 
     private function info($type, $entity, $action)
     {
-
         return ucfirst($action)." ".strtolower($type)." [" . $this->getName($entity)."]";
     }
 
     private function getName($entity)
     {
-        if(method_exists($entity, "getNumInc") && $entity->getNumInc()) {
+         if (method_exists($entity, "getNumInc") && $entity->getNumInc())
             return $entity->getNumInc();
-        }
-        if(method_exists($entity, "getNomArc") && $entity->getNomArc()) {
+         if (method_exists($entity, "getNomArc") && $entity->getNomArc())
             return $entity->getNomArc();
-        }
-        if(method_exists($entity, "getNom") && method_exists($entity, "getPrenom")) {
+         if (method_exists($entity, "getNom") && method_exists($entity, "getPrenom"))
             return $entity->getNom()." ".$entity->getPrenom();
-        }
-        if(method_exists($entity, "getNom") && $entity->getNom()) {
+         if (method_exists($entity, "getNom") && $entity->getNom())
             return $entity->getNom();
-        }
-        if(method_exists($entity, "getNumero") && $entity->getNumero()) {
+         if (method_exists($entity, "getNumero") && $entity->getNumero())
             return $entity->getNumero();
-        }
-        if(method_exists($entity, "getLibCourt") && $entity->getLibCourt()) {
+         if (method_exists($entity, "getLibCourt") && $entity->getLibCourt())
             return $entity->getLibCourt();
-        }
-        if(method_exists($entity, "getTitre") && $entity->getTitre()) {
+         if (method_exists($entity, "getTitre") && $entity->getTitre())
             return $entity->getTitre();
-        }
-        if(method_exists($entity, "getUsername") && $entity->getUsername()) {
+         if (method_exists($entity, "getUsername") && $entity->getUsername())
             return $entity->getUsername();
-        }
-        if(method_exists($entity, "getId")) {
+         if (method_exists($entity, "getId"))
             return $entity->getId();
-        }
         return '';
     }
 

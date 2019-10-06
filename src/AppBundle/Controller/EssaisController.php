@@ -172,7 +172,7 @@ class EssaisController extends Controller
            $ids[] = $filEntity->getId();
         }
         foreach($essai->getFils() as $fil) {
-            if(!in_array($fil->getId(),$ids))
+             if (!in_array($fil->getId(),$ids))
                 $em->remove($fil);
         }
         $em->flush();

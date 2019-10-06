@@ -109,13 +109,26 @@ class Document
      * @var bool
      * @ORM\Column(name="is_signer", type="boolean")
      */
-    private $isSigner = false;
+    private $signer = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="is_archive", type="boolean")
+     */
+    private $archive = false;
 
     /**
      * @var DateTime|null
      * @ORM\Column(name="date_signature", type="date", nullable=true)
      */
     private $dateSignature;
+
+    /**
+     * @var User|null
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="documentSignatures")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $signerBy;
 
     /**
      * @ORM\ManyToOne(targetEntity="Inclusion", inversedBy="documents")
@@ -137,16 +150,16 @@ class Document
      */
     public function isSigner(): bool
     {
-        return $this->isSigner;
+        return $this->signer;
     }
 
     /**
-     * @param bool $isSigner
+     * @param bool $signer
      * @return Document
      */
-    public function setIsSigner(bool $isSigner): Document
+    public function setSigner(bool $signer): Document
     {
-        $this->isSigner = $isSigner;
+        $this->signer = $signer;
         return $this;
     }
 
@@ -298,6 +311,25 @@ class Document
     }
 
     /**
+     * @return User|null
+     */
+    public function getSignerBy(): ?User
+    {
+        return $this->signerBy;
+    }
+
+    /**
+     * @param User|null $signerBy
+     * @return Document
+     */
+    public function setSignerBy(?User $signerBy): Document
+    {
+        $this->signerBy = $signerBy;
+
+        return $this;
+    }
+
+    /**
      * @return DateTime|null
      */
     public function getDateSignature(): ?DateTime
@@ -312,6 +344,24 @@ class Document
     public function setDateSignature(?DateTime $dateSignature): Document
     {
         $this->dateSignature = $dateSignature;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArchive(): bool
+    {
+        return $this->archive;
+    }
+
+    /**
+     * @param bool $archive
+     * @return Document
+     */
+    public function setArchive(bool $archive): Document
+    {
+        $this->archive = $archive;
         return $this;
     }
 }

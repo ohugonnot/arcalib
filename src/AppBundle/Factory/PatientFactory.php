@@ -29,42 +29,36 @@ class PatientFactory implements FactoryInterface
 		$patient->setMedecin($medecin);
 
 		foreach ($params as $key => $value) {
-			if (is_array($value) || $value == '') {
+			if (is_array($value) || $value == '')
 				unset($params[$key]);
-			}
 		}
 
 		if (isset($params["datNai"])) {
 			$datNai = DateTime::createFromFormat('d/m/Y', $params["datNai"])->settime(0,0);
-			if($datNai != $patient->getDatNai()) {
+			 if ($datNai != $patient->getDatNai())
 				$patient->setDatNai($datNai);
-			}
 		}
 
 		if (isset($params["datDiag"])) {
 			$datDiag = DateTime::createFromFormat('d/m/Y', $params["datDiag"])->settime(0,0);
-			if($datDiag != $patient->getDatDiag()) {
+			 if ($datDiag != $patient->getDatDiag())
 				$patient->setDatDiag($datDiag);
-			}
 		}
 		if (isset($params["datLast"])) {
 			$datLast = DateTime::createFromFormat('d/m/Y', $params["datLast"])->settime(0,0);
-			if($datLast != $patient->getDatLast()) {
+			 if ($datLast != $patient->getDatLast())
 				$patient->setDatLast($datLast);
-			}
 		}
 		if (isset($params["datDeces"])) {
 			$datDeces = DateTime::createFromFormat('d/m/Y', $params["datDeces"])->settime(0,0);
-			if($datDeces != $patient->getDatDeces()) {
+			 if ($datDeces != $patient->getDatDeces())
 				$patient->setDatDeces($datDeces);
-			}
 		}
 
-		if (isset($params["cancer"]) and $params["cancer"] == "true") {
+		if (isset($params["cancer"]) and $params["cancer"] == "true")
 			$patient->setCancer(true);
-		} else {
+		else
 			$patient->setCancer(false);
-		}
 
 		$this->validate($patient);
 

@@ -145,11 +145,11 @@
                                 <td class="jma">{{ document.auteur }}</td>
 
                                 <td class="jma">{{ document.description }}</td>
-                                <td>{% if document.isSigner %}<i class='fa fa-check-square-o'></i> le {{ document.dateSignature|date("d/m/Y") }}{% endif %}</td>
+                                <td>{% if document.signer %}<i class='fa fa-check-square-o'></i> le {{ document.dateSignature|date("d/m/Y") }} par {{ document.signerBy.username|default('') }}{% endif %}</td>
 
                                 {# PDFs #}
                                 <td>
-                                    {% if document.isSigner %}
+                                    {% if document.signer %}
                                         {% if document.file %}
                                             <a target='_blank' href='{{ path('downloadDocumentPDF', {pdf: document.file}) }}' class="btn btn-sm btn-outline-info title-tooltip" title='Consulter les PDF'>
                                                 <i class="fa fa-file-text" aria-hidden="true"></i>

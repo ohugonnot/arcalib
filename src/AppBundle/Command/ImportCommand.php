@@ -134,7 +134,7 @@ class ImportCommand extends ContainerAwareCommand
                 $soc = trim($row["CTCAE v4.0 SOC"]);
                 $CTCAESoc = $em->getRepository(CTCAESoc::class)->findOneBy(["nom" => $soc]);
 
-                if(!$CTCAESoc instanceof CTCAESoc) {
+                 if (!$CTCAESoc instanceof CTCAESoc) {
                     $CTCAESoc = new CTCAESoc();
                     $CTCAESoc->setNom($soc);
                     $em->persist($CTCAESoc);
@@ -147,7 +147,7 @@ class ImportCommand extends ContainerAwareCommand
 
                 $CTCAETerm = $em->getRepository(CTCAETerm::class)->findOneBy(["code" => $termCode]);
 
-                if(!$CTCAETerm instanceof CTCAETerm) {
+                 if (!$CTCAETerm instanceof CTCAETerm) {
                     $CTCAETerm = new CTCAETerm();
                     $CTCAETerm->setCode($termCode);
                     $CTCAETerm->setNom($term);
@@ -173,7 +173,7 @@ class ImportCommand extends ContainerAwareCommand
 
                     $CTCAEGrade = $em->getRepository(CTCAEGrade::class)->findOneBy(["nom" => $grade, "grade" => $key, "term" => $CTCAETerm]);
 
-                    if($CTCAEGrade) {
+                     if ($CTCAEGrade) {
                         $CTCAEGrade->setNom($grade);
                         $CTCAEGrade->setGrade($key);
                         $CTCAEGrade->setTerm($CTCAETerm);
