@@ -71,7 +71,6 @@ class VerificationController extends Controller
             $this->VerificationVisite($visite);
         }
 
-
         /** @var ArrayCollection $validationErreurs */
         $validationErreurs = new ArrayCollection($em->getRepository(ValidationErreur::class)->findAll());
 
@@ -370,4 +369,3 @@ class VerificationController extends Controller
         return new JsonResponse(array('message' => "La validation à été supprimé"));
     }
 }
-

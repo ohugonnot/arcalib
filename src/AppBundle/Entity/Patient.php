@@ -65,7 +65,6 @@ class Patient
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -74,112 +73,90 @@ class Patient
 
     /**
      * @var int
-     *
      * @ORM\Column(name="idInterne", type="integer", unique=true, nullable=true)
      */
     private $idInterne;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Nom", type="string", length=100)
      */
     private $nom;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="nomNaissance", type="string", length=100, nullable=true)
      */
     private $nomNaissance;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Prenom", type="string", length=100)
      */
     private $prenom;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatNai", type="date")
      */
     private $datNai;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="Sexe", type="string", length=1, nullable=true)
      */
     private $sexe;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="IPP", type="string", length=50, nullable=true)
      */
     private $ipp;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatDiag", type="date", nullable=true)
      */
     private $datDiag;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="TxtDiag", type="text", nullable=true)
      */
     private $txtDiag;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="cancer", type="boolean", nullable=true)
      */
     private $cancer;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatLast", type="date", nullable=true)
      */
     private $datLast;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="Evolution", type="string", length=50, nullable=true)
      */
     private $evolution;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="Deces", type="string", length=10, nullable=true)
      */
     private $deces;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DatDeces", type="date", nullable=true)
      */
     private $datDeces;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="Memo", type="text", nullable=true)
      */
     private $memo;
@@ -192,14 +169,12 @@ class Patient
      */
     private $medecin;
 
-
     //  1 cim10, aplusieurs patients
     /**
      * @ORM\ManyToOne(targetEntity="LibCim10", inversedBy="patients")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $libCim10;
-
 
     // un patient est lié a plusieurs inclusions
     /**
@@ -219,7 +194,6 @@ class Patient
 
     /**
      * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -229,7 +203,6 @@ class Patient
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNom()
@@ -239,9 +212,7 @@ class Patient
 
     /**
      * Set nom
-     *
      * @param string $nom
-     *
      * @return Patient
      */
     public function setNom($nom)
@@ -253,7 +224,6 @@ class Patient
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNomNaissance()
@@ -263,9 +233,7 @@ class Patient
 
     /**
      * Set nomNaissance
-     *
      * @param $nomNaissance
-     *
      * @return Patient
      */
     public function setNomNaissance($nomNaissance)
@@ -277,7 +245,6 @@ class Patient
 
     /**
      * Get prenom
-     *
      * @return string
      */
     public function getPrenom()
@@ -287,9 +254,7 @@ class Patient
 
     /**
      * Set prenom
-     *
      * @param string $prenom
-     *
      * @return Patient
      */
     public function setPrenom($prenom)
@@ -301,7 +266,6 @@ class Patient
 
     /**
      * Get datNai
-     *
      * @return DateTime
      */
     public function getDatNai()
@@ -311,9 +275,7 @@ class Patient
 
     /**
      * Set datNai
-     *
      * @param DateTime $datNai
-     *
      * @return Patient
      */
     public function setDatNai($datNai)
@@ -325,7 +287,6 @@ class Patient
 
     /**
      * Get ipp
-     *
      * @return string
      */
     public function getIpp()
@@ -335,9 +296,7 @@ class Patient
 
     /**
      * Set ipp
-     *
      * @param string $ipp
-     *
      * @return Patient
      */
     public function setIpp($ipp)
@@ -349,7 +308,6 @@ class Patient
 
     /**
      * Get memo
-     *
      * @return string
      */
     public function getMemo()
@@ -359,9 +317,7 @@ class Patient
 
     /**
      * Set memo
-     *
      * @param string $memo
-     *
      * @return Patient
      */
     public function setMemo($memo)
@@ -373,7 +329,6 @@ class Patient
 
     /**
      * Get datDiag
-     *
      * @return DateTime
      */
     public function getDatDiag()
@@ -383,9 +338,7 @@ class Patient
 
     /**
      * Set datDiag
-     *
      * @param DateTime $datDiag
-     *
      * @return Patient
      */
     public function setDatDiag($datDiag)
@@ -397,7 +350,6 @@ class Patient
 
     /**
      * Get txtDiag
-     *
      * @return string
      */
     public function getTxtDiag()
@@ -407,9 +359,7 @@ class Patient
 
     /**
      * Set txtDiag
-     *
      * @param string $txtDiag
-     *
      * @return Patient
      */
     public function setTxtDiag($txtDiag)
@@ -421,7 +371,6 @@ class Patient
 
     /**
      * Get datLast
-     *
      * @return DateTime
      */
     public function getDatLast()
@@ -431,9 +380,7 @@ class Patient
 
     /**
      * Set datLast
-     *
      * @param DateTime $datLast
-     *
      * @return Patient
      */
     public function setDatLast($datLast)
@@ -445,7 +392,6 @@ class Patient
 
     /**
      * Get sexe
-     *
      * @return string
      */
     public function getSexe()
@@ -455,9 +401,7 @@ class Patient
 
     /**
      * Set sexe
-     *
      * @param string $sexe
-     *
      * @return Patient
      */
     public function setSexe($sexe)
@@ -469,7 +413,6 @@ class Patient
 
     /**
      * Get evolution
-     *
      * @return string
      */
     public function getEvolution()
@@ -479,9 +422,7 @@ class Patient
 
     /**
      * Set evolution
-     *
      * @param string $evolution
-     *
      * @return Patient
      */
     public function setEvolution($evolution)
@@ -493,7 +434,6 @@ class Patient
 
     /**
      * Get deces
-     *
      * @return string
      */
     public function getDeces()
@@ -503,9 +443,7 @@ class Patient
 
     /**
      * Set deces
-     *
      * @param string $deces
-     *
      * @return Patient
      */
     public function setDeces($deces)
@@ -517,7 +455,6 @@ class Patient
 
     /**
      * Get datDeces
-     *
      * @return DateTime
      */
     public function getDatDeces()
@@ -527,9 +464,7 @@ class Patient
 
     /**
      * Set datDeces
-     *
      * @param DateTime $datDeces
-     *
      * @return Patient
      */
     public function setDatDeces($datDeces)
@@ -539,12 +474,10 @@ class Patient
         return $this;
     }
 
-
 //***************************Get et Set des Liens**************************************
 
     /**
      * Get medecin
-     *
      * @return Medecin
      */
     public function getMedecin()
@@ -554,9 +487,7 @@ class Patient
 
     /**
      * Set medecin
-     *
      * @param Medecin $medecin
-     *
      * @return Patient
      */
     public function setMedecin(Medecin $medecin = null)
@@ -568,7 +499,6 @@ class Patient
 
     /**
      * Get libCim10
-     *
      * @return LibCim10
      */
     public function getLibCim10()
@@ -578,9 +508,7 @@ class Patient
 
     /**
      * Set libCim10
-     *
      * @param LibCim10 $libCim10
-     *
      * @return Patient
      */
     public function setLibCim10(LibCim10 $libCim10 = null)
@@ -599,9 +527,7 @@ class Patient
 
     /**
      * Add inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Patient
      */
     public function addInclusion(Inclusion $inclusion)
@@ -613,7 +539,6 @@ class Patient
 
     /**
      * Remove inclusion
-     *
      * @param Inclusion $inclusion
      */
     public function removeInclusion(Inclusion $inclusion)
@@ -624,7 +549,6 @@ class Patient
 
     /**
      * Get inclusions
-     *
      * @return Collection
      */
     public function getInclusions()
@@ -640,7 +564,6 @@ class Patient
 
     /**
      * Get cancer
-     *
      * @return boolean
      */
     public function getCancer()
@@ -650,9 +573,7 @@ class Patient
 
     /**
      * Set cancer
-     *
      * @param boolean $cancer
-     *
      * @return Patient
      */
     public function setCancer($cancer)
@@ -664,7 +585,6 @@ class Patient
 
     /**
      * Get idInterne
-     *
      * @return integer
      */
     public function getIdInterne()
@@ -674,9 +594,7 @@ class Patient
 
     /**
      * Set idInterne
-     *
      * @param integer $idInterne
-     *
      * @return Patient
      */
     public function setIdInterne($idInterne)

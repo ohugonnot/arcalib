@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\Entity;
 
 use DateTime;
@@ -147,7 +146,6 @@ class Traitement
     {
         return $this->traitement;
     }
-
 
     public function setTraitement($traitement)
     {
@@ -301,7 +299,6 @@ class Traitement
         return $this;
     }
 
-
     /**
      * @param Inclusion $inclusion
      * @return $this
@@ -319,6 +316,5 @@ class Traitement
     {
         return $this->inclusion;
     }
-
 
 }

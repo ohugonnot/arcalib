@@ -124,7 +124,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-
 fos_user:
     db_driver: orm # other valid values are 'mongodb' and 'couchdb'
     firewall_name: main
@@ -135,7 +134,6 @@ fos_user:
     profile:
         form:
             type: AppBundle\Form\UserTypeAdmin
-
 
 jms_i18n_routing:
     default_locale: fr
@@ -160,7 +158,6 @@ stof_doctrine_extensions:
     default_locale: fr_FR
     orm:
         default: ~
-
 
 vich_uploader:
     db_driver: orm

@@ -119,7 +119,6 @@ class MedecinRepository extends EntityRepository
         return $arrayById;
     }
 
-
     /**
      * @param $nomPrenomConact
      * @return mixed

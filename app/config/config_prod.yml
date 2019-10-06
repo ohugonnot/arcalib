@@ -21,7 +21,6 @@ monolog:
             type: console
             process_psr_3_messages: false
 
-            
 doctrine:
     orm:
         auto_generate_proxy_classes:  true # <- change to true

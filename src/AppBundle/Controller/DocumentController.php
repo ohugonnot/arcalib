@@ -81,7 +81,7 @@ class DocumentController extends Controller
             }
             $em->flush();
 
-            return $this->redirectToRoute("inclusion_list_documents", ["id" => $inclusion->getId()]);
+            return $this->redirectToRoute("editDocument", ["id" => $document->getId()]);
         }
 
         $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => self::ORDER]));
@@ -99,6 +99,7 @@ class DocumentController extends Controller
             'count' => $allDocuments->count(),
             'index' => $index ?? null,
             'allDocuments' => $allDocuments,
+            'inclusion' => $inclusion,
         ]);
     }
 
@@ -189,7 +190,6 @@ class DocumentController extends Controller
         return $this->render('document/listeDocuments.html.twig', [
             'documents' => $documents,
             'inclusion' => $inclusion,
-            'pdf_document_directory_asset' => $this->getParameter('pdf_document_directory_asset')
         ]);
     }
 
@@ -285,6 +285,25 @@ class DocumentController extends Controller
         }
 
         return new BinaryFileResponse($file_path);
+    }
+
+    /**
+     * @Route("/pdf/document/{id}/signer", name="signerDocument", options={"expose"=true})
+     * @param Document $document
+     * @return RedirectResponse
+     * @throws \Exception
+     */
+    public function signerDocument(Document $document)
+    {
+        if($this->getUser() != $document->getInclusion()->getMedecin())
+            $this->denyAccessUnlessGranted('ROLE_ADMIN', $document, "Vous n'avez pas les droits pour cette action");
+
+        $em = $this->getDoctrine()->getManager();
+        $document->setIsSigner(!$document->isSigner());
+        $document->setDateSignature(new \DateTime());
+        $em->flush();
+
+        return $this->redirectToRoute("editDocument", ["id" => $document->getId()]);
     }
 
     private function getBasePath()

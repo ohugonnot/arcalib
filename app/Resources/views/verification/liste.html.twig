@@ -17,8 +17,6 @@
                     {% set  nom = patients[id].nom~" "~patients[id].prenom %}
                     {% set path =  path('patient', {"id": id}) %}
 
-
-
                 {% elseif type == 'inclusion' %}
 
                     {% if  inclusions[id].patient != null %}
@@ -28,9 +26,6 @@
 
                     {% endif %}
 
-
-
-
                 {% elseif  type == 'visite' %}
 
                     {% if  visites[id].inclusion != null and visites[id].inclusion.patient != null %}
@@ -39,8 +34,6 @@
                         {% set path =  path('patient', {"id": visites[id].inclusion.patient.id, "id_inclusion": visites[id].inclusion.id }) %}
 
                     {% endif %}
-
-
 
                 {% elseif  type == 'facture' %}
 
@@ -67,8 +60,6 @@
                     "path": path,
                     "entityId": id,
                 }]) %}
-
-
 
             {% endfor %}
 
@@ -105,7 +96,6 @@
 
                 {% endif %}
 
-
             {% elseif  type == 'visite' %}
 
                 {% if  visites[id].inclusion != null and visites[id].inclusion.patient != null %}
@@ -113,7 +103,6 @@
                     {% set path =  path('patient', {"id": visites[id].inclusion.patient.id, "id_inclusion": visites[id].inclusion.id }) %}
 
                 {% endif %}
-
 
             {% elseif  type == 'facture' %}
 
@@ -131,7 +120,6 @@
             }]) %}
 
         {% endfor %}
-
 
     {% extends 'base.html.twig' %}
 
@@ -250,7 +238,6 @@
 
                                         <td>
 
-
                                             <div v-for="(erreur, index) in anomalie.erreurs" :data-nth='index'
                                                  class="arcoffice-anomalie-wrapper d-flex align-items-center">
 
@@ -274,7 +261,6 @@
                             </div>
 
                         </div>
-
 
                         {# Anomalies Ignorées #}
                         <div class="tab-pane" id="anomalies-ignorees" role="tabpanel"
@@ -319,7 +305,6 @@
 
                                         <td>
 
-
                                             <a target="_blank" :href="ignore.path">
 
                                                 [[ ignore.nom ]]
@@ -342,7 +327,6 @@
                                                    class="verificationSave btn btn-sm btn-outline-success" href="#">
 
                                                     <i class="fa fa-check"></i> Ne plus ignorer
-
 
                                                 </a>
 
@@ -368,9 +352,7 @@
 
         </section>
 
-
     {% endblock content %}
-
 
     {% block javascripts %}
 
@@ -387,7 +369,6 @@
                         anomalies: {{ anomalie|json_encode|raw }},
                         ignored: {{ ignored|json_encode|raw }}
                     },
-
 
                     methods: {
                         ignore: function (erreur, index, indexAnomalie) {
@@ -468,6 +449,4 @@
 
         </script>
 
-
     {% endblock %}
-

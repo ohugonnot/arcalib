@@ -44,7 +44,6 @@ class User extends BaseUser
 
     /**
      * @var string
-     *
      * @ORM\Column(name="rulesProtocole", type="string", length=255, nullable=true)
      */
     private $rulesProtocole;
@@ -65,6 +64,13 @@ class User extends BaseUser
      * @ORM\ManyToMany(targetEntity="EI", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $eis;
+
+    /**
+     * @var Medecin
+     * @ORM\OneToOne(targetEntity="Medecin", cascade={"persist"}, inversedBy="user")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $medecin;
 
     public function __construct()
     {
@@ -112,9 +118,7 @@ class User extends BaseUser
 
     /**
      * Add log
-     *
      * @param Log $log
-     *
      * @return User
      */
     public function addLog(Log $log)
@@ -126,7 +130,6 @@ class User extends BaseUser
 
     /**
      * Remove log
-     *
      * @param Log $log
      */
     public function removeLog(Log $log)
@@ -137,7 +140,6 @@ class User extends BaseUser
 
     /**
      * Get logs
-     *
      * @return Collection
      */
     public function getLogs()
@@ -147,9 +149,7 @@ class User extends BaseUser
 
     /**
      * Add todoAuteur
-     *
      * @param Todo $todoAuteur
-     *
      * @return User
      */
     public function addTodoAuteur(Todo $todoAuteur)
@@ -161,7 +161,6 @@ class User extends BaseUser
 
     /**
      * Remove todoAuteur
-     *
      * @param Todo $todoAuteur
      */
     public function removeTodoAuteur(Todo $todoAuteur)
@@ -172,7 +171,6 @@ class User extends BaseUser
 
     /**
      * Get todoAuteurs
-     *
      * @return Collection
      */
     public function getTodoAuteurs()
@@ -182,9 +180,7 @@ class User extends BaseUser
 
     /**
      * Add todoDestinataire
-     *
      * @param Todo $todoDestinataire
-     *
      * @return User
      */
     public function addTodoDestinataire(Todo $todoDestinataire)
@@ -196,7 +192,6 @@ class User extends BaseUser
 
     /**
      * Remove todoDestinataire
-     *
      * @param Todo $todoDestinataire
      */
     public function removeTodoDestinataire(Todo $todoDestinataire)
@@ -206,7 +201,6 @@ class User extends BaseUser
 
     /**
      * Get todoDestinataires
-     *
      * @return Collection
      */
     public function getTodoDestinataires()
@@ -216,9 +210,7 @@ class User extends BaseUser
 
     /**
      * Add essai
-     *
      * @param Essais $essai
-     *
      * @return User
      */
     public function addEssai(Essais $essai)
@@ -229,7 +221,6 @@ class User extends BaseUser
 
     /**
      * Remove essai
-     *
      * @param Essais $essai
      */
     public function removeEssai(Essais $essai)
@@ -239,7 +230,6 @@ class User extends BaseUser
 
     /**
      * Get essais
-     *
      * @return Collection
      */
     public function getEssais()
@@ -249,7 +239,6 @@ class User extends BaseUser
 
     /**
      * Get rulesProtocole
-     *
      * @return string
      */
     public function getRulesProtocole()
@@ -259,9 +248,7 @@ class User extends BaseUser
 
     /**
      * Set rulesProtocole
-     *
      * @param string $rulesProtocole
-     *
      * @return User
      */
     public function setRulesProtocole($rulesProtocole)
@@ -270,4 +257,25 @@ class User extends BaseUser
 
         return $this;
     }
+
+    /**
+     * @return Medecin|null
+     */
+    public function getMedecin(): ?Medecin
+    {
+        return $this->medecin;
+    }
+
+    /**
+     * @param Medecin $medecin
+     * @return User
+     */
+    public function setMedecin(?Medecin $medecin): User
+    {
+        $this->medecin = $medecin;
+        if($medecin)
+            $medecin->setUser($this);
+        return $this;
+    }
+
 }

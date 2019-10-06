@@ -41,7 +41,6 @@
 
                     </a>
 
-
                     <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('addFacture') }}">
 
                         Ajouter <i class="fa fa-plus ml-1"></i>
@@ -151,7 +150,6 @@
 
                             </th>
 
-
                             <th class='{% if factures.isSorted('f.statut') %}sorted{% endif %}'>
 
                                 {{ knp_pagination_sortable(factures, 'Statut', 'f.statut') }}
@@ -226,7 +224,6 @@
 
                                 <td>{{ facture.statut }}</td>
 
-
                                 <td class="date">
 
                                     {{ facture.dateEncaissement is empty ? "" : facture.dateEncaissement|date('d/m/Y') }}
@@ -254,7 +251,6 @@
 
                                         {% endif %}
 
-
                                     </button>
                                 </td>
 
@@ -272,7 +268,6 @@
                 </div>
 
             </div>
-
 
             <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-facture-pdf" tabindex="-1" role="dialog"
                  aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
@@ -335,7 +330,6 @@
 
                                         {# Loader #}
 
-
                                     </div>
 
                                 </div>
@@ -362,7 +356,6 @@
                 </div>
 
             </div>
-
 
         </section>
 

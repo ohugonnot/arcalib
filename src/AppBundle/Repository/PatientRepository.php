@@ -190,7 +190,6 @@ class PatientRepository extends EntityRepository
         return $results;
     }
 
-
     /**
      * @param $query
      * @param $filters

@@ -25,7 +25,6 @@ class LogManager
         $this->tokenStorage = $tokenStorage;
     }
 
-
     /**
      * @param $name
      * @param $entity

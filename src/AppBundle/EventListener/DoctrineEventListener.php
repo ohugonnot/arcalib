@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\Log;

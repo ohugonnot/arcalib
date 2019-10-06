@@ -17,7 +17,6 @@ class Tag
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,7 +26,6 @@ class Tag
 
     /**
      * @var string
-     *
      * @ORM\Column(name="nom", type="string", length=255, unique=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -35,7 +33,6 @@ class Tag
 
     /**
      * @var string
-     *
      * @ORM\Column(name="classe", type="string", length=255, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -44,7 +41,6 @@ class Tag
     // =========================variable de liens*************************************
 
     //1 essai est lié a n mots clefs et 1 mot clef est lié a n essais
-
 
     /**
      * @ORM\ManyToMany(targetEntity="Essais", inversedBy="tags", cascade={"persist"}, fetch="EXTRA_LAZY") )
@@ -64,7 +60,6 @@ class Tag
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -74,7 +69,6 @@ class Tag
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNom()
@@ -84,9 +78,7 @@ class Tag
 
     /**
      * Set nom
-     *
      * @param string $nom
-     *
      * @return Tag
      */
     public function setNom($nom)
@@ -98,7 +90,6 @@ class Tag
 
     /**
      * Get classe
-     *
      * @return string
      */
     public function getClasse()
@@ -106,14 +97,11 @@ class Tag
         return $this->classe;
     }
 
-
 // =========================constructor et Get & Set de liens*************************************
 
     /**
      * Set classe
-     *
      * @param string $classe
-     *
      * @return Tag
      */
     public function setClasse($classe)
@@ -125,9 +113,7 @@ class Tag
 
     /**
      * Add essai
-     *
      * @param Essais $essai
-     *
      * @return Tag
      */
     public function addEssai(Essais $essai)
@@ -139,7 +125,6 @@ class Tag
 
     /**
      * Remove essai
-     *
      * @param Essais $essai
      */
     public function removeEssai(Essais $essai)
@@ -149,7 +134,6 @@ class Tag
 
     /**
      * Get essais
-     *
      * @return Collection
      */
     public function getEssais()

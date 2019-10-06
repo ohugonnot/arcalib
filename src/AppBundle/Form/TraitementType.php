@@ -123,5 +123,4 @@ class TraitementType extends AbstractType
         return 'appbundle_traitement';
     }
 
-
 }

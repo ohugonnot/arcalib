@@ -185,7 +185,6 @@ class ImportCommand extends ContainerAwareCommand
                         $em->persist($CTCAEGrade);
                     }
 
-
                 }
 
                 if (($i % $batchSize) === 0) {

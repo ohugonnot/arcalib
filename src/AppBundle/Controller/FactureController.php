@@ -98,7 +98,6 @@ class FactureController extends Controller
         return $this->redirectToRoute("listeFactures");
     }
 
-
 // ------------------------------------------Liste FACTURE-----------------------------------------------------
 
     /**
@@ -148,7 +147,6 @@ class FactureController extends Controller
 
         return $export->exportCSV($factures, "factures");
     }
-
 
 	/**
 	 * @Route("/facture/upload/pdf/{id}", name="uploadFacturePDF", options={"expose"=true})

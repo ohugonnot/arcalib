@@ -133,7 +133,6 @@ class Essais
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -143,7 +142,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Nom", type="string", length=100, unique=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -151,7 +149,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Statut", type="string", length=100, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -159,7 +156,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Titre", type="text", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -167,7 +163,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="NumeroInterne", type="string", length=20, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -175,7 +170,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="NumeroCentre", type="string", length=20, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -183,7 +177,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="TypeEssai", type="string", length=100, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -191,7 +184,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="StadeEss", type="string", length=30, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -199,7 +191,6 @@ class Essais
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DateOuv", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -207,7 +198,6 @@ class Essais
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DateFinInc", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -215,7 +205,6 @@ class Essais
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DateClose", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -223,7 +212,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="TypeProm", type="string", length=50, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -231,7 +219,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Autoprom", type="string", length=20, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -239,7 +226,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Prom", type="string", length=100, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -248,7 +234,6 @@ class Essais
 // -----------coordonnées du contact---------------------
     /**
      * @var string
-     *
      * @ORM\Column(name="ContactNom", type="string", length=255, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -266,7 +251,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="ContactTel", type="string", length=50, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -275,7 +259,6 @@ class Essais
 // -----------Divers----------------------------------------
     /**
      * @var string
-     *
      * @ORM\Column(name="EcrfLink", type="string", length=255, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -283,7 +266,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Notes", type="text", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -292,7 +274,6 @@ class Essais
 //------------------------Gestion/ finances---------
     /**
      * @var string
-     *
      * @ORM\Column(name="UrcGes", type="string", length=10, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -300,7 +281,6 @@ class Essais
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="Sigrec", type="boolean", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -308,7 +288,6 @@ class Essais
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="Sigaps", type="boolean", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -316,7 +295,6 @@ class Essais
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="Emrc", type="boolean", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -324,7 +302,6 @@ class Essais
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="eudraCtNd", type="boolean", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -332,7 +309,6 @@ class Essais
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="CtNd", type="boolean", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -340,7 +316,6 @@ class Essais
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="Cancer", type="boolean", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -348,7 +323,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="TypeConv", type="string", length=100, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -356,7 +330,6 @@ class Essais
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="DateSignConv", type="date", nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -364,7 +337,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="NumEudract", type="string", length=30, nullable=true, unique=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -372,7 +344,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="NumCt", type="string", length=30, nullable=true, unique=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -380,7 +351,6 @@ class Essais
 
     /**
      * @var string
-     *
      * @ORM\Column(name="IntLink", type="string", length=150, nullable=true)
      * @Serializer\Groups({"protocole"})
      */
@@ -591,7 +561,6 @@ class Essais
         return $this;
     }
 
-
 //****************************GET ET SET********************************************
 
     public function getId()
@@ -601,7 +570,6 @@ class Essais
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNom()
@@ -609,12 +577,9 @@ class Essais
         return $this->nom;
     }
 
-
     /**
      * Set nom
-     *
      * @param string $nom
-     *
      * @return Essais
      */
 
@@ -627,7 +592,6 @@ class Essais
 
     /**
      * Get titre
-     *
      * @return string
      */
     public function getTitre()
@@ -637,9 +601,7 @@ class Essais
 
     /**
      * Set titre
-     *
      * @param string $titre
-     *
      * @return Essais
      */
     public function setTitre($titre)
@@ -651,7 +613,6 @@ class Essais
 
     /**
      * Get numeroInterne
-     *
      * @return string
      */
     public function getNumeroInterne()
@@ -661,9 +622,7 @@ class Essais
 
     /**
      * Set numeroInterne
-     *
      * @param string $numeroInterne
-     *
      * @return Essais
      */
     public function setNumeroInterne($numeroInterne)
@@ -675,7 +634,6 @@ class Essais
 
     /**
      * Get statut
-     *
      * @return string
      */
     public function getStatut()
@@ -685,9 +643,7 @@ class Essais
 
     /**
      * Set statut
-     *
      * @param string $statut
-     *
      * @return Essais
      */
     public function setStatut($statut)
@@ -699,7 +655,6 @@ class Essais
 
     /**
      * Get numeroCentre
-     *
      * @return string
      */
     public function getNumeroCentre()
@@ -709,9 +664,7 @@ class Essais
 
     /**
      * Set numeroCentre
-     *
      * @param string $numeroCentre
-     *
      * @return Essais
      */
     public function setNumeroCentre($numeroCentre)
@@ -721,13 +674,10 @@ class Essais
         return $this;
     }
 
-
-
 // -----------------Get et set de dates---------------------------------------------------
 
     /**
      * Get dateOuv
-     *
      * @return DateTime
      */
     public function getDateOuv()
@@ -737,9 +687,7 @@ class Essais
 
     /**
      * Set dateOuv
-     *
      * @param DateTime $dateOuv
-     *
      * @return Essais
      */
     public function setDateOuv($dateOuv)
@@ -751,7 +699,6 @@ class Essais
 
     /**
      * Get dateFinInc
-     *
      * @return DateTime
      */
     public function getDateFinInc()
@@ -761,9 +708,7 @@ class Essais
 
     /**
      * Set dateFinInc
-     *
      * @param DateTime $dateFinInc
-     *
      * @return Essais
      */
     public function setDateFinInc($dateFinInc)
@@ -775,7 +720,6 @@ class Essais
 
     /**
      * Get dateClose
-     *
      * @return DateTime
      */
     public function getDateClose()
@@ -785,9 +729,7 @@ class Essais
 
     /**
      * Set dateClose
-     *
      * @param DateTime $dateClose
-     *
      * @return Essais
      */
     public function setDateClose($dateClose)
@@ -799,7 +741,6 @@ class Essais
 
     /**
      * Get typeEssai
-     *
      * @return string
      */
     public function getTypeEssai()
@@ -809,9 +750,7 @@ class Essais
 
     /**
      * Set typeEssai
-     *
      * @param string $typeEssai
-     *
      * @return Essais
      */
     public function setTypeEssai($typeEssai)
@@ -823,7 +762,6 @@ class Essais
 
     /**
      * Get typeProm
-     *
      * @return string
      */
     public function getTypeProm()
@@ -833,9 +771,7 @@ class Essais
 
     /**
      * Set typeProm
-     *
      * @param string $typeProm
-     *
      * @return Essais
      */
     public function setTypeProm($typeProm)
@@ -847,7 +783,6 @@ class Essais
 
     /**
      * Get autoProm
-     *
      * @return string
      */
     public function getAutoProm()
@@ -857,9 +792,7 @@ class Essais
 
     /**
      * Set autoProm
-     *
      * @param string $autoProm
-     *
      * @return Essais
      */
     public function setAutoProm($autoProm)
@@ -871,7 +804,6 @@ class Essais
 
     /**
      * Get prom
-     *
      * @return string
      */
     public function getProm()
@@ -881,9 +813,7 @@ class Essais
 
     /**
      * Set prom
-     *
      * @param string $prom
-     *
      * @return Essais
      */
     public function setProm($prom)
@@ -895,7 +825,6 @@ class Essais
 
     /**
      * Get stadeEss
-     *
      * @return string
      */
     public function getStadeEss()
@@ -905,9 +834,7 @@ class Essais
 
     /**
      * Set stadeEss
-     *
      * @param string $stadeEss
-     *
      * @return Essais
      */
     public function setStadeEss($stadeEss)
@@ -919,7 +846,6 @@ class Essais
 
     /**
      * Get contactNom
-     *
      * @return string
      */
     public function getContactNom()
@@ -929,9 +855,7 @@ class Essais
 
     /**
      * Set contactNom
-     *
      * @param string $contactNom
-     *
      * @return Essais
      */
     public function setContactNom($contactNom)
@@ -943,7 +867,6 @@ class Essais
 
     /**
      * Get contactMail
-     *
      * @return string
      */
     public function getContactMail()
@@ -953,9 +876,7 @@ class Essais
 
     /**
      * Set contactMail
-     *
      * @param string $contactMail
-     *
      * @return Essais
      */
     public function setContactMail($contactMail)
@@ -967,7 +888,6 @@ class Essais
 
     /**
      * Get contactTel
-     *
      * @return string
      */
     public function getContactTel()
@@ -977,9 +897,7 @@ class Essais
 
     /**
      * Set contactTel
-     *
      * @param string $contactTel
-     *
      * @return Essais
      */
     public function setContactTel($contactTel)
@@ -991,7 +909,6 @@ class Essais
 
     /**
      * Get ecrfLink
-     *
      * @return string
      */
     public function getEcrfLink()
@@ -1001,9 +918,7 @@ class Essais
 
     /**
      * Set ecrfLink
-     *
      * @param string $ecrfLink
-     *
      * @return Essais
      */
     public function setEcrfLink($ecrfLink)
@@ -1015,7 +930,6 @@ class Essais
 
     /**
      * Get notes
-     *
      * @return string
      */
     public function getNotes()
@@ -1025,9 +939,7 @@ class Essais
 
     /**
      * Set notes
-     *
      * @param string $notes
-     *
      * @return Essais
      */
     public function setNotes($notes)
@@ -1039,7 +951,6 @@ class Essais
 
     /**
      * Get urcGes
-     *
      * @return string
      */
     public function getUrcGes()
@@ -1049,9 +960,7 @@ class Essais
 
     /**
      * Set urcGes
-     *
      * @param string $urcGes
-     *
      * @return Essais
      */
     public function setUrcGes($urcGes)
@@ -1063,7 +972,6 @@ class Essais
 
     /**
      * Get sigrec
-     *
      * @return bool
      */
     public function getSigrec()
@@ -1073,9 +981,7 @@ class Essais
 
     /**
      * Set sigrec
-     *
      * @param boolean $sigrec
-     *
      * @return Essais
      */
     public function setSigrec($sigrec)
@@ -1087,7 +993,6 @@ class Essais
 
     /**
      * Get sigaps
-     *
      * @return bool
      */
     public function getSigaps()
@@ -1097,9 +1002,7 @@ class Essais
 
     /**
      * Set sigaps
-     *
      * @param boolean $sigaps
-     *
      * @return Essais
      */
     public function setSigaps($sigaps)
@@ -1111,7 +1014,6 @@ class Essais
 
     /**
      * Get emrc
-     *
      * @return bool
      */
     public function getEmrc()
@@ -1121,9 +1023,7 @@ class Essais
 
     /**
      * Set emrc
-     *
      * @param boolean $emrc
-     *
      * @return Essais
      */
     public function setEmrc($emrc)
@@ -1135,7 +1035,6 @@ class Essais
 
     /**
      * Get cancer
-     *
      * @return boolean
      */
     public function getCancer()
@@ -1145,9 +1044,7 @@ class Essais
 
     /**
      * Set cancer
-     *
      * @param boolean $cancer
-     *
      * @return Essais
      */
     public function setCancer($cancer)
@@ -1160,7 +1057,6 @@ class Essais
 
     /**
      * Get typeConv
-     *
      * @return string
      */
     public function getTypeConv()
@@ -1170,9 +1066,7 @@ class Essais
 
     /**
      * Set typeConv
-     *
      * @param string $typeConv
-     *
      * @return Essais
      */
     public function setTypeConv($typeConv)
@@ -1184,7 +1078,6 @@ class Essais
 
     /**
      * Get dateSignConv
-     *
      * @return DateTime
      */
     public function getDateSignConv()
@@ -1194,9 +1087,7 @@ class Essais
 
     /**
      * Set dateSignConv
-     *
      * @param DateTime $dateSignConv
-     *
      * @return Essais
      */
     public function setDateSignConv($dateSignConv)
@@ -1208,7 +1099,6 @@ class Essais
 
     /**
      * Get numEudract
-     *
      * @return string
      */
     public function getNumEudract()
@@ -1218,9 +1108,7 @@ class Essais
 
     /**
      * Set numEudract
-     *
      * @param string $numEudract
-     *
      * @return Essais
      */
     public function setNumEudract($numEudract)
@@ -1232,7 +1120,6 @@ class Essais
 
     /**
      * Get numCt
-     *
      * @return string
      */
     public function getNumCt()
@@ -1242,9 +1129,7 @@ class Essais
 
     /**
      * Set numCt
-     *
      * @param string $numCt
-     *
      * @return Essais
      */
     public function setNumCt($numCt)
@@ -1256,7 +1141,6 @@ class Essais
 
     /**
      * Get intLink
-     *
      * @return string
      */
     public function getIntLink()
@@ -1266,9 +1150,7 @@ class Essais
 
     /**
      * Set intLink
-     *
      * @param string $intLink
-     *
      * @return Essais
      */
     public function setIntLink($intLink)
@@ -1280,7 +1162,6 @@ class Essais
 
     /**
      * Get objectif
-     *
      * @return integer
      */
     public function getObjectif()
@@ -1290,9 +1171,7 @@ class Essais
 
     /**
      * Set objectif
-     *
      * @param integer $objectif
-     *
      * @return Essais
      */
     public function setObjectif($objectif)
@@ -1302,12 +1181,10 @@ class Essais
         return $this;
     }
 
-
     //-----------------------------------------GET et SET  de Liens--------------------------------------------------
 
     /**
      * Get arc
-     *
      * @return Arc
      */
     public function getArc()
@@ -1317,9 +1194,7 @@ class Essais
 
     /**
      * Set arc
-     *
      * @param Arc $arc
-     *
      * @return Essais
      */
     public function setArc(Arc $arc = null)
@@ -1331,7 +1206,6 @@ class Essais
 
     /**
      * Get medecin
-     *
      * @return Medecin
      */
     public function getMedecin()
@@ -1341,9 +1215,7 @@ class Essais
 
     /**
      * Set medecin
-     *
      * @param Medecin $medecin
-     *
      * @return Essais
      */
     public function setMedecin(Medecin $medecin = null)
@@ -1355,9 +1227,7 @@ class Essais
 
     /**
      * Add inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Essais
      */
     public function addInclusion(Inclusion $inclusion)
@@ -1369,7 +1239,6 @@ class Essais
 
     /**
      * Remove inclusion
-     *
      * @param Inclusion $inclusion
      */
     public function removeInclusion(Inclusion $inclusion)
@@ -1380,7 +1249,6 @@ class Essais
 
     /**
      * Get inclusions
-     *
      * @return Collection
      */
     public function getInclusions()
@@ -1388,12 +1256,9 @@ class Essais
         return $this->inclusions;
     }
 
-
     /**
      * Add facture
-     *
      * @param Facture $facture
-     *
      * @return Essais
      */
     public function addFacture(Facture $facture)
@@ -1405,7 +1270,6 @@ class Essais
 
     /**
      * Remove facture
-     *
      * @param Facture $facture
      */
     public function removeFacture(Facture $facture)
@@ -1416,7 +1280,6 @@ class Essais
 
     /**
      * Get factures
-     *
      * @return Collection
      */
     public function getFactures()
@@ -1426,9 +1289,7 @@ class Essais
 
     /**
      * Add tag
-     *
      * @param Tag $tag
-     *
      * @return Essais
      */
     public function addTag(Tag $tag)
@@ -1448,7 +1309,6 @@ class Essais
 
     /**
      * Remove tag
-     *
      * @param Tag $tag
      */
     public function removeTag(Tag $tag)
@@ -1459,7 +1319,6 @@ class Essais
 
     /**
      * Get tags
-     *
      * @return Collection
      */
     public function getTags()
@@ -1469,7 +1328,6 @@ class Essais
 
     /**
      * Get detail
-     *
      * @return EssaiDetail
      */
     public function getDetail()
@@ -1479,9 +1337,7 @@ class Essais
 
     /**
      * Set detail
-     *
      * @param EssaiDetail $detail
-     *
      * @return Essais
      */
     public function setDetail(EssaiDetail $detail = null)
@@ -1493,9 +1349,7 @@ class Essais
 
     /**
      * Add annuaire
-     *
      * @param Annuaire $annuaire
-     *
      * @return Essais
      */
     public function addAnnuaire(Annuaire $annuaire)
@@ -1509,7 +1363,6 @@ class Essais
 
     /**
      * Remove annuaire
-     *
      * @param Annuaire $annuaire
      */
     public function removeAnnuaire(Annuaire $annuaire)
@@ -1522,7 +1375,6 @@ class Essais
 
     /**
      * Get annuaires
-     *
      * @return Collection
      */
     public function getAnnuaires()
@@ -1532,7 +1384,6 @@ class Essais
 
     /**
      * Get eudraCtNd
-     *
      * @return boolean
      */
     public function getEudraCtNd()
@@ -1542,9 +1393,7 @@ class Essais
 
     /**
      * Set eudraCtNd
-     *
      * @param boolean $eudraCtNd
-     *
      * @return Essais
      */
     public function setEudraCtNd($eudraCtNd)
@@ -1556,7 +1405,6 @@ class Essais
 
     /**
      * Get ctNd
-     *
      * @return boolean
      */
     public function getCtNd()
@@ -1566,9 +1414,7 @@ class Essais
 
     /**
      * Set ctNd
-     *
      * @param boolean $ctNd
-     *
      * @return Essais
      */
     public function setCtNd($ctNd)
@@ -1580,9 +1426,7 @@ class Essais
 
     /**
      * Add user
-     *
      * @param User $user
-     *
      * @return Essais
      */
     public function addUser(User $user)
@@ -1594,7 +1438,6 @@ class Essais
 
     /**
      * Remove user
-     *
      * @param User $user
      */
     public function removeUser(User $user)
@@ -1604,7 +1447,6 @@ class Essais
 
     /**
      * Get users
-     *
      * @return Collection
      */
     public function getUsers()
@@ -1614,9 +1456,7 @@ class Essais
 
     /**
      * Add service
-     *
      * @param Service $service
-     *
      * @return Essais
      */
     public function addService(Service $service)
@@ -1628,7 +1468,6 @@ class Essais
 
     /**
      * Remove service
-     *
      * @param Service $service
      */
     public function removeService(Service $service)
@@ -1638,7 +1477,6 @@ class Essais
 
     /**
      * Get services
-     *
      * @return Collection
      */
     public function getServices()
@@ -1648,9 +1486,7 @@ class Essais
 
     /**
      * Add document
-     *
      * @param DocumentEssai $documentEssai
-     *
      * @return Essais
      */
     public function addDocument(DocumentEssai $documentEssai)
@@ -1663,7 +1499,6 @@ class Essais
 
     /**
      * Remove document
-     *
      * @param DocumentEssai $documentEssai
      */
     public function removeDocument(DocumentEssai $documentEssai)
@@ -1673,7 +1508,6 @@ class Essais
 
     /**
      * Get documents
-     *
      * @return Collection
      */
     public function getDocuments()
@@ -1683,9 +1517,7 @@ class Essais
 
     /**
      * Add Fil
-     *
      * @param Fil $fil
-     *
      * @return Essais
      */
     public function addFil(Fil $fil)
@@ -1698,7 +1530,6 @@ class Essais
 
     /**
      * Remove fil
-     *
      * @param Fil $fil
      */
     public function removeFil(Fil $fil)
@@ -1709,7 +1540,6 @@ class Essais
 
     /**
      * Get fils
-     *
      * @return Collection|Fil[]
      */
     public function getFils()

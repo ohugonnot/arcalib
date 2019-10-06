@@ -71,5 +71,4 @@ class DocumentType extends AbstractType
         return 'appbundle_document';
     }
 
-
 }

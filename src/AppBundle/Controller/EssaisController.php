@@ -39,7 +39,6 @@ class EssaisController extends Controller
         return new JsonResponse(true);
     }
 
-
     /**
      * @Route("/protocole/editer/{id}", name="editEssai", options={"expose"=true})
      * @Route("/protocole", name="protocole", options={"expose"=true})

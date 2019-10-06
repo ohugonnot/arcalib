@@ -29,7 +29,6 @@ class RolesHelper
 
     /**
      * Return roles.
-     *
      * @return array
      */
     public function getRoles()

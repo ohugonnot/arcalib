@@ -17,7 +17,6 @@ class Medecin
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -26,117 +25,100 @@ class Medecin
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Nom", type="string", length=100)
      */
     private $nom;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Prenom", type="string", length=100,nullable=true)
      */
     private $prenom;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Dect", type="string", length=30, nullable=true)
      */
     private $dect;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Portable", type="string", length=100, nullable=true)
      */
     private $portable;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Note", type="text", nullable=true)
      */
     private $note;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="SecNom", type="string", length=255, nullable=true)
      */
     private $secNom;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="SecTel", type="string", length=100, nullable=true)
      */
     private $secTel;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="NumSiret", type="string", length=100,  nullable=true)
      */
     private $numSiret;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="NumSigaps", type="string", length=100,  nullable=true)
      */
     private $numSigaps;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="NumOrdre", type="string", length=100,  nullable=true)
      */
     private $numOrdre;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="NumRpps", type="string", length=100, nullable=true)
      */
     private $numRpps;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="Email", type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="dateEntre", type="date", nullable=true)
      */
     private $dateEntre;
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="dateSortie", type="date", nullable=true)
      */
     private $dateSortie;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="merri", type="string", length=20,  nullable=true)
      */
     private $merri;
 
     //************************************************** variable de Liens******************************
 
-
     /**
      * @ORM\OneToMany(targetEntity="Essais", mappedBy="medecin")
      */
     private $essais;
-
 
     // Ici la relation avec le patient: un medecin est lié a plusieurs patients
 
@@ -144,7 +126,6 @@ class Medecin
      * @ORM\OneToMany(targetEntity="Patient", mappedBy="medecin")
      */
     private $patients;
-
 
     // Ici la relation avec l'inclusion': un medecin est lié a plusieurs inclusion
 
@@ -158,6 +139,12 @@ class Medecin
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $service;
+
+    /**
+     * @var User
+     * @ORM\OneToOne(targetEntity="User", cascade={"persist"}, mappedBy="medecin")
+     */
+    private $user;
 
     //************************************************** Constructor******************************
 
@@ -176,7 +163,6 @@ class Medecin
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -186,7 +172,6 @@ class Medecin
 
     /**
      * Get dect
-     *
      * @return string
      */
     public function getDect()
@@ -196,9 +181,7 @@ class Medecin
 
     /**
      * Set dect
-     *
      * @param string $dect
-     *
      * @return medecin
      */
     public function setDect($dect)
@@ -210,7 +193,6 @@ class Medecin
 
     /**
      * Get portable
-     *
      * @return string
      */
     public function getPortable()
@@ -220,9 +202,7 @@ class Medecin
 
     /**
      * Set portable
-     *
      * @param string $portable
-     *
      * @return Medecin
      */
     public function setPortable($portable)
@@ -234,7 +214,6 @@ class Medecin
 
     /**
      * Get note
-     *
      * @return string
      */
     public function getNote()
@@ -244,9 +223,7 @@ class Medecin
 
     /**
      * Set note
-     *
      * @param string $note
-     *
      * @return medecin
      */
     public function setNote($note)
@@ -258,7 +235,6 @@ class Medecin
 
     /**
      * Get secNom
-     *
      * @return string
      */
     public function getSecNom()
@@ -268,9 +244,7 @@ class Medecin
 
     /**
      * Set secNom
-     *
      * @param string $secNom
-     *
      * @return medecin
      */
     public function setSecNom($secNom)
@@ -282,7 +256,6 @@ class Medecin
 
     /**
      * Get secTel
-     *
      * @return string
      */
     public function getSecTel()
@@ -292,9 +265,7 @@ class Medecin
 
     /**
      * Set secTel
-     *
      * @param string $secTel
-     *
      * @return medecin
      */
     public function setSecTel($secTel)
@@ -306,7 +277,6 @@ class Medecin
 
     /**
      * Get numSiret
-     *
      * @return int
      */
     public function getNumSiret()
@@ -316,9 +286,7 @@ class Medecin
 
     /**
      * Set numSiret
-     *
      * @param integer $numSiret
-     *
      * @return medecin
      */
     public function setNumSiret($numSiret)
@@ -330,7 +298,6 @@ class Medecin
 
     /**
      * Get numSigaps
-     *
      * @return int
      */
     public function getNumSigaps()
@@ -340,9 +307,7 @@ class Medecin
 
     /**
      * Set numSigaps
-     *
      * @param integer $numSigaps
-     *
      * @return medecin
      */
     public function setNumSigaps($numSigaps)
@@ -354,7 +319,6 @@ class Medecin
 
     /**
      * Get numOrdre
-     *
      * @return integer
      */
     public function getNumOrdre()
@@ -364,9 +328,7 @@ class Medecin
 
     /**
      * Set numOrdre
-     *
      * @param integer $numOrdre
-     *
      * @return Medecin
      */
     public function setNumOrdre($numOrdre)
@@ -378,7 +340,6 @@ class Medecin
 
     /**
      * Get numRpps
-     *
      * @return integer
      */
     public function getNumRpps()
@@ -388,9 +349,7 @@ class Medecin
 
     /**
      * Set numRpps
-     *
      * @param integer $numRpps
-     *
      * @return Medecin
      */
     public function setNumRpps($numRpps)
@@ -402,9 +361,7 @@ class Medecin
 
     /**
      * Add patient
-     *
      * @param Patient $patient
-     *
      * @return medecin
      */
     public function addPatient(Patient $patient)
@@ -417,7 +374,6 @@ class Medecin
 
     /**
      * Remove patient
-     *
      * @param Patient $patient
      */
     public function removePatient(Patient $patient)
@@ -428,7 +384,6 @@ class Medecin
 
     /**
      * Get patients
-     *
      * @return Collection
      */
     public function getPatients()
@@ -438,9 +393,7 @@ class Medecin
 
     /**
      * Add inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Medecin
      */
     public function addInclusion(Inclusion $inclusion)
@@ -451,12 +404,10 @@ class Medecin
         return $this;
     }
 
-
     //************************************************** get et set** de liens****************************
 
     /**
      * Remove inclusion
-     *
      * @param Inclusion $inclusion
      */
     public function removeInclusion(Inclusion $inclusion)
@@ -468,7 +419,6 @@ class Medecin
 
     /**
      * Get inclusions
-     *
      * @return Collection
      */
     public function getInclusions()
@@ -483,9 +433,7 @@ class Medecin
 
     /**
      * Add essai
-     *
      * @param Essais $essai
-     *
      * @return Medecin
      */
     public function addEssai(Essais $essai)
@@ -497,7 +445,6 @@ class Medecin
 
     /**
      * Remove essai
-     *
      * @param Essais $essai
      */
     public function removeEssai(Essais $essai)
@@ -508,7 +455,6 @@ class Medecin
 
     /**
      * Get essais
-     *
      * @return Collection
      */
     public function getEssais()
@@ -518,7 +464,6 @@ class Medecin
 
     /**
      * Get service
-     *
      * @return Service
      */
     public function getService()
@@ -528,9 +473,7 @@ class Medecin
 
     /**
      * Set service
-     *
      * @param Service $service
-     *
      * @return Medecin
      */
     public function setService(Service $service = null)
@@ -542,7 +485,6 @@ class Medecin
 
     /**
      * Get email
-     *
      * @return string
      */
     public function getEmail()
@@ -552,9 +494,7 @@ class Medecin
 
     /**
      * Set email
-     *
      * @param string $email
-     *
      * @return Medecin
      */
     public function setEmail($email)
@@ -566,7 +506,6 @@ class Medecin
 
     /**
      * Get dateEntre
-     *
      * @return DateTime
      */
     public function getDateEntre()
@@ -576,9 +515,7 @@ class Medecin
 
     /**
      * Set dateEntre
-     *
      * @param DateTime $dateEntre
-     *
      * @return Medecin
      */
     public function setDateEntre($dateEntre)
@@ -591,7 +528,6 @@ class Medecin
 
     /**
      * Get dateSortie
-     *
      * @return DateTime
      */
     public function getDateSortie()
@@ -601,9 +537,7 @@ class Medecin
 
     /**
      * Set dateSortie
-     *
      * @param DateTime $dateSortie
-     *
      * @return Medecin
      */
     public function setDateSortie($dateSortie)
@@ -615,7 +549,6 @@ class Medecin
 
     /**
      * Get merri
-     *
      * @return string
      */
     public function getMerri()
@@ -625,9 +558,7 @@ class Medecin
 
     /**
      * Set merri
-     *
      * @param string $merri
-     *
      * @return Medecin
      */
     public function setMerri($merri)
@@ -637,14 +568,13 @@ class Medecin
         return $this;
     }
 
-    public function getNomPrenom()
+    public function getNomPrenom() : string
     {
         return $this->getNom() . ' ' . $this->getPrenom();
     }
 
     /**
      * Get nom
-     *
      * @return string
      */
     public function getNom()
@@ -654,9 +584,7 @@ class Medecin
 
     /**
      * Set nom
-     *
      * @param string $nom
-     *
      * @return medecin
      */
     public function setNom($nom)
@@ -668,7 +596,6 @@ class Medecin
 
     /**
      * Get prenom
-     *
      * @return string
      */
     public function getPrenom()
@@ -678,15 +605,31 @@ class Medecin
 
     /**
      * Set prenom
-     *
      * @param string $prenom
-     *
      * @return Medecin
      */
     public function setPrenom($prenom)
     {
         $this->prenom = ucfirst(strtolower($prenom));
 
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return Medecin
+     */
+    public function setUser(?User $user): Medecin
+    {
+        $this->user = $user;
         return $this;
     }
 }

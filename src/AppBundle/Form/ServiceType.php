@@ -36,7 +36,6 @@ class ServiceType extends AbstractType
         ));
     }
 
-
     /**
      * {@inheritdoc}
      */

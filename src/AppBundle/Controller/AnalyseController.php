@@ -339,7 +339,6 @@ class AnalyseController extends Controller
         return $dateArc;
     }
 
-
     public function add0($month)
     {
 
@@ -510,7 +509,6 @@ class AnalyseController extends Controller
 
         return $inclusionsByMounth;
     }
-
 
     public function inclusionsByProtocole(?DateTime $debut, ?DateTime $fin)
     {

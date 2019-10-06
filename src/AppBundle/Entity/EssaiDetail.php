@@ -14,7 +14,6 @@ class EssaiDetail
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,32 +22,27 @@ class EssaiDetail
 
     /**
      * @var string
-     *
      * @ORM\Column(name="crInc", type="text", nullable=true)
      */
     private $crInc;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="crNonInc", type="text", nullable=true)
      */
     private $crNonInc;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="Objectif", type="text", nullable=true)
      */
     private $objectif;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="calendar", type="text",nullable=true)
      */
     private $calendar;
-
 
     /** ***************************************Liens One to One vers ESSAI*********************************/
 
@@ -57,12 +51,10 @@ class EssaiDetail
      */
     private $essai;
 
-
     /*****************************************GET ET SET*********************************/
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -72,7 +64,6 @@ class EssaiDetail
 
     /**
      * Get crInc
-     *
      * @return string
      */
     public function getCrInc()
@@ -82,9 +73,7 @@ class EssaiDetail
 
     /**
      * Set crInc
-     *
      * @param string $crInc
-     *
      * @return EssaiDetail
      */
     public function setCrInc($crInc)
@@ -96,7 +85,6 @@ class EssaiDetail
 
     /**
      * Get crNonInc
-     *
      * @return string
      */
     public function getCrNonInc()
@@ -106,9 +94,7 @@ class EssaiDetail
 
     /**
      * Set crNonInc
-     *
      * @param string $crNonInc
-     *
      * @return EssaiDetail
      */
     public function setCrNonInc($crNonInc)
@@ -120,7 +106,6 @@ class EssaiDetail
 
     /**
      * Get objectif
-     *
      * @return string
      */
     public function getObjectif()
@@ -130,9 +115,7 @@ class EssaiDetail
 
     /**
      * Set objectif
-     *
      * @param string $objectif
-     *
      * @return EssaiDetail
      */
     public function setObjectif($objectif)
@@ -144,7 +127,6 @@ class EssaiDetail
 
     /**
      * Get calendar
-     *
      * @return string
      */
     public function getCalendar()
@@ -154,9 +136,7 @@ class EssaiDetail
 
     /**
      * Set calendar
-     *
      * @param string $calendar
-     *
      * @return EssaiDetail
      */
     public function setCalendar($calendar)
@@ -170,7 +150,6 @@ class EssaiDetail
 
     /**
      * Get essai
-     *
      * @return Essais
      */
     public function getEssai()
@@ -180,9 +159,7 @@ class EssaiDetail
 
     /**
      * Set essai
-     *
      * @param Essais $essai
-     *
      * @return EssaiDetail
      */
     public function setEssai(Essais $essai = null)

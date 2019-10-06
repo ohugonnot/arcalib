@@ -40,7 +40,6 @@ class DocumentEssai
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -49,7 +48,6 @@ class DocumentEssai
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="date", type="date")
      */
     private $date;
@@ -63,21 +61,18 @@ class DocumentEssai
 
     /**
      * @var string
-     *
      * @ORM\Column(name="titre", type="string", length=255, nullable=true)
      */
     private $titre;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="details", type="text", nullable=true)
      */
     private $details;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="file", type="string", length=255, nullable=true)
      */
     private $file;
@@ -90,7 +85,6 @@ class DocumentEssai
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -100,7 +94,6 @@ class DocumentEssai
 
     /**
      * Get date
-     *
      * @return DateTime
      */
     public function getDate()
@@ -110,9 +103,7 @@ class DocumentEssai
 
     /**
      * Set date
-     *
      * @param DateTime $date
-     *
      * @return DocumentEssai
      */
     public function setDate($date)
@@ -124,7 +115,6 @@ class DocumentEssai
 
     /**
      * Get type
-     *
      * @return string
      */
     public function getType()
@@ -134,9 +124,7 @@ class DocumentEssai
 
     /**
      * Set type
-     *
      * @param string $type
-     *
      * @return DocumentEssai
      */
     public function setType($type)
@@ -148,7 +136,6 @@ class DocumentEssai
 
     /**
      * Get jma
-     *
      * @return string
      */
     public function getTitre()
@@ -158,7 +145,6 @@ class DocumentEssai
 
     /**
      * Set jma
-     *
      * @param $titre
      * @return DocumentEssai
      */
@@ -171,7 +157,6 @@ class DocumentEssai
 
     /**
      * Get description
-     *
      * @return string
      */
     public function getDetails()
@@ -181,7 +166,6 @@ class DocumentEssai
 
     /**
      * Set description
-     *
      * @param $details
      * @return DocumentEssai
      */
@@ -194,7 +178,6 @@ class DocumentEssai
 
     /**
      * Get file
-     *
      * @return string
      */
     public function getFile()
@@ -204,9 +187,7 @@ class DocumentEssai
 
     /**
      * Set file
-     *
      * @param string $file
-     *
      * @return DocumentEssai
      */
     public function setFile($file)
@@ -218,7 +199,6 @@ class DocumentEssai
 
     /**
      * Get inclusion
-     *
      * @return Essais
      */
     public function getEssai()
@@ -228,9 +208,7 @@ class DocumentEssai
 
     /**
      * Set inclusion
-     *
      * @param Essais $essai
-     *
      * @return DocumentEssai
      */
     public function setEssai(Essais $essai = null)

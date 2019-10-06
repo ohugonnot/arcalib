@@ -20,7 +20,6 @@ class TodoAlerte
     private $storage;
     private $requestStack;
 
-
     /**
      * TodoAlerte constructor.
      * @param EntityManagerInterface $em
@@ -56,7 +55,6 @@ class TodoAlerte
 
         return $alertes;
     }
-
 
     /**
      * @return array

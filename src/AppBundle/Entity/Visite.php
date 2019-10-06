@@ -41,7 +41,6 @@ class Visite
 
     ];
 
-
     const FAITE = "Faite";
     const NON_FAITE = 'Non faite';
     const PREVUE_CONFIRMEE = "Prévue confirmée";
@@ -61,60 +60,50 @@ class Visite
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
-
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
     private $date;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="type", type="string", length=40, nullable=true)
      */
     private $type;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="calendar", type="string", length=30, nullable=true)
      */
     private $calendar;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="statut", type="string", length=100, nullable=true)
      */
     private $statut;
 
     /**
      * @var bool
-     *
      * @ORM\Column(name="fact", type="boolean", nullable=true)
      */
     private $fact;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="numfact", type="string", length=30, nullable=true)
      */
     private $numfact;
 
-
     /**
      * @var string
-     *
      * @ORM\Column(name="note", type="text", nullable=true)
      */
     private $note;
@@ -127,7 +116,6 @@ class Visite
      */
     private $inclusion;
 
-
 // Lien one arc a many visites
     /**
      * @ORM\ManyToOne(targetEntity="Arc", inversedBy="visites")
@@ -135,12 +123,10 @@ class Visite
      */
     private $arc;
 
-
 //****************************************************************************************GET et SET**************************************************************
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -150,7 +136,6 @@ class Visite
 
     /**
      * Get date
-     *
      * @return DateTime
      */
     public function getDate()
@@ -160,9 +145,7 @@ class Visite
 
     /**
      * Set date
-     *
      * @param DateTime $date
-     *
      * @return Visite
      */
     public function setDate($date)
@@ -174,7 +157,6 @@ class Visite
 
     /**
      * Get type
-     *
      * @return string
      */
     public function getType()
@@ -184,9 +166,7 @@ class Visite
 
     /**
      * Set type
-     *
      * @param string $type
-     *
      * @return Visite
      */
     public function setType($type)
@@ -198,7 +178,6 @@ class Visite
 
     /**
      * Get calendar
-     *
      * @return string
      */
     public function getCalendar()
@@ -208,9 +187,7 @@ class Visite
 
     /**
      * Set calendar
-     *
      * @param string $calendar
-     *
      * @return Visite
      */
     public function setCalendar($calendar)
@@ -222,7 +199,6 @@ class Visite
 
     /**
      * Get statut
-     *
      * @return string
      */
     public function getStatut()
@@ -232,9 +208,7 @@ class Visite
 
     /**
      * Set statut
-     *
      * @param string $statut
-     *
      * @return Visite
      */
     public function setStatut($statut)
@@ -246,7 +220,6 @@ class Visite
 
     /**
      * Get fact
-     *
      * @return boolean
      */
     public function getFact()
@@ -256,9 +229,7 @@ class Visite
 
     /**
      * Set fact
-     *
      * @param boolean $fact
-     *
      * @return Visite
      */
     public function setFact($fact)
@@ -270,7 +241,6 @@ class Visite
 
     /**
      * Get numfact
-     *
      * @return boolean
      */
     public function getNumfact()
@@ -280,9 +250,7 @@ class Visite
 
     /**
      * Set numfact
-     *
      * @param boolean $numfact
-     *
      * @return Visite
      */
     public function setNumfact($numfact)
@@ -294,7 +262,6 @@ class Visite
 
     /**
      * Get note
-     *
      * @return string
      */
     public function getNote()
@@ -304,9 +271,7 @@ class Visite
 
     /**
      * Set note
-     *
      * @param string $note
-     *
      * @return Visite
      */
     public function setNote($note)
@@ -320,7 +285,6 @@ class Visite
 
     /**
      * Get inclusion
-     *
      * @return Inclusion
      */
     public function getInclusion()
@@ -330,12 +294,9 @@ class Visite
 
     /**
      * Set inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Visite
      */
-
 
     public function setInclusion(Inclusion $inclusion = null)
     {
@@ -346,7 +307,6 @@ class Visite
 
     /**
      * Get arc
-     *
      * @return Arc
      */
     public function getArc()
@@ -356,9 +316,7 @@ class Visite
 
     /**
      * Set arc
-     *
      * @param Arc $arc
-     *
      * @return Visite
      */
     public function setArc(Arc $arc = null)
@@ -367,6 +325,5 @@ class Visite
 
         return $this;
     }
-
 
 }

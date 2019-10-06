@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Document
- *
  * @ORM\Table(name="document")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DocumentRepository")
  */
@@ -63,7 +62,6 @@ class Document
 
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -72,7 +70,6 @@ class Document
 
     /**
      * @var DateTime
-     *
      * @ORM\Column(name="date", type="date")
      */
     private $date;
@@ -86,31 +83,39 @@ class Document
 
     /**
      * @var string
-     *
      * @ORM\Column(name="jma", type="string", length=255, nullable=true)
      */
     private $jma;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="auteur", type="string", length=255, nullable=true)
      */
     private $auteur;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="file", type="string", length=255, nullable=true)
      */
     private $file;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="is_signer", type="boolean")
+     */
+    private $isSigner = false;
+
+    /**
+     * @var DateTime|null
+     * @ORM\Column(name="date_signature", type="date", nullable=true)
+     */
+    private $dateSignature;
 
     /**
      * @ORM\ManyToOne(targetEntity="Inclusion", inversedBy="documents")
@@ -120,7 +125,6 @@ class Document
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -129,8 +133,25 @@ class Document
     }
 
     /**
+     * @return bool
+     */
+    public function isSigner(): bool
+    {
+        return $this->isSigner;
+    }
+
+    /**
+     * @param bool $isSigner
+     * @return Document
+     */
+    public function setIsSigner(bool $isSigner): Document
+    {
+        $this->isSigner = $isSigner;
+        return $this;
+    }
+
+    /**
      * Get date
-     *
      * @return DateTime
      */
     public function getDate()
@@ -140,9 +161,7 @@ class Document
 
     /**
      * Set date
-     *
      * @param DateTime $date
-     *
      * @return Document
      */
     public function setDate($date)
@@ -154,7 +173,6 @@ class Document
 
     /**
      * Get type
-     *
      * @return string
      */
     public function getType()
@@ -164,9 +182,7 @@ class Document
 
     /**
      * Set type
-     *
      * @param string $type
-     *
      * @return Document
      */
     public function setType($type)
@@ -178,7 +194,6 @@ class Document
 
     /**
      * Get jma
-     *
      * @return string
      */
     public function getJma()
@@ -188,9 +203,7 @@ class Document
 
     /**
      * Set jma
-     *
      * @param string $jma
-     *
      * @return Document
      */
     public function setJma($jma)
@@ -202,7 +215,6 @@ class Document
 
     /**
      * Get description
-     *
      * @return string
      */
     public function getDescription()
@@ -212,9 +224,7 @@ class Document
 
     /**
      * Set description
-     *
      * @param string $description
-     *
      * @return Document
      */
     public function setDescription($description)
@@ -226,7 +236,6 @@ class Document
 
     /**
      * Get auteur
-     *
      * @return string
      */
     public function getAuteur()
@@ -236,9 +245,7 @@ class Document
 
     /**
      * Set auteur
-     *
      * @param string $auteur
-     *
      * @return Document
      */
     public function setAuteur($auteur)
@@ -250,7 +257,6 @@ class Document
 
     /**
      * Get file
-     *
      * @return string
      */
     public function getFile()
@@ -260,9 +266,7 @@ class Document
 
     /**
      * Set file
-     *
      * @param string $file
-     *
      * @return Document
      */
     public function setFile($file)
@@ -274,7 +278,6 @@ class Document
 
     /**
      * Get inclusion
-     *
      * @return Inclusion
      */
     public function getInclusion()
@@ -284,15 +287,31 @@ class Document
 
     /**
      * Set inclusion
-     *
      * @param Inclusion $inclusion
-     *
      * @return Document
      */
     public function setInclusion(Inclusion $inclusion = null)
     {
         $this->inclusion = $inclusion;
 
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getDateSignature(): ?DateTime
+    {
+        return $this->dateSignature;
+    }
+
+    /**
+     * @param DateTime|null $dateSignature
+     * @return Document
+     */
+    public function setDateSignature(?DateTime $dateSignature): Document
+    {
+        $this->dateSignature = $dateSignature;
         return $this;
     }
 }

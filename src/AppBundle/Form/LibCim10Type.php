@@ -46,5 +46,4 @@ class LibCim10Type extends AbstractType
         return 'appbundle_libcim10';
     }
 
-
 }

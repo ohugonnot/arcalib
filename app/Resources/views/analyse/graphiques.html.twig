@@ -40,7 +40,6 @@
 
             <div class="container">
 
-
                 {# Filtre par date ----------------------------------------------------------------------------------------------------------#}
 
                 <div class="row border-0 py-3 d-flex justify-content-center">
@@ -185,11 +184,9 @@
 
                         </div>
 
-
                         {# Onglet 2-----------#}
 
                         {# Graphique 2 ( canvas2)-------------------Inclusion par médecin / mois -entre D1 et D2---------------------------------------------------------------------#}
-
 
                         <div class="tab-pane" id="inclusion-medecin-mois" role="tabpanel" aria-labelledby="inclusion-medecin-mois"
                              aria-expanded="true">
@@ -215,10 +212,7 @@
 
                             {% endif %}
 
-
-
                             {# Graphique 4 (Canvas 6---------------Inclusion medecin cumulées -entre D1 et D2----------------------------------------------------------------#}
-
 
                             {% if inclusionsMedecin %}
 
@@ -240,7 +234,6 @@
                             {% endif %}
 
                         </div>
-
 
                         <div class="tab-pane" id="inclusion-arc-mois" role="tabpanel" aria-labelledby="inclusion-arc-mois"
                              aria-expanded="true">
@@ -286,13 +279,11 @@
 
                         </div>
 
-
                         {# Onglet 3-----------#}
                         {# Graphique 3 ( canvas4)-------------------Visites par protocole / mois -entre D1 et D2--------------------------------------------------------------#}
 
                         <div class="tab-pane" id="visites" role="tabpanel" aria-labelledby="visites"
                              aria-expanded="true">
-
 
                             {% if visiteByMounthProtocole %}
                                 <div class="arcoffice-graphique-sub">
@@ -331,10 +322,8 @@
                         {# Onglet 4-----------#}
                         {# Graphique 6 (Canvas 5---------------Inclusion service cumulées -entre D1 et D2----------------------------------------------------------------#}
 
-
                         <div class="tab-pane" id="inclusion-service-cumule" role="tabpanel" aria-labelledby="inclusion-service-cumule"
                              aria-expanded="true">
-
 
                             {% if inclusionsService %}
                                 <div class="arcoffice-graphique-sub">
@@ -358,10 +347,8 @@
                         {# Onglet 5-----------#}
                         {# Graphique 7 (Canvas 1--------------Inclusions Totals médecins----------------------------------------------------------------#}
 
-
                         <div class="tab-pane" id="total-inclusions-medecin" role="tabpanel" aria-labelledby="total-inclusions-medecin"
                              aria-expanded="true">
-
 
                             <div class="arcoffice-graphique-sub">
 
@@ -383,10 +370,8 @@
                         {# Onglet 6-----------#}
                         {# Graphique 8 (Canvas 8---------------Inclusions annuelles ----------------------------------------------------------------#}
 
-
                         <div class="tab-pane" id="total-inclusions-ans" role="tabpanel" aria-labelledby="total-inclusions-ans"
                              aria-expanded="true">
-
 
                             <div class="arcoffice-graphique-sub">
 
@@ -402,14 +387,11 @@
 
                             </div>
 
-
                         </div>
-
 
                     </div>
 
                 </div>
-
 
                 {# End HTML section----------------------------------------------------------------------------------------------------------#}
 
@@ -923,7 +905,6 @@
                     backgroundColor.push(default_colors[i % default_colors.length]);
                     i++;
 
-
                 });
 
                 data = {
@@ -977,7 +958,6 @@
                     labels.push(index);
                     backgroundColor.push(default_colors[i % default_colors.length]);
                     i++;
-
 
                 });
 
@@ -1033,7 +1013,6 @@
                     backgroundColor.push(default_colors[i % default_colors.length]);
                     i++;
 
-
                 });
 
                 data = {
@@ -1088,7 +1067,6 @@
                     backgroundColor.push(default_colors[i % default_colors.length]);
                     i++;
 
-
                 });
 
                 data = {
@@ -1142,7 +1120,6 @@
                     labels.push(val.year);
                     backgroundColor.push(default_colors[i % default_colors.length]);
                     i++;
-
 
                 });
 

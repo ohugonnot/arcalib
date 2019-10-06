@@ -138,5 +138,4 @@ class EIType extends AbstractType
         return 'appbundle_ei';
     }
 
-
 }
