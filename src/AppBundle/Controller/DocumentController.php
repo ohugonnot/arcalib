@@ -67,6 +67,7 @@ class DocumentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $emDocument = $em->getRepository(Document::class);
+        $order = $request->get('order');
 
         /** @var Inclusion $inclusion */
         $inclusion = $document->getInclusion();
@@ -83,7 +84,7 @@ class DocumentController extends Controller
             return $this->redirectToRoute("editDocument", ["id" => $document->getId()]);
         }
 
-        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => self::ORDER]));
+        $allDocuments = new ArrayCollection($emDocument->findBy(["inclusion" => $inclusion], ["date" => $order??self::ORDER]));
         if ($allDocuments->contains($document)) {
             $index = $allDocuments->indexOf($document);
             $prev = $allDocuments->get($index - 1);
@@ -99,6 +100,7 @@ class DocumentController extends Controller
             'index' => $index ?? null,
             'allDocuments' => $allDocuments,
             'inclusion' => $inclusion,
+            'order' => $order??self::ORDER,
         ]);
     }
 
