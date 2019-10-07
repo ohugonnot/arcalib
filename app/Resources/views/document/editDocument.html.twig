@@ -277,7 +277,7 @@
                                         {# Prec #}
                                         {% if prev == null %}{% set prev = {id: allDocuments.last.id} %}{% endif %}
                                         {% if prev.id|default(false) %}
-                                            <a title="Précédent" class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip" href="{{ path('editDocument', { id: prev.id }) }}">
+                                            <a title="Précédent" class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip" href="{{ path_context('editDocument', { id: prev.id }) }}">
                                                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                             </a>
                                         {% endif %}
@@ -285,7 +285,7 @@
                                         {# Suiv #}
                                         {% if next == null %}{% set next = {id: allDocuments.first.id} %}{% endif %}
                                         {% if next.id|default(false) %}
-                                            <a title='Suivant' class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip' href="{{ path('editDocument', { id: next.id }) }}">
+                                            <a title='Suivant' class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip' href="{{ path_context('editDocument', { id: next.id }) }}">
                                                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                             </a>
                                         {% endif %}
@@ -338,7 +338,8 @@
                                 <table class="table table-sm table-striped mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
+                                            {% if order == 'ASC' %}{% set order_inverse = 'DESC' %}{% else %}{% set order_inverse = 'ASC' %}{% endif %}
+                                            <th><a href="{{ path_context('editDocument', {id: form.vars.value.id, order:order_inverse}) }}">Date <i class="fa {% if order_inverse == 'ASC' %}fa-caret-down {% else %}fa-caret-up {% endif %}"></i></a></th>
                                             <th>JMA</th>
                                             <th>Type</th>
                                             <th class="text-center">Signé</th>
@@ -348,7 +349,7 @@
                                         {% for document in allDocuments %}
                                             <tr class="{% if document.id == form.vars.value.id %}is-active {% endif %}{% if document.archive %}text-danger{% endif %}">
                                                 <td>
-                                                    <a href="{{ path("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}</a>
+                                                    <a href="{{ path_context("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}</a>
                                                 </td>
                                                 <td>{{ document.jma }}</td>
                                                 <td>

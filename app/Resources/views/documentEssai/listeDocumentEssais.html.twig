@@ -156,19 +156,6 @@
                                             <i class="fa fa-file-text" aria-hidden="true"></i>
 
                                         </button>
-                                        {#
-                                                                                    <a target='_blank' href='{{ documentEssai|getUrlDocument(pdf_document_directory_asset) }}' class="btn btn-sm btn-outline-info title-tooltip" title='Consulter les PDF'>
-
-                                                                                        <i class="fa fa-file-text" aria-hidden="true"></i>
-
-                                                                                    </a>
-
-                                                                                    <button data-id='{{ documentEssai.id }}' type="button" class="ml-2 btn btn-sm btn-outline-danger remove-document-button">
-
-                                                                                        <i aria-hidden="true" class="fa fa-trash"></i>
-
-                                                                                    </button>
-                                        #}
                                     {% else %}
 
                                         <button type="button" data-id='{{ documentEssai.id }}'

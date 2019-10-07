@@ -2,16 +2,37 @@
 
 namespace AppBundle\Twig;
 
-use AppBundle\Entity\Document;
 use AppBundle\Entity\Essais;
 use AppBundle\Entity\Visite;
 use DateTime;
 use Exception;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
+    private $generator;
+
+    private $requestStack;
+
+    public function __construct(UrlGeneratorInterface $generator, RequestStack $requestStack)
+    {
+        $this->generator = $generator;
+        $this->requestStack = $requestStack;
+    }
+
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('path_context', [$this, 'getPathContext'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
+        ];
+    }
+
     public function getFilters()
     {
 
@@ -20,7 +41,6 @@ class AppExtension extends AbstractExtension
             new TwigFilter('age', [$this, 'getAge']),
             new TwigFilter('nbInclusions', [$this, 'nbInclusions']),
             new TwigFilter('visiteClass', [$this, 'visiteClass']),
-            new TwigFilter('getUrlDocument', [$this, 'getUrlDocument']),
         ];
     }
 
@@ -97,19 +117,27 @@ class AppExtension extends AbstractExtension
         }
     }
 
-    /**
-     * @param Document $document
-     * @param $directory
-     * @return null|string
-     */
-    public function getUrlDocument(Document $document, $directory): ?string
+    public function getPathContext($name, $parameters = [], $relative = false)
     {
-        if ($document->getFile()) {
-            $file_path = '/' . $directory . '/inclusion/' . $document->getInclusion()->getId() . '/' . $document->getFile();
-        } else {
-            $file_path = null;
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request)
+            $parameters = $parameters + $request->query->all();
+        return $this->generator->generate($name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
+    }
+
+    public function isUrlGenerationSafe(\Twig\Node\Node $argsNode)
+    {
+        // support named arguments
+        $paramsNode = $argsNode->hasNode('parameters') ? $argsNode->getNode('parameters') : (
+        $argsNode->hasNode(1) ? $argsNode->getNode(1) : null
+        );
+
+        if (null === $paramsNode || $paramsNode instanceof ArrayExpression && \count($paramsNode) <= 2 &&
+            (!$paramsNode->hasNode(1) || $paramsNode->getNode(1) instanceof ConstantExpression)
+        ) {
+            return ['html'];
         }
 
-        return $file_path;
+        return [];
     }
 }
