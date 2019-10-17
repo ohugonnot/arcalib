@@ -33,8 +33,15 @@
 
                     <li class="nav-item">
 
-                        <a class="nav-link {% if app.request.get('_route') == 'patient' %}active{% endif %}"
-                           href="{{ path("patient") }}">Patient</a>
+                        <span class="nav-link {% if app.request.get('_route') == 'patient' %}active{% endif %}">
+                            <a href="{{ path("patient") }}">Patient</a>
+                            <a href="{{ path("requetes") }}">
+                                <span class="title-tooltip {% if (patientAlerte.alertes|length)|default(0) %}has-message-alert has-message-alert-patient{% endif %}"
+                                      data-message-alert="{{ (patientAlerte.alertes|length)|default(0) }}"
+                                      data-original-title="Visites prévues dépassées" data-placement="bottom">
+                                </span>
+                            </a>
+                        </span>
 
                     </li>
 
