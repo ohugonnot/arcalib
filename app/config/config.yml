@@ -42,6 +42,7 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         todoAlerte: '@AppBundle\Services\TodoAlerte'
+        patientAlerte: '@AppBundle\Services\PatientAlerte'
     form_themes:
         - 'VichUploaderBundle:Form:fields.html.twig'
         # - 'bootstrap_3_layout.html.twig'
