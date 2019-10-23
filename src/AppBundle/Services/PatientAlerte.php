@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class PatientAlerte
 {
-
     private $em;
     private $storage;
     private $requestStack;

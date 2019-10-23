@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  */
 class RolesHelper
 {
-
     CONST ROLES = [
         "ROLE_USER" => "Visio",
         "ROLE_ARC" => "Arc",
@@ -36,7 +35,6 @@ class RolesHelper
         $roles = array();
 
         array_walk_recursive($this->rolesHierarchy, function ($val) use (&$roles) {
-
             $roles[self::ROLES[$val]] = $val;
         });
 

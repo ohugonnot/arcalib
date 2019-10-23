@@ -26,9 +26,8 @@ class SendMail
 
     public function sendEmail($render = "default", $variables = [], $to = self::EMAILS_ADMIN)
     {
-        if (!is_array($to)) {
+        if (!is_array($to))
             $to = [$to];
-        }
 
         // Ajout de l'email du medecin responsable de l'inclusion si renseigné
         if (isset($variables["inclusion"])) {
@@ -37,9 +36,8 @@ class SendMail
             $medecin = $inclusion->getMedecin();
             if ($medecin) {
                 $emailMedecin = $medecin->getEmail();
-                if (filter_var($emailMedecin, FILTER_VALIDATE_EMAIL)) {
+                if (filter_var($emailMedecin, FILTER_VALIDATE_EMAIL))
                     $to[] = $emailMedecin;
-                }
             }
         }
 
@@ -49,9 +47,7 @@ class SendMail
         $message = (new Swift_Message($variables["sujet"] ?? self::SUBJECT_DEFAULT))
             ->setFrom($this->container->getParameter("mailer_user"))
             ->setTo($to)
-            ->setBody(
-                $this->templating->render($twigTemplate, $variables)
-            )
+            ->setBody($this->templating->render($twigTemplate, $variables))
             ->setContentType('text/html');
 
         $this->mailer->send($message);

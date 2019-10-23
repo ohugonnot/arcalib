@@ -25,11 +25,10 @@ class EventRepository extends EntityRepository
             ->leftJoin('i.essai', 'e')
             ->leftJoin('i.patient', 'p');
 
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder->leftJoin("e.users", "u")
                 ->andWhere("u = :user")
                 ->setParameter("user", $user);
-        }
 
         return $queryBuilder;
     }

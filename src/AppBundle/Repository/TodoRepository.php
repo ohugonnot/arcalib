@@ -44,12 +44,8 @@ class TodoRepository extends EntityRepository
             ->where("d = :user and (t.niveauResolution != '" . TODO::RESOLU . "' and t.niveauResolution != '" . TODO::RESOLU_AVEC_REMARQUES . "')")
             ->setParameter("user", $user);
 
-        if (false && $lastVisite && $lastVisite instanceof Datetime) {
-
-            $queryBuilder
-                ->andWhere("t.createdAt > :lastVisite")
-                ->setParameter("lastVisite", $lastVisite);
-        }
+        if (false && $lastVisite && $lastVisite instanceof Datetime)
+            $queryBuilder->andWhere("t.createdAt > :lastVisite")->setParameter("lastVisite", $lastVisite);
 
         return $queryBuilder->getQuery()->getArrayResult();
     }

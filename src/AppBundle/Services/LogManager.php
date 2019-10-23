@@ -9,9 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class LogManager
 {
     private $em;
-
     private $tokenStorage;
-
     private $user;
 
     /**
@@ -36,12 +34,10 @@ class LogManager
      */
     public function save($name, $entity, $action, $info, $changeSet = null)
     {
-        if ($this->tokenStorage->getToken() != null) {
+        if ($this->tokenStorage->getToken() != null)
             $this->user = $this->tokenStorage->getToken()->getUser() ?? null;
-        }
-        if ($this->user === "anon.") {
+        if ($this->user === "anon.")
             $this->user = null;
-        }
 
         $log = new Log();
         date_default_timezone_set('Europe/Paris');
@@ -53,9 +49,8 @@ class LogManager
             ->setInfo($info)
             ->setChangeSet($changeSet);
 
-        if ($entity != null && $entity->getId()) {
+        if ($entity != null && $entity->getId())
             $log->setEntityId($entity->getId());
-        }
 
         $this->em->persist($log);
         $this->em->flush();

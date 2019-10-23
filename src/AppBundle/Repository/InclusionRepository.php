@@ -27,12 +27,11 @@ class InclusionRepository extends EntityRepository
     {
         $queryBuilder->leftJoin('i.essai', 'e');
 
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder
                 ->leftJoin('e.users', 'u')
                 ->andWhere("u = :user")
                 ->setParameter("user", $user);
-        }
 
         return $queryBuilder;
     }
@@ -58,7 +57,7 @@ class InclusionRepository extends EntityRepository
             ->setParameter('searchId', $searchId)
             ->setParameter('search', '%' . $search . '%');
 
-         if ($filters) {
+         if ($filters)
             foreach($filters as $param => $value) {
                  if ($value == null)
                     continue;
@@ -66,7 +65,6 @@ class InclusionRepository extends EntityRepository
                 $queryBuilder->andWhere("i.$param = :$paramValue")
                     ->setParameter($paramValue, $value);
             }
-        }
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
@@ -80,9 +78,8 @@ class InclusionRepository extends EntityRepository
      */
     public function findByDate(?DateTime $debut, ?DateTime $fin = null)
     {
-        if ($fin == null) {
+        if ($fin == null)
             $fin = date("Y-m-d H:i:s");
-        }
 
         $queryBuilder = $this->createQueryBuilder('i');
         $queryBuilder
@@ -147,49 +144,36 @@ class InclusionRepository extends EntityRepository
         $results = $queryBuilder->getQuery()->getArrayResult();
 
         foreach ($results as $key => $value) {
-            if ($results[$key]["datCst"] != null) {
+            if ($results[$key]["datCst"] != null)
                 $results[$key]["datCst"] = $value["datCst"]->format('d/m/Y');
-            }
-            if ($results[$key]["datInc"] != null) {
+            if ($results[$key]["datInc"] != null)
                 $results[$key]["datInc"] = $value["datInc"]->format('d/m/Y');
-            }
-            if ($results[$key]["datJ0"] != null) {
+            if ($results[$key]["datJ0"] != null)
                 $results[$key]["datJ0"] = $value["datJ0"]->format('d/m/Y');
-            }
-            if ($results[$key]["datRan"] != null) {
+            if ($results[$key]["datRan"] != null)
                 $results[$key]["datRan"] = $value["datRan"]->format('d/m/Y');
-            }
-            if ($results[$key]["datScr"] != null) {
+            if ($results[$key]["datScr"] != null)
                 $results[$key]["datScr"] = $value["datScr"]->format('d/m/Y');
-            }
-            if ($results[$key]["datOut"] != null) {
+            if ($results[$key]["datOut"] != null)
                 $results[$key]["datOut"] = $value["datOut"]->format('d/m/Y');
-            }
-            if ($results[$key]["medecin"] == null) {
+            if ($results[$key]["medecin"] == null)
                 $results[$key]["medecin"] = ["id" => null];
-            }
-            if ($results[$key]["essai"] == null) {
+            if ($results[$key]["essai"] == null)
                 $results[$key]["essai"] = ["id" => null];
-            }
-            if ($results[$key]["arc"] == null) {
+            if ($results[$key]["arc"] == null)
                 $results[$key]["arc"] = ["id" => null];
-            }
-            if ($results[$key]["service"] == null) {
+            if ($results[$key]["service"] == null)
                 $results[$key]["service"] = ["id" => null];
-            }
             foreach ($results[$key]["visites"] as $key2 => $visite) {
-                if ($visite["date"] != null) {
+                if ($visite["date"] != null)
                     $results[$key]["visites"][$key2]["date"] = $visite["date"]->format('d/m/Y');
-                }
-                if ($visite["arc"] == null) {
+                if ($visite["arc"] == null)
                     $results[$key]["visites"][$key2]["arc"] = ["id" => null];
-                }
             }
         }
 
-        if (!empty($results)) {
+        if (!empty($results))
             return $results[0];
-        }
 
         return $results;
     }
@@ -213,18 +197,14 @@ class InclusionRepository extends EntityRepository
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
-        foreach ($query as $k => $q) {
-            if ($q != '') {
+        foreach ($query as $k => $q)
+            if ($q != '')
                 $queryBuilder->andWhere("i.numInc like :q$k or p.nom like :q$k or p.prenom like :q$k or e.nom like :q$k ")
                     ->setParameter("q$k", '%' . $q . "%");
-            }
 
-        }
-
-        if (isset($filters["statut"]) && $filters["statut"] != null) {
+        if (isset($filters["statut"]) && $filters["statut"] != null)
             $queryBuilder->andWhere("i.statut = :statut")
                 ->setParameter("statut", $filters["statut"]);
-        }
 
         $queryBuilder->orderBy('i.numInc', 'ASC');
 

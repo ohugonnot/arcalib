@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvToArray
 {
-
     protected $cols = [];
     protected $name;
     protected $titles;
@@ -28,20 +27,18 @@ class CsvToArray
 
     public function convert($filename, $delimiter = ';')
     {
-        if (!file_exists($filename) || !is_readable($filename)) {
+        if (!file_exists($filename) || !is_readable($filename))
             return FALSE;
-        }
 
         $header = NULL;
         $data = array();
 
         if (($handle = fopen($filename, 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 1000000, $delimiter)) !== FALSE) {
-                if (!$header) {
+                if (!$header)
                     $header = $row;
-                } else {
+                else
                     $data[] = array_combine($header, $row);
-                }
             }
             fclose($handle);
         }
@@ -57,9 +54,7 @@ class CsvToArray
         $response = new StreamedResponse();
         $response->setCallback(function () use ($listes) {
             $handle = fopen('php://output', 'w+');
-
             fputcsv($handle, $this->titles, ';');
-
             foreach ($listes as $liste) {
                 $liste = $this->getEntityColumnValues($liste);
                 fputcsv(
@@ -68,9 +63,7 @@ class CsvToArray
                     ';'
                 );
             }
-
             fclose($handle);
-
         });
 
         $response->setStatusCode(200);
@@ -83,62 +76,46 @@ class CsvToArray
 
     function getEntityColumn($entity, $name = null)
     {
-
         $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
-
-        $values = array();
-
         foreach ($this->cols as $col) {
-            if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"])) {
+            if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
                 continue;
-            }
             $values[] = $col;
         }
 
         $fonction = $this->name . 'Titles';
-        if ($name) {
+        if ($name)
             $fonction = $name . 'Titles';
-        }
 
-        if (method_exists($this, $fonction)) {
-            $values = $this->$fonction($values, $entity);
-        }
+        if (method_exists($this, $fonction))
+            $values = $this->$fonction($values??[], $entity);
 
-        return $values;
+        return $values??[];
     }
 
     function getEntityColumnValues($entity, $name = null)
     {
-
         $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
-
-        $values = array();
-
         foreach ($this->cols as $col) {
             $getter = 'get' . ucfirst($col);
-            if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"])) {
+            if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
                 continue;
-            }
-
-            if (is_a($entity->$getter(), 'DateTime')) {
+            if (is_a($entity->$getter(), 'DateTime'))
                 $values[] = $entity->$getter()->format('d/m/Y');
-            } elseif ($col == 'NumInc') {
+            elseif ($col == 'NumInc')
                 $values[] = '="' . $entity->$getter() . '"';
-            } else {
+            else
                 $values[] = $entity->$getter();
-            }
         }
 
         $fonction = $this->name;
-        if ($name) {
+        if ($name)
             $fonction = $name;
-        }
 
-        if (method_exists($this, $fonction)) {
-            $values = $this->$fonction($values, $entity);
-        }
+        if (method_exists($this, $fonction))
+            $values = $this->$fonction($values??[], $entity);
 
-        return $values;
+        return $values??[];
     }
 
     //extractions  de la page inclusion
@@ -163,7 +140,6 @@ class CsvToArray
 
     public function inclusionsTitles($values)
     {
-
         return array_merge(["Patient", "Initiales", "Protocole", "Médecin référent", "Service"], $values);
     }
 
@@ -178,7 +154,6 @@ class CsvToArray
 
     public function patientsTitles($values)
     {
-
         return array_merge($values, ["Code CIM10"]);
     }
 
@@ -193,7 +168,6 @@ class CsvToArray
 
     public function essaistitles($values)
     {
-
         return array_merge($values, ["Medecin référent"]);
     }
 
@@ -208,7 +182,6 @@ class CsvToArray
 
     public function facturestitles($values)
     {
-
         return array_merge($values, ["Protocole"]);
     }
 

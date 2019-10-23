@@ -15,7 +15,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class TodoAlerte
 {
-
     private $em;
     private $storage;
     private $requestStack;
@@ -61,20 +60,17 @@ class TodoAlerte
     {
         $lastVisite = $this->requestStack->getCurrentRequest()->cookies->get("lastVisite");
 
-        if ($lastVisite) {
+        if ($lastVisite)
             $lastVisite = new DateTime($lastVisite);
-        }
 
         $token = $this->storage->getToken();
-        if (!$token) {
+        if (!$token)
             return [];
-        }
 
         $user = $token->getUser();
 
-        if (!($user instanceof User)) {
+        if (!($user instanceof User))
             return [];
-        }
 
         $emTodo = $this->em->getRepository(Todo::class);
         $newTodos = $emTodo->findNewTodos($user, $lastVisite);

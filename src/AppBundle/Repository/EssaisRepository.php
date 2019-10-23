@@ -24,11 +24,10 @@ class EssaisRepository extends EntityRepository
      */
     private function joinUserWhereUser(QueryBuilder $queryBuilder, User $user)
     {
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder->leftJoin('e.users', 'u')
                 ->andWhere("u = :user")
                 ->setParameter("user", $user);
-        }
 
         return $queryBuilder;
     }
@@ -59,10 +58,9 @@ class EssaisRepository extends EntityRepository
             ->groupBy("e.id")
             ->setMaxResults(10);
 
-        foreach ($query as $k => $q) {
+        foreach ($query as $k => $q)
             $queryBuilder->andWhere("e.nom like :q$k")
                 ->setParameter("q$k", '%' . $q . "%");
-        }
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
@@ -150,9 +148,8 @@ class EssaisRepository extends EntityRepository
      */
     public function findEssaiByDateOuverture(?DateTime $debut, ?DateTime $fin = null)
     {
-        if ($fin == null) {
+        if ($fin == null)
             $fin = date("Y-m-d H:i:s");
-        }
 
         $queryBuilder = $this->createQueryBuilder('e')
             ->where('e.dateOuv >= :debut')
@@ -170,9 +167,8 @@ class EssaisRepository extends EntityRepository
      */
     public function findEssaiByDateCloture(?DateTime $debut, ?DateTime $fin = null)
     {
-        if ($fin == null) {
+        if ($fin == null)
             $fin = date("Y-m-d H:i:s");
-        }
 
         $queryBuilder = $this->createQueryBuilder('e')
             ->where('e.dateClose >= :debut')
@@ -218,50 +214,38 @@ class EssaisRepository extends EntityRepository
 
         $results = $queryBuilder->getQuery()->getArrayResult();
 
-        if (empty($results)) {
+        if (empty($results))
             return $results;
-        }
 
         foreach ($results as $key => $value) {
-            if ($results[$key]["dateOuv"] != null) {
+            if ($results[$key]["dateOuv"] != null)
                 $results[$key]["dateOuv"] = $value["dateOuv"]->format('d/m/Y');
-            }
-            if ($results[$key]["dateFinInc"] != null) {
+            if ($results[$key]["dateFinInc"] != null)
                 $results[$key]["dateFinInc"] = $value["dateFinInc"]->format('d/m/Y');
-            }
-            if ($results[$key]["dateClose"] != null) {
+            if ($results[$key]["dateClose"] != null)
                 $results[$key]["dateClose"] = $value["dateClose"]->format('d/m/Y');
-            }
-            if ($results[$key]["dateSignConv"] != null) {
+            if ($results[$key]["dateSignConv"] != null)
                 $results[$key]["dateSignConv"] = $value["dateSignConv"]->format('d/m/Y');
-            }
-            if ($results[$key]["arc"] == null) {
+            if ($results[$key]["arc"] == null)
                 $results[$key]["arc"] = ["id" => null];
-            }
-            if ($results[$key]["medecin"] == null) {
+            if ($results[$key]["medecin"] == null)
                 $results[$key]["medecin"] = ["id" => null];
-            }
             foreach ($results[$key]["inclusions"] as $k2 => $v2) {
-                if ($v2["datInc"] === null) {
+                if ($v2["datInc"] === null)
                     continue;
-                }
                 $results[$key]["inclusions"][$k2]["datInc"] = $v2["datInc"]->format('d/m/Y');
             }
             $services = [];
-            foreach ($results[$key]["services"] as $k2 => $v2) {
+            foreach ($results[$key]["services"] as $k2 => $v2)
                 $services[] = $v2["id"];
-            }
             $results[$key]["services"] = $services;
-            foreach ($results[$key]["fils"] as $k2 => $v2) {
-                if ($v2["date"] != null) {
+            foreach ($results[$key]["fils"] as $k2 => $v2)
+                if ($v2["date"] != null)
                     $results[$key]["fils"][$k2]["date"] = $v2["date"]->format('d/m/Y');
-                }
-            }
         }
 
-        if (!empty($results)) {
+        if (!empty($results))
             return $results[0];
-        }
 
         return $results;
     }
@@ -280,34 +264,25 @@ class EssaisRepository extends EntityRepository
             ->leftjoin('e.services', 's')
             ->orderBy('e.nom', 'ASC');
 
-        if (isset($filters["statut"]) && $filters["statut"] != null) {
-            $queryBuilder->andWhere("e.statut = :statut")
-                ->setParameter("statut", $filters["statut"]);
-        }
+        if (isset($filters["statut"]) && $filters["statut"] != null)
+            $queryBuilder->andWhere("e.statut = :statut")->setParameter("statut", $filters["statut"]);
 
-        if (isset($filters["service"]) && $filters["service"] != '') {
-            $queryBuilder->andWhere("s.id = :serviceId")
-                ->setParameter("serviceId", $filters["service"]);
-        }
+        if (isset($filters["service"]) && $filters["service"] != '')
+            $queryBuilder->andWhere("s.id = :serviceId")->setParameter("serviceId", $filters["service"]);
 
         $queryBuilderTest = clone $queryBuilder;
 
         $queryBuilderTest->groupBy("e.id")->setMaxResults(25);
 
-        foreach ($query as $k => $q) {
-            if ($q != '') {
-                $queryBuilderTest->andWhere("e.nom like :q$k or e.objectif like :q$k or t.nom like :q$k or e.statut like :q$k")
-                    ->setParameter("q$k", '%' . $q . "%");
-            }
-
-        }
+        foreach ($query as $k => $q)
+            if ($q != '')
+                $queryBuilderTest->andWhere("e.nom like :q$k or e.objectif like :q$k or t.nom like :q$k or e.statut like :q$k")->setParameter("q$k", '%' . $q . "%");
 
         $results = $queryBuilderTest->getQuery()->getArrayResult();
 
         $essaiIds = [];
-        foreach ($results as $essai) {
+        foreach ($results as $essai)
             $essaiIds[] = $essai["id"];
-        }
 
         $queryBuilder
             ->leftJoin('e.arc', 'a')

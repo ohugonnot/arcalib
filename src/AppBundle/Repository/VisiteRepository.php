@@ -32,12 +32,10 @@ class VisiteRepository extends EntityRepository
             ->leftJoin('i.essai', 'e')
             ->leftJoin('i.patient', 'p');
 
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder->andWhere("u = :user")
                 ->setParameter("user", $user)
                 ->leftJoin('e.users', 'u');
-
-        }
 
         return $queryBuilder;
     }
@@ -69,9 +67,8 @@ class VisiteRepository extends EntityRepository
      */
     public function findByDate(?DateTime $debut, ?DateTime $fin = null)
     {
-        if ($fin == null) {
+        if ($fin == null)
             $fin = date("Y-m-d H:i:s");
-        }
 
         $queryBuilder = $this->createQueryBuilder('v')
             ->where('v.date >= :debut')
@@ -137,19 +134,17 @@ class VisiteRepository extends EntityRepository
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
         /** @var DateTime $date */
-        if ($date) {
+        if ($date)
             $queryBuilder->andWhere("YEAR(v.date) = :year")
                 ->setParameter("year", $date->format("Y"))
                 ->andWhere("MONTH(v.date) = :month")
                 ->setParameter("month", $date->format("m") )
                 ->andWhere("DAY(v.date) = :day")
                 ->setParameter("day", $date->format("d") );
-        }
 
-        if (isset($filters["statut"]) && $filters["statut"] != null) {
+        if (isset($filters["statut"]) && $filters["statut"] != null)
             $queryBuilder->andWhere("v.statut = :statut")
                 ->setParameter("statut", $filters["statut"]);
-        }
 
         $queryBuilder->orderBy('v.date', 'ASC');
 
