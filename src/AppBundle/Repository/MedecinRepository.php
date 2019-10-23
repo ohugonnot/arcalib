@@ -24,12 +24,11 @@ class MedecinRepository extends EntityRepository
      */
     private function joinUserWhereUser(QueryBuilder $queryBuilder, User $user)
     {
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder
                 ->leftJoin('e.users', 'u')
                 ->andWhere("u = :user")
                 ->setParameter("user", $user);
-        }
 
         return $queryBuilder;
     }
@@ -64,7 +63,6 @@ class MedecinRepository extends EntityRepository
             ->leftJoin('m.inclusions', 'i')
             ->leftJoin('i.patient', 'p')
             ->leftJoin('i.essai', 'e')
-
             ->orderBy('m.nom', 'ASC');
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
@@ -72,20 +70,17 @@ class MedecinRepository extends EntityRepository
         $queryBuilderTest = clone $queryBuilder;
         $queryBuilderTest->groupBy("m.id")->setMaxResults(25);
 
-        foreach ($query as $k => $q) {
-            if ($q != '') {
+        foreach ($query as $k => $q)
+            if ($q != '')
                 $queryBuilderTest
                     ->andWhere("m.nom like :q$k or m.prenom like :q$k")
                     ->setParameter("q$k", '%' . $q . "%");
-            }
-        }
 
         $results = $queryBuilderTest->getQuery()->getArrayResult();
 
         $ids = [];
-        foreach ($results as $medecin) {
+        foreach ($results as $medecin)
             $ids[] = $medecin["id"];
-        }
 
         $queryBuilder
             ->andwhere("m.id IN(:ids)")
@@ -112,9 +107,8 @@ class MedecinRepository extends EntityRepository
     private function idMedecinOnKeyArray($arrayMedecins)
     {
         $arrayById = [];
-        foreach ($arrayMedecins as $medecin) {
+        foreach ($arrayMedecins as $medecin)
             $arrayById[$medecin["id"]] = $medecin;
-        }
 
         return $arrayById;
     }

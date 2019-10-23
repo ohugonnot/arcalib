@@ -24,12 +24,10 @@ class AnnuaireRepository extends EntityRepository
             ->groupBy("a.id")
             ->setMaxResults(25);
 
-        foreach ($query as $k => $q) {
-            if ($q != '') {
+        foreach ($query as $k => $q)
+            if ($q != '')
                 $queryBuilder->andWhere("a.mail like :q$k or a.nom like :q$k  or a.fonction like :q$k  or a.telephone like :q$k or a.prenom like :q$k or e.nom like :q$k or a.societe like :q$k")
                     ->setParameter("q$k", '%' . $q . "%");
-            }
-        }
 
         return $queryBuilder->getQuery()->getArrayResult();
     }

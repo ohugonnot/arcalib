@@ -17,7 +17,6 @@ use Twig\TwigFunction;
 class AppExtension extends AbstractExtension
 {
     private $generator;
-
     private $requestStack;
 
     public function __construct(UrlGeneratorInterface $generator, RequestStack $requestStack)
@@ -62,18 +61,15 @@ class AppExtension extends AbstractExtension
      */
     public function getAge(?DateTime $date, ?DateTime $deces): ?int
     {
-        if (!$date instanceof DateTime) {
+        if (!$date instanceof DateTime)
             return null;
-        }
 
-        if ($deces instanceof DateTime) {
+        if ($deces instanceof DateTime)
             $referenceDate = $deces->format("d-m-Y");
-        } else {
+        else
             $referenceDate = date('d-m-Y');
-        }
 
         $referenceDateTimeObject = new DateTime($referenceDate);
-
         $diff = $referenceDateTimeObject->diff($date);
 
         return $diff->y;
@@ -86,9 +82,8 @@ class AppExtension extends AbstractExtension
     public function nbInclusions($array): int
     {
         $sum = 0;
-        foreach ($array as $essai) {
+        foreach ($array as $essai)
             $sum += count($essai->getInclusions());
-        }
 
         return $sum;
     }
@@ -101,20 +96,17 @@ class AppExtension extends AbstractExtension
     public function visiteClass(Visite $visite): string
     {
         $date = $visite->getDate();
-        if ($date == null) {
+        if ($date == null)
             return "";
-        }
 
         $now = new DateTime();
         $interval = $now->diff($date);
-        if ($interval->format('%R%a') > 30) {
+        if ($interval->format('%R%a') > 30)
             return "more-30-days";
-        }
-        if ($interval->format('%R%a') < 30 && $interval->format('%R%a') > 0) {
+        if ($interval->format('%R%a') < 30 && $interval->format('%R%a') > 0)
             return "less-30-days";
-        } else {
+        else
             return "past";
-        }
     }
 
     public function getPathContext($name, $parameters = [], $relative = false)
@@ -128,15 +120,12 @@ class AppExtension extends AbstractExtension
     public function isUrlGenerationSafe(\Twig\Node\Node $argsNode)
     {
         // support named arguments
-        $paramsNode = $argsNode->hasNode('parameters') ? $argsNode->getNode('parameters') : (
-        $argsNode->hasNode(1) ? $argsNode->getNode(1) : null
-        );
+        $paramsNode = $argsNode->hasNode('parameters') ? $argsNode->getNode('parameters') : ($argsNode->hasNode(1) ? $argsNode->getNode(1) : null);
 
         if (null === $paramsNode || $paramsNode instanceof ArrayExpression && \count($paramsNode) <= 2 &&
             (!$paramsNode->hasNode(1) || $paramsNode->getNode(1) instanceof ConstantExpression)
-        ) {
+        )
             return ['html'];
-        }
 
         return [];
     }

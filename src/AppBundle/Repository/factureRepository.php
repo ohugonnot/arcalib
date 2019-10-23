@@ -20,11 +20,10 @@ class factureRepository extends EntityRepository
      */
     private function joinUserWhereUser(QueryBuilder $queryBuilder, User $user)
     {
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder->leftJoin('e.users', 'u')
                 ->andWhere("u = :user")
                 ->setParameter("user", $user);
-        }
 
         return $queryBuilder;
     }

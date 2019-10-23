@@ -31,12 +31,11 @@ class PatientRepository extends EntityRepository
         $queryBuilder->leftJoin('p.inclusions', 'i')
             ->leftJoin('i.essai', 'e');
 
-        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE) {
+        if (!$user->getEssais()->isEmpty() || $user->getRulesProtocole() == User::NO_PROTOCOLE)
             $queryBuilder
                 ->leftJoin('e.users', 'u')
                 ->andWhere("u = :user")
                 ->setParameter("user", $user);
-        }
 
         return $queryBuilder;
     }
@@ -71,10 +70,9 @@ class PatientRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('p')
             ->setMaxResults(10)
             ->groupBy('p');
-        foreach ($query as $k => $q) {
+        foreach ($query as $k => $q)
             $queryBuilder->andWhere("p.nom like :q$k or p.prenom like :q$k or p.nomNaissance like :q$k")
                 ->setParameter("q$k", '%' . $q . "%");
-        }
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
@@ -162,30 +160,22 @@ class PatientRepository extends EntityRepository
         $results = $queryBuilder->getQuery()->getArrayResult();
 
         foreach ($results as $key => $value) {
-            if ($results[$key]["datNai"] != null) {
+            if ($results[$key]["datNai"] != null)
                 $results[$key]["datNai"] = $value["datNai"]->format('d/m/Y');
-            }
-            if ($results[$key]["datDiag"] != null) {
+            if ($results[$key]["datDiag"] != null)
                 $results[$key]["datDiag"] = $value["datDiag"]->format('d/m/Y');
-            }
-            if ($results[$key]["datLast"] != null) {
+            if ($results[$key]["datLast"] != null)
                 $results[$key]["datLast"] = $value["datLast"]->format('d/m/Y');
-            }
-            if ($results[$key]["datDeces"] != null) {
+            if ($results[$key]["datDeces"] != null)
                 $results[$key]["datDeces"] = $value["datDeces"]->format('d/m/Y');
-            }
-            if ($results[$key]["medecin"] == null) {
+            if ($results[$key]["medecin"] == null)
                 $results[$key]["medecin"] = ["id" => null];
-            }
-            if ($results[$key]["libCim10"] == null) {
+            if ($results[$key]["libCim10"] == null)
                 $results[$key]["libCim10"] = ["id" => null];
-            }
-
         }
 
-        if (!empty($results)) {
+        if (!empty($results))
             return $results[0];
-        }
 
         return $results;
     }
@@ -214,24 +204,20 @@ class PatientRepository extends EntityRepository
         $queryBuilderTest = clone $queryBuilder;
         $queryBuilderTest->groupBy("p.id")->setMaxResults(25);
 
-        foreach ($query as $k => $q) {
-            if ($q != '') {
+        foreach ($query as $k => $q)
+            if ($q != '')
                 $queryBuilderTest->andWhere("p.nom like :q$k or p.prenom like :q$k or p.nomNaissance like :q$k or p.datNai like :q$k")
                     ->setParameter("q$k", '%' . $q . "%");
-            }
-        }
 
-        if (isset($filters["statut"]) && $filters["statut"] != null) {
+        if (isset($filters["statut"]) && $filters["statut"] != null)
             $queryBuilderTest->andWhere("i.statut = :statut")
                 ->setParameter("statut", $filters["statut"]);
-        }
 
         $results = $queryBuilderTest->getQuery()->getArrayResult();
 
         $ids = [];
-        foreach ($results as $patient) {
+        foreach ($results as $patient)
             $ids[] = $patient["id"];
-        }
 
         $queryBuilder
             ->andwhere("p.id IN(:ids)")
