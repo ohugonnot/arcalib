@@ -68,9 +68,15 @@ class Visite
 
     /**
      * @var DateTime
-     * @ORM\Column(name="date", type="date", nullable=true)
+     * @ORM\Column(name="date", type="datetime", nullable=true)
      */
     private $date;
+
+    /**
+     * @var DateTime
+     * @ORM\Column(name="date_fin", type="datetime", nullable=true)
+     */
+    private $date_fin;
 
     /**
      * @var string
@@ -151,6 +157,27 @@ class Visite
     public function setDate($date)
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     * @return DateTime
+     */
+    public function getDateFin()
+    {
+        return $this->date_fin;
+    }
+
+    /**
+     * Set date
+     * @param DateTime $date_fin
+     * @return Visite
+     */
+    public function setDateFin($date_fin)
+    {
+        $this->date_fin = $date_fin;
 
         return $this;
     }

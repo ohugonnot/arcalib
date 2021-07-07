@@ -33,6 +33,18 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @var string
+     * @ORM\Column(name="Nom", type="string", length=100)
+     */
+    private $nom;
+
+    /**
+     * @var ?string
+     * @ORM\Column(name="Prenom", type="string", length=100, nullable=true)
+     */
+    private $prenom;
+
+    /**
      * @ORM\OneToMany(targetEntity="Log", mappedBy="user", cascade={"all"})
      */
     private $logs;
@@ -67,10 +79,17 @@ class User extends BaseUser
 
     /**
      * @var Medecin
-     * @ORM\OneToOne(targetEntity="Medecin", cascade={"persist"}, inversedBy="user")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity="Medecin", cascade={"all"}, inversedBy="user")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $medecin;
+
+    /**
+     * @var Arc
+     * @ORM\OneToOne(targetEntity="Arc", cascade={"all"}, inversedBy="user")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $arc;
 
     /**
      * @ORM\OneToMany(targetEntity="Document", mappedBy="signerBy", cascade={"all"})
@@ -87,6 +106,43 @@ class User extends BaseUser
         $this->todoAuteurs = new ArrayCollection();
         $this->eis = new ArrayCollection();
         $this->documentSignatures = new ArrayCollection();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    /**
+     * @param string $nom
+     * @return User
+     */
+    public function setNom(string $nom): User
+    {
+        $this->nom = strtoupper($nom);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    /**
+     * @param string $prenom
+     * @return User
+     */
+    public function setPrenom(?string $prenom): User
+    {
+        $this->prenom = ucfirst(strtolower($prenom));
+        return $this;
     }
 
     /**
@@ -284,6 +340,27 @@ class User extends BaseUser
             $medecin->setUser($this);
         return $this;
     }
+
+    /**
+     * @return Arc|null
+     */
+    public function getArc(): ?Arc
+    {
+        return $this->arc;
+    }
+
+    /**
+     * @param Arc $arc
+     * @return User
+     */
+    public function setArc(?Arc $arc): User
+    {
+        $this->arc = $arc;
+        if ($arc)
+            $arc->setUser($this);
+        return $this;
+    }
+
 
     /**
      * Add document

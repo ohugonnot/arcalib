@@ -159,12 +159,13 @@ class InclusionRepository extends EntityRepository
                 $results[$key]["service"] = ["id" => null];
             foreach ($results[$key]["visites"] as $key2 => $visite) {
                 if ($visite["date"] != null)
-                    $results[$key]["visites"][$key2]["date"] = $visite["date"]->format('d/m/Y');
+                    $results[$key]["visites"][$key2]["date"] = $visite["date"]->format('d/m/Y H:i');
+                if ($visite["date_fin"] != null)
+                    $results[$key]["visites"][$key2]["date_fin"] = $visite["date_fin"]->format('d/m/Y H:i');
                 if ($visite["arc"] == null)
                     $results[$key]["visites"][$key2]["arc"] = ["id" => null];
             }
         }
-
         if (!empty($results))
             return $results[0];
 

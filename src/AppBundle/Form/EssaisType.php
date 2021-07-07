@@ -124,7 +124,7 @@ class EssaisType extends AbstractType
                     return $er->createQueryBuilder('a')
                         ->orderBy('a.nomArc', 'ASC');
                 },
-                'choice_label' => 'nomArc',
+                'choice_label' => 'nomPrenom',
                 'required' => false,
             ))
             ->add('services', EntityType::class, array(

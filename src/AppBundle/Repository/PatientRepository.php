@@ -121,7 +121,7 @@ class PatientRepository extends EntityRepository
             ->leftJoin('p.inclusions', 'i')
             ->leftJoin('i.visites', 'v')
             ->leftJoin('i.essai', 'e')
-            ->select("p", "e.nom", 'e.statut', "v.date", "e.id as id_essai", "i.id as id_inclusion")
+            ->select("p", "e.nom", 'e.statut', "v.date", "v.date_fin", "e.id as id_essai", "i.id as id_inclusion")
             ->where("v.statut = '" . Visite::PREVUE_THEORIQUE . "' or v.statut = '" . Visite::PREVUE_CONFIRMEE . "'")
             ->andWhere('v.date BETWEEN :now and :period ')
             ->setParameter('period', (new DateTime())->modify("+30 days"))

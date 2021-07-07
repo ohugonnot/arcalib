@@ -44,81 +44,117 @@
 
 	<div class="row">
 	
-	<div class="col">
-	
-		<div class="form-row form-group">
+		<div class="col">
 
-				{# Nom d'utilisateur #}
-				<div class="col-6">
+			<div class="form-row form-group">
 
-					{{ form_label(form.username) }}
-
-					{{ form_errors(form.username) }}
-
-					{{ form_widget(form.username, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
-			
-			    </div>
-				
-				{# Adresse email #}
-			    <div class="col-6">
-
-			    	{{ form_label(form.email) }}
-
-					{{ form_errors(form.email) }}
-
-					{{ form_widget(form.email, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
-			
-			    </div>
-
-			    {% if is_granted('ROLE_ADMIN') %}
-
-				    <div class="col-6">
-
-				    	{{ form_label(form.plainPassword.first) }}
-
-						{{ form_errors(form.plainPassword.first) }}
-
-						{{ form_widget(form.plainPassword.first, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
-				
-				    </div>
-
-				    <div class="col-6">
-
-				    	{{ form_label(form.plainPassword.second) }}
-
-						{{ form_errors(form.plainPassword.second) }}
-
-						{{ form_widget(form.plainPassword.second, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
-				
-				    </div>
-
+					{# Nom d'utilisateur #}
 					<div class="col-6">
 
-						{{ form_label(form.medecin) }}
+						{{ form_label(form.username) }}
 
-						{{ form_errors(form.medecin) }}
+						{{ form_errors(form.username) }}
 
-						{{ form_widget(form.medecin) }}
+						{{ form_widget(form.username, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
 
 					</div>
 
-				    <div class="col-12">
+					{# Adresse email #}
+					<div class="col-6">
 
-				    	{{ form_label(form.enabled) }}
+						{{ form_label(form.email) }}
 
-						{{ form_errors(form.enabled) }}
+						{{ form_errors(form.email) }}
 
-						{{ form_widget(form.enabled) }}
-				
-				    </div>
+						{{ form_widget(form.email, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
 
-			    {% endif %}
+					</div>
+
+					<div class="col-6">
+
+						{{ form_label(form.nom) }}
+
+						{{ form_errors(form.nom) }}
+
+						{{ form_widget(form.nom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+					</div>
+
+					<div class="col-6">
+
+						{{ form_label(form.prenom) }}
+
+						{{ form_errors(form.prenom) }}
+
+						{{ form_widget(form.prenom, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+					</div>
+					{% if is_granted('ROLE_ADMIN') and form.vars.name == 'appbundle_useradmin' %}
+						<div class="col-6">
+
+							{{ form_label(form.plainPassword.first) }}
+
+							{{ form_errors(form.plainPassword.first) }}
+
+							{{ form_widget(form.plainPassword.first, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+						</div>
+
+						<div class="col-6">
+
+							{{ form_label(form.plainPassword.second) }}
+
+							{{ form_errors(form.plainPassword.second) }}
+
+							{{ form_widget(form.plainPassword.second, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+						</div>
+
+						<div class="col-6">
+
+							{{ form_label(form.medecin) }}
+
+							<div class="label font-weight-normal">Sélectionner un medecin existant</div>
+
+							{{ form_errors(form.medecin) }}
+
+							{{ form_widget(form.medecin) }}
+
+							<div class="label font-weight-normal">ou</div>
+
+							<div id="addMedecin">
+
+								{{ form_row(form.addMedecin) }}
+
+							</div>
+
+						</div>
+
+						<div class="col-6" id="addArc" style="display: none;">
+
+							{{ form_label(form.arc) }}
+
+							<div class="label font-weight-normal">Sélectionner un arc existant</div>
+
+							{{ form_errors(form.arc) }}
+
+							{{ form_widget(form.arc) }}
+
+							<div class="label font-weight-normal">ou</div>
+
+							<div id="addArc_checkbox">
+								{{ form_row(form.addArc) }}
+							</div>
+
+						</div>
+
+					{% endif %}
+
+			</div>
 
 		</div>
 
-	</div>
-
-		{% if is_granted('ROLE_ADMIN') %}
+		{% if is_granted('ROLE_ADMIN') and  form.vars.name == 'appbundle_useradmin' %}
 
 		<div class="col">
 
@@ -164,18 +200,41 @@
 
 			</div>
 
+			<div class="form-row form-group">
+				<div class="col">
+
+					{{ form_label(form.enabled) }}
+
+					{{ form_errors(form.enabled) }}
+
+					{{ form_widget(form.enabled) }}
+
+				</div>
+			</div>
+
 		</div>
 
 		{% else %}
 
-			{% do form.roles.setRendered %}	
-            {% do form.plainPassword.setRendered %}
-            {% do form.enabled.setRendered %}
-            {% do form.essais.setRendered %}		
-            {% do form.rulesProtocole.setRendered %}
-            
+		<div class="col-12">
+			{% if form.vars.value.medecin is not null %}
+				Compte relié au Medecin : {{ form.vars.value.medecin.nomPrenom }}
+			{% endif %}
+		</div>
+		<div class="col-12">
+			{% if form.vars.value.arc is not null %}
+				Compte relié à l'Arc : {{ form.vars.value.arc.nomPrenom }}
+			{% endif %}
+		</div>
 		{% endif %}
 		    
 	{{ form_end(form) }}
 
 </div>
+
+<style>
+	#addArc_checkbox label, #addMedecin label
+	{
+		font-weight: normal;
+	}
+</style>

@@ -854,7 +854,7 @@
 
                                         {% for arc in arcs %}
 
-                                            <option value="{{ arc.id }}">{{ arc.nomArc }}</option>
+                                            <option value="{{ arc.id }}">{{ arc.nomPrenom }}</option>
 
                                         {% endfor %}
 
@@ -950,9 +950,20 @@
 
                                                 <div class="col">
 
-                                                    <input v-model='visiteSelected.date' type="text"
-                                                           class="form-control form-control-sm js-datepicker"
-                                                           id="date-visite" name="date-visite" required>
+                                                    <date-picker v-model="visiteSelected.date" :config="options"></date-picker>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-row form-group">
+
+                                                {# Date Fin Visite #}
+                                                <label for="date-fin-visite" class="col-4 col-form-label">Date de fin</label>
+
+                                                <div class="col">
+
+                                                    <date-picker v-model="visiteSelected.date_fin" :config="options" ></date-picker>
 
                                                 </div>
 
@@ -1035,7 +1046,7 @@
 
                                                         {% for arc in arcs %}
 
-                                                            <option value="{{ arc.id }}">{{ arc.nomArc }}</option>
+                                                            <option value="{{ arc.id }}">{{ arc.nomPrenom }}</option>
 
                                                         {% endfor %}
 

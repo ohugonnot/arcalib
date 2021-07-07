@@ -24,7 +24,8 @@ class ArcType extends AbstractType
         // ------------------------------------------Formulaire-----------------------------------------------------
     {
         $builder
-            ->add('nomArc', TextType::class, ['label' => 'Nom, Prénom'])
+            ->add('nomArc', TextType::class, ['label' => 'Nom'])
+            ->add('prenomArc', TextType::class, ['label' => 'Prénom','required'=>false])
             ->add('datIn', DateType::class, array(
                 'widget' => 'single_text',
                 "required" => false,

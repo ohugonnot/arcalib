@@ -32,7 +32,7 @@ class InclusionType extends AbstractType
                     return $er->createQueryBuilder('p')
                         ->orderBy('p.nom', 'ASC');
                 },
-                'choice_label' => 'NomPrenom',
+                'choice_label' => 'nomPrenom',
                 'required' => false,
                 'attr' => ["class" => "js-select2"],
             ))
@@ -114,7 +114,7 @@ class InclusionType extends AbstractType
                     return $er->createQueryBuilder('m')
                         ->orderBy('m.nom', 'ASC');
                 },
-                'choice_label' => 'NomPrenom',
+                'choice_label' => 'nomPrenom',
                 'required' => false,
                 'label' => "Médecin référent",
                 'attr' => ["class" => "js-select2"],
@@ -125,7 +125,7 @@ class InclusionType extends AbstractType
                     return $er->createQueryBuilder('a')
                         ->orderBy('a.nomArc', 'ASC');
                 },
-                'choice_label' => 'nomArc',
+                'choice_label' => 'nomPrenom',
                 'required' => false,
                 'label' => "ARC référent",
                 'attr' => ["class" => "js-select2"],

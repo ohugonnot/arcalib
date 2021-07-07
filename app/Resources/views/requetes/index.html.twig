@@ -70,6 +70,7 @@
 
                                     <th>Date</th>
 
+                                    <th>Date de Fin</th>
                                 </tr>
 
                                 </thead>
@@ -79,7 +80,7 @@
 
                                 {% for array in patientVisite30Days %}
 
-                                    {% set    patient = array[0] %}
+                                    {% set patient = array[0] %}
 
                                     <tr>
 
@@ -94,8 +95,9 @@
 
                                         <td>{{ array.statut }}</td>
 
-                                        <td>{{ array.date|date("d/m/Y") }}</td>
+                                        <td>{{ array.date|date("d/m/Y H:i") }}</td>
 
+                                        <td>{{ array.date_fin is empty ? "" : array.date_fin|date('d/m/Y H:i') }}</td>
                                     </tr>
 
                                 {% endfor %}
@@ -255,6 +257,7 @@
 
                                     <th>Patient</th>
                                     <th>Date</th>
+                                    <th>Date de Fin</th>
                                     <th>Statut</th>
 
                                 </tr>
@@ -272,8 +275,8 @@
                                             <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: visite.inclusion.id }) }}">    {{ visite.inclusion.patient.nomPrenom }}
                                             </a>
                                         </td>
-                                        <td>{{ visite.date|date("d/m/Y") }}</td>
-
+                                        <td>{{ visite.date is empty ? "" : visite.date|date('d/m/Y H:i') }}</td>
+                                        <td>{{ visite.dateFin is empty ? "" : visite.dateFin|date('d/m/Y H:i') }}</td>
                                         <td>{{ visite.statut }}</td>
 
                                     </tr>

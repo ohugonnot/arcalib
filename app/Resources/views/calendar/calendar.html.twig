@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+	{# Réécriture SEO #}
+	{% block header %}
+
+        {% embed "include/header.html.twig" %}
+
+            {# Titre #}
+            {% block seo_title %}
+
+              Calendrier - ArcOffice
+
+            {% endblock seo_title %}
+
+            {# Description #}
+            {% block seo_description %}
+
+                Calendrier des visites
+
+            {% endblock seo_description %}
+
+            {% block css %}
+                <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
+                <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+                <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+            {% endblock css %}
+
+        {% endembed %}
+
+    {% endblock header %}
+
+	{# Body Class #}
+	{% block body_class %}arcoffice-calendrier{% endblock %}
+
+	{# Section 'Fil d'ariane' #}
+	{% block fil_ariane %}
+
+        {% embed "include/fil-ariane.html.twig" with { page_name : 'Calendrier' } %}
+
+            {% block fil_ariane_more %}
+
+
+            {% endblock fil_ariane_more %}
+
+        {% endembed %}
+
+    {% endblock fil_ariane %}
+
+	{% block content %}
+
+        {# Section Principale #}
+        <section class="section-main">
+
+            <div class="container">
+
+                <div class="row" style="display: block">
+
+                    <div id="calendar" style="height: 800px;">
+
+                        <div id="menu">
+                          <span id="menu-navi">
+                            <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+                            <button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+                              <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+                              <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+                            </button>
+                          </span>
+                          <span id="renderRange" class="render-range"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% endblock content %}
+
+    {% block javascripts %}
+
+        {{ parent() }}
+        <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+        <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+        <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+        <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+
+        <script>
+            var Calendar = tui.Calendar;
+              var cal = new tui.Calendar('#calendar', {
+                    defaultView: 'month',
+                    month: {
+                        daynames: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                        startDayOfWeek: 0,
+                    },
+                  });
+        </script>
+    {% endblock javascripts %}

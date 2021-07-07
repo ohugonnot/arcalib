@@ -35,7 +35,7 @@ class ArcImport implements ImportInterface
 			}
 
 			if ($checkIfExist) {
-				$exist = $this->entityManager->getRepository(Arc::class)->findOneBy(["nomArc" => $a["Nom ARC"]]);
+				$exist = $this->entityManager->getRepository(Arc::class)->findOneBy(["nomArc" => $a["Nom ARC"],"prenomArc" => $a["Prénom ARC"]]);
 				if ($exist) {
 					$arc = $exist;
 				}
@@ -57,6 +57,7 @@ class ArcImport implements ImportInterface
 			}
 
 			$arc->setNomArc($a["Nom ARC"]);
+            $arc->setPrenomArc(($a["Prénom ARC"])??null);
 			$arc->setDatIn($datIn);
 			$arc->setDatOut($datOut);
 			$arc->setIniArc($a["Initiales"]);

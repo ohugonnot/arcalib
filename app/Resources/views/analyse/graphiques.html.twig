@@ -145,8 +145,6 @@
                         <div class="tab-pane active" id="inclusion-protocole-mois" role="tabpanel" aria-labelledby="inclusion-protocole-mois"
                              aria-expanded="true">
 
-                            {% if inclusionsByMounthProtocole %}
-
                                 <div class="arcoffice-graphique-sub">
 
                                     <h2><i class="fa fa-bar-chart ml-2"></i> Inclusion par protocole / mois
@@ -156,31 +154,33 @@
                                         ( en nombre d'inclusions confirmés, basé sur la date d'inclusion, hors screen et
                                         false sceen )</p>
 
+                                    {% if inclusionsByMounthProtocole %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas3"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
 
                             {# Graphique 5 (Canvas 7---------------Inclusion Protocoles cumulées -entre D1 et D2----------------------------------------------------------------#}
 
-                            {% if inclusionsByProtocole %}
                                 <div class="arcoffice-graphique-sub">
 
                                     <h2><i class="fa fa-bar-chart"></i> Inclusions par Protocole, cumulées entre deux
                                         dates
                                         <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
                                     </h2>
-
+                                    {% if inclusionsByProtocole %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
                                         <canvas id="canvas7"></canvas>
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
 
                         </div>
 
@@ -191,8 +191,6 @@
                         <div class="tab-pane" id="inclusion-medecin-mois" role="tabpanel" aria-labelledby="inclusion-medecin-mois"
                              aria-expanded="true">
 
-                            {% if inclusionsByMounthMedecin %}
-
                                 <div class="arcoffice-graphique-sub">
 
                                     <h2><i class="fa fa-bar-chart"></i> Inclusion par médecin / mois
@@ -202,19 +200,18 @@
                                     <p>Les inclusions mensuelles, entre T1 et T2, par médecin ( en nombre
                                         d'inclusion-médecin référent )</p>
 
+                                    {% if inclusionsByMounthMedecin %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas2"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
 
-                            {% endif %}
-
                             {# Graphique 4 (Canvas 6---------------Inclusion medecin cumulées -entre D1 et D2----------------------------------------------------------------#}
-
-                            {% if inclusionsMedecin %}
 
                                 <div class="arcoffice-graphique-sub">
 
@@ -222,23 +219,21 @@
                                         dates
                                         <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
                                     </h2>
-
+                                    {% if inclusionsMedecin %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas6"></canvas>
 
                                     </div>
-
-                                </div>
-
-                            {% endif %}
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
+                                </div>}
 
                         </div>
 
                         <div class="tab-pane" id="inclusion-arc-mois" role="tabpanel" aria-labelledby="inclusion-arc-mois"
                              aria-expanded="true">
-
-                            {% if inclusionsByMounthArc %}
 
                                 <div class="arcoffice-graphique-sub">
 
@@ -248,17 +243,16 @@
 
                                     <p>Les inclusions mensuelles, entre T1 et T2, par Arc</p>
 
+                                    {% if inclusionsByMounthArc %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas9"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-
-                            {% endif %}
-
-                            {% if inclusionsArc %}
 
                                 <div class="arcoffice-graphique-sub">
 
@@ -266,16 +260,16 @@
                                         dates
                                         <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
                                     </h2>
-
+                                    {% if inclusionsArc %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas11"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-
-                            {% endif %}
 
                         </div>
 
@@ -285,37 +279,37 @@
                         <div class="tab-pane" id="visites" role="tabpanel" aria-labelledby="visites"
                              aria-expanded="true">
 
-                            {% if visiteByMounthProtocole %}
                                 <div class="arcoffice-graphique-sub">
 
                                     <h2><i class="fa fa-bar-chart"></i> Visites par protocole / mois
                                         <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
                                     </h2>
-
+                                    {% if visiteByMounthProtocole %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas4"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
 
-                            {% if visiteByMounthArc %}
                                 <div class="arcoffice-graphique-sub">
 
                                     <h2><i class="fa fa-bar-chart"></i> Visites par Arc / mois
                                         <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
                                     </h2>
-
+                                    {% if visiteByMounthArc %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas10"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
 
                         </div>
 
@@ -325,22 +319,22 @@
                         <div class="tab-pane" id="inclusion-service-cumule" role="tabpanel" aria-labelledby="inclusion-service-cumule"
                              aria-expanded="true">
 
-                            {% if inclusionsService %}
                                 <div class="arcoffice-graphique-sub">
 
                                     <h2><i class="fa fa-bar-chart"></i> Inclusions par Service, cumulées entre deux
                                         dates
                                         <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
                                     </h2>
-
+                                    {% if inclusionsService %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
 
                                         <canvas id="canvas5"></canvas>
 
                                     </div>
-
+                                    {% else %}
+                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
 
                         </div>
 
@@ -582,12 +576,15 @@
                         },
                         tooltips: {
                             mode: 'single',
-                            mode: 'single',
                             intersect: true,
                             filter: function (tooltipItem) {
                                 return !tooltipItem.yLabel == 0; // custom added prop to dataset
                             }
-                        }
+                        },
+                        legend: {
+                            position: "right",
+                            align: "middle"
+                        },
                     }
                 });
 
@@ -736,7 +733,11 @@
                             filter: function (tooltipItem, data) {
                                 return !tooltipItem.yLabel == 0; // custom added prop to dataset
                             }
-                        }
+                        },
+                        legend: {
+                            position: "right",
+                            align: "middle"
+                        },
                     }
                 });
 
@@ -918,7 +919,7 @@
                 var ctx5 = document.getElementById("canvas5").getContext("2d");
 
                 new Chart(ctx5, {
-                    type: 'pie',
+                    type: 'bar',
                     data: data,
                     options: {
                         tooltips: {
@@ -938,6 +939,9 @@
                                     return label + ' (' + percent + ' %)';
                                 }
                             }
+                        },
+                        legend: {
+                            display: false
                         }
                     }
                 });
@@ -1026,7 +1030,7 @@
                 var ctx6 = document.getElementById("canvas6").getContext("2d");
 
                 new Chart(ctx6, {
-                    type: 'pie',
+                    type: 'bar',
                     data: data,
                     options: {
                         tooltips: {
@@ -1046,6 +1050,9 @@
                                     return label + ' (' + percent + ' %)';
                                 }
                             }
+                        },
+                        legend: {
+                            display: false
                         }
                     }
                 });
@@ -1100,7 +1107,11 @@
                                     return label + ' (' + percent + ' %)';
                                 }
                             }
-                        }
+                        },
+                        legend: {
+                            position: "right",
+                            align: "middle"
+                        },
                     }
                 });
 

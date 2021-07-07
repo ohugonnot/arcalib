@@ -946,6 +946,14 @@
 
                                         </th>
 
+                                        <th @click="orderBy('date_fin', 'visite')">
+
+                                            Date Fin
+                                            <i v-bind:class='[visite.order.date_fin == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                               class="fa"></i>
+
+                                        </th>
+
                                         <th @click="orderBy('patient', 'visite')">
 
                                             Patient <i
@@ -972,8 +980,17 @@
 
                                         <td>
 
-                                            <a v-if='visite.date.date != null' :href="linkVisite(visite)">[[
-                                                visite.date.date | date ]]</a>
+                                            <a v-if='visite.date.date != null' :href="linkVisite(visite)">
+                                                [[ visite.date.date | datetime ]]
+                                            </a>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span v-if='visite.date_fin != null'>
+                                                [[ visite.date_fin.date | datetime ]]
+                                            </span>
 
                                         </td>
 
@@ -1230,7 +1247,7 @@
                                                                         {{ visite.calendar }} - {{ visite.statut }} -
 
                                                                         {% if visite.arc != null %}
-                                                                            {{ visite.arc.nomArc }}
+                                                                            {{ visite.arc.nomPrenom }}
                                                                         {% endif %}
 
                                                                     {% endif %}

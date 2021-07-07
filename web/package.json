@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "arcoffice",
   "version": "1.0.0",
   "description": "ArcOffice est un outil de gestion d'une unité de recherche clinique.",
@@ -74,5 +74,8 @@
       "es2015",
       "es2016"
     ]
+  },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
   }
 }
