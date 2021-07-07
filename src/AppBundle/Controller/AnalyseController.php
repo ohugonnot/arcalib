@@ -50,7 +50,7 @@ class AnalyseController extends Controller
                 $dateArcVisites = $this->visiteArcByDate($debut, $fin);
                 $inclusionsService = $this->inclusionsByService($debut, $fin);
                 $inclusionsArc = $this->inclusionByArc($debut, $fin);
-                $inclusionsMedecin = $this->inclusionByMedecin($debut, $fin, true);
+                $inclusionsMedecin = $this->inclusionByMedecin($debut, $fin, false);
                 $inclusionsByProtocole = $this->inclusionsByProtocole($debut, $fin);
             }
         } else {
@@ -61,7 +61,7 @@ class AnalyseController extends Controller
             $dateArcVisites = $this->visiteArcByDate($lastYear, $endMonth);
             $inclusionsService = $this->inclusionsByService($lastYear, $endMonth);
             $inclusionsArc = $this->inclusionByArc($lastYear, $endMonth);
-            $inclusionsMedecin = $this->inclusionByMedecin($lastYear, $endMonth, true);
+            $inclusionsMedecin = $this->inclusionByMedecin($lastYear, $endMonth, false);
             $inclusionsByProtocole = $this->inclusionsByProtocole($lastYear, $endMonth);
         }
 
@@ -145,7 +145,7 @@ class AnalyseController extends Controller
                 ->select('i')
                 ->join('i.arc', 'a')
                 ->addSelect("a")
-                ->orderBy('a.nomArc')
+                ->orderBy('a.nomArc, a.prenomArc')
                 ->getQuery()
                 ->getResult();
 
@@ -161,7 +161,7 @@ class AnalyseController extends Controller
                 ->setParameter('fin', $fin)
                 ->join('i.arc', 'a')
                 ->addSelect("a")
-                ->orderBy('a.nomArc')
+                ->orderBy('a.nomArc, a.prenomArc')
                 ->getQuery()
                 ->getResult();
         }
@@ -174,10 +174,10 @@ class AnalyseController extends Controller
             if (!$arc) {
                 continue;
             }
-            if (!isset($inclusionArc[$arc->getNomArc()])) {
-                $inclusionArc[$arc->getNomArc()] = 0;
+            if (!isset($inclusionArc[$arc->getNomPrenom()])) {
+                $inclusionArc[$arc->getNomPrenom()] = 0;
             }
-            $inclusionArc[$arc->getNomArc()] += 1;
+            $inclusionArc[$arc->getNomPrenom()] += 1;
         }
 
         ksort($inclusionArc);
@@ -281,14 +281,14 @@ class AnalyseController extends Controller
 
         $inclusionsByMonth = $em->getRepository(Inclusion::class)
             ->createQueryBuilder('i')
-            ->select(' count(i) as nb, MONTH(i.datInc) AS month, YEAR(i.datInc) AS year, a.nomArc as nom')
+            ->select('count(i) as nb, MONTH(i.datInc) AS month, YEAR(i.datInc) AS year, a.nomArc as nom, a.prenomArc as prenom')
             ->join('i.arc', 'a')
             ->where('i.datInc IS NOT NULL')
             ->andWhere('i.datInc >= :debut')
             ->andWhere('i.datInc <= :fin')
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin)
-            ->orderBy('i.datInc, a.nomArc')
+            ->orderBy('i.datInc, a.nomArc, a.prenomArc')
             ->groupBy('month')
             ->addGroupBy('year')
             ->addGroupBy('i.arc')
@@ -302,7 +302,7 @@ class AnalyseController extends Controller
 
             $formtedMonth = $this->add0($array["month"]);
             $year = $array["year"];
-            $nom = $array["nom"];
+            $nom = $array["nom"].' '.$array["prenom"];
 
             if (!isset($dateArc[$nom][$year . $formtedMonth])) {
                 $dateArc[$nom][$year . $formtedMonth] = [];
@@ -388,7 +388,7 @@ class AnalyseController extends Controller
 
             $formattedByMonth = $this->add0($array["month"]);
             $year = $array["year"];
-            $nom = $array["nom"];
+            $nom = $array["nom"].' '.($array["prenom"]??null);
 
             if (!isset($date[$nom][$year . $formattedByMonth])) {
                 $date[$nom][$year . $formattedByMonth] = [];
@@ -464,7 +464,7 @@ class AnalyseController extends Controller
 
         $visitesByMonth = $em->getRepository(Visite::class)
             ->createQueryBuilder('v')
-            ->select(' count(v) as nb, MONTH(v.date) AS month, YEAR(v.date) AS year, a.nomArc as nom')
+            ->select(' count(v) as nb, MONTH(v.date) AS month, YEAR(v.date) AS year, a.nomArc as nom, a.prenomArc as prenom')
             ->leftJoin('v.arc', 'a')
             ->where('v.date IS NOT NULL')
             ->andWhere('v.date >= :debut')
@@ -472,7 +472,7 @@ class AnalyseController extends Controller
             ->andWhere("v.statut ='".Visite::FAITE."' ")
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin)
-            ->orderBy('v.date, a.nomArc')
+            ->orderBy('v.date, a.nomArc, a.prenomArc')
             ->groupBy('month')
             ->addGroupBy('year')
             ->addGroupBy('v.arc')
@@ -504,6 +504,7 @@ class AnalyseController extends Controller
             ->setParameter('fin', $fin)
             ->orderBy('serviceNom')
             ->groupBy('serviceNom')
+            ->orderBy('nb','DESC')
             ->getQuery()
             ->getResult();
 
@@ -529,6 +530,7 @@ class AnalyseController extends Controller
             ->setParameter('fin', $fin)
             ->orderBy('protocoleNom')
             ->groupBy('protocoleNom')
+            ->orderBy('nb','DESC')
             ->getQuery()
             ->getResult();
 

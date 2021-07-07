@@ -79,6 +79,41 @@
                     width: '100%',
                     language: "fr"
                 });
+
+				showAddArc();
+				$(document).on("change","#appbundle_useradmin_roles_1,#appbundle_useradmin_arc", function() {
+					showAddArc();
+				});
+				$(document).on("change","#appbundle_useradmin_addArc", function() {
+					if($(this).is(':checked'))
+						$('#appbundle_useradmin_arc').val(null).prop("disabled",true);
+					else
+						$('#appbundle_useradmin_arc').val(null).prop("disabled",false);
+				});
+				$(document).on("change","#appbundle_useradmin_arc", function() {
+					if($(this).val())
+						$('#appbundle_useradmin_addArc').prop('checked',false);
+				});
+				$(document).on("change","#appbundle_useradmin_addMedecin", function() {
+					if($(this).is(':checked'))
+						$('#appbundle_useradmin_medecin').val(null).prop("disabled",true);
+					else
+						$('#appbundle_useradmin_medecin').val(null).prop("disabled",false);
+				});
+				$(document).on("change","#appbundle_useradmin_medecin", function() {
+					if($(this).val())
+						$('#appbundle_useradmin_addMedecin').prop('checked',false);
+				});
 			});
+
+			function showAddArc()
+			{
+				if($('#appbundle_useradmin_roles_1').is(':checked'))
+					$('#addArc').show();
+				else {
+					$('#addArc').hide();
+					$('#appbundle_useradmin_addArc').prop( "checked",false);
+				}
+			}
 		</script>
 	{% endblock %}

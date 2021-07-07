@@ -28,6 +28,15 @@
 
                 </li>
 
+                {# Agenda #}
+
+                <li class="nav-item">
+
+                    <a class="nav-link {% if app.request.get('_route') == 'agenda' %}active{% endif %}"
+                       href="{{ path("agenda") }}">Agenda</a>
+
+                </li>
+
                 {# Patient #}
                 {% if app.user.rulesProtocole is defined and app.user.rulesProtocole != "np" %}
 

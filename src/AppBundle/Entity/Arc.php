@@ -30,6 +30,12 @@ class Arc
     private $nomArc;
 
     /**
+     * @var string
+     * @ORM\Column(name="PrenomArc", type="string", length=50, nullable=true)
+     */
+    private $prenomArc;
+
+    /**
      * @var DateTime
      * @ORM\Column(name="DatIn", type="date", nullable=true)
      */
@@ -99,6 +105,12 @@ class Arc
      */
     private $service;
 
+    /**
+     * @var User
+     * @ORM\OneToOne(targetEntity="User", cascade={"persist"}, mappedBy="arc")
+     */
+    private $user;
+
     // -------------------------------------------------Constructor------------------------------------------
 
     /**
@@ -138,7 +150,28 @@ class Arc
      */
     public function setNomArc($nomArc)
     {
-        $this->nomArc = $nomArc;
+        $this->nomArc = strtoupper($nomArc);
+
+        return $this;
+    }
+
+    /**
+     * Get PrenomArc
+     * @return string
+     */
+    public function getPrenomArc()
+    {
+        return $this->prenomArc;
+    }
+
+    /**
+     * Set PrenomArc
+     * @param string $prenomArc
+     * @return Arc
+     */
+    public function setPrenomArc($prenomArc)
+    {
+        $this->prenomArc = ucfirst(strtolower($prenomArc));
 
         return $this;
     }
@@ -432,5 +465,28 @@ class Arc
         $this->service = $service;
 
         return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return Arc
+     */
+    public function setUser(?User $user): Arc
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getNomPrenom() : string
+    {
+        return $this->getNomArc() . ' ' . $this->getPrenomArc();
     }
 }

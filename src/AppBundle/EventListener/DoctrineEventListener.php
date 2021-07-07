@@ -86,8 +86,14 @@ class DoctrineEventListener implements EventSubscriber
 
             foreach ($param as $key2 => $value)
             if ($value instanceof \DateTime)
+            {
                 /** @var \DateTime $value */
-                $this->changeSet[$key][$key2] = $value->format("d-m-Y");
+                $time = $value->format('Hi');
+                if($time == '0000')
+                    $this->changeSet[$key][$key2] = $value->format("d-m-Y");
+                else
+                    $this->changeSet[$key][$key2] = $value->format("d-m-Y H:i");
+            }
         }
     }
 
@@ -118,8 +124,8 @@ class DoctrineEventListener implements EventSubscriber
     {
          if (method_exists($entity, "getNumInc") && $entity->getNumInc())
             return $entity->getNumInc();
-         if (method_exists($entity, "getNomArc") && $entity->getNomArc())
-            return $entity->getNomArc();
+         if (method_exists($entity, "getNomPrenom"))
+            return $entity->getNomPrenom();
          if (method_exists($entity, "getNom") && method_exists($entity, "getPrenom"))
             return $entity->getNom()." ".$entity->getPrenom();
          if (method_exists($entity, "getNom") && $entity->getNom())

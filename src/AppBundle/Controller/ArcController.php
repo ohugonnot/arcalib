@@ -109,7 +109,7 @@ class ArcController extends Controller
             $query, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             20/*limit per page*/,
-            array('defaultSortFieldName' => ['a.nomArc'], 'defaultSortDirection' => 'asc')
+            array('defaultSortFieldName' => ['a.nomArc','a.prenomArc'], 'defaultSortDirection' => 'asc')
         );
 
         return $this->render('arc/listeArcs.html.twig', [

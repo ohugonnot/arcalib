@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Arc;
+use AppBundle\Entity\Medecin;
 use AppBundle\Entity\User;
-use AppBundle\Form\UserTypeAdmin;
+use AppBundle\Form\UserAdminType;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,46 +18,30 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserController extends Controller
 {
-
-// ------------------------------------------ADD USER----------------------------------------------------- 
-    /**
-     * @Route("/utilisateur/ajouter", name="addUser")
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
-    public function addUserAction(Request $request)
-    {
-        $user = new User();
-
-        $form = $this->get('form.factory')->create(UserTypeAdmin::class, $user);
-
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            return $this->redirectToRoute("listeUsers");
-        }
-
-        return $this->render('@FOSUser/Profile/edit.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
 // ------------------------------------------Edit USER----------------------------------------------------- 
 
-	/**
-	 * @Route("/utilisateur/editer/{id}", name="editUser")
-	 * @param Request $request
-	 * @param User $user
-	 * @return RedirectResponse|Response
-	 */
-    public function editUserAction(Request $request, User $user)
+    /**
+     * @Route("/utilisateur/editer/{id}", name="editUser")
+     * @Route("/utilisateur/ajouter", name="addUser")
+     * @param Request $request
+     * @param null $id
+     * @return RedirectResponse|Response
+     */
+    public function editUserAction(Request $request, $id=null)
     {
-        $form = $this->get('form.factory')->create(UserTypeAdmin::class, $user);
+        $em = $this->getDoctrine()->getManager();
+        if(!$id) {
+            $user = new User();
+            $form = $this->get('form.factory')->create(UserAdminType::class, $user,['validation_groups'=>['Registration']]);
+        }
+        else {
+            $user = $em->getRepository(User::class)->find($id);
+            if(!$user)
+                $this->createNotFoundException('Utilisateur non trouvé');
+            $form = $this->get('form.factory')->create(UserAdminType::class, $user,['validation_groups'=>['Profile']]);
+        }
 
-         if ($this->getUser() != $user)
+        if ($this->getUser() != $user)
             $this->denyAccessUnlessGranted('ROLE_ADMIN', $user, "Vous n'avez pas les droits pour cette action");
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -74,6 +60,41 @@ class UserController extends Controller
                     'form' => $form->createView(),
                 ]);
             }
+
+            $alreadyExist = false;
+            if ($arc = $user->getArc())
+                $alreadyExist = $userManager->findUserBy(["arc"=>$arc]);
+
+            if ($alreadyExist && $alreadyExist != $user) {
+                $this->addFlash(
+                    'danger',
+                    'Il existe déjà un utilisateur pour cet arc c\'est '. $alreadyExist->getUsername()
+                );
+                return $this->render('@FOSUser/Profile/edit.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            if($form->get('addMedecin')->getData())
+            {
+                $medecin = new Medecin();
+                $medecin->setNom($user->getNom());
+                $medecin->setPrenom($user->getPrenom());
+                $em->persist($medecin);
+                $em->flush();
+                $user->setMedecin($medecin);
+            }
+
+            if($form->get('addArc')->getData())
+            {
+                $arc = new Arc();
+                $arc->setNomArc($user->getNom());
+                $arc->setPrenomArc($user->getPrenom());
+                $em->persist($arc);
+                $em->flush();
+                $user->setArc($arc);
+            }
+
             $userManager->updateUser($user);
             $this->addFlash(
                 'success',

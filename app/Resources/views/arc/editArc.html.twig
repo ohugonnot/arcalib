@@ -8,8 +8,8 @@
 
     {% elseif app.request.get("_route") == 'editArc' %}
 
-        {% set title_page = "Modifier l'ARC " ~ form.vars.value.nomArc %}
-        {% set description_page = "Édition de l'ARC " ~ form.vars.value.nomArc %}
+        {% set title_page = "Modifier l'ARC " ~ form.vars.value.nomPrenom %}
+        {% set description_page = "Édition de l'ARC " ~ form.vars.value.nomPrenom %}
 
     {% endif %}
 	
@@ -115,13 +115,24 @@
                         <div class="form-row form-group">
 
                             {# nomArc #}
-                            <div class="col-8">
+                            <div class="col-4">
 
                                 {{ form_label(form.nomArc) }}
 
                                 {{ form_errors(form.nomArc) }}
 
                                 {{ form_widget(form.nomArc, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
+
+                            </div>
+
+                            {# prenomArc #}
+                            <div class="col-4">
+
+                                {{ form_label(form.prenomArc) }}
+
+                                {{ form_errors(form.prenomArc) }}
+
+                                {{ form_widget(form.prenomArc, { 'attr': { 'class': 'form-control form-control-sm' } }) }}
 
                             </div>
 

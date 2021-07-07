@@ -311,7 +311,7 @@
                                     </div>
 
                                     <div style='text-align: right' class="col">
-                                        {% if (app.user == inclusion.medecin or is_granted('ROLE_ADMIN')) and not form.vars.value.signer  %}
+                                        {% if (app.user.medecin == inclusion.medecin or is_granted('ROLE_ADMIN')) and not form.vars.value.signer  %}
                                             <a class="mt-2 btn btn-sm btn-outline-danger title-tooltip" href="{{ path("signerDocument", {id: form.vars.value.id}) }}" >
                                                 <i class="fa fa-check-square-o"></i> <span>Signer le document</span>
                                             </a>

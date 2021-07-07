@@ -37,9 +37,15 @@ class VisiteFactory implements FactoryInterface
 		}
 
 		if (isset($params["date"])) {
-			$date = DateTime::createFromFormat('d/m/Y', $params["date"]);
-			$visite->setDate($date);
+			$date = DateTime::createFromFormat('d/m/Y H:i', $params["date"]);
+			if($date)
+			    $visite->setDate($date);
 		}
+        if (isset($params["date_fin"])) {
+            $date_fin = DateTime::createFromFormat('d/m/Y H:i', $params["date_fin"]);
+            if($date_fin)
+                $visite->setDateFin($date_fin);
+        }
 
 		if (isset($params["fact"]) and $params["fact"] == "true") {
 			$visite->setFact(true);

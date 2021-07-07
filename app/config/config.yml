@@ -16,7 +16,7 @@ framework:
         strict_requirements: ~
     form: ~
     csrf_protection: ~
-    validation: { enable_annotations: true }
+    validation: { enabled: true, enable_annotations: true }
     #serializer: { enable_annotations: true }
     templating:
         engines: ['twig']
@@ -134,7 +134,7 @@ fos_user:
         sender_name: "%mailer_user%"
     profile:
         form:
-            type: AppBundle\Form\UserTypeAdmin
+            type: AppBundle\Form\UserType
 
 jms_i18n_routing:
     default_locale: fr

@@ -88,9 +88,9 @@
 
                         <tr>
 
-                            <th class="{% if arcs.isSorted('a.nom') %}sorted{% endif %}" data-sort="arc">
+                            <th class="{% if arcs.isSorted('a.nomArc') %}sorted{% endif %}" data-sort="arc">
 
-                                {{ knp_pagination_sortable(arcs, 'Nom ARC', ['a.nomArc']) }}
+                                {{ knp_pagination_sortable(arcs, 'Nom ARC', ['a.nomArc','a.prenomArc']) }}
 
                             </th>
 
@@ -140,7 +140,7 @@
 
                                     <a href="{{ path("editArc", { id: arc.id }) }}">
 
-                                        {{ arc.nomArc }}
+                                        {{ arc.nomPrenom }}
 
                                     </a>
 

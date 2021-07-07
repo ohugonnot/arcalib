@@ -11,7 +11,8 @@ use Symfony\Component\Templating\EngineInterface;
 class SendMail
 {
     const SUBJECT_DEFAULT = "Arcoffice Email";
-    const EMAILS_ADMIN = ["folken70@hotmail.com", "herve.perrier@infirmerie-protestante.com", "recherche-clinique@infirmerie-protestante.com"];
+    // A chaque inclusion, destinataires des inclusions(responsable d'equipe)
+    const EMAILS_ADMIN = ["herve.perrier@infirmerie-protestante.com", "recherche-clinique@infirmerie-protestante.com"];
 
     protected $mailer;
     protected $templating;

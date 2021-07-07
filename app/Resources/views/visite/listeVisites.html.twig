@@ -101,6 +101,12 @@
 
                             </th>
 
+                            <th class='{% if visites.isSorted('v.date_fin') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Date Fin', 'v.date_fin') }}
+
+                            </th>
+
                             <th class='{% if visites.isSorted('v.statut') %}sorted{% endif %}'>
 
                                 {{ knp_pagination_sortable(visites, 'Statut', 'v.statut') }}
@@ -157,7 +163,13 @@
 
                                 <td class="date">
 
-                                    {{ visite.date is empty ? "" : visite.date|date('d/m/Y') }}
+                                    {{ visite.date is empty ? "" : visite.date|date('d/m/Y H:i') }}
+
+                                </td>
+
+                                <td class="date">
+
+                                    {{ visite.dateFin is empty ? "" : visite.dateFin|date('d/m/Y H:i') }}
 
                                 </td>
 

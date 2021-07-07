@@ -292,7 +292,7 @@ class DocumentController extends Controller
      */
     public function signerDocument(Document $document)
     {
-        if ($this->getUser() != $document->getInclusion()->getMedecin())
+        if ($this->getUser()->getMedecin() != $document->getInclusion()->getMedecin())
             $this->denyAccessUnlessGranted('ROLE_ADMIN', $document, "Vous n'avez pas les droits pour cette action");
 
         $em = $this->getDoctrine()->getManager();
