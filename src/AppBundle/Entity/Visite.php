@@ -80,7 +80,7 @@ class Visite
 
     /**
      * @var string
-     * @ORM\Column(name="type", type="string", length=40, nullable=true)
+     * @ORM\Column(name="type", type="string", length=60, nullable=true)
      */
     private $type;
 
