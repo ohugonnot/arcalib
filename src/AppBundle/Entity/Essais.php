@@ -49,7 +49,7 @@ class Essais
         'Refus' => self::REFUS,
     ];
 
-    const OBSERVATIONELLE = "Observationelle";
+    const OBSERVATIONELLE = "Observationelle (obsolete)";
     const INTERV_TYPE_1 = "Interv-type 1";
     const INTERV_TYPE_2 = "Interv-type 2";
     const TYPE_3_NI = "type 3-NI";
@@ -58,7 +58,7 @@ class Essais
     const NA = "NA";
 
     const TYPE = [
-        'Observationelle' => self::OBSERVATIONELLE,
+        'Observationelle (obsolete)' => self::OBSERVATIONELLE,
         'Interv-type 1' => self::INTERV_TYPE_1,
         'Interv-type 2' => self::INTERV_TYPE_2,
         'type 3-NI' => self::TYPE_3_NI,
