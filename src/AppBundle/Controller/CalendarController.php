@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Visite;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,6 +24,20 @@ class CalendarController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('calendar/calendar.html.twig');
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        $emVisite = $em->getRepository(Visite::class);
+        $visiteForWeek = $emVisite->findForAWeek($user);
+
+        $visiteByDay = [];
+        foreach ($visiteForWeek as $key => $visite) {
+            $visiteByDay[$visite->getDate()->format("Y-m-d")][] = $visite;
+        }
+
+        return $this->render('calendar/calendar.html.twig',[
+            'visiteForweek' => $visiteByDay
+        ]);
     }
 }
