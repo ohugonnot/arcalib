@@ -3,13 +3,13 @@
 'use strict';
 
 // Chargement et initialisation des composants utilisés
-var gulp = require('gulp'),
+let gulp = require('gulp'),
     $ = require('gulp-load-plugins')(),
     pump = require('pump');
-var uglify = require('gulp-uglify-es').default;
+let uglify = require('gulp-uglify-es').default;
 
 // Configuration générale du projet et des composants utilisés
-var project = {
+let project = {
   	name: 'projectName', // nom du projet
   	globalJSFile: 'global.min.js', // nom du fichier JS après concaténation
   	plugins: { // activation ou désactivation de certains plugins à la carte
@@ -33,7 +33,7 @@ var project = {
 };
 
 // Chemins vers les ressources ciblées
-var paths = {
+let paths = {
   	root: './', // dossier actuel
   	dev: './dev/', // dossier de travail
   	dest: './dist/', // dossier destiné à la livraison
@@ -83,7 +83,7 @@ gulp.task('copy-bootstrap', function () {
 });
 
 // Ressources JavaScript utilisées par ce projet (vendors + scripts JS spécifiques /dev/js/**/*.js)
-var vendors = [
+let vendors = [
     paths.vendors + 'core-js/client/core.min.js',
     paths.vendors + 'jquery/dist/jquery.js',
     paths.vendors + 'popper.js/dist/umd/popper.min.js',
@@ -177,7 +177,7 @@ gulp.task('img', function () {
 	gulp.task('build', ['css', 'js', 'img']);
 
 	// Tâche Copy File : tapez "gulp copy"
-	gulp.task('copy', ['copy-knacss', 'copy-hamburgers']);
+	gulp.task('copy', ['copy-bootstrap', 'copy-hamburgers']);
 
 	// Tâche par défaut
 	gulp.task('default', ['build']);
@@ -187,15 +187,15 @@ gulp.task('img', function () {
 		gulp.watch('dev/sass/**/*.scss', ['css']);
 		gulp.watch('dev/css/**/*.css', ['css']);
 		gulp.watch('dev/js/**/*.js', ['js']);
-	})
+	});
 
 	// Watcher CSS
 	gulp.task('watch-css', function() {
 		gulp.watch('dev/sass/**/*.scss', ['css']);
 		gulp.watch('dev/css/**/*.css', ['css']);
-	})
+	});
 
 	// Watcher JS
 	gulp.task('watch-js', function() {
 		gulp.watch('dev/js/**/*.js', ['js']);
-	})
+	});
