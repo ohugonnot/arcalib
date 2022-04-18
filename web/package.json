@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "arcoffice",
   "version": "1.0.0",
   "description": "ArcOffice est un outil de gestion d'une unité de recherche clinique.",
@@ -44,8 +44,8 @@
     "jquery": "^3.3.1",
     "jquery-validation": "^1.17.0",
     "list.js": "^1.5.0",
-    "lodash": "^4.17.4",
-    "moment": "^2.19.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.3",
     "npm": "^6.11.3",
     "popper.js": "1.12.5",
     "sweetalert2": "6.10.3",
