@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,15 +30,65 @@ class CalendarController extends Controller
 
         $user = $this->getUser();
         $emVisite = $em->getRepository(Visite::class);
-        $visiteForWeek = $emVisite->findForAWeek($user);
+        //$visiteForWeek = $emVisite->findAdvancedArray(null, [], $user, false);
+        /*$visiteForWeek = $emVisite->findForAWeek($user);
 
         $visiteByDay = [];
-        foreach ($visiteForWeek as $key => $visite) {
-            $visiteByDay[$visite->getDate()->format("Y-m-d")][] = $visite;
+        foreach ($visiteForWeek as $visite) {
+            /** @var Visite $visite */
+            /*$patient = $visite->getInclusion()->getPatient();
+            $dateStartVisite = $visite->getDate();
+            $dateFinVisite = $visite->getDateFin();
+
+            $visiteByDay[]["title"] = $patient->getPrenom()." ".$patient->getPrenom();
+            $visiteByDay[]["start"] = $dateStartVisite->format("Y-m-d")."T".$dateStartVisite->format("H:i:s");
+            if ($dateFinVisite){
+                $visiteByDay[]["end"] = $dateFinVisite->format("Y-m-d")."T".$dateFinVisite->format("H:i:s");
+            }
         }
 
-        return $this->render('calendar/calendar.html.twig',[
-            'visiteForweek' => $visiteByDay
-        ]);
+        /*title: 'Meeting',
+                            start: '2019-08-12T14:30:00',*/
+
+        return $this->render('calendar/calendar.html.twig');
+    }
+
+    /**
+     * @Route("/events", name="agenda_events", options={"expose"=true})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function events(Request $request){
+        $em = $this->getDoctrine()->getManager();
+
+        $start_str = substr($request->get("start"), 0, 10);
+        $end_str = substr($request->get("end"), 0, 10);
+
+        $start = \DateTime::createFromFormat("Y-m-d", $start_str);
+        $fin = \DateTime::createFromFormat("Y-m-d", $end_str);
+
+        $user = $this->getUser();
+        $emVisite = $em->getRepository(Visite::class);
+
+        $visiteForWeek = $emVisite->findByDate($start, $fin, $user);
+
+        $visiteByDay = [];
+        foreach ($visiteForWeek as $visite) {
+            /** @var Visite $visite */
+            $patient = $visite->getInclusion()->getPatient();
+            $dateStartVisite = $visite->getDate();
+            $dateFinVisite = $visite->getDateFin();
+
+            $data = [];
+
+            $data["title"] = $patient->getPrenom()." ".$patient->getPrenom();
+            $data["start"] = $dateStartVisite->format("Y-m-d")."T".$dateStartVisite->format("H:i:s");
+            if ($dateFinVisite){
+                $data["end"] = $dateFinVisite->format("Y-m-d")."T".$dateFinVisite->format("H:i:s");
+            }
+            $visiteByDay[] = $data;
+        }
+
+        return new JsonResponse($visiteByDay);
     }
 }

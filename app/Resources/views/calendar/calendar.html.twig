@@ -72,12 +72,20 @@
                     firstDay: 1,
                     allDaySlot: false,
                     timeFormat: 'H',
-                    minTime: '08:00',
-                    maxTime: '20:00',
+                    slotMinTime: '08:00:00',
+                    slotMaxTime: '20:00:00',
+                    slotDuration: '00:15:00',
+                    slotLabelInterval: '01:00:00',
+                    slotLabelFormat: {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        omitZeroMinute: false,
+                        meridiem: 'long'
+                    },
                     initialView: 'timeGridWeek',
                     //defaultView: 'timeGridWeek',
                     headerToolbar: {
-                        left: 'prev,next today',
+                        left: 'prevYear,prev,next,nextYear today',
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
@@ -88,21 +96,22 @@
                         day: 'Jour',
                         list: 'list'
                     },
-                    events: [
-                        {
-                            title: 'Meeting',
-                            start: '2019-08-12T14:30:00',
-                            extendedProps: {
-                                status: 'done'
+                    customButtons: {
+                        prev444: {
+                            text: 'prev',
+                            click: function () {
+                                calendar.prev();
+                                var date = calendar.getDate();
+                                var url = Routing.generate("agenda_events", {'dtevent' : moment(date).format('YYYY-MM-DD')});
+                                $.get(url, function(response){
+                                    alert(response["data"]);
+                                })
                             }
-                        },
-                        {
-                            title: 'Birthday Party',
-                            start: '2019-08-13T07:00:00',
-                            backgroundColor: 'green',
-                            borderColor: 'green'
-                        },
-                    ]
+                        }
+                    },
+                    eventSources: [{
+                        url: Routing.generate("agenda_events")
+                    }]
                     //dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }
                     /*dayHeaderContent: (args) => {
                         return moment(args.date).format('ddd Do/')

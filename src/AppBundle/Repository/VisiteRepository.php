@@ -58,7 +58,7 @@ class VisiteRepository extends EntityRepository
      * @param DateTime|null $fin
      * @return array
      */
-    public function findByDate(?DateTime $debut, ?DateTime $fin = null)
+    public function findByDate(?DateTime $debut, ?DateTime $fin = null, $user = null)
     {
         if ($fin == null)
             $fin = date("Y-m-d H:i:s");
@@ -68,6 +68,10 @@ class VisiteRepository extends EntityRepository
             ->andWhere('v.date <= :fin')
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin);
+
+        if ($user){
+            $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
+        }
 
         return $queryBuilder->getQuery()->getResult();
     }
