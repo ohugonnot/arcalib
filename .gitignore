@@ -65,3 +65,8 @@ var/logs/
 var/sessions/
 vendor/
 web/assets/
+.bash
+.bash_history
+.bashrc
+.bash_logout
+.profile
