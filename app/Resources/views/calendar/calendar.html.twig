@@ -96,22 +96,25 @@
                         day: 'Jour',
                         list: 'list'
                     },
-                    customButtons: {
-                        prev444: {
-                            text: 'prev',
-                            click: function () {
-                                calendar.prev();
-                                var date = calendar.getDate();
-                                var url = Routing.generate("agenda_events", {'dtevent' : moment(date).format('YYYY-MM-DD')});
-                                $.get(url, function(response){
-                                    alert(response["data"]);
-                                })
-                            }
+                    eventSources: [{
+                        url: Routing.generate("agenda_events"),
+                        color: 'yellow',
+                    }],
+                    eventDidMount: function (info) {
+                        var statutEvent = info.event.extendedProps["statutEvt"];
+                        $(info.el).css("border", "solid #D3D3D3 3px");
+                        if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::FAITE') }}') {
+                            $(info.el).css("border-left", "solid #39c158 10px");
+                        } else if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::NON_FAITE') }}'){
+                            $(info.el).css("border-left", "solid #dc3545 10px");
+                        } else if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::PREVUE_CONFIRMEE') }}'){
+                            $(info.el).css("border-left", "solid #fd7e14 10px");
                         }
                     },
-                    eventSources: [{
-                        url: Routing.generate("agenda_events")
-                    }]
+                    /*viewDidMount: function(args){
+                        console.log($(".fc-timegrid-col-events > .fc-timegrid-event-harness").html());
+                        $("a.test1").parent("div").css("border", "green solid 5px");
+                    }*/
                     //dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }
                     /*dayHeaderContent: (args) => {
                         return moment(args.date).format('ddd Do/')
