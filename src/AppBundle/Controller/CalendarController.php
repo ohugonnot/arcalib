@@ -81,11 +81,14 @@ class CalendarController extends Controller
 
             $data = [];
 
-            $data["title"] = $patient->getPrenom()." ".$patient->getPrenom();
+            $data["title"] = $patient->getPrenom()." ".$patient->getNom()." No inclusion : ".$visite->getInclusion()->getId();
             $data["start"] = $dateStartVisite->format("Y-m-d")."T".$dateStartVisite->format("H:i:s");
             if ($dateFinVisite){
                 $data["end"] = $dateFinVisite->format("Y-m-d")."T".$dateFinVisite->format("H:i:s");
             }
+            $data["color"] = "#FFF";
+            $data["textColor"] = "blue";
+            $data["statutEvt"] = $visite->getStatut();
             $visiteByDay[] = $data;
         }
 
