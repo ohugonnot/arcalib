@@ -105,6 +105,22 @@
                             weekVisites.push(elt.visiteObj);
                         });
                     },
+                    eventContent: function (arg) {
+                        var event = arg.event;
+                        var identitePatient = event.extendedProps["identitePatient"];
+                        var etude = event.extendedProps["etude"];
+                        var typeVisite = event.extendedProps["typeVisite"];
+                        var heureEvt = moment(event.start).format("HH:mm");
+                        if (moment(event.end).isValid()){
+                            heureEvt += " - " + moment(event.end).format("HH:mm");
+                        }
+
+                        return {html: "<div style='font-size: 0.7em;'><span style='color: blue;'>" + heureEvt + "</span>"
+                            + "<br />" + "<span style='color: blue;'>" + identitePatient + "</span>"
+                            + "<br />" + "<span style='color: #000;'>" + etude + "</span>"
+                            + "<br />" + "<span style='color: #000;'>" + typeVisite + "</span></div>" };
+                    },
+
                     eventDidMount: function (info) {
                         var statutEvent = info.event.extendedProps["statutEvt"];
                         $(info.el).css("border", "solid #D3D3D3 3px");
