@@ -65,6 +65,7 @@
         <script src="{{ asset('dist/fullcalendar/main.min.js') }}" type="text/javascript"></script>
 
         <script>
+            var weekVisites = [];
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -97,9 +98,13 @@
                         list: 'list'
                     },
                     eventSources: [{
-                        url: Routing.generate("agenda_events"),
-                        color: 'yellow',
+                        url: Routing.generate("agenda_events")
                     }],
+                    eventSourceSuccess: function(content, xhr) {
+                        $.each(content, function(idx, elt){
+                            weekVisites.push(elt.visiteObj);
+                        });
+                    },
                     eventDidMount: function (info) {
                         var statutEvent = info.event.extendedProps["statutEvt"];
                         $(info.el).css("border", "solid #D3D3D3 3px");
@@ -111,14 +116,11 @@
                             $(info.el).css("border-left", "solid #fd7e14 10px");
                         }
                     },
-                    /*viewDidMount: function(args){
-                        console.log($(".fc-timegrid-col-events > .fc-timegrid-event-harness").html());
-                        $("a.test1").parent("div").css("border", "green solid 5px");
-                    }*/
-                    //dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }
-                    /*dayHeaderContent: (args) => {
-                        return moment(args.date).format('ddd Do/')
-                    }*/
+                    eventClick: function(info) {
+                        var noInclusionSelected = info.event.extendedProps["noInclusion"];
+                        var idPatient = info.event.extendedProps["idPatient"];
+                        window.location.href = Routing.generate("patient", {"id" : idPatient, id_inclusion: noInclusionSelected});
+                    }
                 });
                 calendar.render();
             });
