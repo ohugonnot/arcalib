@@ -2,11 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Arc;
 use AppBundle\Entity\Visite;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,32 +24,10 @@ class CalendarController extends Controller
      */
     public function indexAction(Request $request)
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-        $emVisite = $em->getRepository(Visite::class);
-        //$visiteForWeek = $emVisite->findAdvancedArray(null, [], $user, false);
-        /*$visiteForWeek = $emVisite->findForAWeek($user);
-
-        $visiteByDay = [];
-        foreach ($visiteForWeek as $visite) {
-            /** @var Visite $visite */
-            /*$patient = $visite->getInclusion()->getPatient();
-            $dateStartVisite = $visite->getDate();
-            $dateFinVisite = $visite->getDateFin();
-
-            $visiteByDay[]["title"] = $patient->getPrenom()." ".$patient->getPrenom();
-            $visiteByDay[]["start"] = $dateStartVisite->format("Y-m-d")."T".$dateStartVisite->format("H:i:s");
-            if ($dateFinVisite){
-                $visiteByDay[]["end"] = $dateFinVisite->format("Y-m-d")."T".$dateFinVisite->format("H:i:s");
-            }
-        }
-
-        /*title: 'Meeting',
-                            start: '2019-08-12T14:30:00',*/
-
-        return $this->render('calendar/calendar.html.twig');
+        $arcs = $this->getDoctrine()->getManager()->getRepository(Arc::class)->findBy([], ["nomArc" => 'asc']);
+        return $this->render('calendar/calendar.html.twig', [
+            'arcs' => $arcs
+        ]);
     }
 
     /**
@@ -89,6 +66,10 @@ class CalendarController extends Controller
             $data["color"] = "#FFF";
             $data["textColor"] = "blue";
             $data["statutEvt"] = $visite->getStatut();
+            $data["noInclusion"] = $visite->getInclusion()->getId();
+            $data["noVisite"] = $visite->getId();
+            $data["idPatient"] = $patient->getId();
+
             $visiteByDay[] = $data;
         }
 
