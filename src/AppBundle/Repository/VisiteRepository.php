@@ -82,8 +82,8 @@ class VisiteRepository extends EntityRepository
      */
     public function findForAWeek(User $user)
     {
-        $debut = (new DateTime())->setTime(0, 0);
-        $now = (new DateTime())->setTime(0, 0);
+        $debut = (new DateTime())->setTime(0, 0,0);
+        $now = (new DateTime())->setTime(0, 0,0);
         $interval = new DateInterval('P1W');
         $fin = $now->add($interval);
 
