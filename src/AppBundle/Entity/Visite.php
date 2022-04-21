@@ -24,6 +24,7 @@ class Visite
     const FIN_ETUDE = "Fin d'étude";
     const UNIQUE = 'Unique';
     const MONITORAGE = "Monitorage";
+    const ADMIN = "Administratif";
     const AUTRE = 'Autre';
 
     CONST TYPE = [
@@ -37,6 +38,7 @@ class Visite
         "Fin d'étude" => self::FIN_ETUDE,
         'Unique' => self::UNIQUE,
         'Monitorage' => self::MONITORAGE,
+        'Administratif' => self::ADMIN,
         'Autre' => self::AUTRE,
 
     ];

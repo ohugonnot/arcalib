@@ -64,8 +64,7 @@ class VisiteRepository extends EntityRepository
             $fin = date("Y-m-d H:i:s");
 
         $queryBuilder = $this->createQueryBuilder('v')
-            ->where('v.date >= :debut')
-            ->andWhere('v.date <= :fin')
+            ->andWhere('v.date BETWEEN :debut AND :fin or v.date_fin BETWEEN :debut AND :fin or (v.date <= :debut and v.date_fin >= :fin)')
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin);
 
@@ -83,8 +82,8 @@ class VisiteRepository extends EntityRepository
      */
     public function findForAWeek(User $user)
     {
-        $debut = (new DateTime())->setTime(0, 0);
-        $now = (new DateTime())->setTime(0, 0);
+        $debut = (new DateTime())->setTime(0, 0,0);
+        $now = (new DateTime())->setTime(0, 0,0);
         $interval = new DateInterval('P1W');
         $fin = $now->add($interval);
 
