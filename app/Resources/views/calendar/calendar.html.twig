@@ -115,7 +115,7 @@
                             heureEvt += " - " + moment(event.end).format("HH:mm");
                         }
 
-                        return {html: "<div style='font-size: 0.7em;'><span style='color: blue;'>" + heureEvt + "</span>"
+                        return {html: "<div style='font-size: 1em; padding: 2px;'><span style='color: blue;'>" + heureEvt + "</span>"
                             + "<br />" + "<span style='color: blue;'>" + identitePatient + "</span>"
                             + "<br />" + "<span style='color: #000;'>" + etude + "</span>"
                             + "<br />" + "<span style='color: #000;'>" + typeVisite + "</span></div>" };
@@ -136,6 +136,24 @@
                         var noInclusionSelected = info.event.extendedProps["noInclusion"];
                         var idPatient = info.event.extendedProps["idPatient"];
                         window.location.href = Routing.generate("patient", {"id" : idPatient, id_inclusion: noInclusionSelected});
+                    },
+
+                    editable: true,
+                    eventDrop: function(info) {
+                        var idVisite = info.event.extendedProps["noVisite"];
+                        var start = moment(info.event.start).format("YYYY-MM-DD HH:mm:00");
+                        var end = "";
+                        if (moment(info.event.end).isValid()){
+                            end = moment(info.event.end).format("YYYY-MM-DD HH:mm:00");
+                        }
+                        if (confirm("Etes-vous sur de vouloir déplacer cette visite ?")) {
+                            var urlSave = Routing.generate("agenda_save_visit");
+                            $.post(urlSave, {"start" : start, "end" : end, "idVisite" : idVisite}, function(response){
+
+                            });
+                        }else{
+                            info.revert();
+                        }
                     }
                 });
                 calendar.render();

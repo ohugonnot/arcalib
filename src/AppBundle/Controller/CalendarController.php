@@ -78,4 +78,26 @@ class CalendarController extends Controller
 
         return new JsonResponse($visiteByDay);
     }
+
+    /**
+     * @Route("/save_visit", name="agenda_save_visit", options={"expose"=true})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function saveVisitAction(Request $request){
+        $idVisite = $request->get("idVisite");
+        $start = $request->get("start");
+        $end = $request->get("end");
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var Visite $visite */
+        $visite = $em->getRepository(Visite::class)->find($idVisite);
+        $visite->setDate(\DateTime::createFromFormat("Y-m-d H:i:s", $start));
+        if (!empty($end)){
+            $visite->setDateFin(\DateTime::createFromFormat("Y-m-d H:i:s", $end));
+        }
+        $em->persist($visite);
+        $em->flush();
+        return new JsonResponse();
+    }
 }
