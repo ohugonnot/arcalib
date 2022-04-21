@@ -41,8 +41,8 @@ class CalendarController extends Controller
         $start_str = substr($request->get("start"), 0, 10);
         $end_str = substr($request->get("end"), 0, 10);
 
-        $start = \DateTime::createFromFormat("Y-m-d", $start_str);
-        $fin = \DateTime::createFromFormat("Y-m-d", $end_str);
+        $start = \DateTime::createFromFormat("Y-m-d", $start_str)->setTime(0,0);
+        $fin = \DateTime::createFromFormat("Y-m-d", $end_str)->setTime(0,0);
 
         $user = $this->getUser();
         $emVisite = $em->getRepository(Visite::class);

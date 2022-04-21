@@ -64,8 +64,7 @@ class VisiteRepository extends EntityRepository
             $fin = date("Y-m-d H:i:s");
 
         $queryBuilder = $this->createQueryBuilder('v')
-            ->where('v.date >= :debut')
-            ->andWhere('v.date <= :fin')
+            ->andWhere('v.date BETWEEN :debut AND :fin or v.date_fin BETWEEN :debut AND :fin or (v.date <= :debut and v.date_fin >= :fin)')
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin);
 
