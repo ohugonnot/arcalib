@@ -1,0 +1,141 @@
+
+	// Protocole
+
+		.arcoffice-protocole {
+			.col-liste-protocole {
+				position: relative;
+
+				.form-title {
+					margin-bottom: 0;
+				}
+
+				.is-selected {
+					color: $white;
+    				background-color: $red;
+    				border-color: $red;
+				}
+			}
+
+			.col-liste-protocole, 
+			.col-liste-patient {
+				&:hover {
+					background: #f1f1f1 !important;
+				}
+			}
+			
+			.col-liste-sub {
+				position: absolute;
+				left: -1px;
+				top: 40px;
+				bottom: -1px;
+				right: -1px;
+				overflow: auto;
+				
+				a {
+					width: 100%;
+					position: relative;
+					padding: 5px 5px 5px 25px;
+					font-size: .8rem;
+					font-weight: 600;
+
+					&:not(:last-of-type) {
+						border-bottom: 1px solid $input-border-color;	
+					}
+
+					&:hover {
+						text-decoration: none;
+						background: #dfddea;
+					}
+
+					&.is-active {
+						color: $white;
+						background: $violet;
+					}
+
+					&:before {
+						content: "";
+						position: absolute;
+						left: 7.5px;
+						top: 50%;
+						width: 10px;
+						height: 10px;
+						border-radius: 50%;
+						background: $white;
+						transform: translateY(-50%);
+					}
+				}
+			}
+
+			.col-liste-patient {
+				table {
+					thead th {
+						cursor: pointer;
+
+						&.is-listed {
+							i {
+								transform: rotate(180deg);
+							}
+						}
+
+						i {
+							transition: transform .3s ease;
+						}
+					}
+
+					tbody {
+						tr {
+							&:hover {
+						      	background: #dfddea;
+						    }
+						}
+						td:nth-of-type(2),
+						td:nth-of-type(3) {
+							cursor: pointer;
+						}
+					}
+				}
+			}
+
+			.protocole-patient-statut {
+				position: relative;
+				padding-right: 25px;
+
+				&:before {
+					content: "";
+					position: absolute;
+					right: 7.5px;
+					top: 50%;
+					width: 10px;
+					height: 10px;
+					border-radius: 50%;
+					background: $white;
+					transform: translateY(-50%);
+				}
+			}
+
+			.arcoffice-protocole-pdf {
+				.loader {
+					display: block;
+				    width: 25px;
+				    height: 25px;
+				    border: 4px solid $blue;
+				    border-right-color: rgba($blue, .4);
+				    border-radius: 50%;
+				    animation: rotate .6s infinite linear;
+				}
+
+				.col-btn-sm .btn {
+					height: 31px;
+				}
+			}
+
+
+		}
+
+		.arcoffice-edition {
+			.col-liste-documents {
+				.form-title {
+					height: auto;
+				}
+			}
+		}

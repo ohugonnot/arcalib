@@ -1,0 +1,16 @@
+
+	// Analyses
+
+		// Pipeline
+
+			.table-anaylyse-protocole {
+				table-layout: fixed;
+    			word-wrap: break-word;
+    			
+				td, th {
+					padding: .35rem !important;
+					font-size: 12px;
+					font-weight: 600;
+					border: 1px solid $input-border-color;
+				}
+			}

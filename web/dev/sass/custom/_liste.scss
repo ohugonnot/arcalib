@@ -1,0 +1,109 @@
+
+	// Listes
+
+		.arcoffice-liste {
+
+			h4 {
+				width: 100%;
+				padding: 9px 0;
+				font: $font-size-base $font-stack-bold;
+				letter-spacing: -.5px;
+				color: $violet;
+				border-bottom: 1px solid $input-border-color;
+			}
+
+			.table {
+				margin-bottom: 0;
+
+				thead th {
+					.sortable,
+					.asc,
+					.desc {
+						cursor: pointer;
+						color: $black;
+						text-decoration: none;
+					}
+				}
+			}
+
+			.table-sm td,
+			.table-sm th {
+				padding: .45rem;
+			}
+
+			tbody {
+				tr {
+					&:hover {
+				      	background: #dfddea;
+				    }
+				}
+
+				.past .date {
+					color: $red;
+			    }
+
+			    .more-30-days .date {
+					color: $green;
+			    }
+
+			    .less-30-days .date {
+					color: $orange;
+			    }
+			}
+
+			.arcoffice-admin {
+				font-weight: 600;
+
+				i {
+					color: $yellow;
+				}
+			}
+		}
+
+		.facture-debit,
+		.facture-credit {
+			position: relative;
+			padding-left: 25px !important;
+
+			&:after {
+				content: "";
+			    position: absolute;
+			    left: 7.5px;
+			    top: 50%;
+			    width: 10px;
+			    height: 10px;
+			    border-radius: 50%;
+			    background: $red;
+			    transform: translateY(-50%);
+			}
+		}
+
+		.facture-credit {
+			&:after {
+				background: $green;
+			}
+		}
+
+		.libcim10-checkbox {
+			width: 60px;
+
+			label {
+				width: 100%;	
+			}
+		}
+
+		.actualites-titre {
+			width: 300px;
+		}
+		
+		.actualite-ok {
+			color: $green;
+		}
+
+		.actualite-ko {
+			color: $red;
+		}
+
+		.col-libcim10-editer {
+			min-height: 750px;
+		}

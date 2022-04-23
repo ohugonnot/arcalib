@@ -1,0 +1,73 @@
+
+	// Cohérence des données
+
+		.arcoffice-coherence-data {
+
+			.form-title {
+				cursor: initial;
+				border-bottom: 0;
+
+				i {
+					color: $blue;
+				}
+			}
+
+			.section-main {
+				.container {
+					background: #f5f5f5;
+				}
+				.nav-tabs {
+					height: 40px;
+					border-bottom: 1px solid rgba(0,0,0,.15);
+				}
+
+				.nav-link {
+					align-items: center;
+					height: calc(40px - 1px);
+					padding: .5rem .75rem;
+					border: 0;
+					font: 600 $font-size-base $font-stack-bold;
+					letter-spacing: -.5px;
+					border-radius: 0;
+					border-right: 1px solid rgba(0,0,0,.15);
+		
+					&.active {
+						color: $violet;
+					}
+
+					&:hover,
+					&:focus,
+					&:active {
+						border-right: 1px solid rgba(0,0,0,.15);
+					}
+				}
+			}
+
+			
+
+			.table-sm td,
+			.table-sm th {
+				padding: .45rem;
+			}
+
+			tbody {
+				tr {
+					&:hover {
+				      	background: #dfddea;
+				    }
+				}
+			}
+
+			.arcoffice-anomalie-wrapper {
+				height: 30px;
+
+				// &:not(:first-of-type) {
+				// 	border-top: 1px solid $input-border-color;
+				// }
+			}
+
+			.verificationSave {
+				padding: .1rem .3rem; 
+				font-size: .7rem;
+			}
+		}

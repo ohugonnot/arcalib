@@ -1,0 +1,39 @@
+
+	// Requêtes
+
+		.arcoffice-requetes {
+			.form-title {
+				border-top: 0;
+
+				&:hover,
+				&:focus,
+				&:active {
+					color: $violet;
+					text-decoration: none;
+				}
+
+				i {
+					color: $blue;
+				}
+			}
+
+			.table {
+				table-layout: fixed;
+				margin-bottom: 1rem;
+			}
+
+			// th,
+			// td {
+			// 	width: 20%;
+			// }
+
+			.section-main {
+				.collapse {
+					&:last-of-type {
+						&:before {
+							height: 0; 
+						}
+					}
+				}
+			}
+		}

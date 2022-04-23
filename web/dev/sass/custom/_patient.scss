@@ -1,0 +1,91 @@
+
+	/* Patient */
+
+		.arcoffice-patient {
+			
+			.patient-liste-inclusion {
+				position: relative;
+
+				&:before, 
+				&:after {
+					content: "";
+					position: absolute;
+					left: -15px;
+					right: -15px;
+					border-top: 1px solid $input-border-color;	
+				}
+
+				.form-title {
+					height: 30px;
+					margin-bottom: 0;
+					padding-bottom: 0;
+					cursor: auto;
+					border-bottom: 0;
+
+					&:before {
+						content: none;
+					}
+				}
+
+				.table tbody tr.is-active {
+					position: relative;
+					background: rgba($blue, .2);
+				}
+			}
+
+			.patient-get-inclusion {
+				width: 100%;
+				font-size: .7rem;
+				justify-content: space-between;
+
+				i {
+					/* float: right; */
+					pointer-events: none;
+					font-size: 1rem;
+				}
+			}
+
+			.col-visite {
+				&:hover {
+			      	background: transparent !important;
+			    }
+
+				tbody tr {
+					cursor: pointer;
+					
+					&:hover {
+				      	background: #dfddea;
+				    }
+
+				    &.past a {
+						color: $black;
+						text-decoration: underline;
+				    }
+
+				    &.more-30-days a {
+						color: $green;
+				    }
+
+				    &.less-30-days a {
+						color: $orange;
+				    }
+				}
+
+				.patient-visite-statut {
+					position: relative;
+					padding-right: 20px;
+
+					&:before {
+						content: "";
+						position: absolute;
+						right: 5px;
+						top: 50%;
+						width: 10px;
+						height: 10px;
+						border-radius: 50%;
+						background: $white;
+						transform: translateY(-50%);
+					}
+				}
+			}
+		}

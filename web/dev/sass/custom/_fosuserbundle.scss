@@ -1,0 +1,69 @@
+
+	// FosUserBundle - Symfony
+
+		// Général
+
+			.arcoffice-fosuser {
+				position: relative;
+
+				&:before {
+					content: "";
+					background-image: url(../img/bg-01.jpg);
+					background-position: center center;
+			    	background-repeat: no-repeat;
+			    	background-size: cover;
+			    	position: absolute;
+			    	top: 0;
+			    	left: 0;
+			    	right: 0;
+			    	bottom: 0;
+			    	z-index: -1;
+			    	// opacity: .5;
+				}
+
+				main {
+					margin-top: 0;
+
+					& > div {
+						height: calc(100vh - 50px);
+					}
+				}
+
+				.lead {
+					font-family: $font-stack-bold;
+				    font-weight: 600;
+				    color: $violet;
+				    letter-spacing: -.5px;
+				}
+
+				.arcoffice-fosuser-sub {
+					width: 100%;
+					max-width: 375px;
+					margin: 0 15px;
+					padding: 25px;
+					border-radius: .25rem;
+					background: rgba($white, .5);
+					box-shadow: 0 5px 20px #cdcbde;
+
+					label:not(.form-check-label) {
+						font-size: $font-size-base;
+					}
+
+					input[type="submit"] {
+						font: 600 $font-size-base $font-stack-bold;
+						// background-image: linear-gradient(-90deg, #3E396B 50%, #201C38 100%);
+					}
+				}
+			}
+
+		// Connexion 
+
+			.arcoffice-login {
+			}
+
+		// Réinitialisation du mot de passe
+
+
+
+
+			
