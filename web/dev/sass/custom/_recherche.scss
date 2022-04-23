@@ -1,0 +1,186 @@
+
+	// Recherche
+
+		.arcoffice-recherche {
+			.col-recherche {
+				min-height: 630px;
+			}
+
+			.nav-tabs .nav-item {
+				flex-grow: 1;
+
+				&:last-child {
+					a {
+						border-right: none;
+					}
+				}
+			}
+
+			.form-title {
+				cursor: initial;
+
+				&:not(:first-of-type) {
+					border-top: 1px solid $input-border-color;
+				}
+
+				i {
+					color: $blue;
+				}
+			}
+
+			label[for="recherche-protocole-nom-mot-clef"],
+			label[for="recherche-patient-nom"] {
+				width: 140px;
+			}
+
+			.recherche-protocole-statut,
+			.recherche-protocole-nom-mot-clef,
+			.recherche-patient-statut,
+			.recherche-patient-nom,
+			.recherche-annuaire-nom,
+			.recherche-medecin-nom {
+				width: 165px;
+			}
+
+			.table-sm td,
+			.table-sm th {
+				padding: .45rem;
+			}
+
+			thead th {
+				font-size: $font-size-sm;
+				cursor: pointer;
+			}
+
+			tbody {
+
+				&:nth-child(odd) {
+					 background-color: rgba(0,0,0,.05);
+				}
+
+				tr:first {
+					td:first-of-type {
+						font-weight: 600;
+					}
+				}
+			}
+			
+			.recherche-medecin-resultat tbody td {
+				&:nth-child(1) {
+					width: 22.5%;
+					vertical-align: top;
+				}
+			}
+
+			.recherche-medecin-resultat-sub {
+				table-layout: fixed;
+
+				td, th {
+					padding: .1rem;
+				}
+			}
+
+			.recherche-tags {
+				li {
+				    padding: .2rem;
+				    margin: .2rem 5px .2rem 0;
+				    cursor: initial;
+				    line-height: 1;
+				    color: $pink;
+				    text-align: center;
+				    white-space: nowrap;
+				    vertical-align: baseline;
+				    border-radius: .2rem;
+				    font-size: 90%;
+				    font-weight: 600;
+				    border: 1px solid $pink;
+				}
+			}
+		}
+
+	// Actualités
+
+		.col-actualites {
+			border-left: 1px solid $input-border-color;
+
+			.form-title {
+				border-bottom: 1px solid $input-border-color;
+			}
+		}
+
+		.recherche-actualites {
+			position: absolute;
+			left: -1px;
+			top: 40px;
+			bottom: 0;
+			right: 0;
+			overflow: auto;
+
+			article {
+				// margin: 0 -16px;
+				// margin: 0;
+				padding: 8px;
+
+				&:not(:last-of-type) {
+					border-bottom: 1px solid $input-border-color;	
+				}
+
+				.titre {
+					display: inline-block;
+					margin-bottom: 5px;
+					font: 600 $font-size-sm $font-stack-bold;
+					color: $pink;
+					letter-spacing: -.5px;
+				}
+
+				.date {
+					margin-bottom: 5px;
+					font: 900 .75rem $font-family-base;
+					text-transform: uppercase;
+					letter-spacing: .5px;
+				}
+				
+				.description {
+
+					p {
+						font-size: $font-size-sm;
+						margin: 0;	
+					}
+				}
+			}
+		}
+
+	// Liens
+
+		.col-links {
+
+			border-left: 1px solid $input-border-color;
+
+			.form-title {
+				border-bottom: 1px solid $input-border-color;
+			}
+
+			a {
+				margin: 0 -15px;
+				padding: 15px 10px;
+				border-bottom: 1px solid $input-border-color;
+				text-decoration: none;
+				background-color: transparent;
+				transition: background .2s ease-in-out;
+				
+				&:hover {
+					background: #dfddea;
+
+					svg {
+						fill: #0d4c8e;
+					}
+				}
+
+				&.col-links_radiologie,
+				&.col-links_vidal {
+					svg {
+						height: 42px;
+					}
+				}
+			}
+		}

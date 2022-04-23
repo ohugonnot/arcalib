@@ -1,0 +1,66 @@
+
+	// Bloc-notes
+
+		.table-bloc-notes {
+			thead {
+				th {
+					&:first-of-type {
+						width: 200px;
+					}
+
+					&:nth-of-type(2) {
+						width: 400px;
+					}
+				}
+			}
+
+			td.date {
+				position: relative;
+    			padding-left: 25px;
+
+    			&.bloc-note-alerte-done {
+    				&:before {
+    					background: $orange;
+    				}
+    			}
+
+    			&.bloc-note-date-outdated {
+    				&:before {
+    					background: $red;
+    				}
+    			}
+
+    			&.bloc-note-alerte-ok {
+    				&:before {
+    					background: $green;
+    				}
+    			}
+
+    			&.bloc-note-date-done {
+    				&:before {
+    					background: $blue;
+    				}
+    			}
+
+    			&:before {
+    				content: "";
+				    position: absolute;
+				    left: 5px;
+				    top: 50%;
+				    width: 10px;
+				    height: 10px;
+				    border-radius: 50%;
+				    transform: translateY(-50%);
+    			}
+			}
+		}
+
+        .bloc-notes-destinataires {
+            .form-check:first-of-type {
+                margin-left: .75rem;
+            }
+        }
+
+        .bloc-note-alerte {
+            margin-bottom: .4rem;
+        }

@@ -45,7 +45,6 @@
 /.web-server-pid
 
 /web/node_modules/
-/web/dev/
 /web/yarn*
 sftp*
 desktop.ini

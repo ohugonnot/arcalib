@@ -1,0 +1,34 @@
+
+	// Documents (du patient)
+
+		.col-arcoffice-document {
+			min-height: 750px;
+
+			object {
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		.col-arcoffice-document-add-sub {
+			width: 100%;
+			min-height: 750px;
+			cursor: pointer;
+			border: 2px dashed $blue;
+		}
+
+		.col-visite {
+			table {
+				tbody {
+					tr {
+						&:hover {
+							background: #dfddea;
+						}
+
+						&.is-active {
+							background: rgba(20,113,212,.2);
+						}
+					}
+				}
+			}
+		}

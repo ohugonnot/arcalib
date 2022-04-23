@@ -1,0 +1,28 @@
+
+	// Graphiques
+
+		.arcoffice-graphique {
+			.section-main .container {
+				background: #f5f5f5;
+			}
+		}
+
+		.arcoffice-graphique-sub {
+			padding: 20px;
+			border-bottom: 1px solid $input-border-color;
+
+			h2 {
+				margin-bottom: 15px;
+				font: 600 $font-size-lg $font-stack-bold;
+				color: $violet;
+				letter-spacing: -.5px;
+
+				i {
+					color: $blue;
+				}
+			}
+
+			p {
+				width: 70%;
+			}
+		}

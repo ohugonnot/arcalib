@@ -1,0 +1,21 @@
+
+	// Plugin JS - Typeahead.js (Auto-complétion)
+
+		.tt-menu {
+			width: calc(100% - .5rem);
+			top: 99%;
+			font-size: 13px;
+			background-color: $white;
+    		border: 1px solid rgba(0,0,0,.15);
+    		border-radius: .25rem;
+		}
+
+		.tt-suggestion {
+			padding: 3px 5px;
+			
+			&:hover {
+				cursor: pointer;
+				color: $white;
+				background: $blue;
+			}
+		}

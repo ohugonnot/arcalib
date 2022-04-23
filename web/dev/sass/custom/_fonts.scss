@@ -1,0 +1,39 @@
+
+	// Fonts (Polices de caractère)
+
+		// Source Sans Pro - Light (Exemple)
+
+			// @font-face {
+			//     font-family: 'Source Sans Pro';
+			//     src: url('../fonts/sourcesans/sourcesanspro-light-webfont.woff2') format('woff2'),
+			//          url('../fonts/sourcesans/sourcesanspro-light-webfont.woff') format('woff'),
+			//          url('../fonts/sourcesans/sourcesanspro-light-webfont.ttf') format('truetype'),
+			// 		 url('../font/sourcesans/sourcesanspro-light-webfont.svg#SourceSansProLight') format('svg');
+			//     font-weight: 300;
+			//     font-style: normal;
+			// }
+
+		// Montserrat - Bold
+
+			@font-face {
+			    font-family: 'Montserrat';
+			    src: url('../fonts/montserrat/bold/montserrat-bold.woff2') format('woff2'),
+			         url('../fonts/montserrat/bold/montserrat-bold.woff') format('woff'),
+			         url('../fonts/montserrat/bold/montserrat-bold.ttf') format('truetype'),
+					 url('../font/montserrat/bold/montserrat-bold.svg#Montserrat') format('svg');
+			    font-weight: 600;
+			    font-style: normal;
+			}
+
+		// Montserrat - Regular
+
+			@font-face {
+			    font-family: 'Montserrat';
+			    src: url('../fonts/montserrat/regular/montserrat-regular.woff2') format('woff2'),
+			         url('../fonts/montserrat/regular/montserrat-regular.woff') format('woff'),
+			         url('../fonts/montserrat/regular/montserrat-regular.ttf') format('truetype'),
+					 url('../font/montserrat/regular/montserrat-regular.svg#Montserrat') format('svg');
+			    font-weight: 400;
+			    font-style: normal;
+			}
+		

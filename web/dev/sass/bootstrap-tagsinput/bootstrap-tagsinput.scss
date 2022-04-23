@@ -1,0 +1,66 @@
+.bootstrap-tagsinput {
+    width: 100%;
+    max-width: 100%;
+    display: inline-block;
+    padding: .25rem .5rem;
+    color: #495057;
+    vertical-align: middle;
+    cursor: text;
+    line-height: 1.9;
+    font-size: $font-size-sm;
+    border: 1px solid $input-border-color;
+    border-radius: .2rem;
+    background-color: $white;
+    background-image: none;
+    background-clip: padding-box;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+
+    &.is-focus {
+        background-color: $white;
+        border-color: #80bdff;
+        outline: 0;
+    }
+}
+
+.bootstrap-tagsinput input {
+    width: 30px;
+    margin: 0;
+    max-width: inherit;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.bootstrap-tagsinput .tag {
+    display: inline;
+    padding: .2em .2em .3em;
+    cursor: initial !important;
+    font-size: 85%;
+    line-height: 1;
+    color: $white;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .2rem;
+    background: $pink;
+    transition: background .2s ease-in-out;
+
+    &:hover {
+        background: rgba($pink, .9);
+    }
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"] {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+    content: "×";
+    padding: 0px 2px;
+}
+
+.bootstrap-tagsinput .tt-menu {
+    min-width: 160px;
+}

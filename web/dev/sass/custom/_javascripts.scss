@@ -1,0 +1,65 @@
+
+	// Styles pour les plugins JS
+
+		// bLazy.js – A lazyload image script
+	    
+		    .b-lazy {
+				max-width: 100%;
+				opacity: 0;
+		        transition: opacity .2s ease;  
+			}
+
+		    .b-lazy.b-loaded {
+		        opacity: 1;
+		    }
+
+		// Vue.js
+
+			[v-cloak] {
+				display: none;
+			}
+
+		// Plugin JS - Typeahead.js (Auto-complétion)
+
+			.tt-menu {
+				width: calc(100% - .5rem);
+				top: 99%;
+				z-index: 10000 !important;
+				font-size: 13px;
+				background-color: $white;
+	    		border: 1px solid #80bdff;
+	    		border-radius: .25rem;
+			}
+
+			.tt-suggestion {
+				padding: 6px 5px;
+				
+				&:hover {
+					cursor: pointer;
+					color: $white;
+					background: $blue;
+				}
+			}
+
+			.tt-cursor {
+				background: rgba($blue, .2);
+			}
+
+		// Cometchat
+
+			#cometchat {
+				position: relative;
+			}
+
+		// Dropzone
+			
+			.dz-preview{
+				display: none;
+			}
+		
+		// Symfony
+		
+			.invalid-feedback, 
+			.invalid-tooltip {
+	            display: inherit;   
+	        }
