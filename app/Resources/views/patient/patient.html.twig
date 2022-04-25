@@ -316,6 +316,7 @@
                                     <input type="text" class="form-control form-control-sm js-datepicker"
                                            v-model='patient.datDiag' id="date-diagnostic">
 
+
                                     {# Cancer #}
                                     <div class="form-check form-control-sm mt-3 mb-0 p-0">
 
@@ -962,7 +963,7 @@
                                                 <label for="date-fin-visite" class="col-4 col-form-label">Date Fin</label>
 
                                                 <div class="col">
-
+                                                    <v-date-picker v-model="visiteSelected.date_fin" mode="dateTime" is24hrg>
                                                     <date-picker v-model="visiteSelected.date_fin" :config="options" ></date-picker>
 
                                                 </div>
