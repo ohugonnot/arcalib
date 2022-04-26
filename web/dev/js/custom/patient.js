@@ -418,6 +418,7 @@ if ($("#patient").length > 0) {
             options: {
                 format: 'DD/MM/YYYY HH:mm',
                 useCurrent: false,
+                disabledHours: [00,01,02,03,04,05,06,07,20,21,22,23]
             },
         },
 
