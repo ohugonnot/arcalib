@@ -72,7 +72,6 @@
                 calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'fr',
                     firstDay: 1,
-                    allDaySlot: false,
                     timeFormat: 'H',
                     slotMinTime: '08:00:00',
                     slotMaxTime: '20:00:00',
@@ -99,12 +98,8 @@
                         list: 'list'
                     },
                     dateClick: function(info) {
-                        /*alert('Clicked on: ' + info.dateStr);
-                        alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-                        alert('Current view: ' + info.view.type);*/
-                        // change the day's background color just for fun
                         date = moment(info.dateStr, "YYYY-MM-DD");
-                        calendar.changeView("timeGridWeek");
+                        calendar.changeView("timeGridDay");
                         calendar.gotoDate(info.dateStr);
                     },
                     eventSources: [{
@@ -124,8 +119,9 @@
                         if (moment(event.end).isValid()){
                             heureEvt += " - " + moment(event.end).format("HH:mm");
                         }
-
-                        return {html: "<div style='font-size: 1em; padding: 2px;'><span style='color: blue;'>" + heureEvt + "</span>"
+                        // changement style cellule de visite du calendrier
+                        // %!12!
+                        return {html: "<div style='font-size: 0.80em; padding: 2px;'><span style='color: blue;'>" + heureEvt + "</span>"
                             + "<br />" + "<span style='color: blue;'>" + identitePatient + "</span>"
                             + "<br />" + "<span style='color: #000;'>" + etude + "</span>"
                             + "<br />" + "<span style='color: #000;'>" + typeVisite + "</span></div>" };
@@ -143,8 +139,14 @@
                         }
                         // rend la date clicable pour aller de jour en jour
                         $.each($("a.fc-daygrid-day-number"), function(idx,elt){
-                            $(elt).attr("style", "text-decoration : underline;cursor: pointer;");
-                            $(elt).attr("title", $(elt).attr("aria-label"));
+                            $(elt).hover(function() {
+                                $(elt).attr("style", "text-decoration : underline;cursor: pointer;");
+                                $(elt).attr("title", $(elt).attr("aria-label"));
+                            });
+                            $(elt).mouseout(function() {
+                                $(elt).attr("style", "text-decoration : none;cursor: none;");
+                                $(elt).attr("title", "");
+                            });
                         });
 
                         // pour les entetes de tableau
@@ -179,13 +181,6 @@
                     }
                 });
                 calendar.render();
-
-                $('.fc-day-number').each(function(){
-                    var $this =  $(this);
-                    $this.on('click', function(){
-                        //console.log($(this).data('goto', 'date'));
-                    });
-                });
             });
         </script>
     {% endblock javascripts %}
