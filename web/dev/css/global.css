@@ -10185,8 +10185,7 @@ main {
   .arcoffice-patient .col-visite tbody tr:hover {
     background: #dfddea; }
   .arcoffice-patient .col-visite tbody tr.past a {
-    color: #000;
-    text-decoration: underline; }
+    color: #000; }
   .arcoffice-patient .col-visite tbody tr.more-30-days a {
     color: #28a745; }
   .arcoffice-patient .col-visite tbody tr.less-30-days a {
