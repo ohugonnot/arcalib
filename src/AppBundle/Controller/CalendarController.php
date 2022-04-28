@@ -41,13 +41,14 @@ class CalendarController extends Controller
         $start_str = substr($request->get("start"), 0, 10);
         $end_str = substr($request->get("end"), 0, 10);
 
-        $start = \DateTime::createFromFormat("Y-m-d", $start_str)->setTime(0,0);
-        $fin = \DateTime::createFromFormat("Y-m-d", $end_str)->setTime(0,0);
+        $start = \DateTime::createFromFormat("Y-m-d", $start_str)->setTime(0,0,0);
+        $fin = \DateTime::createFromFormat("Y-m-d", $end_str)->setTime(0,0,0);
 
         $user = $this->getUser();
         $emVisite = $em->getRepository(Visite::class);
 
         $visiteForWeek = $emVisite->findByDate($start, $fin, $user);
+
 
         $visiteByDay = [];
         foreach ($visiteForWeek as $visite) {
@@ -57,21 +58,32 @@ class CalendarController extends Controller
             $dateFinVisite = $visite->getDateFin();
 
             $data = [];
+            $diff = 0;
+            $timestampDebut = $dateStartVisite->getTimestamp();
+
 
             $data["title"] = "";
             $data["start"] = $dateStartVisite->format("Y-m-d")."T".$dateStartVisite->format("H:i:s");
             if ($dateFinVisite){
                 $data["end"] = $dateFinVisite->format("Y-m-d")."T".$dateFinVisite->format("H:i:s");
+                $data["dateEnd"] = $data["end"];
+                $timestampFin = $dateFinVisite->getTimestamp();
+                $diff = ($timestampFin - $timestampDebut)/(60*60);
             }
+            $data["dateStart"] = $data["start"];
+
             $data["identitePatient"] = $patient->getPrenom()." ".$patient->getNom();
-            $data["etude"] = "Etude : ".$visite->getInclusion()->getEssai()->getNom();
-            $data["typeVisite"] = "Type : ".$visite->getType();
+            $data["etude"] = $visite->getInclusion()->getEssai()->getNom();
+            $data["typeVisite"] = $visite->getType();
             $data["color"] = "#FFF";
             $data["textColor"] = "blue";
             $data["statutEvt"] = $visite->getStatut();
             $data["noInclusion"] = $visite->getInclusion()->getId();
             $data["noVisite"] = $visite->getId();
             $data["idPatient"] = $patient->getId();
+
+            if($diff>12)
+                $data["allDay"] = true;
 
             $visiteByDay[] = $data;
         }

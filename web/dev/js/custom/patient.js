@@ -1,7 +1,7 @@
 if ($("#patient").length > 0) {
 
     Vue.component('date-picker', VueBootstrapDatetimePicker);
-    var patient = new Vue({
+    const patient = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#patient',
@@ -73,7 +73,7 @@ if ($("#patient").length > 0) {
             deletePatient: function () {
 
                 if (this.patient.id) {
-                    var that = this;
+                    let that = this;
                     swal({
                         title: 'Etes vous sûr ?',
                         text: "Vous allez supprimer un patient. Vous ne pourrez pas revenir en arrière !",
@@ -110,6 +110,14 @@ if ($("#patient").length > 0) {
                     $('.patient-liste-inclusion tr[data-id=' + id + '] .patient-get-inclusion').addClass("btn-primary");
                     insertParam("id_inclusion", id);
                     insertParam("id", patient.patient.id);
+                    let id_visite = getUrlParameter("id_visite");
+                    if (id_visite) {
+                        const index = visite.visites.findIndex(function (element) {
+                            return parseInt(element.id) === parseInt(id_visite)
+                        });
+                        if (index >= 0)
+                            visite.openModal(index)
+                    }
                 });
             }
         },
@@ -147,7 +155,7 @@ if ($("#patient").length > 0) {
         }
     });
 
-    var recherche = new Vue({
+    const recherche = new Vue({
         delimiters: ['[[', ']]'],
         el: '#recherche',
         data: {
@@ -156,7 +164,7 @@ if ($("#patient").length > 0) {
 
         methods: {
             search: function () {
-                var that = this;
+                let that = this;
                 $.post(Routing.generate('recherchePatient', {query: this.recherche}), {}, function (data) {
                     if (data[0]) {
                         selectPatient(data[0]);
@@ -177,11 +185,10 @@ if ($("#patient").length > 0) {
                     patient.patient = data;
                     patient.disabled = false;
 
-                    var id_inclusion = getUrlParameter("id_inclusion");
+                    let id_inclusion = getUrlParameter("id_inclusion");
                     if (id_inclusion) {
                         patient.getInclusion(id_inclusion);
-                    }
-                    else if (patient.patient.inclusions.length > 0 && inclusion.inclusion.id === 0) {
+                    } else if (patient.patient.inclusions.length > 0 && inclusion.inclusion.id === 0) {
                         patient.getInclusion(patient.patient.inclusions[0].id);
                     }
 
@@ -193,7 +200,7 @@ if ($("#patient").length > 0) {
     });
 
 
-    var inclusion = new Vue({
+    const inclusion = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#inclusion',
@@ -406,7 +413,7 @@ if ($("#patient").length > 0) {
         }
     });
 
-    var visite = new Vue({
+    const visite = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#visite',
@@ -418,7 +425,7 @@ if ($("#patient").length > 0) {
             options: {
                 format: 'DD/MM/YYYY HH:mm',
                 useCurrent: false,
-                disabledHours: [00,01,02,03,04,05,06,07,20,21,22,23]
+            //    enabledHours: [8,9,10,11,12,13,14,15,16,17,18,19],
             },
         },
 
@@ -457,10 +464,10 @@ if ($("#patient").length > 0) {
             },
             isPast: function (visite) {
                 if (visite.date) {
-                    var difJour = moment().diff(moment(visite.date, 'DD/MM/YYYY'), 'days');
-                    if (difJour < -30) {
+                    let difhours = moment().diff(moment(visite.date, 'DD/MM/YYYY HH:mm'), 'hours');
+                    if (difhours < -30*24) {
                         return "more-30-days";
-                    } else if (difJour > -30 && difJour < 0) {
+                    } else if (difhours > -30*24 && difhours < 0) {
                         return "less-30-days";
                     } else {
                         return "past";
@@ -472,7 +479,7 @@ if ($("#patient").length > 0) {
                 if (this.visiteSelected.id === 0) {
                     return;
                 }
-                var indexPrevVisite = (this.visiteSelected.index - 1);
+                let indexPrevVisite = (this.visiteSelected.index - 1);
                 indexPrevVisite = (indexPrevVisite < 0) ? this.visites.length - 1 : indexPrevVisite;
                 this.visites[this.visiteSelected.index] = this.old;
                 this.old = JSON.parse(JSON.stringify(this.visites[indexPrevVisite]));
@@ -483,18 +490,36 @@ if ($("#patient").length > 0) {
                 if (this.visiteSelected.id === 0) {
                     return;
                 }
-                var indexNextVisite = (this.visiteSelected.index + 1) % this.visites.length;
+                let indexNextVisite = (this.visiteSelected.index + 1) % this.visites.length;
                 this.visites[this.visiteSelected.index] = this.old;
                 this.old = JSON.parse(JSON.stringify(this.visites[indexNextVisite]));
                 this.visiteSelected = this.visites[indexNextVisite];
                 this.visiteSelected.index = indexNextVisite;
             },
+            changeDateVisite: function () {
+                if(!this.visiteSelected.date_fin && moment(this.visiteSelected.date, "DD/MM/YYYY hh:mm").isValid()) {
+                    this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY hh:mm").add(1, 'hours').format("DD/MM/YYYY hh:mm");
+                    visite.$forceUpdate();
+                }
+            },
             saveVisite: function () {
 
                 if (!this.visiteSelected.date) {
-                    toastr.error('La visite doit avoir une date.');
+                    toastr.error('La visite doit avoir une date de debut.');
                     return false;
                 }
+
+                if(!this.visiteSelected.date_fin) {
+                    this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY hh:mm").add(1, 'hours').format("DD/MM/YYYY hh:mm");
+                } else {
+                    let debut = moment(this.visiteSelected.date, "DD/MM/YYYY hh:mm");
+                    let fin = moment(this.visiteSelected.date_fin, "DD/MM/YYYY hh:mm");
+                    if(fin < debut) {
+                        toastr.error('La date de fin doit être après la date de debut.');
+                        return false;
+                    }
+                }
+
                 $('#saveVisite').prop('disabled', true);
                 $.post(Routing.generate("saveVisite", {id: this.visiteSelected.id}), {
                     appbundle_visite: this.visiteSelected,
@@ -552,7 +577,7 @@ if ($("#patient").length > 0) {
     });
 
     // Autocompletation du moteur de recherche de patient
-    var patients = new Bloodhound({
+    const patients = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
@@ -571,7 +596,9 @@ if ($("#patient").length > 0) {
         }
     });
 
-    $('#input-recherche').typeahead({
+    let recherche_input = $('#input-recherche');
+
+    recherche_input.typeahead({
         highlight: true,
         minLength: 1,
         hint: true
@@ -589,7 +616,7 @@ if ($("#patient").length > 0) {
     function selectPatient(patientReponse) {
 
         // Quand on selectionne un patient on ferme le typehead et on repasse la recherche a vide
-        $('#input-recherche').typeahead('close').typeahead('val', '');
+        recherche_input.typeahead('close').typeahead('val', '');
         recherche.recherche = '';
         patient.patient.id = patientReponse.id;
         patient.disabled = false;
@@ -603,7 +630,7 @@ if ($("#patient").length > 0) {
 
 
     jQuery(document).ready(function ($) {
-        var id_patient = getUrlParameter("id");
+        let id_patient = getUrlParameter("id");
         if (id_patient) {
             recherche.selectPatient(id_patient);
         }

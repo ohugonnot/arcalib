@@ -67,7 +67,7 @@
 
                     {# Col 1 ----------------------------------------------------------------------------------------------------------#
                                         {# Colonne Patient #}
-                    <div v-bind:class='{ "is-disabled" : disabled }' id="patient" class="col col-arcoffice col-patient"
+                    <div :class='{ "is-disabled" : disabled }' id="patient" class="col col-arcoffice col-patient"
                          v-cloak>
 
                         <input type="hidden" v-model='patient.id'>
@@ -217,7 +217,7 @@
 
                                         <td>
 
-                                            <a v-if='inclusion.essai != null' v-bind:href="linkEssai(inclusion.essai)">
+                                            <a v-if='inclusion.essai != null' :href="linkEssai(inclusion.essai)">
 
                                                 <span v-if='inclusion.essai'>[[ inclusion.essai.nom ]]</span>
 
@@ -454,7 +454,7 @@
                     {#  Colonne 2: Inclusion ---------------------------------------------------------------------------------------------------------#}
 
                     {# Colonne Inclusion #}
-                    <div v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }' id="inclusion"
+                    <div :class='{"is-loading" : loading, "is-disabled" : disabled }' id="inclusion"
                          class="col col-arcoffice col-inclusion" v-cloak>
 
                         {# Titre + Boutons #}
@@ -896,7 +896,7 @@
                     {# Col 3 --------Visites--------------------------------------------------------------------------------------------------#}
                     {# Colonne Visites #}
                     <div id="visite" class="col col-arcoffice col-visite"
-                         v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }' v-cloak>
+                         :class='{"is-loading" : loading, "is-disabled" : disabled }' v-cloak>
 
                         {# Titre + Boutons #}
                         <div class="form-title d-flex align-items-center">
@@ -950,7 +950,7 @@
 
                                                 <div class="col">
 
-                                                    <date-picker v-model="visiteSelected.date" :config="options" id="dtStartVisite"></date-picker>
+                                                    <date-picker v-model="visiteSelected.date" autocomplete="off" @dp-hide="changeDateVisite" :config="options" id="dtStartVisite"></date-picker>
 
                                                 </div>
 
@@ -963,11 +963,24 @@
 
                                                 <div class="col">
 
-                                                    <date-picker v-model="visiteSelected.date_fin" :config="options" id="dtEndVisite"></date-picker>
+                                                    <date-picker v-model="visiteSelected.date_fin" autocomplete="off" :config="options" id="dtEndVisite"></date-picker>
 
                                                 </div>
 
                                             </div>
+
+                                            {#
+                                            <div class="form-check">
+
+                                                <label class="form-check-label">
+
+                                                    <input v-model='visiteSelected.allDay'
+                                                           class="form-check-input" type="checkbox" value="">Toute la journée
+
+                                                </label>
+
+                                            </div>
+                                            #}
 
                                             {# Type Visite #}
                                             <div class="form-row form-group">
@@ -1177,7 +1190,7 @@
                                 <td>[[ visite.type ]]</td>
 
                                 <td data-placement="right" :data-original-title='visite.statut'
-                                    v-bind:class="[(visite.statut == '{{ constant('AppBundle\\Entity\\Visite::FAITE') }}') ? 'arcoffice-vert' : '', (visite.statut == '{{ constant('AppBundle\\Entity\\Visite::NON_FAITE') }}') ? 'arcoffice-rouge' : '', (visite.statut == '{{ constant('AppBundle\\Entity\\Visite::PREVUE_CONFIRMEE') }}') ? 'arcoffice-orange' : '']"
+                                    :class="[(visite.statut == '{{ constant('AppBundle\\Entity\\Visite::FAITE') }}') ? 'arcoffice-vert' : '', (visite.statut == '{{ constant('AppBundle\\Entity\\Visite::NON_FAITE') }}') ? 'arcoffice-rouge' : '', (visite.statut == '{{ constant('AppBundle\\Entity\\Visite::PREVUE_CONFIRMEE') }}') ? 'arcoffice-orange' : '']"
                                     class="patient-visite-statut title-tooltip">[[ visite.statut ]]
                                 </td>
 

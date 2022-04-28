@@ -65,14 +65,13 @@
         <script src="{{ asset('dist/fullcalendar/main.min.js') }}" type="text/javascript"></script>
 
         <script>
-            var weekVisites = [];
-            var calendar;
+            let weekVisites = [];
+            let calendar;
             document.addEventListener('DOMContentLoaded', function () {
-                var calendarEl = document.getElementById('calendar');
+                const calendarEl = document.getElementById('calendar');
                 calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'fr',
                     firstDay: 1,
-                    timeFormat: 'H',
                     slotMinTime: '08:00:00',
                     slotMaxTime: '20:00:00',
                     slotDuration: '00:15:00',
@@ -105,30 +104,41 @@
                     eventSources: [{
                         url: Routing.generate("agenda_events")
                     }],
-                    eventSourceSuccess: function(content, xhr) {
+                    eventSourceSuccess: function(content) {
                         $.each(content, function(idx, elt){
                             weekVisites.push(elt.visiteObj);
                         });
                     },
                     eventContent: function (arg) {
-                        var event = arg.event;
-                        var identitePatient = event.extendedProps["identitePatient"];
-                        var etude = event.extendedProps["etude"];
-                        var typeVisite = event.extendedProps["typeVisite"];
-                        var heureEvt = moment(event.start).format("HH:mm");
-                        if (moment(event.end).isValid()){
-                            heureEvt += " - " + moment(event.end).format("HH:mm");
+                        let event = arg.event;
+                        let identitePatient = event.extendedProps["identitePatient"];
+                        let etude = event.extendedProps["etude"];
+                        let typeVisite = event.extendedProps["typeVisite"];
+                        let format = "HH:mm";
+                        let formatDate = "";
+                        if(event.allDay) {
+                            format = "DD/MM HH:mm";
+                            formatDate += moment(event.extendedProps["dateStart"]).format(format);
+                            if (event.extendedProps["dateEnd"] && moment(event.extendedProps["dateEnd"]).isValid()){
+                                formatDate += " - " + moment(event.extendedProps["dateEnd"]).format(format);
+                            }
+                        } else {
+                            formatDate += moment(event.start).format(format);
+                            if (event.end && moment(event.end).isValid()){
+                                formatDate += " - " + moment(event.end).format(format);
+                            }
                         }
-                        // changement style cellule de visite du calendrier
-                        // %!12!
-                        return {html: "<div style='font-size: 0.80em; padding: 2px;'><span style='color: blue;'>" + heureEvt + "</span>"
+                        let html = "<div style='font-size: 0.8em; padding: 2px;'><span style='color: blue;'>" + formatDate + "</span>"
                             + "<br />" + "<span style='color: blue;'>" + identitePatient + "</span>"
-                            + "<br />" + "<span style='color: #000;'>" + etude + "</span>"
-                            + "<br />" + "<span style='color: #000;'>" + typeVisite + "</span></div>" };
+                            + "<br />" + "<span style='color: #000;'>" + etude + "</span>";
+                        if(typeVisite)
+                            html += "<br />" + "<span style='color: #000;'>Type : " + typeVisite + "</span></div>";
+
+                        return {html: html};
                     },
 
                     eventDidMount: function (info) {
-                        var statutEvent = info.event.extendedProps["statutEvt"];
+                        let statutEvent = info.event.extendedProps["statutEvt"];
                         $(info.el).css("border", "solid #D3D3D3 3px");
                         if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::FAITE') }}') {
                             $(info.el).css("border-left", "solid #39c158 10px");
@@ -157,30 +167,38 @@
 
                     },
                     eventClick: function(info) {
-                        var noInclusionSelected = info.event.extendedProps["noInclusion"];
-                        var idPatient = info.event.extendedProps["idPatient"];
-                        window.location.href = Routing.generate("patient", {"id" : idPatient, id_inclusion: noInclusionSelected});
+                        let noInclusionSelected = info.event.extendedProps["noInclusion"];
+                        let idPatient = info.event.extendedProps["idPatient"];
+                        window.open(Routing.generate("patient", {"id" : idPatient, id_inclusion: noInclusionSelected, "id_visite": info.event.extendedProps["noVisite"]}), 'visite');
                     },
 
                     editable: true,
                     eventDrop: function(info) {
-                        var idVisite = info.event.extendedProps["noVisite"];
-                        var start = moment(info.event.start).format("YYYY-MM-DD HH:mm:00");
-                        var end = "";
-                        if (moment(info.event.end).isValid()){
-                            end = moment(info.event.end).format("YYYY-MM-DD HH:mm:00");
-                        }
-                        if (confirm("Etes-vous sur de vouloir déplacer cette visite ?")) {
-                            var urlSave = Routing.generate("agenda_save_visit");
-                            $.post(urlSave, {"start" : start, "end" : end, "idVisite" : idVisite}, function(response){
-
-                            });
-                        }else{
-                            info.revert();
-                        }
+                        SaveVisite(info);
+                    },
+                    eventResize: function(info) {
+                        SaveVisite(info);
                     }
                 });
                 calendar.render();
             });
+
+            function SaveVisite(info) {
+                let idVisite = info.event.extendedProps["noVisite"];
+                let start = moment(info.event.start).format("YYYY-MM-DD HH:mm:00");
+                let end = "";
+                if (moment(info.event.end).isValid()){
+                    end = moment(info.event.end).format("YYYY-MM-DD HH:mm:00");
+                }
+
+                if (confirm("Etes-vous sur de vouloir déplacer cette visite ?")) {
+                    let urlSave = Routing.generate("agenda_save_visit");
+                    $.post(urlSave, {"start" : start, "end" : end, "idVisite" : idVisite}, function(response){
+
+                    });
+                } else {
+                    info.revert();
+                }
+            }
         </script>
     {% endblock javascripts %}

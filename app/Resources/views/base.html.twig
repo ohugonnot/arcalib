@@ -50,24 +50,23 @@
 {# Javascripts #}
 {% block javascripts %}
     <script>
-        var Essais_ARCHIVE = "{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}";
-        var Essais_REFUS = "{{ constant('AppBundle\\Entity\\Essais::REFUS') }}";
-        var Essais_FAISABILITE_EN_ATTENTE = "{{ constant('AppBundle\\Entity\\Essais::FAISABILITE_EN_ATTENTE') }}";
-        var Essais_CONVENTION_SIGNATURE = "{{ constant('AppBundle\\Entity\\Essais::CONVENTION_SIGNATURE') }}";
-        var Essais_ATTENTE_DE_MEP = "{{ constant('AppBundle\\Entity\\Essais::ATTENTE_DE_MEP') }}";
-        var Essais_INCLUSIONS_OUVERTES = "{{ constant('AppBundle\\Entity\\Essais::INCLUSIONS_OUVERTES') }}";
-        var Essais_INCLUSIONS_GELEES = "{{ constant('AppBundle\\Entity\\Essais::INCLUSIONS_GELEES') }}";
-        var Essais_INCLUSIONS_CLOSES_SUIVI = "{{ constant('AppBundle\\Entity\\Essais::INCLUSIONS_CLOSES_SUIVI') }}";
-        var Essais_QUERIES_ET_FINALISATION = "{{ constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION') }}";
-        var Essais_CLOSE_EN_ATTENTE_PAYEMENT = "{{ constant('AppBundle\\Entity\\Essais::CLOSE_EN_ATTENTE_PAYEMENT') }}";
-        var Essais_AUTRE = "{{ constant('AppBundle\\Entity\\Essais::AUTRE') }}";
-        var Patient_VIVANT = "{{ constant('AppBundle\\Entity\\Patient::VIVANT') }}";
-        var Inclusion_OUI_SORTIE = "{{ constant('AppBundle\\Entity\\Inclusion::OUI_SORTIE') }}";
+        const Essais_ARCHIVE = "{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}";
+        const Essais_REFUS = "{{ constant('AppBundle\\Entity\\Essais::REFUS') }}";
+        const Essais_FAISABILITE_EN_ATTENTE = "{{ constant('AppBundle\\Entity\\Essais::FAISABILITE_EN_ATTENTE') }}";
+        const Essais_CONVENTION_SIGNATURE = "{{ constant('AppBundle\\Entity\\Essais::CONVENTION_SIGNATURE') }}";
+        const Essais_ATTENTE_DE_MEP = "{{ constant('AppBundle\\Entity\\Essais::ATTENTE_DE_MEP') }}";
+        const Essais_INCLUSIONS_OUVERTES = "{{ constant('AppBundle\\Entity\\Essais::INCLUSIONS_OUVERTES') }}";
+        const Essais_INCLUSIONS_GELEES = "{{ constant('AppBundle\\Entity\\Essais::INCLUSIONS_GELEES') }}";
+        const Essais_INCLUSIONS_CLOSES_SUIVI = "{{ constant('AppBundle\\Entity\\Essais::INCLUSIONS_CLOSES_SUIVI') }}";
+        const Essais_QUERIES_ET_FINALISATION = "{{ constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION') }}";
+        const Essais_CLOSE_EN_ATTENTE_PAYEMENT = "{{ constant('AppBundle\\Entity\\Essais::CLOSE_EN_ATTENTE_PAYEMENT') }}";
+        const Essais_AUTRE = "{{ constant('AppBundle\\Entity\\Essais::AUTRE') }}";
+        const Patient_VIVANT = "{{ constant('AppBundle\\Entity\\Patient::VIVANT') }}";
+        const Inclusion_OUI_SORTIE = "{{ constant('AppBundle\\Entity\\Inclusion::OUI_SORTIE') }}";
     </script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
     <script src="{{ asset('dist/js/global.min.js') }}"></script>
-    <script src="{{ asset('dist/js/custom-datepicker.js') }}"></script>
 
     {% if app.environment != "dev" %}
         <script type="text/javascript" charset="utf-8" src="{{ asset('/cometchat/js.php') }}" async></script>
