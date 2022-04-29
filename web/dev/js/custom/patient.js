@@ -497,8 +497,8 @@ if ($("#patient").length > 0) {
                 this.visiteSelected.index = indexNextVisite;
             },
             changeDateVisite: function () {
-                if(!this.visiteSelected.date_fin && moment(this.visiteSelected.date, "DD/MM/YYYY hh:mm").isValid()) {
-                    this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY hh:mm").add(1, 'hours').format("DD/MM/YYYY hh:mm");
+                if(!this.visiteSelected.date_fin && moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").isValid()) {
+                    this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").add(1, 'hours').format("DD/MM/YYYY HH:mm");
                     visite.$forceUpdate();
                 }
             },
