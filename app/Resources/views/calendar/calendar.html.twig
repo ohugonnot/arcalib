@@ -50,9 +50,7 @@
         <section class="section-main">
 
             <div class="container">
-
                 <div id='calendar'></div>
-
             </div>
 
         </section>
@@ -67,6 +65,15 @@
         <script>
             let weekVisites = [];
             let calendar;
+            var popTemplate = [
+                '<div class="popover" style="max-width:600px;" >',
+                '<div class="arrow"></div>',
+                '<div class="popover-header">',
+                '<button id="closepopover" type="button" class="close" aria-hidden="true">&times;</button>',
+                '<h3 class="popover-title"></h3>',
+                '</div>',
+                '<div class="popover-content"></div>',
+                '</div>'].join('');
             document.addEventListener('DOMContentLoaded', function () {
                 const calendarEl = document.getElementById('calendar');
                 calendar = new FullCalendar.Calendar(calendarEl, {
@@ -113,7 +120,6 @@
                         let event = arg.event;
                         let identitePatient = event.extendedProps["identitePatient"];
                         let etude = event.extendedProps["etude"];
-                        let typeVisite = event.extendedProps["typeVisite"];
                         let format = "HH:mm";
                         let formatDate = "";
                         if(event.allDay) {
@@ -131,12 +137,29 @@
                         let html = "<div style='font-size: 0.8em; padding: 2px;'><span style='color: blue;'>" + formatDate + "</span>"
                             + "<br />" + "<span style='color: blue;'>" + identitePatient + "</span>"
                             + "<br />" + "<span style='color: #000;'>" + etude + "</span>";
-                        if(typeVisite)
-                            html += "<br />" + "<span style='color: #000;'>Type : " + typeVisite + "</span></div>";
 
                         return {html: html};
                     },
+                    eventMouseEnter: function(info){
+                        let event = info.event;
+                        let identitePatient = event.extendedProps["identitePatient"];
+                        let etude = event.extendedProps["etude"];
+                        let typeVisite = event.extendedProps["typeVisite"];
+                        let statutEvt = event.extendedProps["statutEvt"];
 
+                        let html = "<p style='color: blue;'>" + identitePatient + "</p>"
+                            + "<p style='color: #000;'>" + etude + "</p>";
+                            + "<p style='color: #000;'>" + typeVisite + "</p>"
+                            + "<p style='color: #000;'>" + statutEvt + "</p>";
+
+                        $(info.el).popover({
+                            content: html,
+                            html: true,
+                            trigger: 'hover',
+                            placement: 'left',
+                            container: 'body'
+                        });
+                    },
                     eventDidMount: function (info) {
                         let statutEvent = info.event.extendedProps["statutEvt"];
                         $(info.el).css("border", "solid #D3D3D3 3px");
