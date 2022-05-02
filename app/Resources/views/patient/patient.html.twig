@@ -969,18 +969,16 @@
 
                                             </div>
 
-                                            {#
                                             <div class="form-check">
 
                                                 <label class="form-check-label">
 
-                                                    <input v-model='visiteSelected.allDay'
+                                                    <input v-model='visiteSelected.all_day' @change="changeAllDay"
                                                            class="form-check-input" type="checkbox" value="">Toute la journée
 
                                                 </label>
 
                                             </div>
-                                            #}
 
                                             {# Type Visite #}
                                             <div class="form-row form-group">
@@ -1041,6 +1039,17 @@
                                                     </select>
 
                                                 </div>
+
+                                            </div>
+
+                                            <div class="form-check">
+
+                                                <label class="form-check-label">
+
+                                                    <input v-model='visiteSelected.fait'
+                                                           class="form-check-input" type="checkbox" title=" cliquer si faite">Faite
+
+                                                </label>
 
                                             </div>
 

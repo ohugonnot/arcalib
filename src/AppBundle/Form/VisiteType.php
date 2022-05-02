@@ -44,7 +44,6 @@ class VisiteType extends AbstractType
                 "required" => false,
                 "multiple" => false,
                 'choices' => Visite::STATUT))
-            ->add('fact')
             ->add('numfact', TextType::class, ["required" => false, 'label' => 'N°facture'])
             ->add('note', TextareaType::class, ["required" => false, 'label' => 'Notes'])
             ->add('arc', EntityType::class, array(
@@ -65,6 +64,9 @@ class VisiteType extends AbstractType
                 'choice_label' => 'id',
                 'required' => true,
             ))
+            ->add('fact')
+            ->add('all_day')
+            ->add('fait')
 //--------------------------------------------------------------BOUTONS--------------------------------------------------------------
             ->add('envoyer', SubmitType::class, array(
                 'label' => "Enregistrer",

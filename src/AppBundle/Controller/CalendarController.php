@@ -80,9 +80,11 @@ class CalendarController extends Controller
             $data["statutEvt"] = $visite->getStatut();
             $data["noInclusion"] = $visite->getInclusion()->getId();
             $data["noVisite"] = $visite->getId();
+            $data["note"] = $visite->getNote();
+            $data["fait"] = $visite->getFait();
             $data["idPatient"] = $patient->getId();
 
-            if($diff>12)
+            if($diff>12 || $visite->getAllDay())
                 $data["allDay"] = true;
 
             $visiteByDay[] = $data;
