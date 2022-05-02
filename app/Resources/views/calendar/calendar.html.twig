@@ -94,14 +94,14 @@
                     headerToolbar: {
                         left: 'prevYear,prev,next,nextYear today',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
                     },
                     buttonText: {
                         today: "Aujourd'hui",
                         month: 'Mois',
                         week: 'Semaine',
                         day: 'Jour',
-                        list: 'list'
+                        list: 'Liste'
                     },
                     dateClick: function(info) {
                         date = moment(info.dateStr, "YYYY-MM-DD");
@@ -134,41 +134,57 @@
                                 formatDate += " - " + moment(event.end).format(format);
                             }
                         }
-                        let html = "<div style='font-size: 0.8em; padding: 2px;'><span style='color: blue;'>" + formatDate + "</span>"
+                        let html = "<div style='font-size: 0.7em; padding: 2px;'><span style='color: red;'>" + formatDate + "</span>"//Modifs HERVE cellule calendar
                             + "<br />" + "<span style='color: blue;'>" + identitePatient + "</span>"
-                            + "<br />" + "<span style='color: #000;'>" + etude + "</span>";
+                            + "<br />" + "<span style='color: green;'>" + etude + "</span>";
 
                         return {html: html};
                     },
-                    eventMouseEnter: function(info){
+                    eventMouseEnter: function(info)//Modifs HERVE POPOV calendar
+                    {
                         let event = info.event;
                         let identitePatient = event.extendedProps["identitePatient"];
                         let etude = event.extendedProps["etude"];
+                        let noteVisite = event.extendedProps["note"];
                         let typeVisite = event.extendedProps["typeVisite"];
                         let statutEvt = event.extendedProps["statutEvt"];
 
-                        let html = "<p style='color: blue;'>" + identitePatient + "</p>"
-                            + "<p style='color: #000;'>" + etude + "</p>";
-                            + "<p style='color: #000;'>" + typeVisite + "</p>"
-                            + "<p style='color: #000;'>" + statutEvt + "</p>";
+                        let html = "<p style='color: red;'>" + identitePatient + "</p>";
+                        if(etude)
+                            html +=  "Etude : " + etude+"<br>"
+                        if(typeVisite)
+                            html += "Type : " + typeVisite+"<br>"
+                        if(noteVisite)
+                            html += "Note : " + noteVisite+"<br>"
+                        if(statutEvt)
+                            html += "Status : " + statutEvt+"<br>";
 
                         $(info.el).popover({
+                            trigger: "hover",
                             content: html,
                             html: true,
-                            trigger: 'hover',
-                            placement: 'left',
+                            placement: 'top',// Positionement du popover / cellule
                             container: 'body'
                         });
+                        $(info.el).mouseover();
                     },
                     eventDidMount: function (info) {
                         let statutEvent = info.event.extendedProps["statutEvt"];
+                        let fait = info.event.extendedProps["fait"];
                         $(info.el).css("border", "solid #D3D3D3 3px");
                         if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::FAITE') }}') {
-                            $(info.el).css("border-left", "solid #39c158 10px");
+                            $(info.el).css("border-left", "solid darkgreen 4px");//statut et Epaisseur de la barre de gauche :FAITE=verte 
                         } else if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::NON_FAITE') }}'){
-                            $(info.el).css("border-left", "solid #dc3545 10px");
+                            $(info.el).css("border-left", "solid red 4px");//NON FAITE= rouge
                         } else if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::PREVUE_CONFIRMEE') }}'){
-                            $(info.el).css("border-left", "solid #fd7e14 10px");
+                            $(info.el).css("border-left", "solid green 4px");
+                        } else if (statutEvent === '{{ constant('AppBundle\\Entity\\Visite::PREVUE_THEORIQUE') }}'){
+                            $(info.el).css("border-left", "solid orange 4px");
+                        }
+
+                        var dotEl = info.el.getElementsByClassName('fc-list-event-dot')[0];
+                        if (dotEl) {
+                            dotEl.style.borderColor = (fait)?'green':"red";
                         }
                         // rend la date clicable pour aller de jour en jour
                         $.each($("a.fc-daygrid-day-number"), function(idx,elt){
@@ -184,7 +200,7 @@
 
                         // pour les entetes de tableau
                         $.each($("th.fc-col-header-cell"), function(idx,elt){
-                            $(elt).attr("style", "text-decoration : underline;cursor: pointer;");
+                            $(elt).attr("style", "text-decoration:underline;color:brown; cursor: pointer;");//Pourquoi underline?
                             $(elt).attr("title", $(elt).attr("aria-label"));
                         });
 
@@ -214,7 +230,7 @@
                     end = moment(info.event.end).format("YYYY-MM-DD HH:mm:00");
                 }
 
-                if (confirm("Etes-vous sur de vouloir déplacer cette visite ?")) {
+                if (confirm("Etes-vous sûr de vouloir déplacer cette visite ?")) {
                     let urlSave = Routing.generate("agenda_save_visit");
                     $.post(urlSave, {"start" : start, "end" : end, "idVisite" : idVisite}, function(response){
 

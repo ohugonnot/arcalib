@@ -26,6 +26,7 @@ class Visite
     const MONITORAGE = "Monitorage";
     const ADMIN = "Administratif";
     const AUTRE = 'Autre';
+    const ACTION = 'Action';
 
     CONST TYPE = [
         'Screen' => self::SCREEN,
@@ -40,6 +41,7 @@ class Visite
         'Monitorage' => self::MONITORAGE,
         'Administratif' => self::ADMIN,
         'Autre' => self::AUTRE,
+        'Action'=> self::ACTION,
 
     ];
 
@@ -103,6 +105,18 @@ class Visite
      * @ORM\Column(name="fact", type="boolean", nullable=true)
      */
     private $fact;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="fait", type="boolean", nullable=true)
+     */
+    private $fait;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="all_day", type="boolean", nullable=true)
+     */
+    private $all_day;
 
     /**
      * @var string
@@ -269,6 +283,48 @@ class Visite
     }
 
     /**
+     * Get fait
+     * @return boolean
+     */
+    public function getFait()
+    {
+        return $this->fait;
+    }
+
+    /**
+     * Set fact
+     * @param boolean $fait
+     * @return Visite
+     */
+    public function setFait($fait)
+    {
+        $this->fait = $fait;
+
+        return $this;
+    }
+
+    /**
+     * Get all_day
+     * @return boolean
+     */
+    public function getAllDay()
+    {
+        return $this->all_day;
+    }
+
+    /**
+     * Set fact
+     * @param boolean $all_day
+     * @return Visite
+     */
+    public function setAllDay(bool $all_day)
+    {
+        $this->all_day = $all_day;
+
+        return $this;
+    }
+
+    /**
      * Get numfact
      * @return boolean
      */
@@ -323,7 +379,7 @@ class Visite
 
     /**
      * Set inclusion
-     * @param Inclusion $inclusion
+     * @param Inclusion|null $inclusion
      * @return Visite
      */
 
@@ -345,7 +401,7 @@ class Visite
 
     /**
      * Set arc
-     * @param Arc $arc
+     * @param Arc|null $arc
      * @return Visite
      */
     public function setArc(Arc $arc = null)

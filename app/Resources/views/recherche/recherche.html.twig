@@ -1202,6 +1202,8 @@
 
                                         <hr>
 
+     {# 2- Tableau des visites proches.................................................... #} 
+
                                         {% for index, visites in visiteForweek %}
 
                                             <div style='display:none;' class='visite-popup {{ index }}'>
@@ -1223,44 +1225,72 @@
                                                 {% else %}
 
                                                     <div class="alert alert-warning">
-                                                        <ul>
-                                                            {% for  visite in visites %}
-                                                                {% set id_inclusion = null %}
-                                                                <li>
+      
 
-                                                                    {% if visite.inclusion.patient != null %}
-                                                                        <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion }) }}">
+                                                       
+                               <table border="2"bordercolor="brown"color="red"style=font-size:0.7em;> {# TODO ODILON#}
+                                
+                                    <thead>
+                                            <tr>
+                                                <th colspan="6">{{ visites|length }} visite(s)</th>
+                                            </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for  visite in visites %}
+                                            {% set id_inclusion = null %}
+                                            <tr>
+                                                {% if visite.fait %}
+                                                <td class="patient-visite-statut title-tooltip arcoffice-vert">
+                                                        Faite
+                                                </td>
+                                                {% else %}
+                                                    <td class="patient-visite-statut title-tooltip arcoffice-rouge">
+                                                        Non faite
+                                                    </td>
+                                                {% endif %}
+                                                <td>
+                                                        {{ visite.statut }}
+                                                </td>
+                                                <td>{% if visite.inclusion.patient != null %}
+                                                                <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion }) }}">
                                                                             {{ visite.inclusion.patient.nom }} {{ visite.inclusion.patient.prenom }}
-                                                                        </a>
-                                                                    {% endif %}
+                                                                </a>
+                                                        {% endif %}</td>
 
-                                                                    {% if visite.inclusion != null %}
-                                                                        {% set id_inclusion = visite.inclusion.id %}
-                                                                        {% if visite.inclusion.essai %}
-                                                                            {% set archive = visite.inclusion.essai.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") %}
-                                                                            {# <a href="{{ path("editEssai", {id: visite.inclusion.essai.id }) }}">#}
-                                                                            - {{ visite.inclusion.essai.nom }}
+                                                <td>   {% if visite.inclusion != null %}
+                                                            {% set id_inclusion = visite.inclusion.id %}
+                                                                {% if visite.inclusion.essai %}
+                                                                    {% set archive = visite.inclusion.essai.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") %}
+                                                                    {# <a href="{{ path("editEssai", {id: visite.inclusion.essai.id }) }}">#}
+                                                                            {{ visite.inclusion.essai.nom }}
                                                                             {# </a> #}
-                                                                        {% endif %}
+                                                                        {% endif %}</td>
 
-                                                                        <br>
-                                                                        {{ visite.calendar }} - {{ visite.statut }} -
+                                                <td>
+                                                        {{ visite.calendar }}</td>
 
-                                                                        {% if visite.arc != null %}
-                                                                            {{ visite.arc.nomPrenom }}
-                                                                        {% endif %}
+                                                <td> 
+                                                        {% if visite.arc != null %}
+                                                        {{ visite.arc.nomPrenom }}
+                                                        {% endif %}
 
                                                                     {% endif %}
-                                                                </li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </div>
+                                                                </td>
+                                            </tr>
+                                        {% endfor %}
+
+
+                                    </tbody>
+                                </table></FONT>
+                            </div>
+                        </div>
 
                                                 {% endif %}
 
-                                            </div>
+                                         {% endfor %}
+
 {# 2- Alertes EI..................................................... #}
-                                        {% endfor %}
 
                                         {% if eiAlertes|length > 0 %}
 

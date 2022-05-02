@@ -47,14 +47,25 @@ class VisiteFactory implements FactoryInterface
                 $visite->setDateFin($date_fin);
         }
 
-		if (isset($params["fact"]) and $params["fact"] == "true") {
+		if (isset($params["fact"]) && $params["fact"] == "true") {
 			$visite->setFact(true);
 		} else {
 			$visite->setFact(false);
 		}
 
-		$this->validate($visite);
+        if (isset($params["all_day"])&& $params["all_day"] == "true") {
+            $visite->setAllDay(true);
+        } else {
+            $visite->setAllDay(false);
+        }
 
+        if (isset($params["fait"]) && $params["fait"] == "true") {
+            $visite->setFait(true);
+        } else {
+            $visite->setFait(false);
+        }
+
+		$this->validate($visite);
 		return $visite;
 	}
 }
