@@ -1152,7 +1152,7 @@
 
                         <div class="modal fade" id="messageAccueil" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content">
 {# 2- visites Proches.................................................... #}                                    
                                     <div class="modal-header">
@@ -1224,67 +1224,62 @@
 
                                                 {% else %}
 
-                                                    <div class="alert alert-warning">
-      
+                                                    <table class="table table-sm table-striped mt-2 mb-0" style="font-size:0.8em;border:1px solid rgba(0,0,0,.15);"> {# TODO ODILON ET BENJAMIN #}
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="6">{{ visites|length }} visite(s)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
 
-                                                       
-                               <table border="2"bordercolor="brown"color="red"style=font-size:0.7em;> {# TODO ODILON#}
-                                
-                                    <thead>
-                                            <tr>
-                                                <th colspan="6">{{ visites|length }} visite(s)</th>
-                                            </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        {% for  visite in visites %}
-                                            {% set id_inclusion = null %}
-                                            <tr>
-                                                {% if visite.fait %}
-                                                <td class="patient-visite-statut title-tooltip arcoffice-vert">
-                                                        Faite
-                                                </td>
-                                                {% else %}
-                                                    <td class="patient-visite-statut title-tooltip arcoffice-rouge">
-                                                        Non faite
-                                                    </td>
-                                                {% endif %}
-                                                <td>
-                                                        {{ visite.statut }}
-                                                </td>
-                                                <td>{% if visite.inclusion.patient != null %}
-                                                                <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion }) }}">
-                                                                            {{ visite.inclusion.patient.nom }} {{ visite.inclusion.patient.prenom }}
-                                                                </a>
-                                                        {% endif %}</td>
-
-                                                <td>   {% if visite.inclusion != null %}
-                                                            {% set id_inclusion = visite.inclusion.id %}
-                                                                {% if visite.inclusion.essai %}
-                                                                    {% set archive = visite.inclusion.essai.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") %}
-                                                                    {# <a href="{{ path("editEssai", {id: visite.inclusion.essai.id }) }}">#}
-                                                                            {{ visite.inclusion.essai.nom }}
-                                                                            {# </a> #}
-                                                                        {% endif %}</td>
-
-                                                <td>
-                                                        {{ visite.calendar }}</td>
-
-                                                <td> 
-                                                        {% if visite.arc != null %}
-                                                        {{ visite.arc.nomPrenom }}
-                                                        {% endif %}
-
+                                                            {% for  visite in visites %}
+                                                                {% set id_inclusion = null %}
+                                                                <tr>
+                                                                    {% if visite.fait %}
+                                                                    <td class="patient-visite-statut title-tooltip">
+                                                                <span class="popup-homepage--visites__circle arcoffice-vert"></span>
+                                                                    </td>
+                                                                    {% else %}
+                                                                        <td class="patient-visite-statut title-tooltip">
+                                                                            <span class="popup-homepage--visites__circle arcoffice-rouge"></span>
+                                                                        </td>
                                                                     {% endif %}
-                                                                </td>
-                                            </tr>
-                                        {% endfor %}
+                                                                    <td>
+                                                                            {{ visite.statut }}
+                                                                    </td>
+                                                                    <td>{% if visite.inclusion.patient != null %}
+                                                                                    <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion, id_visite: visite.id }) }}">
+                                                                                                {{ visite.inclusion.patient.nom }} {{ visite.inclusion.patient.prenom }}
+                                                                                    </a>
+                                                                            {% endif %}</td>
+
+                                                                    <td>   {% if visite.inclusion != null %}
+                                                                                {% set id_inclusion = visite.inclusion.id %}
+                                                                                    {% if visite.inclusion.essai %}
+                                                                                        {% set archive = visite.inclusion.essai.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") %}
+                                                                                        {# <a href="{{ path("editEssai", {id: visite.inclusion.essai.id }) }}">#}
+                                                                                                {{ visite.inclusion.essai.nom }}
+                                                                                                {# </a> #}
+                                                                                            {% endif %}</td>
+
+                                                                    <td>
+                                                                            {{ visite.calendar }}</td>
+
+                                                                    <td> 
+                                                                            {% if visite.arc != null %}
+                                                                            {{ visite.arc.nomPrenom }}
+                                                                            {% endif %}
+
+                                                                                        {% endif %}
+                                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
 
 
-                                    </tbody>
-                                </table></FONT>
-                            </div>
-                        </div>
+                                                        </tbody>
+                                                    </table>
+                                                      
+                                                    {# </div> #}
 
                                                 {% endif %}
 
