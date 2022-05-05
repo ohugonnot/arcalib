@@ -10782,6 +10782,22 @@ footer {
 .tooltip {
   pointer-events: none; }
 
+.popup-homepage--visites__circle {
+  width: 15px;
+  height: 15px;
+  display: flex;
+  position: relative; }
+  .popup-homepage--visites__circle:before {
+    content: "";
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translateY(-50%); }
+
 .b-lazy {
   max-width: 100%;
   opacity: 0;

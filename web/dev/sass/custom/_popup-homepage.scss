@@ -1,0 +1,18 @@
+.popup-homepage--visites__circle {
+	width: 15px;
+	height: 15px;
+	display: flex;
+	position: relative;
+
+	&:before {
+	    content: "";
+	    position: absolute;
+	    right: 5px;
+	    top: 50%;
+	    width: 10px;
+	    height: 10px;
+	    border-radius: 50%;
+	    background: #fff;
+	    transform: translateY(-50%);
+	}
+}
