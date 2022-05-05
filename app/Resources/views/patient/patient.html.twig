@@ -4,7 +4,6 @@
 	{% block header %}
 
         {% embed "include/header.html.twig" %}
-
             {# Titre #}
             {% block seo_title %}
 
@@ -19,6 +18,9 @@
 
             {% endblock seo_description %}
 
+            {% block css %}
+                <link href="https://cdn.jsdelivr.net/npm/pc-bootstrap4-datetimepicker@4.17/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+            {% endblock css %}
         {% endembed %}
 
     {% endblock header %}

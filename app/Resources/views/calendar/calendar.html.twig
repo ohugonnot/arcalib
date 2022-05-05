@@ -79,8 +79,8 @@
                 calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'fr',
                     firstDay: 1,
-                    slotMinTime: '08:00:00',
-                    slotMaxTime: '20:00:00',
+                    slotMinTime: '00:00:00',
+                    slotMaxTime: '24:00:00',
                     slotDuration: '00:15:00',
                     slotLabelInterval: '01:00:00',
                     slotLabelFormat: {
@@ -91,17 +91,20 @@
                     },
                     initialView: 'timeGridWeek',
                     //defaultView: 'timeGridWeek',
+                   
                     headerToolbar: {
                         left: 'prevYear,prev,next,nextYear today',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listDay,listWeek,listMonth'
                     },
                     buttonText: {
                         today: "Aujourd'hui",
                         month: 'Mois',
                         week: 'Semaine',
                         day: 'Jour',
-                        list: 'Liste'
+                        listDay: "Liste Jour",
+                        listWeek: "Liste Semaine",
+                        listMonth: "Liste Mois",
                     },
                     dateClick: function(info) {
                         date = moment(info.dateStr, "YYYY-MM-DD");
@@ -148,17 +151,26 @@
                         let noteVisite = event.extendedProps["note"];
                         let typeVisite = event.extendedProps["typeVisite"];
                         let statutEvt = event.extendedProps["statutEvt"];
+                        let fucks = [
+                            "https://img-4.linternaute.com/d577ne-3ItveNbxoqB6bclooPAI=/1240x/smart/877c614011b24e3192a71e50f43239f6/ccmcms-linternaute/30118501.jpg",
+                            "http://image.over-blog.com/Ti1QS3NZzDWoKwjOBLpUQO1LH9c=/filters:no_upscale()/image%2F0557250%2F20210320%2Fob_253135_7777966183329238107.jpg",
+                            "https://i.ytimg.com/vi/LakuKuJ7dhc/hqdefault.jpg",
+                            "https://www.yatahonga.com/travail/dnjnq/ ", 
+                            "https://www.yatahonga.com/insolite/tsjnq/",
 
-                        let html = "<p style='color: red;'>" + identitePatient + "</p>";
+
+                            "https://www.infirmerie-protestante.com/sites/default/files/equipe-recherche-clinique_0.jpg"
+                        ]
+                        let html = "<p class='h6'>" + identitePatient + "</p><hr>";
                         if(etude)
-                            html +=  "Etude : " + etude+"<br>"
+                            html +=  "<b>Étude</b> : " + etude+"<br>";
                         if(typeVisite)
-                            html += "Type : " + typeVisite+"<br>"
+                            html += "<b>Type</b> : " + typeVisite+"<br><hr>";
                         if(noteVisite)
-                            html += "Note : " + noteVisite+"<br>"
+                            html += "<b>Notes</b> :<br> " + "<p class='text-success'>" + noteVisite + "</p><hr>";
                         if(statutEvt)
-                            html += "Status : " + statutEvt+"<br>";
-
+                            html += "<b>Status</b> : " + statutEvt+"<br>";
+                            html += "<img width='100' src='" + fucks[Math.floor(Math.random() * fucks.length)]+"'>";
                         $(info.el).popover({
                             trigger: "hover",
                             content: html,
@@ -166,7 +178,11 @@
                             placement: 'top',// Positionement du popover / cellule
                             container: 'body'
                         });
+                        $(info.el).parent().css('z-index', 3000);
                         $(info.el).mouseover();
+                    },
+                    eventMouseLeave: function(info) {
+                        $(info.el).parent().css('z-index', 1);
                     },
                     eventDidMount: function (info) {
                         let statutEvent = info.event.extendedProps["statutEvt"];
