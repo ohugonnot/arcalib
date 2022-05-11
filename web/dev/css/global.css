@@ -10798,6 +10798,15 @@ footer {
     background: #fff;
     transform: translateY(-50%); }
 
+.fc-theme-standard .fc-list-day-cushion {
+  background: #dfddea !important; }
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-top: 1rem; }
+
+.fc-theme-standard {
+  padding-bottom: 1rem; }
+
 .b-lazy {
   max-width: 100%;
   opacity: 0;

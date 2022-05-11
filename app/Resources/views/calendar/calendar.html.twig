@@ -65,7 +65,7 @@
         <script>
             let weekVisites = [];
             let calendar;
-            var popTemplate = [
+            let popTemplate = [
                 '<div class="popover" style="max-width:600px;" >',
                 '<div class="arrow"></div>',
                 '<div class="popover-header">',
@@ -78,6 +78,7 @@
                 const calendarEl = document.getElementById('calendar');
                 calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'fr',
+                    height: 'auto', // Benjamin Ascenseur Calendrier
                     firstDay: 1,
                     slotMinTime: '00:00:00',
                     slotMaxTime: '24:00:00',
@@ -95,7 +96,7 @@
                     headerToolbar: {
                         left: 'prevYear,prev,next,nextYear today',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listDay,listWeek,listMonth'
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listDay,listWeek'//,listMonth'
                     },
                     buttonText: {
                         today: "Aujourd'hui",
@@ -104,10 +105,9 @@
                         day: 'Jour',
                         listDay: "Liste Jour",
                         listWeek: "Liste Semaine",
-                        listMonth: "Liste Mois",
+                        //listMonth: "Liste Mois",
                     },
                     dateClick: function(info) {
-                        date = moment(info.dateStr, "YYYY-MM-DD");
                         calendar.changeView("timeGridDay");
                         calendar.gotoDate(info.dateStr);
                     },
@@ -151,17 +151,8 @@
                         let noteVisite = event.extendedProps["note"];
                         let typeVisite = event.extendedProps["typeVisite"];
                         let statutEvt = event.extendedProps["statutEvt"];
-                        let fucks = [
-                            "https://img-4.linternaute.com/d577ne-3ItveNbxoqB6bclooPAI=/1240x/smart/877c614011b24e3192a71e50f43239f6/ccmcms-linternaute/30118501.jpg",
-                            "http://image.over-blog.com/Ti1QS3NZzDWoKwjOBLpUQO1LH9c=/filters:no_upscale()/image%2F0557250%2F20210320%2Fob_253135_7777966183329238107.jpg",
-                            "https://i.ytimg.com/vi/LakuKuJ7dhc/hqdefault.jpg",
-                            "https://www.yatahonga.com/travail/dnjnq/ ", 
-                            "https://www.yatahonga.com/insolite/tsjnq/",
 
-
-                            "https://www.infirmerie-protestante.com/sites/default/files/equipe-recherche-clinique_0.jpg"
-                        ]
-                        let html = "<p class='h6'>" + identitePatient + "</p><hr>";
+                        let html = "<b>" + identitePatient + "</b><hr>";
                         if(etude)
                             html +=  "<b>Étude</b> : " + etude+"<br>";
                         if(typeVisite)
@@ -170,7 +161,7 @@
                             html += "<b>Notes</b> :<br> " + "<p class='text-success'>" + noteVisite + "</p><hr>";
                         if(statutEvt)
                             html += "<b>Status</b> : " + statutEvt+"<br>";
-                            html += "<img width='100' src='" + fucks[Math.floor(Math.random() * fucks.length)]+"'>";
+                           
                         $(info.el).popover({
                             trigger: "hover",
                             content: html,
@@ -198,7 +189,7 @@
                             $(info.el).css("border-left", "solid orange 4px");
                         }
 
-                        var dotEl = info.el.getElementsByClassName('fc-list-event-dot')[0];
+                        let dotEl = info.el.getElementsByClassName('fc-list-event-dot')[0];
                         if (dotEl) {
                             dotEl.style.borderColor = (fait)?'green':"red";
                         }
