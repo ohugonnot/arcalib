@@ -144,10 +144,9 @@
 
                     <a class="nav-link dropdown-toggle {% if app.request.get('_route') in [ 'analyseGraphique', 'requetes', 'verificationData', 'listeLogs', 'analyseTableau', 'analyseStatistique'] %}active{% endif %}"
                        href="#" id="arcoffice-analyse" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">Analyses</a>
+                       aria-expanded="false"><i class="mr-2 fas fa-chart-line"> </i> Analyses</a>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="arcoffice-analyse"><i
-                                class="fas fa-chart-line"></i>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="arcoffice-analyse">
 
                         <a class="dropdown-item {% if app.request.get('_route') == 'analyseGraphique' %}active{% endif %}"
                            href="{{ path("analyseGraphique") }}">Graphiques</a>
