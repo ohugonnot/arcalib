@@ -510,8 +510,7 @@ class VisiteController extends Controller
         foreach ($visites as $visite) {
             $date_visite = $visite->getDate();
             $date_min = (new DateTime("01/01/2019"))->setTime(0, 0, 0);
-            if ($date_visite < $date_min)
-                continue;
+
 
             $inclusion = $visite->getInclusion();
             if (!$inclusion)
@@ -524,8 +523,8 @@ class VisiteController extends Controller
             foreach ($tempsVisites as $essai => $tempsVisite) {
                 $essai = trim(strtolower($essai));
                 if ($essai == $essai_name) {
-                    $protocole_matched[$essai] = isset($protocole_matched[$essai]["nb_visite"]) ? $protocole_matched[$essai]["nb_visite"] : 0;
-                    $protocole_matched[$essai] = isset($protocole_matched[$essai]["temps_total"]) ? $protocole_matched[$essai]["temps_total"] : 0;
+                    $protocole_matched[$essai]["nb_visite"] = isset($protocole_matched[$essai]["nb_visite"]) ? $protocole_matched[$essai]["nb_visite"] : 0;
+                    $protocole_matched[$essai]["temps_total"] = isset($protocole_matched[$essai]["temps_total"]) ? $protocole_matched[$essai]["temps_total"] : 0;
                     foreach ($tempsVisite as $type => $temps) {
                         if ($visite->getType() == $type && $visite->getStatut() != VISITE::NON_FAITE) {
                             $visite->setDuree($temps);
