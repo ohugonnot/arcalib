@@ -14,6 +14,26 @@ use Exception;
 class VisiteRepository extends EntityRepository
 {
     /**
+     * @param User $user
+     * @param $search
+     * @param $searchId
+     * @return Query
+     */
+    public function getQuery(User $user, $search, $searchId)
+    {
+        $queryBuilder = $this->createQueryBuilder('v')
+            ->where("v.id like :search or p.nom like :search or p.prenom like :search or e.nom like :search or v.date like :search or v.statut like :search or v.type like :search or v.calendar like :search or v.id = :searchId")
+            ->addSelect("e", "a", "p", "i")
+            ->groupBy('v.id')
+            ->setParameter('searchId', $searchId)
+            ->setParameter('search', '%' . $search . '%');
+
+        $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
+
+        return $queryBuilder->getQuery();
+    }
+
+    /**
      * @param QueryBuilder $queryBuilder
      * @param User $user
      * @return QueryBuilder
@@ -34,26 +54,6 @@ class VisiteRepository extends EntityRepository
     }
 
     /**
-     * @param User $user
-     * @param $search
-     * @param $searchId
-     * @return Query
-     */
-    public function getQuery(User $user, $search, $searchId)
-    {
-        $queryBuilder = $this->createQueryBuilder('v')
-            ->where("v.id like :search or p.nom like :search or p.prenom like :search or e.nom like :search or v.date like :search or v.statut like :search or v.type like :search or v.calendar like :search or v.id = :searchId")
-            ->addSelect("e","a","p","i")
-            ->groupBy('v.id')
-            ->setParameter('searchId', $searchId)
-            ->setParameter('search', '%' . $search . '%');
-
-        $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
-
-        return $queryBuilder->getQuery();
-    }
-
-    /**
      * @param DateTime|null $debut
      * @param DateTime|null $fin
      * @return array
@@ -68,7 +68,7 @@ class VisiteRepository extends EntityRepository
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin);
 
-        if ($user){
+        if ($user) {
             $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
         }
 
@@ -82,13 +82,13 @@ class VisiteRepository extends EntityRepository
      */
     public function findForAWeek(User $user)
     {
-        $debut = (new DateTime())->setTime(0, 0,0);
-        $now = (new DateTime())->setTime(0, 0,0);
+        $debut = (new DateTime())->setTime(0, 0, 0);
+        $now = (new DateTime())->setTime(0, 0, 0);
         $interval = new DateInterval('P1W');
         $fin = $now->add($interval);
 
         $queryBuilder = $this->createQueryBuilder('v')
-            ->addSelect("e", "a", "i","p")
+            ->addSelect("e", "a", "i", "p")
             ->where('v.date >= :debut')
             ->andWhere('v.date <= :fin')
             ->setParameter('debut', $debut)
@@ -103,9 +103,9 @@ class VisiteRepository extends EntityRepository
     public function findConfirmeeTheoriqueDepassee($user)
     {
         $queryBuilder = $this->createQueryBuilder('v')
-            ->addSelect("e", "a", "i","p")
+            ->addSelect("e", "a", "i", "p")
             ->andWhere('v.date < :today')
-            ->andWhere("v.statut = '". Visite::PREVUE_CONFIRMEE ."' or v.statut = '". Visite::PREVUE_THEORIQUE ."'")
+            ->andWhere("v.statut = '" . Visite::PREVUE_CONFIRMEE . "' or v.statut = '" . Visite::PREVUE_THEORIQUE . "'")
             ->setParameter('today', new DateTime("today"))
             ->orderBy('v.date', "ASC");
 
@@ -134,9 +134,9 @@ class VisiteRepository extends EntityRepository
             $queryBuilder->andWhere("YEAR(v.date) = :year")
                 ->setParameter("year", $date->format("Y"))
                 ->andWhere("MONTH(v.date) = :month")
-                ->setParameter("month", $date->format("m") )
+                ->setParameter("month", $date->format("m"))
                 ->andWhere("DAY(v.date) = :day")
-                ->setParameter("day", $date->format("d") );
+                ->setParameter("day", $date->format("d"));
 
         if (isset($filters["statut"]) && $filters["statut"] != null)
             $queryBuilder->andWhere("v.statut = :statut")
@@ -145,5 +145,30 @@ class VisiteRepository extends EntityRepository
         $queryBuilder->orderBy('v.date', 'ASC');
 
         return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findAllByUser(User $user)
+    {
+        $queryBuilder = $this->createQueryBuilder('v');
+        $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findAll()
+    {
+        $queryBuilder = $this->createQueryBuilder('v');
+        $queryBuilder->leftJoin('v.inclusion', 'i')
+            ->leftJoin('i.arc', 'a')
+            ->leftJoin('i.essai', 'e')
+            ->leftJoin('i.patient', 'p')
+            ->addSelect("e", "a", "p", "i")
+            ->setMaxResults(10);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

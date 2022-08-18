@@ -67,6 +67,7 @@ class VisiteType extends AbstractType
             ->add('fact')
             ->add('all_day')
             ->add('fait')
+            ->add('duree')
 //--------------------------------------------------------------BOUTONS--------------------------------------------------------------
             ->add('envoyer', SubmitType::class, array(
                 'label' => "Enregistrer",

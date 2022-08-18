@@ -285,8 +285,8 @@ if ($("#patient").length > 0) {
                     toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
 
                 }).always(function () {
-                        $('.title-tooltip').tooltip('hide');
-                        $('#saveInclusion').prop('disabled', false);
+                    $('.title-tooltip').tooltip('hide');
+                    $('#saveInclusion').prop('disabled', false);
                 });
             },
 
@@ -320,8 +320,7 @@ if ($("#patient").length > 0) {
                     patient.patient = data;
                     if (id_inclusion !== undefined) {
                         patient.getInclusion(id_inclusion);
-                    }
-                    else if (patient.patient.inclusions.length > 0 && inclusion.inclusion.id === 0) {
+                    } else if (patient.patient.inclusions.length > 0 && inclusion.inclusion.id === 0) {
                         patient.getInclusion(patient.patient.inclusions[0].id);
                     }
                     patient.disabled = false;
@@ -439,7 +438,7 @@ if ($("#patient").length > 0) {
             options: {
                 format: 'DD/MM/YYYY HH:mm',
                 useCurrent: false,
-            //    enabledHours: [8,9,10,11,12,13,14,15,16,17,18,19],
+                //    enabledHours: [8,9,10,11,12,13,14,15,16,17,18,19],
             },
         },
 
@@ -479,9 +478,9 @@ if ($("#patient").length > 0) {
             isPast: function (visite) {
                 if (visite.date) {
                     let difhours = moment().diff(moment(visite.date, 'DD/MM/YYYY HH:mm'), 'hours');
-                    if (difhours < -30*24) {
+                    if (difhours < -30 * 24) {
                         return "more-30-days";
-                    } else if (difhours > -30*24 && difhours < 0) {
+                    } else if (difhours > -30 * 24 && difhours < 0) {
                         return "less-30-days";
                     } else {
                         return "past";
@@ -511,18 +510,18 @@ if ($("#patient").length > 0) {
                 this.visiteSelected.index = indexNextVisite;
             },
             changeDateVisite: function () {
-                if(!this.visiteSelected.date_fin && moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").isValid()) {
+                if (!this.visiteSelected.date_fin && moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").isValid()) {
                     this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").add(1, 'hours').format("DD/MM/YYYY HH:mm");
                     visite.$forceUpdate();
                 }
             },
             changeAllDay: function (e) {
-                console.log(this.visiteSelected,e);
-                if(this.visiteSelected.all_day) {
+                console.log(this.visiteSelected, e);
+                if (this.visiteSelected.all_day) {
                     this.visiteSelected.date = moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").startOf('day').format("DD/MM/YYYY HH:mm");
                     this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").endOf('day').format("DD/MM/YYYY HH:mm");
-                    }
-                },
+                }
+            },
             saveVisite: function () {
 
                 if (!this.visiteSelected.date) {
@@ -530,12 +529,12 @@ if ($("#patient").length > 0) {
                     return false;
                 }
 
-                if(!this.visiteSelected.date_fin) {
+                if (!this.visiteSelected.date_fin) {
                     this.visiteSelected.date_fin = moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm").add(1, 'hours').format("DD/MM/YYYY HH:mm");
                 } else {
                     let debut = moment(this.visiteSelected.date, "DD/MM/YYYY HH:mm");
                     let fin = moment(this.visiteSelected.date_fin, "DD/MM/YYYY HH:mm");
-                    if(fin < debut) {
+                    if (fin < debut) {
                         toastr.error('La date de fin doit être après la date de debut.');
                         return false;
                     }
@@ -556,6 +555,9 @@ if ($("#patient").length > 0) {
                     $('#saveVisite').prop('disabled', false);
                     $('.title-tooltip').tooltip('hide');
                     $("#arcoffice-add-visite").modal('hide');
+                }).fail(function (e) {
+                    toastr.success("Erreur dans la requête.");
+                    console.log(e);
                 });
 
             }
