@@ -506,6 +506,7 @@ class VisiteController extends Controller
         ];
 
         $updated_visites = [];
+        $protocole_matched = [];
         foreach ($visites as $visite) {
             $inclusion = $visite->getInclusion();
             if (!$inclusion)
@@ -518,10 +519,12 @@ class VisiteController extends Controller
             foreach ($tempsVisites as $essai => $tempsVisite) {
                 $essai = trim(strtolower($essai));
                 if ($essai == $essai_name) {
+                    $protocole_matched[$essai] = isset($protocole_matched[$essai]) ? $protocole_matched[$essai] : 0;
                     foreach ($tempsVisite as $type => $temps) {
                         if ($visite->getType() == $type && $visite->getStatut() != VISITE::NON_FAITE) {
                             $visite->setDuree($temps);
                             $updated_visites[] = $visite;
+                            $protocole_matched[$essai]++;
                         }
                     }
                 }
@@ -533,6 +536,7 @@ class VisiteController extends Controller
         }
         dump($updated_visites);
         dump($total);
+        dump($protocole_matched);
         return new Response();
     }
 }
