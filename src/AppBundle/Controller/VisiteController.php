@@ -519,7 +519,7 @@ class VisiteController extends Controller
                 $essai = trim(strtolower($essai));
                 if ($essai == $essai_name) {
                     foreach ($tempsVisite as $type => $temps) {
-                        if ($visite->getType() == $type) {
+                        if ($visite->getType() == $type && $visite->getStatut() != VISITE::NON_FAITE) {
                             $visite->setDuree($temps);
                             $updated_visites[] = $visite;
                         }
@@ -527,8 +527,12 @@ class VisiteController extends Controller
                 }
             }
         }
+        $total = 0;
+        foreach ($updated_visites as $updated_visite) {
+            $total += $updated_visite->getDuree();
+        }
         dump($updated_visites);
-
+        dump($total);
         return new Response();
     }
 }
