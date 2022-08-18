@@ -6,6 +6,7 @@ use AppBundle\Entity\Essais;
 use AppBundle\Entity\Facture;
 use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Patient;
+use AppBundle\Entity\Visite;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -220,8 +221,20 @@ class CsvToArray
         return array_merge(["Patient", "Initiales", "Médecin référent de l'inclusion", "Service"], $values, $this->getEntityColumn($entity->getEssai(), "essais"));
     }
 
+    //extractions  des factures
+    public function visites($values, $entity)
+    {
+        /** @var $entity Visite */
+        $inclusion = $entity->getInclusion();
+        $essai = $inclusion ? $inclusion->getEssai() : null;
+        $essaiNom = $essai ? $essai->getNom() : null;
+
+        return array_merge($values, [$essaiNom]);
+    }
+
     public function visitesTitles($values)
     {
-        return array_merge([], $values);
+        return array_merge($values, ["Protocole"]);
     }
+
 }
