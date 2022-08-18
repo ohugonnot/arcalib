@@ -166,8 +166,8 @@ class VisiteRepository extends EntityRepository
             ->leftJoin('i.arc', 'a')
             ->leftJoin('i.essai', 'e')
             ->leftJoin('i.patient', 'p')
-            ->addSelect("e", "a", "p", "i")
-            ->setMaxResults(10);
+            ->addSelect("e", "a", "p", "i");
+        //->setMaxResults(10);
 
         return $queryBuilder->getQuery()->getResult();
     }

@@ -157,7 +157,377 @@ class VisiteController extends Controller
         $emVisite = $em->getRepository(Visite::class);
         $visites = $emVisite->findAll();
 
-        dump($visites);
+        # Tableau visite hervé
+        $tempsVisites = [
+            "APICAT" => [
+                VISITE::SCREEN => 15,
+                VISITE::INCLUSION => 120,
+                VISITE::SUIVI => 45,
+                VISITE::FIN_ETUDE => 45,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "FORSYA 1" => [
+                VISITE::SCREEN => 15,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 30,
+                VISITE::UNIQUE => 0,
+            ],
+            "FORSYA 2" => [
+                VISITE::SCREEN => 15,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 30,
+                VISITE::UNIQUE => 0,
+            ],
+            "GREAT" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 20,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 20,
+                VISITE::UNIQUE => 0,
+            ],
+            "MAPIE" => [
+                VISITE::SCREEN => 20,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "MYPEBS" => [
+                VISITE::SCREEN => 90,
+                VISITE::INCLUSION => 30,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "PRO SPIRIT" => [
+                VISITE::SCREEN => 20,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 30,
+                VISITE::UNIQUE => 0,
+            ],
+            "SMART2T" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 30,
+                VISITE::UNIQUE => 0,
+            ],
+            "SUNSTAR" => [
+                VISITE::SCREEN => 30,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 45,
+                VISITE::FIN_ETUDE => 45,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "TOFAST" => [
+                VISITE::SCREEN => 15,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 30,
+                VISITE::UNIQUE => 0,
+            ],
+            "UPSTAND" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "OPALE" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "PERFUSE" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "RABE REAL" => [
+                VISITE::SCREEN => 15,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 20,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "UPHOLD" => [
+                VISITE::SCREEN => 20,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 60,
+                VISITE::FIN_ETUDE => 60,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "XARENO" => [
+                VISITE::SCREEN => 30,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "CRI-RA" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 60,
+                VISITE::FIN_ETUDE => 60,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "P59-DURIGAST" => [
+                VISITE::SCREEN => 45,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 30,
+                VISITE::UNIQUE => 0,
+            ],
+            "PREVOX" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "PERSEPOLIS" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "ELEGANT" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 20,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "PARACT" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "ASCALATE" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 0,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "COLON-IM" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "COOK" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 0,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "PROMETCO" => [
+                VISITE::SCREEN => 30,
+                VISITE::INCLUSION => 40,
+                VISITE::SUIVI => 40,
+                VISITE::FIN_ETUDE => 40,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "EQUATEUR" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "ERAV" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 20,
+                VISITE::SUIVI => 20,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "FRENCH rmd covid" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 0,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 20,
+            ],
+            "LIBELULE" => [
+                VISITE::SCREEN => 20,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 60,
+                VISITE::FIN_ETUDE => 60,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "MENTCOVRMD" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 0,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 20,
+            ],
+            "PROMPT" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 20,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "P32-ESOSTRATE" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 0,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "P34-ADAGE" => [
+                VISITE::SCREEN => 30,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "P50-ASPIK" => [
+                VISITE::SCREEN => 20,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "P51-GASFOX" => [
+                VISITE::SCREEN => 0,
+                VISITE::INCLUSION => 0,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "P52-IROCAS" => [
+                VISITE::SCREEN => 20,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 30,
+                VISITE::FIN_ETUDE => 30,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "P70-CIRCULATE" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 20,
+                VISITE::FIN_ETUDE => 20,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "REOFLAC" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 90,
+                VISITE::SUIVI => 90,
+                VISITE::FIN_ETUDE => 90,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "TOPSATI" => [
+                VISITE::SCREEN => 10,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 60,
+                VISITE::FIN_ETUDE => 60,
+                VISITE::MONITORAGE => 60,
+                VISITE::UNIQUE => 0,
+            ],
+            "BENCHMARK" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 120,
+                VISITE::SUIVI => 45,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 15,
+                VISITE::UNIQUE => 0,
+            ],
+            "MITRAGISTER" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 60,
+                VISITE::SUIVI => 15,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+            "France TAVI" => [
+                VISITE::SCREEN => 5,
+                VISITE::INCLUSION => 45,
+                VISITE::SUIVI => 0,
+                VISITE::FIN_ETUDE => 0,
+                VISITE::MONITORAGE => 0,
+                VISITE::UNIQUE => 0,
+            ],
+        ];
+
+        $updated_visites = [];
+        foreach ($visites as $visite) {
+            $inclusion = $visite->getInclusion();
+            if (!$inclusion)
+                continue;
+
+            $essai = $inclusion->getEssai();
+            if (!$essai)
+                continue;
+            $essai_name = trim(strtolower($essai->getNom()));
+            foreach ($tempsVisites as $essai => $tempsVisite) {
+                $essai = trim(strtolower($essai));
+                if ($essai == $essai_name) {
+                    foreach ($tempsVisite as $type => $temps) {
+                        if ($visite->getType() == $type) {
+                            $visite->setDuree($temps);
+                            $updated_visites[] = $visite;
+                        }
+                    }
+                }
+            }
+        }
+        dump($updated_visites);
 
         return new Response();
     }
