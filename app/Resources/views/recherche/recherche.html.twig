@@ -74,7 +74,8 @@
                                 <li class="nav-item">
 
                                     <a class="nav-link d-flex" data-toggle="tab" href="#block-recherche-service"
-                                       role="tab" aria-selected="true"><span class="fa fa-sitemap mr-2"></span>Service</a>
+                                       role="tab" aria-selected="true"><span
+                                                class="fa fa-sitemap mr-2"></span>Service</a>
 
                                 </li>
 
@@ -93,7 +94,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content w-100">
 
-                            {# Recherche par protocole ----------------------------------------------------------#}
+                            {# Recherche par protocole --------------------------------------------------------- -#}
                             <div class="tab-pane active" id="block-recherche-protocole" role="tabpanel"
                                  aria-labelledby="block-recherche-protocole">
 
@@ -177,22 +178,25 @@
 
                                         <th @click="orderBy('statut', 'essai')">
 
-                                            Statut <span :class='[essai.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                         class="fa"></span>
+                                            Statut <span
+                                                    :class='[essai.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('inclusions', 'essai')">
 
-                                            Nb. d'inclusions/ Objectif <span :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                                             class="fa"></span>
+                                            Nb. d'inclusions/ Objectif <span
+                                                    :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('inclusions', 'essai')">
 
-                                            Médecin référent <span :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                                   class="fa"></span>
+                                            Médecin référent <span
+                                                    :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
@@ -255,7 +259,7 @@
 
                             </div>
 
-                            {# Recherche par patient ----------------------------------------------------------#}
+                            {# Recherche par patient --------------------------------------------------------- -#}
 
                             <div class="tab-pane" id="block-recherche-patient" role="tabpane2"
                                  aria-labelledby="block-recherche-patient">
@@ -338,15 +342,17 @@
 
                                         <th @click="orderBy('nomNaissance', 'patient')">
 
-                                            Nom Naissance <span :class='[patient.order.nomNaissance == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                                class="fa"></span>
+                                            Nom Naissance <span
+                                                    :class='[patient.order.nomNaissance == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('datNai', 'patient')">
 
-                                            Date Naissance <span :class='[patient.order.datNai == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                                 class="fa"></span>
+                                            Date Naissance <span
+                                                    :class='[patient.order.datNai == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
@@ -407,7 +413,7 @@
 
                             </div>
 
-                            {# Recherche par Medecin ----------------------------------------------------------#}
+                            {# Recherche par Medecin --------------------------------------------------------- -#}
 
                             <div class="tab-pane" id="block-recherche-medecin" role="tabpane3"
                                  aria-labelledby="block-recherche-medecin">
@@ -502,7 +508,7 @@
                                                     <th {# @click="orderBy('inclusions', 'medecin')" #}>
 
                                                         Inclusion (date,
-                                                        statut) {# <span :class='[medecin.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]' class="fa"> </span>#}
+                                                        statut) {# <span :class='[medecin.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]' class="fa"> </span> #}
 
                                                     </th>
 
@@ -575,7 +581,7 @@
 
                             </div>
 
-                            {# Recherche dans l'annuaire ---------------------------------------------------------------------------------#}
+                            {# Recherche dans l'annuaire -------------------------------------------------------------------------------- -#}
 
                             <div class="tab-pane" id="block-recherche-annuaire" role="tabpane4"
                                  aria-labelledby="block-recherche-annuaire">
@@ -639,22 +645,25 @@
 
                                         <th @click="orderBy('societe', 'annuaire')">
 
-                                            Société <span :class='[annuaire.order.societe == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                          class="fa"></span>
+                                            Société <span
+                                                    :class='[annuaire.order.societe == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('fonction', 'annuaire')">
 
-                                            Fonction <span :class='[annuaire.order.fonction == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                           class="fa"></span>
+                                            Fonction <span
+                                                    :class='[annuaire.order.fonction == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('telephone', 'annuaire')">
 
-                                            Téléphone <span :class='[annuaire.order.telephone == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                            class="fa"></span>
+                                            Téléphone <span
+                                                    :class='[annuaire.order.telephone == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
@@ -792,22 +801,25 @@
 
                                         <th @click="orderBy('statut', 'essai')">
 
-                                            Statut <span :class='[essai.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                         class="fa"></span>
+                                            Statut <span
+                                                    :class='[essai.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('inclusions', 'essai')">
 
-                                            Nb. d'inclusions/ Objectif <span :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                                             class="fa"></span>
+                                            Nb. d'inclusions/ Objectif <span
+                                                    :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('inclusions', 'essai')">
 
-                                            Médecin référent <span :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                                   class="fa"></span>
+                                            Médecin référent <span
+                                                    :class='[essai.order.inclusions == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
@@ -870,7 +882,7 @@
 
                             </div>
 
-                            {# Recherche par Date ----------------------------------------------------------#}
+                            {# Recherche par Date --------------------------------------------------------- -#}
 
                             <div class="tab-pane" id="block-recherche-date" role="tabpane6"
                                  aria-labelledby="block-recherche-date">
@@ -888,10 +900,12 @@
 
                                         <label class="mr-2" for="recherche-medecin-date">Par date de visite </label>
 
-                                        <button @click.prevent="dayBefore" class="btn btn-sm btn-outline-primary"><span           class="fa fa-chevron-left"></span></button>
+                                        <button @click.prevent="dayBefore" class="btn btn-sm btn-outline-primary"><span
+                                                    class="fa fa-chevron-left"></span></button>
                                         <input class="recherche-medecin-date form-control form-control-sm js-datepicker"
                                                id="recherche-medecin-date" v-model='visite.query' type="text" value="">
-                                        <button @click.prevent="dayAfter" class="btn btn-sm btn-outline-primary"><span           class="fa fa-chevron-right"></span></button>
+                                        <button @click.prevent="dayAfter" class="btn btn-sm btn-outline-primary"><span
+                                                    class="fa fa-chevron-right"></span></button>
 
                                     </div>
 
@@ -943,15 +957,17 @@
 
                                         <th @click="orderBy('patient', 'visite')">
 
-                                            Patient <span :class='[visite.order.patient == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                          class="fa"></span>
+                                            Patient <span
+                                                    :class='[visite.order.patient == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
                                         <th @click="orderBy('statut', 'visite')">
 
-                                            Statut <span :class='[visite.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                                         class="fa"></span>
+                                            Statut <span
+                                                    :class='[visite.order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                                    class="fa"></span>
 
                                         </th>
 
@@ -1130,7 +1146,7 @@
 
                     </div>
 
-                    {# MODAl D ACCEUIL ------------------------------------------------------------#}
+                    {# MODAl D ACCEUIL ----------------------------------------------------------- -#}
                     {% if app.session.get("modalNewVisites") and app.user.rulesProtocole is defined and app.user.rulesProtocole != "np" %}
 
                         {{ app.session.set("modalNewVisites", true) }}
@@ -1210,15 +1226,21 @@
 
                                                 {% else %}
 
-                                                    <table class="table-pop-up table table-sm table-striped mt-2 mb-0" style="font-size:0.8em;border:1px solid rgba(0,0,0,.15);"> {# TODO ODILON ET BENJAMIN #}
+                                                    <table class="table-pop-up table table-sm table-striped mt-2 mb-0"
+                                                           style="font-size:0.8em;border:1px solid rgba(0,0,0,.15);"> {# TODO ODILON ET BENJAMIN #}
                                                         <thead>
                                                         <tr>
                                                             <th colspan="6">
                                                                 <label for="search-{{ index }}">
-                                                                    <button class="btn btn-violet btn-sm ml-2"><span class="fa fa-search"></span></button>
+                                                                    <button class="btn btn-violet btn-sm ml-2"><span
+                                                                                class="fa fa-search"></span></button>
                                                                 </label>
 
-                                                                <input style="line-height: 1.75em;" id="search-{{ index }}" class="search-pop-up" type="text" onkeyup="search(event)" value="" placeholder="" {% if "now"|date("Y-m-d") == index %}autofocus {% endif %}>
+                                                                <input style="line-height: 1.75em;"
+                                                                       id="search-{{ index }}" class="search-pop-up"
+                                                                       type="text" onkeyup="search(event)" value=""
+                                                                       placeholder=""
+                                                                       {% if "now"|date("Y-m-d") == index %}autofocus {% endif %}>
                                                             </th>
                                                         </tr>
                                                         <tr class="tri">
@@ -1228,6 +1250,7 @@
                                                             <th>Inclusion</th>
                                                             <th>JMA</th>
                                                             <th>Arc</th>
+                                                            <th>Durée</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -1251,7 +1274,8 @@
                                                                 </td>
                                                                 <td>
                                                                     {% if visite.inclusion.patient != null %}
-                                                                        <a target="_visite" href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion, id_visite: visite.id }) }}">
+                                                                        <a target="_visite"
+                                                                           href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: id_inclusion, id_visite: visite.id }) }}">
                                                                             {{ visite.inclusion.patient.nom }} {{ visite.inclusion.patient.prenom }}
                                                                         </a>
                                                                     {% endif %}
@@ -1261,7 +1285,7 @@
                                                                         {% set id_inclusion = visite.inclusion.id %}
                                                                         {% if visite.inclusion.essai %}
                                                                             {% set archive = visite.inclusion.essai.statut == constant("AppBundle\\Entity\\Essais::ARCHIVE") %}
-                                                                            {# <a href="{{ path("editEssai", {id: visite.inclusion.essai.id }) }}">#}
+                                                                            {# <a href="{{ path("editEssai", {id: visite.inclusion.essai.id }) }}"> #}
                                                                             {{ visite.inclusion.essai.nom }}
                                                                             {# </a> #}
                                                                         {% endif %}
@@ -1274,6 +1298,9 @@
                                                                     {% if visite.arc != null %}
                                                                         {{ visite.arc.nomPrenom }}
                                                                     {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {{ visite.duree }}
                                                                 </td>
                                                             </tr>
                                                         {% endfor %}
@@ -1327,7 +1354,9 @@
                                             <hr>
                                             {{ inclusionsScreen|length }} patient(s)
                                             <ul>
-                                                <Li><a target="_screen" href="{{ path("listeInclusions", {"statut": "screen"}) }}">Voir la liste</a></Li>
+                                                <Li><a target="_screen"
+                                                       href="{{ path("listeInclusions", {"statut": "screen"}) }}">Voir
+                                                        la liste</a></Li>
                                             </ul>
                                         {% endif %}
                                     </div>
@@ -1404,7 +1433,7 @@
                 const table = th.closest('table').querySelector('tbody');
                 Array.from(table.querySelectorAll('tr'))
                     .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-                    .forEach(tr => table.appendChild(tr) );
+                    .forEach(tr => table.appendChild(tr));
             })));
         </script>
 

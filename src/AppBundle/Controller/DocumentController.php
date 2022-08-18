@@ -39,7 +39,7 @@ class DocumentController extends Controller
         $document = new Document();
         $document->setInclusion($inclusion);
 
-        $form = $this->get('form.factory')->create(DocumentType::class, $document);
+        $form = $this->createForm(DocumentType::class, $document);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->persist($document);

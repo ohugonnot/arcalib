@@ -28,7 +28,7 @@ class Visite
     const AUTRE = 'Autre';
     const ACTION = 'Action';
 
-    CONST TYPE = [
+    const TYPE = [
         'Screen' => self::SCREEN,
         'Inclusion' => self::INCLUSION,
         'Initiation' => self::INITIATION,
@@ -41,7 +41,7 @@ class Visite
         'Monitorage' => self::MONITORAGE,
         'Administratif' => self::ADMIN,
         'Autre' => self::AUTRE,
-        'Action'=> self::ACTION,
+        'Action' => self::ACTION,
 
     ];
 
@@ -52,7 +52,7 @@ class Visite
     const CONTACT_TEL = "Contact tel";
     const SUR_DOSSIER = 'Sur dossier';
 
-    CONST STATUT = [
+    const STATUT = [
         'Faite' => self::FAITE,
         'Non faite' => self::NON_FAITE,
         'Prévue confirmée' => self::PREVUE_CONFIRMEE,
@@ -81,6 +81,12 @@ class Visite
      * @ORM\Column(name="date_fin", type="datetime", nullable=true)
      */
     private $date_fin;
+
+    /**
+     * @var int|null
+     * @ORM\Column(name="duree", type="integer", nullable=true)
+     */
+    private $duree;
 
     /**
      * @var string
@@ -408,6 +414,24 @@ class Visite
     {
         $this->arc = $arc;
 
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDuree(): ?int
+    {
+        return $this->duree;
+    }
+
+    /**
+     * @param int|null $duree
+     * @return Visite
+     */
+    public function setDuree(?int $duree): Visite
+    {
+        $this->duree = $duree;
         return $this;
     }
 

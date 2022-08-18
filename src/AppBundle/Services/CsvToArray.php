@@ -88,9 +88,9 @@ class CsvToArray
             $fonction = $name . 'Titles';
 
         if (method_exists($this, $fonction))
-            $values = $this->$fonction($values??[], $entity);
+            $values = $this->$fonction($values ?? [], $entity);
 
-        return $values??[];
+        return $values ?? [];
     }
 
     function getEntityColumnValues($entity, $name = null)
@@ -99,6 +99,11 @@ class CsvToArray
         foreach ($this->cols as $col) {
             $getter = 'get' . ucfirst($col);
             if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
+                continue;
+            if (!method_exists($entity, $getter)) {
+                $getter = $this->camelize($getter);
+            }
+            if (!method_exists($entity, $getter))
                 continue;
             if (is_a($entity->$getter(), 'DateTime'))
                 $values[] = $entity->$getter()->format('d/m/Y');
@@ -113,9 +118,14 @@ class CsvToArray
             $fonction = $name;
 
         if (method_exists($this, $fonction))
-            $values = $this->$fonction($values??[], $entity);
+            $values = $this->$fonction($values ?? [], $entity);
 
-        return $values??[];
+        return $values ?? [];
+    }
+
+    function camelize($input, $separator = '_')
+    {
+        return str_replace($separator, '', ucwords($input, $separator));
     }
 
     //extractions  de la page inclusion
@@ -208,5 +218,10 @@ class CsvToArray
     {
         /** @var $entity Inclusion */
         return array_merge(["Patient", "Initiales", "Médecin référent de l'inclusion", "Service"], $values, $this->getEntityColumn($entity->getEssai(), "essais"));
+    }
+
+    public function visitesTitles($values)
+    {
+        return array_merge([], $values);
     }
 }

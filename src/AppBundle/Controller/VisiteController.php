@@ -4,13 +4,16 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Visite;
 use AppBundle\Factory\VisiteFactory;
+use AppBundle\Services\CsvToArray;
 use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/arcalib")
@@ -19,11 +22,11 @@ class VisiteController extends Controller
 {
 
 //-----------------------------------DELETE VISITE  ->  deleteVisite-------------------------
-	/**
-	 * @Route("/visite/supprimer/{id}", name="deleteVisite", options={"expose"=true})
-	 * @param Visite $visite
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/visite/supprimer/{id}", name="deleteVisite", options={"expose"=true})
+     * @param Visite $visite
+     * @return JsonResponse
+     */
     public function deleteVisiteAction(Visite $visite)
     {
         $em = $this->getDoctrine()->getManager();
@@ -75,14 +78,14 @@ class VisiteController extends Controller
         ]);
     }
 
-	/**
-	 * @Route("/visite/edit/{id}", name="editVisite", options={"expose"=true})
-	 * @Route("/visite/save/{id}", name="saveVisite", options={"expose"=true})
-	 * @param Request $request
-	 * @param null $id
-	 * @param VisiteFactory $visiteFactory
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/visite/edit/{id}", name="editVisite", options={"expose"=true})
+     * @Route("/visite/save/{id}", name="saveVisite", options={"expose"=true})
+     * @param Request $request
+     * @param null $id
+     * @param VisiteFactory $visiteFactory
+     * @return JsonResponse
+     */
     public function saveVisitetAction(Request $request, VisiteFactory $visiteFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -126,5 +129,36 @@ class VisiteController extends Controller
         $visites = $emVisite->findAdvancedArray($date, $filters, $user);
 
         return new JsonResponse($visites);
+    }
+
+    /**
+     * @Route("/visite/export", name="exportVisites", options={"expose"=true})
+     * @Security("has_role('ROLE_ARC')")
+     * @param CsvToArray $export
+     * @return StreamedResponse
+     */
+    public function exportEssaisAction(CsvToArray $export)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $emVisite = $em->getRepository(Visite::class);
+        $visites = $emVisite->findAllByUser($user);
+
+        return $export->exportCSV($visites, "visites");
+    }
+
+    /**
+     * @Route("/visite/updateDuree", name="updateDuree", options={"expose"=true})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function updateDuree(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $emVisite = $em->getRepository(Visite::class);
+        $visites = $emVisite->findAll();
+
+        dump($visites);
+
+        return new Response();
     }
 }

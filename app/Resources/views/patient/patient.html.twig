@@ -19,7 +19,8 @@
             {% endblock seo_description %}
 
             {% block css %}
-                <link href="https://cdn.jsdelivr.net/npm/pc-bootstrap4-datetimepicker@4.17/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+                <link href="https://cdn.jsdelivr.net/npm/pc-bootstrap4-datetimepicker@4.17/build/css/bootstrap-datetimepicker.min.css"
+                      rel="stylesheet">
             {% endblock css %}
         {% endembed %}
 
@@ -36,9 +37,7 @@
             {% block fil_ariane_more %}
 
                 {# Barre de recherche #}
-                <form id="recherche" class="form-inline ml-auto" xmlns:v-bind="http://www.w3.org/1999/xhtml"
-                      xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
-                      xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+                <form id="recherche" class="form-inline ml-auto">
 
                     <input class="patient-recherche form-control form-control-sm mr-2" autocomplete="off" type="text"
                            id='input-recherche' v-model="recherche" name="recherche" placeholder="Rechercher un patient"
@@ -453,7 +452,7 @@
 
                     </div>
 
-                    {#  Colonne 2: Inclusion ---------------------------------------------------------------------------------------------------------#}
+                    {#  Colonne 2: Inclusion -------------------------------------------------------------------------------------------------------- -#}
 
                     {# Colonne Inclusion #}
                     <div :class='{"is-loading" : loading, "is-disabled" : disabled }' id="inclusion"
@@ -501,7 +500,7 @@
 
                             {# Boutons de controle PDF #}
 
-                           <div v-if='inclusion.id != 0 && inclusion.id != null' class="form-row form-group">
+                            <div v-if='inclusion.id != 0 && inclusion.id != null' class="form-row form-group">
 
                                 <div class="col">
 
@@ -509,7 +508,7 @@
 
                                     <br>
 
-                                    {#<a :href='linkListeDocuments'
+                                    {# <a :href='linkListeDocuments'
                                        title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-list" aria-hidden="true"></i>
@@ -519,7 +518,7 @@
                                     <a :href='firstDocument'
                                        title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]]   </i>
+                                        <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]] </i>
 
                                     </a>
 
@@ -539,19 +538,22 @@
                                     <br>
 
                                     <a :href='firstTraitement'
-                                       title='Liste des traitements' class="btn btn-sm btn-outline-primary title-tooltip">
+                                       title='Liste des traitements'
+                                       class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-medkit" aria-hidden="true"> [[ inclusion.traitements.length ]] </i>
+                                        <i class="fa fa-medkit" aria-hidden="true">
+                                            [[ inclusion.traitements.length ]]
+                                        </i>
 
                                     </a>
 
                                 </div>
 
-                                 <div class="col">
+                                <div class="col">
 
                                     <label class="col-form-label">EI/EIG</label>
 
-                                     <br>
+                                    <br>
 
                                     <a :href='firstEi'
                                        title='Liste des EI/EIG' class="btn btn-sm btn-outline-primary title-tooltip">
@@ -562,14 +564,15 @@
 
                                 </div>
 
-                                 <div class="col">
+                                <div class="col">
 
                                     <label class="col-form-label">Events</label>
 
-                                     <br>
+                                    <br>
 
                                     <a :href='firstEvent'
-                                       title='Liste des Evenements' class="btn btn-sm btn-outline-primary title-tooltip">
+                                       title='Liste des Evenements'
+                                       class="btn btn-sm btn-outline-primary title-tooltip">
 
                                         <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.events.length ]] </i>
 
@@ -577,7 +580,7 @@
 
                                 </div>
 
-                               {# <div class="col">
+                                {# <div class="col">
 
                                     <label class="col-form-label">Surcoûts</label>
 
@@ -655,7 +658,7 @@
                             <div class="form-row form-group">
 
                                 <label class="col-4 col-form-label title-tooltip" title="Date officielle de l'inclusion"
-                                       for="inclusion" >Inclusion</label>
+                                       for="inclusion">Inclusion</label>
 
                                 <div class="col">
 
@@ -870,7 +873,7 @@
                             <div class="form-row form-group">
 
                                 <label for="service"
-                                       class="col-4 col-form-label">Service</label>{# TODO creer link service - inclusion#}
+                                       class="col-4 col-form-label">Service</label>{# TODO creer link service - inclusion #}
 
                                 <div class="col" v-cloak>
 
@@ -895,7 +898,7 @@
 
                     </div>
 
-                    {# Col 3 --------Visites--------------------------------------------------------------------------------------------------#}
+                    {# Col 3 --------Visites------------------------------------------------------------------------------------------------- -#}
                     {# Colonne Visites #}
                     <div id="visite" class="col col-arcoffice col-visite"
                          :class='{"is-loading" : loading, "is-disabled" : disabled }' v-cloak>
@@ -952,7 +955,9 @@
 
                                                 <div class="col">
 
-                                                    <date-picker v-model="visiteSelected.date" autocomplete="off" @dp-hide="changeDateVisite" :config="options" id="dtStartVisite"></date-picker>
+                                                    <date-picker v-model="visiteSelected.date" autocomplete="off"
+                                                                 @dp-hide="changeDateVisite" :config="options"
+                                                                 id="dtStartVisite"></date-picker>
 
                                                 </div>
 
@@ -961,24 +966,48 @@
                                             <div class="form-row form-group">
 
                                                 {# Date Fin Visite #}
-                                                <label for="date-fin-visite" class="col-4 col-form-label">Date Fin</label>
+                                                <label for="date-fin-visite" class="col-4 col-form-label">Date
+                                                    Fin</label>
 
                                                 <div class="col">
 
-                                                    <date-picker v-model="visiteSelected.date_fin" autocomplete="off" :config="options" id="dtEndVisite"></date-picker>
+                                                    <date-picker v-model="visiteSelected.date_fin" autocomplete="off"
+                                                                 :config="options" id="dtEndVisite"></date-picker>
 
                                                 </div>
 
                                             </div>
 
-                                            <div class="form-check">
+                                            <div class="form-row form-group">
 
-                                                <label class="form-check-label">
+                                                <div class="col-6 d-flex align-items-center">
+                                                    {# Toute la journée #}
+                                                    <div class="form-check mb-0">
 
-                                                    <input v-model='visiteSelected.all_day' @change="changeAllDay"
-                                                           class="form-check-input" type="checkbox" value="">Toute la journée
+                                                        <label class="form-check-label">
 
-                                                </label>
+                                                            <input v-model='visiteSelected.all_day'
+                                                                   @change="changeAllDay"
+                                                                   class="form-check-input" type="checkbox" value="">
+                                                            Toute la journée
+
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+
+                                                {# Durée #}
+                                                <label for="duree-visite"
+                                                       class=" col-form-label">Durée (mn)</label>
+
+                                                <div class="col">
+
+                                                    <input v-model='visiteSelected.duree' type="number"
+                                                           min="0" step="1"
+                                                           class="form-control form-control-sm"
+                                                           id="duree-visite" name="duree-visite">
+
+                                                </div>
 
                                             </div>
 
@@ -1049,7 +1078,8 @@
                                                 <label class="form-check-label">
 
                                                     <input v-model='visiteSelected.fait'
-                                                           class="form-check-input" type="checkbox" title=" cliquer si faite">Faite
+                                                           class="form-check-input" type="checkbox"
+                                                           title=" cliquer si faite">Faite
 
                                                 </label>
 

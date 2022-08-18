@@ -33,26 +33,43 @@
 
             {% block fil_ariane_more %}
 
-                {# Barre de recherche #}
-                <form id="recherche" class="form-inline ml-auto">
+                <div class="ml-auto d-flex">
 
-                    <div class="arcoffice-count">
+                    {% if is_granted('ROLE_ARC') %}
 
-                        {{ visites.getTotalItemCount }} visites trouvée(s)
+                        <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportVisites') }}">
 
-                    </div>
+                            Exporter <i class="fa fa-file-excel-o ml-1"></i>
 
-                    <input class="search liste-visites-recherche form-control form-control-sm mr-2" autocomplete="off"
-                           type="text" id='input-recherche' value='{{ app.request.get("recherche") }}' name="recherche"
-                           placeholder="Rechercher une visite / Filtrer" aria-label="Rechercher un visite / Filtrer">
+                        </a>
 
-                    <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+                    {% endif %}
 
-                        <i class="fa fa-search" aria-hidden="true"></i>
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto">
 
-                    </button>
+                        <div class="arcoffice-count">
 
-                </form>
+                            {{ visites.getTotalItemCount }} visites trouvée(s)
+
+                        </div>
+
+                        <input class="search liste-visites-recherche form-control form-control-sm mr-2"
+                               autocomplete="off"
+                               type="text" id='input-recherche' value='{{ app.request.get("recherche") }}'
+                               name="recherche"
+                               placeholder="Rechercher une visite / Filtrer"
+                               aria-label="Rechercher un visite / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
 
             {% endblock fil_ariane_more %}
 
@@ -107,6 +124,12 @@
 
                             </th>
 
+                            <th class='{% if visites.isSorted('v.duree') %}sorted{% endif %}'>
+
+                                {{ knp_pagination_sortable(visites, 'Durée', 'v.duree') }}
+
+                            </th>
+
                             <th class='{% if visites.isSorted('v.statut') %}sorted{% endif %}'>
 
                                 {{ knp_pagination_sortable(visites, 'Statut', 'v.statut') }}
@@ -137,7 +160,7 @@
 
                                 <td class="statut">
 
-                                    {{ visite.id }}
+                                    <a href="{{ path("patient", {id: visite.inclusion.patient.id, id_inclusion: visite.inclusion.id, id_visite: visite.id }) }}">{{ visite.id }}</a>
 
                                 </td>
 
@@ -170,6 +193,12 @@
                                 <td class="date">
 
                                     {{ visite.dateFin is empty ? "" : visite.dateFin|date('d/m/Y H:i') }}
+
+                                </td>
+
+                                <td class="duree">
+
+                                    {{ visite.duree }}
 
                                 </td>
 
