@@ -778,7 +778,7 @@ class VisiteController extends Controller
                     $protocole_matched[$essai]["temps_total"] = isset($protocole_matched[$essai]["temps_total"]) ? $protocole_matched[$essai]["temps_total"] : 0;
                     foreach ($tempsVisite as $type => $temps) {
                         if ($visite->getType() == $type && $visite->getStatut() != VISITE::NON_FAITE) {
-                            $visite->setDuree($temps);
+                            $visite->setDuree(null);
                             $updated_visites[] = $visite;
                             $protocole_matched[$essai]["nb_visite"]++;
                             $protocole_matched[$essai]["temps_total"] += $visite->getDuree();
@@ -786,7 +786,6 @@ class VisiteController extends Controller
 
                             if (($i % $batchCount) == 0) {
                                 $em->flush();
-                                $em->clear();
                             }
                         }
                     }
@@ -795,7 +794,7 @@ class VisiteController extends Controller
         }
         $em->flush();
         $em->clear();
-        
+
         $total = 0;
         foreach ($updated_visites as $updated_visite) {
             $total += $updated_visite->getDuree();
