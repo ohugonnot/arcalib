@@ -756,6 +756,8 @@ class VisiteController extends Controller
 
         $updated_visites = [];
         $protocole_matched = [];
+        $batchCount = 100;
+        $i = 0;
         foreach ($visites as $visite) {
             $date_visite = $visite->getDate();
             $date_min = (new DateTime("01/01/2019"))->setTime(0, 0, 0);
@@ -780,11 +782,20 @@ class VisiteController extends Controller
                             $updated_visites[] = $visite;
                             $protocole_matched[$essai]["nb_visite"]++;
                             $protocole_matched[$essai]["temps_total"] += $visite->getDuree();
+                            $i++;
+
+                            if (($i % $batchCount) == 0) {
+                                $em->flush();
+                                $em->clear();
+                            }
                         }
                     }
                 }
             }
         }
+        $em->flush();
+        $em->clear();
+        
         $total = 0;
         foreach ($updated_visites as $updated_visite) {
             $total += $updated_visite->getDuree();

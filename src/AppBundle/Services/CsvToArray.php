@@ -229,12 +229,15 @@ class CsvToArray
         $essai = $inclusion ? $inclusion->getEssai() : null;
         $essaiNom = $essai ? $essai->getNom() : null;
 
-        return array_merge($values, [$essaiNom]);
+        $arc = $entity->getArc();
+        $nomPrenomArc = $arc ? $arc->getNomPrenom() : null;
+
+        return array_merge($values, [$essaiNom, $nomPrenomArc]);
     }
 
     public function visitesTitles($values)
     {
-        return array_merge($values, ["Protocole"]);
+        return array_merge($values, ["Protocole", "ARC"]);
     }
 
 }
