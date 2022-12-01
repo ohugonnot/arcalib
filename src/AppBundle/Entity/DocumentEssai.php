@@ -14,9 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class DocumentEssai
 {
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const ADMIN = "Admin";
     const SCREEN = 'Screen';
     const DOC = 'Doc';
+    const STAT = 'STATUS';
     const VERSIONS = 'Versions';
     const COURRIERS = 'Courriers';
     const NEWSLETTER = 'Newsletter';
@@ -25,9 +28,10 @@ class DocumentEssai
     const PROC = 'Procedures';
     const AUTRE = 'Autre';
 
-    CONST TYPE = [
+    const TYPE = [
         'Administratif' => self::ADMIN,
         'Screen' => self::SCREEN,
+        'STATUS' => self::STAT,
         'Documents' => self::DOC,
         'Versions' => self::VERSIONS,
         'Courriers' => self::COURRIERS,
@@ -208,7 +212,7 @@ class DocumentEssai
 
     /**
      * Set inclusion
-     * @param Essais $essai
+     * @param Essais|null $essai
      * @return DocumentEssai
      */
     public function setEssai(Essais $essai = null)
