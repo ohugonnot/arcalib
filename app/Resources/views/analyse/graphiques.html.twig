@@ -40,7 +40,7 @@
 
             <div class="container">
 
-                {# Filtre par date ----------------------------------------------------------------------------------------------------------#}
+                {# Filtre par date --------------------------------------------------------------------------------------------------------- -#}
 
                 <div class="row border-0 py-3 d-flex justify-content-center">
 
@@ -98,7 +98,8 @@
                     <ul class="nav nav-tabs w-100" role="tablist">
 
                         <li class="nav-item"><!--1-->
-                            <a class="nav-link active d-flex" data-toggle="tab" href="#inclusion-protocole-mois" role="tab"
+                            <a class="nav-link active d-flex" data-toggle="tab" href="#inclusion-protocole-mois"
+                               role="tab"
                                aria-selected="true"><i class="fa fa-folder-open  mr-2"></i>Inc/Prot/mois</a>
                         </li>
 
@@ -139,1034 +140,1538 @@
 
                     <!-- Nav tabs- Fin des onglets -->
                     <div class="tab-content w-100">
-                        {# Onglet 1-----------#}
-                        {# Graphique 1 ( canvas3) ---------------------Inclusion par protocole / mois entre D1 et ----------------------------------------------------------------------------#}
-
-                        <div class="tab-pane active" id="inclusion-protocole-mois" role="tabpanel" aria-labelledby="inclusion-protocole-mois"
+                        {# Onglet 1 #}
+                        <div class="tab-pane active" id="inclusion-protocole-mois" role="tabpanel"
+                             aria-labelledby="inclusion-protocole-mois"
                              aria-expanded="true">
 
-                                <div class="arcoffice-graphique-sub">
+                            <div class="arcoffice-graphique-sub">
 
-                                    <h2><i class="fa fa-bar-chart ml-2"></i> Inclusion par protocole / mois
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    <p><i class=" ml-2"></i>Inclusions mensuelles, entre date 1 et date 2, par protocole
-                                        ( en nombre d'inclusions confirmés, basé sur la date d'inclusion, hors screen et
-                                        false sceen )</p>
+                                <h2><i class="fa fa-bar-chart ml-2"></i> Inclusion par protocole / mois
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                <p><i class=" ml-2"></i>Inclusions mensuelles, entre date 1 et date 2, par protocole
+                                    ( en nombre d'inclusions confirmés, basé sur la date d'inclusion, hors screen et
+                                    false sceen ):</p>
 
-                                    {% if inclusionsByMounthProtocole %}
+                                {% if inclusionsByMounthProtocole %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas3"></canvas>
-
+                                        <canvas id="inclusionsByMounthProtocole"></canvas>
                                     </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
+                                    <script>
+                                        let inclusionsByMounthProcole = function () {
+                                            let datasets = [];
+                                            let i = 0;
+                                            $.each({{ inclusionsByMounthProtocole|json_encode|raw }}, function (index, val) {
+                                                let data = [];
+                                                $.each(val, function (i2, v2) {
+                                                    data.push({
+                                                        x: new Date(parseInt(v2.year), parseInt(v2.month) - 1),
+                                                        y: v2.nb
+                                                    })
+                                                });
 
-                            {# Graphique 5 (Canvas 7---------------Inclusion Protocoles cumulées -entre D1 et D2----------------------------------------------------------------#}
+                                                datasets.push({
+                                                    backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
+                                                    strokeColor: "#ff6c23",
+                                                    pointColor: "#fff",
+                                                    pointStrokeColor: "#ff6c23",
+                                                    pointHighlightFill: "#fff",
+                                                    pointHighlightStroke: "#ff6c23",
+                                                    label: index + ' ',
+                                                    data: data,
+                                                    borderWidth: 1
+                                                });
+                                                i++;
+                                            });
 
-                                <div class="arcoffice-graphique-sub">
+                                            let inclusionsByMounthProtocole = document.getElementById("inclusionsByMounthProtocole").getContext("2d");
 
-                                    <h2><i class="fa fa-bar-chart"></i> Inclusions par Protocole, cumulées entre deux
-                                        dates
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    {% if inclusionsByProtocole %}
+                                            new Chart(inclusionsByMounthProtocole, {
+                                                responsive: true,
+                                                type: 'bar',
+                                                data: {
+                                                    datasets: datasets
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            type: 'time',
+                                                            stacked: true,
+                                                            distribution: 'linear',
+                                                            time: {
+                                                                unit: 'month',
+                                                                format: 'timeFormat',
+                                                                tooltipFormat: 'MMM YYYY',
+                                                                unitStepSize: 1,
+                                                                round: 'month'
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 5,
+                                                                beginAtZero: true
+                                                            },
+                                                            stacked: true
+                                                        }]
+                                                    },
+                                                    tooltips: {
+                                                        mode: 'single',
+                                                        intersect: true,
+                                                        filter: function (tooltipItem, data) {
+                                                            return !tooltipItem.yLabel == 0; // custom added prop to dataset
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        position: "right",
+                                                        align: "middle"
+                                                    },
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+
+                            {# --Inclusion Protocoles cumulées -entre D1 et D2-: Camembert------------------------------------------------------------- -#}
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i>
+                                    Inclusions par Protocole, cumulées entre deux dates :
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if inclusionsByProtocole %}
                                     <div class="w-75 ml-auto ml-auto mr-auto">
-                                        <canvas id="canvas7"></canvas>
+                                        <canvas id="inclusionsByProtocole"></canvas>
                                     </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
+                                    <script>
+                                        let inclusionsByProtocole = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+
+                                            let i = 0;
+                                            $.each({{ inclusionsByProtocole|json_encode|raw }}, function (index, val) {
+
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.protocoleNom);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+
+                                            });
+
+                                            data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionsByProtocole = document.getElementById("inclusionsByProtocole").getContext("2d");
+
+                                            new Chart(inclusionsByProtocole, {
+                                                type: 'pie',
+                                                data: data,
+                                                options: {
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        position: "right",
+                                                        align: "middle"
+                                                    },
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionsByProtocoleBar"></canvas>
+                                    </div>
+
+                                    <script>
+                                        let inclusionsByProtocoleBar = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+                                            let i = 0;
+                                            $.each({{ inclusionsByProtocole|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.protocoleNom);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
+
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionsByProtocoleBar = document.getElementById("inclusionsByProtocoleBar").getContext("2d");
+
+                                            new Chart(inclusionsByProtocoleBar, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            ticks: {
+                                                                autoSkip: false
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                beginAtZero: true
+                                                            }
+                                                        }],
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Inclusions par type de Protocole :
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if inclusionByTypeEssai %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByTypeEssai"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionByTypeEssai = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+
+                                            let i = 0;
+                                            $.each({{ inclusionByTypeEssai|json_encode|raw }}, function (index, val) {
+
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.type);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+
+                                            });
+
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionByTypeEssai = document.getElementById("inclusionByTypeEssai").getContext("2d");
+
+                                            new Chart(inclusionByTypeEssai, {
+                                                type: 'pie',
+                                                data: data,
+                                                options: {
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        position: "right",
+                                                        align: "middle"
+                                                    },
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByTypeEssaiBar"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionByTypeEssaiBar = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+                                            let i = 0;
+                                            $.each({{ inclusionByTypeEssai|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.type);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
+
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionByTypeEssaiBar = document.getElementById("inclusionByTypeEssaiBar").getContext("2d");
+
+                                            new Chart(inclusionByTypeEssaiBar, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            ticks: {
+                                                                autoSkip: false
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                beginAtZero: true
+                                                            }
+                                                        }],
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Inclusions par type de promoteur:
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if inclusionByTypeProm %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByTypeProm"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionByTypeProm = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+
+                                            let i = 0;
+                                            $.each({{ inclusionByTypeProm|json_encode|raw }}, function (index, val) {
+
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.type);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+
+                                            });
+
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionByTypeProm = document.getElementById("inclusionByTypeProm").getContext("2d");
+
+                                            new Chart(inclusionByTypeProm, {
+                                                type: 'pie',
+                                                data: data,
+                                                options: {
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        position: "right",
+                                                        align: "middle"
+                                                    },
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByTypePromBar"></canvas>
+                                    </div>
+
+                                    <script>
+                                        let inclusionByTypePromBar = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+                                            let i = 0;
+                                            $.each({{ inclusionByTypeProm|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.type);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
+
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionByTypePromBar = document.getElementById("inclusionByTypePromBar").getContext("2d");
+
+                                            new Chart(inclusionByTypePromBar, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            ticks: {
+                                                                autoSkip: false
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                beginAtZero: true
+                                                            }
+                                                        }],
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Onglet 2----Inclusion par médecins------ -#}
+                        {# ----Inclusion par médecin / mois -entre D1 et D2-------------------------------------------------------------------- -#}
+
+                        <div class="tab-pane" id="inclusion-medecin-mois" role="tabpanel"
+                             aria-labelledby="inclusion-medecin-mois"
+                             aria-expanded="true">
+
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Inclusion par médecin / mois
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+
+                                <p>Les inclusions mensuelles, entre T1 et T2, par médecin (en nombre
+                                    d'inclusion-médecin référent)</p>
+
+                                {% if inclusionsByMounthMedecin %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionsByMounthMedecin"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionsByMounthMedecin = function () {
+                                            let datasets = [];
+                                            let i = 0;
+                                            $.each({{ inclusionsByMounthMedecin|json_encode|raw }}, function (index, val) {
+                                                let data = [];
+
+                                                $.each(val, function (i2, v2) {
+                                                    data.push(
+                                                        {
+                                                            x: new Date(parseInt(v2.year), parseInt(v2.month) - 1),
+                                                            y: v2.nb
+                                                        }
+                                                    )
+                                                });
+
+                                                datasets.push({
+                                                    backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
+                                                    strokeColor: "#ff6c23",
+                                                    pointColor: "#fff",
+                                                    pointStrokeColor: "#ff6c23",
+                                                    pointHighlightFill: "#fff",
+                                                    pointHighlightStroke: "#ff6c23",
+                                                    label: index + ' ',
+                                                    data: data,
+                                                    borderWidth: 1
+                                                });
+                                                i++;
+                                            });
+
+                                            let inclusionsByMounthMedecin = document.getElementById("inclusionsByMounthMedecin").getContext("2d");
+
+                                            new Chart(inclusionsByMounthMedecin, {
+                                                responsive: true,
+                                                type: 'bar',
+                                                data: {
+                                                    datasets: datasets
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            type: 'time',
+                                                            stacked: true,
+                                                            distribution: 'linear',
+                                                            time: {
+                                                                unit: 'month',
+                                                                format: 'timeFormat',
+                                                                tooltipFormat: 'MMM YYYY',
+                                                                unitStepSize: 1,
+                                                                round: 'month'
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 5,
+                                                                beginAtZero: true
+                                                            },
+                                                            stacked: true
+                                                        }]
+                                                    },
+                                                    tooltips: {
+                                                        mode: 'single',
+                                                        intersect: true,
+                                                        filter: function (tooltipItem) {
+                                                            return !tooltipItem.yLabel == 0; // custom added prop to dataset
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        position: "right",
+                                                        align: "middle"
+                                                    },
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+
+                            {# --------Inclusion medecin cumulées -entre D1 et D2--------------------------------------------------------------- -#}
+
+                            <div class="arcoffice-graphique-sub">
+                                <h2><i class="fa fa-bar-chart"></i> Inclusions par médecin, cumulées entre deux dates:
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if inclusionsMedecin %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionsMedecin"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionsMedecin = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+
+                                            let i = 0;
+                                            $.each({{ inclusionsMedecin|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val));
+                                                labels.push(index);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
+
+                                            data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionsMedecin = document.getElementById("inclusionsMedecin").getContext("2d");
+
+                                            new Chart(inclusionsMedecin, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            ticks: {
+                                                                autoSkip: false
+                                                            }
+                                                        }],
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: false
+                                                    },
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+                            }
+
+                        </div>
+                        {# Onglet 3-----Inclusion par Arc----- -#}
+                        {# ----Inclusion par Arc / mois -entre D1 et D2-------------------------------------------------------------------- -#}
+                        <div class="tab-pane" id="inclusion-arc-mois" role="tabpanel"
+                             aria-labelledby="inclusion-arc-mois"
+                             aria-expanded="true">
+
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Inclusion par Arc / mois
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+
+                                <p>Les inclusions mensuelles, entre T1 et T2, par Arc:</p>
+
+                                {% if inclusionsByMounthArc %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionsByMounthArc"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionsByMounthArc = function () {
+                                            let datasets = [];
+                                            let i = 0;
+                                            $.each({{ inclusionsByMounthArc|json_encode|raw }}, function (index, val) {
+                                                let data = [];
+                                                $.each(val, function (i2, v2) {
+                                                    data.push(
+                                                        {
+                                                            x: new Date(parseInt(v2.year), parseInt(v2.month) - 1),
+                                                            y: v2.nb
+                                                        }
+                                                    )
+                                                });
+
+                                                datasets.push({
+                                                    backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
+                                                    strokeColor: "#ff6c23",
+                                                    pointColor: "#fff",
+                                                    pointStrokeColor: "#ff6c23",
+                                                    pointHighlightFill: "#fff",
+                                                    pointHighlightStroke: "#ff6c23",
+                                                    label: index + ' ',
+                                                    data: data,
+                                                    borderWidth: 1
+                                                });
+                                                i++;
+                                            });
+
+                                            let inclusionsByMounthArc = document.getElementById("inclusionsByMounthArc").getContext("2d");
+
+                                            new Chart(inclusionsByMounthArc, {
+                                                responsive: true,
+                                                type: 'bar',
+                                                data: {
+                                                    datasets: datasets
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            type: 'time',
+                                                            stacked: true,
+                                                            distribution: 'linear',
+                                                            time: {
+                                                                unit: 'month',
+                                                                format: 'timeFormat',
+                                                                tooltipFormat: 'MMM YYYY',
+                                                                unitStepSize: 1,
+                                                                round: 'month'
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 5,
+                                                                beginAtZero: true
+                                                            },
+                                                            stacked: true
+                                                        }]
+                                                    },
+                                                    tooltips: {
+                                                        mode: 'single',
+                                                        intersect: true,
+                                                        filter: function (tooltipItem) {
+                                                            return !tooltipItem.yLabel == 0; // custom added prop to dataset
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+                            {# ----Inclusions cumulées par ARC -entre D1 et D2-------------------------------------------------------------------- -#}
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Inclusions par arc, cumulées entre deux
+                                    dates:
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if inclusionsArc %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionsArc"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionsArc = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+                                            let i = 0;
+                                            $.each({{ inclusionsArc|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val));
+                                                labels.push(index);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
+
+                                            data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionsArc = document.getElementById("inclusionsArc").getContext("2d");
+
+                                            new Chart(inclusionsArc, {
+                                                type: 'pie',
+                                                data: data,
+                                                options: {
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
+
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
 
                         </div>
 
-                        {# Onglet 2-----------#}
-
-                        {# Graphique 2 ( canvas2)-------------------Inclusion par médecin / mois -entre D1 et D2---------------------------------------------------------------------#}
-
-                        <div class="tab-pane" id="inclusion-medecin-mois" role="tabpanel" aria-labelledby="inclusion-medecin-mois"
-                             aria-expanded="true">
-
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Inclusion par médecin / mois
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-
-                                    <p>Les inclusions mensuelles, entre T1 et T2, par médecin ( en nombre
-                                        d'inclusion-médecin référent )</p>
-
-                                    {% if inclusionsByMounthMedecin %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas2"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
-
-                            {# Graphique 4 (Canvas 6---------------Inclusion medecin cumulées -entre D1 et D2----------------------------------------------------------------#}
-
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Inclusions par médecin, cumulées entre deux
-                                        dates
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    {% if inclusionsMedecin %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas6"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>}
-
-                        </div>
-
-                        <div class="tab-pane" id="inclusion-arc-mois" role="tabpanel" aria-labelledby="inclusion-arc-mois"
-                             aria-expanded="true">
-
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Inclusion par Arc / mois
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-
-                                    <p>Les inclusions mensuelles, entre T1 et T2, par Arc</p>
-
-                                    {% if inclusionsByMounthArc %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas9"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
-
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Inclusions par arc, cumulées entre deux
-                                        dates
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    {% if inclusionsArc %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas11"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
-
-                        </div>
-
-                        {# Onglet 3-----------#}
-                        {# Graphique 3 ( canvas4)-------------------Visites par protocole / mois -entre D1 et D2--------------------------------------------------------------#}
-
+                        {# Onglet 4---------- -#}
+                        {# -------------------Visites par protocole / mois -entre D1 et D2------------------------------------------------------------- -#}
                         <div class="tab-pane" id="visites" role="tabpanel" aria-labelledby="visites"
                              aria-expanded="true">
 
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Visites par protocole / mois
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    {% if visiteByMounthProtocole %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas4"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
-
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Visites par Arc / mois
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    {% if visiteByMounthArc %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas10"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
-
-                        </div>
-
-                        {# Onglet 4-----------#}
-                        {# Graphique 6 (Canvas 5---------------Inclusion service cumulées -entre D1 et D2----------------------------------------------------------------#}
-
-                        <div class="tab-pane" id="inclusion-service-cumule" role="tabpanel" aria-labelledby="inclusion-service-cumule"
-                             aria-expanded="true">
-
-                                <div class="arcoffice-graphique-sub">
-
-                                    <h2><i class="fa fa-bar-chart"></i> Inclusions par Service, cumulées entre deux
-                                        dates
-                                        <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
-                                    </h2>
-                                    {% if inclusionsService %}
-                                    <div class="w-75 ml-auto ml-auto mr-auto">
-
-                                        <canvas id="canvas5"></canvas>
-
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
-                                    {% endif %}
-                                </div>
-
-                        </div>
-
-                        {# Onglet 5-----------#}
-                        {# Graphique 7 (Canvas 1--------------Inclusions Totals médecins----------------------------------------------------------------#}
-
-                        <div class="tab-pane" id="total-inclusions-medecin" role="tabpanel" aria-labelledby="total-inclusions-medecin"
-                             aria-expanded="true">
-
                             <div class="arcoffice-graphique-sub">
 
-                                <h2><i class="fa fa-bar-chart"></i> Total des Inclusions par médecin</h2>
+                                <h2><i class="fa fa-bar-chart"></i> Visites par protocole / mois:
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if visiteByMounthProtocole %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="visiteByMounthProtocole"></canvas>
+                                    </div>
+                                    <script>
+                                        let visiteByMounthProtocole = function () {
+                                            let datasets = [];
+                                            let i = 0;
+                                            $.each({{ visiteByMounthProtocole|json_encode|raw }}, function (index, val) {
+                                                let data = [];
+                                                $.each(val, function (i2, v2) {
+                                                    data.push(
+                                                        {
+                                                            x: new Date(parseInt(v2.year), parseInt(v2.month) - 1),
+                                                            y: v2.nb
+                                                        }
+                                                    )
+                                                });
 
-                                <p>L'activité globale en Recherche clinique par médecin (nombre d'inclusions dans la
-                                    base pour lesquelles le médecin est responsable).</p>
+                                                datasets.push({
+                                                    backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
+                                                    strokeColor: "#ff6c23",
+                                                    pointColor: "#fff",
+                                                    pointStrokeColor: "#ff6c23",
+                                                    pointHighlightFill: "#fff",
+                                                    pointHighlightStroke: "#ff6c23",
+                                                    label: index + ' ',
+                                                    data: data,
+                                                    borderWidth: 1
+                                                });
+                                                i++;
+                                            });
 
-                                <div class="w-75 ml-auto ml-auto mr-auto">
+                                            let visiteByMounthProtocole = document.getElementById("visiteByMounthProtocole").getContext("2d");
 
-                                    <canvas id="canvas1"></canvas>
+                                            new Chart(visiteByMounthProtocole, {
+                                                responsive: true,
+                                                type: 'bar',
+                                                data: {
+                                                    datasets: datasets
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            type: 'time',
+                                                            stacked: true,
+                                                            distribution: 'linear',
+                                                            time: {
+                                                                unit: 'month',
+                                                                format: 'timeFormat',
+                                                                tooltipFormat: 'MMM YYYY',
+                                                                unitStepSize: 1,
+                                                                round: 'month'
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 5,
+                                                                beginAtZero: true
+                                                            },
+                                                            stacked: true
+                                                        }]
+                                                    },
+                                                    tooltips: {
+                                                        mode: 'single',
+                                                        intersect: true,
+                                                        filter: function (tooltipItem, data) {
+                                                            return !tooltipItem.yLabel == 0; // custom added prop to dataset
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
 
-                                </div>
+                            <div class="arcoffice-graphique-sub">
+                                <h2><i class="fa fa-bar-chart"></i> Visites par Arc / mois
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if visiteByMounthArc %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="visiteByMounthArc"></canvas>
+                                    </div>
+                                    <script>
+                                        let visiteByMounthArc = function () {
+                                            let datasets = [];
+                                            let i = 0;
+                                            $.each({{ visiteByMounthArc|json_encode|raw }}, function (index, val) {
+                                                let data = [];
 
+                                                $.each(val, function (i2, v2) {
+                                                    data.push(
+                                                        {
+                                                            x: new Date(parseInt(v2.year), parseInt(v2.month) - 1),
+                                                            y: v2.nb
+                                                        }
+                                                    )
+                                                });
+
+                                                datasets.push({
+                                                    backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
+                                                    strokeColor: "#ff6c23",
+                                                    pointColor: "#fff",
+                                                    pointStrokeColor: "#ff6c23",
+                                                    pointHighlightFill: "#fff",
+                                                    pointHighlightStroke: "#ff6c23",
+                                                    label: index + ' ',
+                                                    data: data,
+                                                    borderWidth: 1
+                                                });
+                                                i++;
+                                            });
+
+                                            let visiteByMounthArc = document.getElementById("visiteByMounthArc").getContext("2d");
+
+                                            new Chart(visiteByMounthArc, {
+                                                responsive: true,
+                                                type: 'bar',
+                                                data: {
+                                                    datasets: datasets
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            type: 'time',
+                                                            stacked: true,
+                                                            distribution: 'linear',
+                                                            time: {
+                                                                unit: 'month',
+                                                                format: 'timeFormat',
+                                                                tooltipFormat: 'MMM YYYY',
+                                                                unitStepSize: 1,
+                                                                round: 'month'
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 5,
+                                                                beginAtZero: true
+                                                            },
+                                                            stacked: true
+                                                        }]
+                                                    },
+                                                    tooltips: {
+                                                        mode: 'single',
+                                                        intersect: true,
+                                                        filter: function (tooltipItem, data) {
+                                                            return !tooltipItem.yLabel == 0; // custom added prop to dataset
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
                             </div>
 
                         </div>
 
-                        {# Onglet 6-----------#}
-                        {# Graphique 8 (Canvas 8---------------Inclusions annuelles ----------------------------------------------------------------#}
-
-                        <div class="tab-pane" id="total-inclusions-ans" role="tabpanel" aria-labelledby="total-inclusions-ans"
+                        {# Onglet 5---------- -#}
+                        {# --------Inclusion service cumulées -entre D1 et D2--------------------------------------------------------------- -#}
+                        <div class="tab-pane" id="inclusion-service-cumule" role="tabpanel"
+                             aria-labelledby="inclusion-service-cumule"
                              aria-expanded="true">
 
                             <div class="arcoffice-graphique-sub">
 
-                                <h2><i class="fa fa-bar-chart"></i> Total des Inclusions par années</h2>
+                                <h2><i class="fa fa-bar-chart"></i> Inclusions par Service, cumulées entre deux
+                                    dates :
+                                    <small> du {{ debut|date('d/m/Y') }} au {{ fin|date('d/m/Y') }}</small>
+                                </h2>
+                                {% if inclusionsService %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionsService"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionsService = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+                                            let i = 0;
+                                            $.each({{ inclusionsService|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.serviceNom);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
 
-                                <p></p>
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor
+                                                }],
+                                                labels: labels
+                                            };
 
-                                <div class="w-75 ml-auto ml-auto mr-auto">
+                                            let inclusionsService = document.getElementById("inclusionsService").getContext("2d");
 
-                                    <canvas id="canvas8"></canvas>
+                                            new Chart(inclusionsService, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            ticks: {
+                                                                autoSkip: false
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 10,
+                                                                beginAtZero: true
+                                                            }
+                                                        }]
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.labels[tooltipItem.index] || '';
 
-                                </div>
-
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
+                                                                let sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
+                                                                    return sum + dataset;
+                                                                }, 0);
+                                                                let percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
+                                                                percent = percent.toFixed(0); // make a nice string
+                                                                return label + ' (' + percent + ' %)';
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
                             </div>
 
                         </div>
 
+                        {# Onglet 6---------- -#}
+                        {# --------------Inclusions Totals médecins--------------------------------------------------------------- -#}
+
+                        <div class="tab-pane" id="total-inclusions-medecin" role="tabpanel"
+                             aria-labelledby="total-inclusions-medecin"
+                             aria-expanded="true">
+
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Total des inclusions par médecin</h2>
+                                {% if inclusionMedecin %}
+                                    <p>L'activité globale en Recherche clinique par médecin (nombre d'inclusions dans la
+                                        base depuis l'origine):</p>
+
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionMedecin"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionMedecin = function () {
+                                            let inclusionMedecin = document.getElementById("inclusionMedecin").getContext("2d");
+
+                                            new Chart(inclusionMedecin, {
+                                                responsive: true,
+                                                type: 'bar',
+                                                data: {
+                                                    labels: {{ inclusionMedecin|keys|json_encode|raw }},
+                                                    datasets: [{
+                                                        backgroundColor: colors({{ inclusionMedecin|values|length }}), // Put the gradient here as a fill color
+                                                        strokeColor: "#ff6c23",
+                                                        pointColor: "#fff",
+                                                        pointStrokeColor: "#ff6c23",
+                                                        pointHighlightFill: "#fff",
+                                                        pointHighlightStroke: "#ff6c23",
+                                                        label: "Nombre d'inclusion(s) ",
+                                                        data: {{ inclusionMedecin|values|json_encode|raw }},
+                                                        borderWidth: 1
+                                                    }]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        xAxes: [{
+                                                            ticks: {
+                                                                autoSkip: false
+                                                            }
+                                                        }],
+                                                        yAxes: [{
+                                                            ticks: {
+                                                                stepSize: 10,
+                                                                beginAtZero: true
+                                                            }
+                                                        }]
+                                                    },
+                                                    legend: {
+                                                        display: false
+
+                                                    },
+                                                    title: {
+                                                        display: false,
+                                                        text: "Nombre d'inclusion par médecin dans la base"
+                                                    }
+                                                }
+
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                        {# Onglet 7-total annuel--------- -#}
+                        {# ---------------Inclusions annuelles --------------------------------------------------------------- -#}
+
+                        <div class="tab-pane" id="total-inclusions-ans" role="tabpanel"
+                             aria-labelledby="total-inclusions-ans"
+                             aria-expanded="true">
+
+                            <div class="arcoffice-graphique-sub">
+
+                                <h2><i class="fa fa-bar-chart"></i> Inclusions / années</h2>
+                                {% if inclusionByYear %}
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByYear"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionByYear = function () {
+                                            let datasets = [];
+                                            let labels = [];
+                                            let backgroundColor = [];
+                                            let i = 0;
+                                            $.each({{ inclusionByYear|json_encode|raw }}, function (index, val) {
+                                                datasets.push(parseInt(val.nb));
+                                                labels.push(val.year);
+                                                backgroundColor.push(default_colors[i % default_colors.length]);
+                                                i++;
+                                            });
+
+                                            let data = {
+                                                datasets: [{
+                                                    data: datasets,
+                                                    backgroundColor: backgroundColor,
+                                                    label: "Nombre d'inclusion(s) "
+                                                }],
+                                                labels: labels
+                                            };
+
+                                            let inclusionByYear = document.getElementById("inclusionByYear").getContext("2d");
+
+                                            new Chart(inclusionByYear, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        x: {
+                                                            stacked: true,
+                                                        },
+                                                        y: {
+                                                            stacked: true
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: false
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+
+                                    <hr>
+                            {# ---------------Inclusions / années: % par type d'étude --------------------------------------------------------------- -#}
+
+                            <h2><i class="fa fa-bar-chart"></i> Inclusions / années: % par type d'étude </h2>
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByYearByTypeEssai"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionByYearByTypeEssai = function () {
+                                            let datas = {{ inclusionByYearByTypeEssai|json_encode|raw }};
+                                            let datasets = [];
+                                            let labels = [];
+
+                                            let years = datas.years;
+                                            datas = datas.data;
+                                            datasets = [];
+                                            $.each(years, function (index, val) {
+                                                labels.push(val);
+                                            });
+                                            let i = 0;
+                                            $.each(datas, function (i2, val2) {
+                                                let backgroundColor = [];
+                                                for (let x = 0; x < val2.length; x++) {
+                                                    backgroundColor.push(default_colors[i % default_colors.length]);
+                                                }
+                                                datasets.push(
+                                                    {
+                                                        data: val2,
+                                                        backgroundColor: backgroundColor,
+                                                        label: i2,
+                                                        stack: "0"
+                                                    }
+                                                );
+                                                i++;
+                                            });
+
+                                            let data = {
+                                                datasets: datasets,
+                                                labels: labels
+                                            };
+
+                                            let inclusionByYearByTypeEssai = document.getElementById("inclusionByYearByTypeEssai").getContext("2d");
+
+                                            new Chart(inclusionByYearByTypeEssai, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        x: {
+                                                            stacked: true,
+                                                        },
+                                                        y: {
+                                                            stacked: true
+                                                        }
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' % des inclusions';
+                                                                return label;
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: true
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+
+                                    <hr>
+                            {# ---------------Inclusions / années: % par type de promoteur --------------------------------------------------------------- -#}
+                                    <h2><i class="fa fa-bar-chart"></i> Inclusions / années: % par type de promoteur </h2>
+                                    <div class="w-75 ml-auto ml-auto mr-auto">
+                                        <canvas id="inclusionByYearByTypeProm"></canvas>
+                                    </div>
+                                    <script>
+                                        let inclusionByYearByTypeProm = function () {
+                                            let datas = {{ inclusionByYearByTypeProm|json_encode|raw }};
+                                            let datasets = [];
+                                            let labels = [];
+
+                                            let years = datas.years;
+                                            datas = datas.data;
+                                            datasets = [];
+                                            $.each(years, function (index, val) {
+                                                labels.push(val);
+                                            });
+                                            let i = 0;
+                                            $.each(datas, function (i2, val2) {
+                                                let backgroundColor = [];
+                                                for (let x = 0; x < val2.length; x++) {
+                                                    backgroundColor.push(default_colors[i % default_colors.length]);
+                                                }
+                                                datasets.push(
+                                                    {
+                                                        data: val2,
+                                                        backgroundColor: backgroundColor,
+                                                        label: i2,
+                                                        stack: "0"
+                                                    }
+                                                );
+                                                i++;
+                                            });
+
+                                            let data = {
+                                                datasets: datasets,
+                                                labels: labels
+                                            };
+
+                                            let inclusionByYearByTypeProm = document.getElementById("inclusionByYearByTypeProm").getContext("2d");
+
+                                            new Chart(inclusionByYearByTypeProm, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        x: {
+                                                            stacked: true,
+                                                        },
+                                                        y: {
+                                                            stacked: true
+                                                        }
+                                                    },
+                                                    tooltips: {
+                                                        callbacks: {
+                                                            label: function (tooltipItem, data) {
+                                                                let label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                                                if (label) {
+                                                                    label += ' : ';
+                                                                }
+                                                                label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' % des inclusions';
+                                                                return label;
+                                                            }
+                                                        }
+                                                    },
+                                                    legend: {
+                                                        display: true
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                {% else %}
+                                    <div class="alert alert-info">Pas d'inclusion trouvées sur la période</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-
-                {# End HTML section----------------------------------------------------------------------------------------------------------#}
-
+                {# End HTML section--------------------------------------------------------------------------------------------------------- -#}
             </div>
 
         </section>
-
     {% endblock content %}
 
-{# Bloc JS ----------------------------------------------------------------------------------------------------------#}
-
+{# Bloc JS --------------------------------------------------------------------------------------------------------- -#}
 	{% block javascripts %}
 
         {{ parent() }}
 
         <script>
+            const default_colors = [
+                'rgba(255, 99, 132, 0.5)',// rose
+                'rgba(54, 162, 235, 0.5)',// bleu clair
+                'rgba(255, 206, 86, 0.5)',// jaune Or
+                'rgba(64, 182, 155, 0.5)',// Bleu vert
+                'rgba(153, 102, 255, 0.5)',// Violet Lilas
+                'rgba(255, 159, 64, 0.5)', // Orange clair
+                'rgba(51, 204, 51,0.5)',// Vert
+                'rgba(200, 50, 150, 0.5)',// Rose- Violet
+                'rgba(255, 51, 0, 0.5)',// Orange-Rouge
+                'rgba(100, 100, 100, 0.5)',// gris
+                'rgba(255, 0, 0, 0.5)',  // Rouge
+                'rgba(204, 0, 255, 0.5)',// Violet
+                'rgba(225, 125, 132, 0.5)',// Rose chair
+                'rgba(25, 75, 150, 0.5)',// Bleu roy
+                'rgba(200, 150, 25, 0.5)',// Jaune tournesol
+                'rgba(150, 45, 255, 0.5)',  // Violet
+                'rgba(0, 102, 0, 0.5)',// vert sombre
+                'rgba(81, 38, 15, 0.5)',// Marron
+                'rgba(110, 220, 200, 0.5)',// bleu ciel
+                'rgba(255, 0, 0, 0.5)',  // Rouge
+                'rgba(82, 200, 120, 0.5)',// vert clair
+                'rgba(255, 99, 132, 0.9)',// rose
+                'rgba(54, 162, 235, 0.9)',// bleu clair
+                'rgba(255, 206, 86, 0.9)',// jaune Or
+                'rgba(64, 182, 155, 0.9)',// Bleu vert
+                'rgba(153, 102, 255, 0.9)',// Violet Lilas
+                'rgba(255, 159, 64, 0.9)', // Orange clair
+                'rgba(51, 204, 51,0.9)',// Vert
+                'rgba(200, 50, 150, 0.9)',// Rose- Violet
+                'rgba(255, 51, 0, 0.9)',// Orange-Rouge
+                'rgba(100, 100, 100, 0.9)',// gris
+                'rgba(255, 0, 0, 0.9)',  // Rouge
+                'rgba(204, 0, 255, 0.9)',// Violet
+                'rgba(225, 125, 132, 0.9)',// Rose chair
+                'rgba(25, 75, 150, 0.9)',// Bleu roy
+                'rgba(200, 150, 25, 0.9)',// Jaune tournesol
+                'rgba(150, 45, 255, 0.9)',  // Violet
+                'rgba(0, 102, 0, 0.9)',// vert sombre
+                'rgba(81, 38, 15, 0.9)',// Marron
+                'rgba(110, 220, 200, 0.9)',// bleu ciel
+                'rgba(255, 0, 0, 0.9)',  // Rouge
+                'rgba(82, 200, 120, 0.9)'// vert clair
+            ];
+
+            function colors(nb) {
+                let colors = [];
+                for (let i = 0; i < nb; i++) {
+                    colors.push(default_colors[i % default_colors.length])
+                }
+                return colors;
+            }
 
             $(function () {
-
                 $('.js-datepicker').datepicker({format: 'dd/mm/yyyy', language: 'fr', todayHighlight: true});
                 moment.locale("fr");
 
-                var default_colors = [
-                    'rgba(255, 99, 132, 0.5)',// rose
-                    'rgba(54, 162, 235, 0.5)',// bleu clair
-                    'rgba(255, 206, 86, 0.5)',// jaune Or
-                    'rgba(64, 182, 155, 0.5)',// Bleu vert
-                    'rgba(153, 102, 255, 0.5)',// Violet Lilas
-                    'rgba(255, 159, 64, 0.5)', // Orange clair
-                    'rgba(51, 204, 51,0.5)',// Vert
-                    'rgba(200, 50, 150, 0.5)',// Rose- Violet
-                    'rgba(255, 51, 0, 0.5)',// Orange-Rouge
-                    'rgba(100, 100, 100, 0.5)',// gris
-                    'rgba(255, 0, 0, 0.5)',  // Rouge
-                    'rgba(204, 0, 255, 0.5)',// Violet
-                    'rgba(225, 125, 132, 0.5)',// Rose chair
-                    'rgba(25, 75, 150, 0.5)',// Bleu roy
-                    'rgba(200, 150, 25, 0.5)',// Jaune tournesol
-                    'rgba(150, 45, 255, 0.5)',  // Violet
-                    'rgba(0, 102, 0, 0.5)',// vert sombre
-                    'rgba(81, 38, 15, 0.5)',// Marron
-                    'rgba(110, 220, 200, 0.5)',// bleu ciel
-                    'rgba(255, 0, 0, 0.5)',  // Rouge
-                    'rgba(82, 200, 120, 0.5)',// vert clair
-                    'rgba(255, 99, 132, 0.9)',// rose
-                    'rgba(54, 162, 235, 0.9)',// bleu clair
-                    'rgba(255, 206, 86, 0.9)',// jaune Or
-                    'rgba(64, 182, 155, 0.9)',// Bleu vert
-                    'rgba(153, 102, 255, 0.9)',// Violet Lilas
-                    'rgba(255, 159, 64, 0.9)', // Orange clair
-                    'rgba(51, 204, 51,0.9)',// Vert
-                    'rgba(200, 50, 150, 0.9)',// Rose- Violet
-                    'rgba(255, 51, 0, 0.9)',// Orange-Rouge
-                    'rgba(100, 100, 100, 0.9)',// gris
-                    'rgba(255, 0, 0, 0.9)',  // Rouge
-                    'rgba(204, 0, 255, 0.9)',// Violet
-                    'rgba(225, 125, 132, 0.9)',// Rose chair
-                    'rgba(25, 75, 150, 0.9)',// Bleu roy
-                    'rgba(200, 150, 25, 0.9)',// Jaune tournesol
-                    'rgba(150, 45, 255, 0.9)',  // Violet
-                    'rgba(0, 102, 0, 0.9)',// vert sombre
-                    'rgba(81, 38, 15, 0.9)',// Marron
-                    'rgba(110, 220, 200, 0.9)',// bleu ciel
-                    'rgba(255, 0, 0, 0.9)',  // Rouge
-                    'rgba(82, 200, 120, 0.9)'// vert clair
-                ];
-
-                function colors(nb) {
-
-                    var colors = [];
-                    for (var i = 0; i < nb; i++) {
-                        colors.push(default_colors[i % default_colors.length])
-                    }
-                    return colors;
-                }
-
-// INCLUSIONS GLOBALES PAR MEDECIN: --------------------------------------------------------------------------------------------------------------				
-                {% if inclusionMedecin %}
-
-                var ctx = document.getElementById("canvas1").getContext("2d");
-
-                new Chart(ctx, {
-                    responsive: true,
-                    type: 'bar',
-                    data: {
-                        labels: {{ inclusionMedecin|keys|json_encode|raw }},
-                        datasets: [{
-                            backgroundColor: colors({{ inclusionMedecin|values|length }}), // Put the gradient here as a fill color
-                            strokeColor: "#ff6c23",
-                            pointColor: "#fff",
-                            pointStrokeColor: "#ff6c23",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "#ff6c23",
-                            label: "Nombre d'inclusion(s) ",
-                            data: {{ inclusionMedecin|values|json_encode|raw }},
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    autoSkip: false
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 10,
-                                    beginAtZero: true
-                                }
-                            }]
-                        },
-                        legend: {
-                            display: false
-
-                        },
-                        title: {
-                            display: false,
-                            text: "Nombre d'inclusion par médecin dans la base"
-                        }
-                    }
-
-                });
-
-                {% endif %}
-
-// INCLUSIONS  PAR MEDECIN/ MOIS/ de T1 à T2: --------------------------------------------------------------------------------------------------------------				    
-                {% if inclusionsByMounthMedecin %}
-
-                var datasets = [];
-                var i = 0;
-                $.each({{ inclusionsByMounthMedecin|json_encode|raw }}, function (index, val) {
-                    var data = [];
-
-                    $.each(val, function (i2, v2) {
-                        data.push(
-                            {x: new Date(parseInt(v2.year), parseInt(v2.month) - 1), y: v2.nb}
-                        )
-                    });
-
-                    datasets.push(
-                        {
-                            backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
-                            strokeColor: "#ff6c23",
-                            pointColor: "#fff",
-                            pointStrokeColor: "#ff6c23",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "#ff6c23",
-                            label: index + ' ',
-                            data: data,
-                            borderWidth: 1
-                        }
-                    );
-
-                    i++;
-
-                });
-
-                var ctx2 = document.getElementById("canvas2").getContext("2d");
-
-                new Chart(ctx2, {
-                    responsive: true,
-                    type: 'bar',
-                    data: {
-                        datasets: datasets
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                stacked: true,
-                                distribution: 'linear',
-                                time: {
-                                    unit: 'month',
-                                    format: 'timeFormat',
-                                    tooltipFormat: 'MMM YYYY',
-                                    unitStepSize: 1,
-                                    round: 'month'
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 5,
-                                    beginAtZero: true
-                                },
-                                stacked: true
-                            }]
-                        },
-                        tooltips: {
-                            mode: 'single',
-                            intersect: true,
-                            filter: function (tooltipItem) {
-                                return !tooltipItem.yLabel == 0; // custom added prop to dataset
-                            }
-                        },
-                        legend: {
-                            position: "right",
-                            align: "middle"
-                        },
-                    }
-                });
-
-                {% endif %}
-
-// INCLUSIONS  PAR MEDECIN/ MOIS/ de T1 à T2: --------------------------------------------------------------------------------------------------------------
-                {% if inclusionsByMounthArc %}
-
-                var datasets = [];
-                var i = 0;
-                $.each({{ inclusionsByMounthArc|json_encode|raw }}, function (index, val) {
-                    var data = [];
-
-                    $.each(val, function (i2, v2) {
-                        data.push(
-                            {x: new Date(parseInt(v2.year), parseInt(v2.month) - 1), y: v2.nb}
-                        )
-                    });
-
-                    datasets.push(
-                        {
-                            backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
-                            strokeColor: "#ff6c23",
-                            pointColor: "#fff",
-                            pointStrokeColor: "#ff6c23",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "#ff6c23",
-                            label: index + ' ',
-                            data: data,
-                            borderWidth: 1
-                        }
-                    );
-
-                    i++;
-
-                });
-
-                var ctx9 = document.getElementById("canvas9").getContext("2d");
-
-                new Chart(ctx9, {
-                    responsive: true,
-                    type: 'bar',
-                    data: {
-                        datasets: datasets
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                stacked: true,
-                                distribution: 'linear',
-                                time: {
-                                    unit: 'month',
-                                    format: 'timeFormat',
-                                    tooltipFormat: 'MMM YYYY',
-                                    unitStepSize: 1,
-                                    round: 'month'
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 5,
-                                    beginAtZero: true
-                                },
-                                stacked: true
-                            }]
-                        },
-                        tooltips: {
-                            mode: 'single',
-                            mode: 'single',
-                            intersect: true,
-                            filter: function (tooltipItem) {
-                                return !tooltipItem.yLabel == 0; // custom added prop to dataset
-                            }
-                        }
-                    }
-                });
-
-                {% endif %}
-
-// INCLUSIONS PAR ESSAIS / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------			   
+                // Ong1: INCLUSIONS PAR protocole / MOIS : --------------------------------------------------------------------------------------
                 {% if inclusionsByMounthProtocole %}
-
-                var datasets = [];
-                var i = 0;
-                $.each({{ inclusionsByMounthProtocole|json_encode|raw }}, function (index, val) {
-                    var data = [];
-
-                    $.each(val, function (i2, v2) {
-                        data.push(
-                            {x: new Date(parseInt(v2.year), parseInt(v2.month) - 1), y: v2.nb}
-                        )
-                    });
-
-                    datasets.push(
-                        {
-                            backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
-                            strokeColor: "#ff6c23",
-                            pointColor: "#fff",
-                            pointStrokeColor: "#ff6c23",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "#ff6c23",
-                            label: index + ' ',
-                            data: data,
-                            borderWidth: 1
-                        }
-                    );
-
-                    i++;
-
-                });
-
-                var ctx3 = document.getElementById("canvas3").getContext("2d");
-
-                new Chart(ctx3, {
-                    responsive: true,
-                    type: 'bar',
-                    data: {
-                        datasets: datasets
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                stacked: true,
-                                distribution: 'linear',
-                                time: {
-                                    unit: 'month',
-                                    format: 'timeFormat',
-                                    tooltipFormat: 'MMM YYYY',
-                                    unitStepSize: 1,
-                                    round: 'month'
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 5,
-                                    beginAtZero: true
-                                },
-                                stacked: true
-                            }]
-                        },
-                        tooltips: {
-                            mode: 'single',
-                            intersect: true,
-                            filter: function (tooltipItem, data) {
-                                return !tooltipItem.yLabel == 0; // custom added prop to dataset
-                            }
-                        },
-                        legend: {
-                            position: "right",
-                            align: "middle"
-                        },
-                    }
-                });
-
+                inclusionsByMounthProcole();
                 {% endif %}
 
-// INCLUSIONS PAR visites / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
-                {% if visiteByMounthProtocole %}
-
-                var datasets = [];
-                var i = 0;
-                $.each({{ visiteByMounthProtocole|json_encode|raw }}, function (index, val) {
-                    var data = [];
-
-                    $.each(val, function (i2, v2) {
-                        data.push(
-                            {x: new Date(parseInt(v2.year), parseInt(v2.month) - 1), y: v2.nb}
-                        )
-                    });
-
-                    datasets.push(
-                        {
-                            backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
-                            strokeColor: "#ff6c23",
-                            pointColor: "#fff",
-                            pointStrokeColor: "#ff6c23",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "#ff6c23",
-                            label: index + ' ',
-                            data: data,
-                            borderWidth: 1
-                        }
-                    );
-
-                    i++;
-
-                });
-
-                var ctx4 = document.getElementById("canvas4").getContext("2d");
-
-                new Chart(ctx4, {
-                    responsive: true,
-                    type: 'bar',
-                    data: {
-                        datasets: datasets
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                stacked: true,
-                                distribution: 'linear',
-                                time: {
-                                    unit: 'month',
-                                    format: 'timeFormat',
-                                    tooltipFormat: 'MMM YYYY',
-                                    unitStepSize: 1,
-                                    round: 'month'
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 5,
-                                    beginAtZero: true
-                                },
-                                stacked: true
-                            }]
-                        },
-                        tooltips: {
-                            mode: 'single',
-                            intersect: true,
-                            filter: function (tooltipItem, data) {
-                                return !tooltipItem.yLabel == 0; // custom added prop to dataset
-                            }
-                        }
-                    }
-                });
-
-                {% endif %}
-
-// Arc PAR visites / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
-                {% if visiteByMounthArc %}
-
-                var datasets = [];
-                var i = 0;
-                $.each({{ visiteByMounthArc|json_encode|raw }}, function (index, val) {
-                    var data = [];
-
-                    $.each(val, function (i2, v2) {
-                        data.push(
-                            {x: new Date(parseInt(v2.year), parseInt(v2.month) - 1), y: v2.nb}
-                        )
-                    });
-
-                    datasets.push(
-                        {
-                            backgroundColor: default_colors[i % default_colors.length], // Put the gradient here as a fill color
-                            strokeColor: "#ff6c23",
-                            pointColor: "#fff",
-                            pointStrokeColor: "#ff6c23",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "#ff6c23",
-                            label: index + ' ',
-                            data: data,
-                            borderWidth: 1
-                        }
-                    );
-
-                    i++;
-
-                });
-
-                var ctx10 = document.getElementById("canvas10").getContext("2d");
-
-                new Chart(ctx10, {
-                    responsive: true,
-                    type: 'bar',
-                    data: {
-                        datasets: datasets
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                stacked: true,
-                                distribution: 'linear',
-                                time: {
-                                    unit: 'month',
-                                    format: 'timeFormat',
-                                    tooltipFormat: 'MMM YYYY',
-                                    unitStepSize: 1,
-                                    round: 'month'
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    stepSize: 5,
-                                    beginAtZero: true
-                                },
-                                stacked: true
-                            }]
-                        },
-                        tooltips: {
-                            mode: 'single',
-                            intersect: true,
-                            filter: function (tooltipItem, data) {
-                                return !tooltipItem.yLabel == 0; // custom added prop to dataset
-                            }
-                        }
-                    }
-                });
-
-                {% endif %}
-
-// INCLUSIONS PAR centre / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
-                {% if inclusionsService %}
-
-                var datasets = [];
-                var labels = [];
-                var backgroundColor = [];
-
-                var i = 0;
-                $.each({{ inclusionsService|json_encode|raw }}, function (index, val) {
-
-                    datasets.push(parseInt(val.nb));
-                    labels.push(val.serviceNom);
-                    backgroundColor.push(default_colors[i % default_colors.length]);
-                    i++;
-
-                });
-
-                data = {
-                    datasets: [{
-                        data: datasets,
-                        backgroundColor: backgroundColor
-                    }],
-                    labels: labels
-                };
-
-                var ctx5 = document.getElementById("canvas5").getContext("2d");
-
-                new Chart(ctx5, {
-                    type: 'bar',
-                    data: data,
-                    options: {
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    var label = data.labels[tooltipItem.index] || '';
-
-                                    if (label) {
-                                        label += ' : ';
-                                    }
-                                    label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
-                                    var sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
-                                        return sum + dataset;
-                                    }, 0);
-                                    var percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
-                                    percent = percent.toFixed(0); // make a nice string
-                                    return label + ' (' + percent + ' %)';
-                                }
-                            }
-                        },
-                        legend: {
-                            display: false
-                        }
-                    }
-                });
-
-                {% endif %}
-
-// INCLUSIONS PAR Medecin / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
-                {% if inclusionsArc %}
-
-                var datasets = [];
-                var labels = [];
-                var backgroundColor = [];
-
-                var i = 0;
-                $.each({{ inclusionsArc|json_encode|raw }}, function (index, val) {
-
-                    datasets.push(parseInt(val));
-                    labels.push(index);
-                    backgroundColor.push(default_colors[i % default_colors.length]);
-                    i++;
-
-                });
-
-                data = {
-                    datasets: [{
-                        data: datasets,
-                        backgroundColor: backgroundColor
-                    }],
-                    labels: labels
-                };
-
-                var ctx11 = document.getElementById("canvas11").getContext("2d");
-
-                new Chart(ctx11, {
-                    type: 'pie',
-                    data: data,
-                    options: {
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    var label = data.labels[tooltipItem.index] || '';
-
-                                    if (label) {
-                                        label += ' : ';
-                                    }
-                                    label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
-                                    var sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
-                                        return sum + dataset;
-                                    }, 0);
-                                    var percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
-                                    percent = percent.toFixed(0); // make a nice string
-                                    return label + ' (' + percent + ' %)';
-                                }
-                            }
-                        }
-                    }
-                });
-
-                {% endif %}
-
-                // INCLUSIONS PAR Medecin / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
-                {% if inclusionsMedecin %}
-
-                var datasets = [];
-                var labels = [];
-                var backgroundColor = [];
-
-                var i = 0;
-                $.each({{ inclusionsMedecin|json_encode|raw }}, function (index, val) {
-
-                    datasets.push(parseInt(val));
-                    labels.push(index);
-                    backgroundColor.push(default_colors[i % default_colors.length]);
-                    i++;
-
-                });
-
-                data = {
-                    datasets: [{
-                        data: datasets,
-                        backgroundColor: backgroundColor
-                    }],
-                    labels: labels
-                };
-
-                var ctx6 = document.getElementById("canvas6").getContext("2d");
-
-                new Chart(ctx6, {
-                    type: 'bar',
-                    data: data,
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    autoSkip: false
-                                }
-                            }],
-                        },
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    var label = data.labels[tooltipItem.index] || '';
-
-                                    if (label) {
-                                        label += ' : ';
-                                    }
-                                    label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
-                                    var sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
-                                        return sum + dataset;
-                                    }, 0);
-                                    var percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
-                                    percent = percent.toFixed(0); // make a nice string
-                                    return label + ' (' + percent + ' %)';
-                                }
-                            }
-                        },
-                        legend: {
-                            display: false
-                        },
-                    }
-                });
-
-                {% endif %}
-
-// INCLUSIONS PAR Medecin / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
+                // Ong1: INCLUSIONS PAR protocole: PIE cumul de T1 à T2: --------------------------------------------------------------------------------------------------------------
                 {% if inclusionsByProtocole %}
-
-                var datasets = [];
-                var labels = [];
-                var backgroundColor = [];
-
-                var i = 0;
-                $.each({{ inclusionsByProtocole|json_encode|raw }}, function (index, val) {
-
-                    datasets.push(parseInt(val.nb));
-                    labels.push(val.protocoleNom);
-                    backgroundColor.push(default_colors[i % default_colors.length]);
-                    i++;
-
-                });
-
-                data = {
-                    datasets: [{
-                        data: datasets,
-                        backgroundColor: backgroundColor
-                    }],
-                    labels: labels
-                };
-
-                var ctx7 = document.getElementById("canvas7").getContext("2d");
-
-                new Chart(ctx7, {
-                    type: 'pie',
-                    data: data,
-                    options: {
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    var label = data.labels[tooltipItem.index] || '';
-
-                                    if (label) {
-                                        label += ' : ';
-                                    }
-                                    label += Math.round(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] * 100) / 100 + ' inclusions';
-                                    var sum = data.datasets[tooltipItem.datasetIndex].data.reduce(function (sum, dataset) {
-                                        return sum + dataset;
-                                    }, 0);
-                                    var percent = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] / sum * 100;
-                                    percent = percent.toFixed(0); // make a nice string
-                                    return label + ' (' + percent + ' %)';
-                                }
-                            }
-                        },
-                        legend: {
-                            position: "right",
-                            align: "middle"
-                        },
-                    }
-                });
-
+                inclusionsByProtocole();
+                inclusionsByProtocoleBar();
                 {% endif %}
 
-// INCLUSIONS ANNEE: --------------------------------------------------------------------------------------------------------------
+                // Ong2: INCLUSIONS PAR MEDECIN/ MOIS/ de T1 à T2: --------------------------------------------------------------------------------------------------------------
+                {% if inclusionsByMounthMedecin %}
+                inclusionsByMounthMedecin();
+                {% endif %}
+
+                // Ong2: Cumul INCLUSIONS PAR Medecin  de T1 à T2: --------------------------------------------------------------------------------------------------------------
+                {% if inclusionsMedecin %}
+                inclusionsMedecin();
+                {% endif %}
+
+                // Ong3: INCLUSIONS  PAR ARC/ MOIS/ de T1 à T2: --------------------------------------------------------------------------------------------------------------
+                {% if inclusionsByMounthArc %}
+                inclusionsByMounthArc();
+                {% endif %}
+
+                // Ong3: Cumul INCLUSIONS PAR arc / MOIS PIE: --------------------------------------------------------------------------------------------------------------
+                {% if inclusionsArc %}
+                inclusionsArc();
+                {% endif %}
+
+                // Ong4: Visites / MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
+                {% if visiteByMounthProtocole %}
+                visiteByMounthProtocole();
+                {% endif %}
+
+                // Ong4: visites/arc/MOIS de T1 à T2: --------------------------------------------------------------------------------------------------------------
+                {% if visiteByMounthArc %}
+                visiteByMounthArc();
+                {% endif %}
+
+                // Ong5: Cumul des INCLUSIONS PAR service : --------------------------------------------------------------------------------------------------------------
+                {% if inclusionsService %}
+                inclusionsService();
+                {% endif %}
+
+                // Ong6: INCLUSIONS GLOBALES PAR MEDECIN: --------------------------------------------------------------------------------------------------------------
+                {% if inclusionMedecin %}
+                inclusionMedecin();
+                {% endif %}
+
+                // Ong7: INCLUSIONS ANNEE: --------------------------------------------------------------------------------------------------------------
                 {% if inclusionByYear %}
+                inclusionByYear();
+                inclusionByYearByTypeEssai();
+                inclusionByYearByTypeProm();
+                {% endif %}
 
-                var datasets = [];
-                var labels = [];
-                var backgroundColor = [];
+                {% if inclusionByTypeEssai %}
+                inclusionByTypeEssai();
+                inclusionByTypeEssaiBar();
+                {% endif %}
 
-                var i = 0;
-                $.each({{ inclusionByYear|json_encode|raw }}, function (index, val) {
-
-                    datasets.push(parseInt(val.nb));
-                    labels.push(val.year);
-                    backgroundColor.push(default_colors[i % default_colors.length]);
-                    i++;
-
-                });
-
-                data = {
-                    datasets: [{
-                        data: datasets,
-                        backgroundColor: backgroundColor,
-                        label: "Nombre d'inclusion(s) "
-                    }],
-                    labels: labels
-                };
-
-                var ctx8 = document.getElementById("canvas8").getContext("2d");
-
-                new Chart(ctx8, {
-                    type: 'bar',
-                    data: data,
-                    options: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                });
-
+                {% if inclusionByTypeProm %}
+                inclusionByTypeProm();
+                inclusionByTypePromBar();
                 {% endif %}
 // Fin des graphes --------------------------------------------------------------------------------------------------------------
-
             });
-
         </script>
-
     {% endblock javascripts %}
