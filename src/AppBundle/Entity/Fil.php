@@ -14,6 +14,7 @@ class Fil
 {
     // Ce qui sera sauver en base
     const TYPE_ADMINISTRATIF = "Administratif";
+    const TYPE_STAT = "Etape clef";
     const TYPE_MATERIEL = "Matériel";
     const TYPE_QUESTION = "Question";
     const TYPE_MONITORAGE = "Monitorage";
@@ -21,8 +22,10 @@ class Fil
     const TYPE_DIVERS = "Divers";
 
     // Ce qu'on pourra lire dans les selecteurs sur l'outil
-    CONST TYPES = [
+    // Attention ne jamais les changer
+    const TYPES = [
         'Administratif' => self::TYPE_ADMINISTRATIF,
+        'Etape clef' => self::TYPE_STAT,
         'Matériel' => self::TYPE_MATERIEL,
         'Question' => self::TYPE_QUESTION,
         'Monitorage' => self::TYPE_MONITORAGE,
@@ -73,6 +76,15 @@ class Fil
     }
 
     /**
+     * Get type.
+     * @return string|null
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Set type.
      * @param string|null $type
      * @return Fil
@@ -85,12 +97,12 @@ class Fil
     }
 
     /**
-     * Get type.
+     * Get texte.
      * @return string|null
      */
-    public function getType()
+    public function getTexte()
     {
-        return $this->type;
+        return $this->texte;
     }
 
     /**
@@ -106,12 +118,12 @@ class Fil
     }
 
     /**
-     * Get texte.
-     * @return string|null
+     * Get date.
+     * @return \DateTime
      */
-    public function getTexte()
+    public function getDate()
     {
-        return $this->texte;
+        return $this->date;
     }
 
     /**
@@ -127,15 +139,6 @@ class Fil
     }
 
     /**
-     * Get date.
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
      * Get inclusion
      * @return Essais
      */
@@ -146,7 +149,7 @@ class Fil
 
     /**
      * Set inclusion
-     * @param Essais $essai
+     * @param Essais|null $essai
      * @return Fil
      */
     public function setEssai(Essais $essai = null)

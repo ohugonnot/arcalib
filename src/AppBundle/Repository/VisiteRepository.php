@@ -76,7 +76,7 @@ class VisiteRepository extends EntityRepository
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @return Visite[]
      * @throws Exception
      */
@@ -85,6 +85,8 @@ class VisiteRepository extends EntityRepository
         $debut = (new DateTime())->setTime(0, 0, 0);
         $now = (new DateTime())->setTime(0, 0, 0);
         $interval = new DateInterval('P1W');
+        $intervaldebut = new DateInterval('P3D');
+        $debut = $debut->sub($intervaldebut);
         $fin = $now->add($interval);
 
         $queryBuilder = $this->createQueryBuilder('v')

@@ -7,8 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Essais
@@ -22,6 +22,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Essais
 {
     // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const FAISABILITE_EN_ATTENTE = "Faisabilité en attente";
     const CONVENTION_SIGNATURE = "Convention signature";
     const ATTENTE_DE_MEP = "Attente de MEP";
@@ -49,25 +50,31 @@ class Essais
         'Refus' => self::REFUS,
     ];
 
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const OBSERVATIONELLE = "Observationelle (obsolete)";
     const INTERV_TYPE_1 = "Interv-type 1";
     const INTERV_TYPE_2 = "Interv-type 2";
     const TYPE_3_NI = "type 3-NI";
     const REGISTRE = "Registre";
     const COLLECTION_BIOLOGIQUE = "Collection biologique";
+    const REGISTREM = "Registre rémunéré";
     const NA = "NA";
 
     const TYPE = [
-        'Observationelle (obsolete)' => self::OBSERVATIONELLE,
-        'Interv-type 1' => self::INTERV_TYPE_1,
-        'Interv-type 2' => self::INTERV_TYPE_2,
-        'type 3-NI' => self::TYPE_3_NI,
-        'Registre' => self::REGISTRE,
-        'Collection biologique' => self::COLLECTION_BIOLOGIQUE,
+        'Obs. (obsolete)' => self::OBSERVATIONELLE,
+        'Int-type 1' => self::INTERV_TYPE_1,
+        'Int-type 2' => self::INTERV_TYPE_2,
+        'NonInt-type 3' => self::TYPE_3_NI,
+        'Registre non rem.' => self::REGISTRE,
+        'Registre rémunéré' => self::REGISTREM,
+        'Coll.biologique' => self::COLLECTION_BIOLOGIQUE,
         'Autre' => self::AUTRE,
         'NA' => self::NA,
     ];
 
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const PHASE_I = "Phase I";
     const PHASE_II = "Phase II";
     const PHASE_II_III = "Phase II-III";
@@ -84,6 +91,8 @@ class Essais
         'NA' => self::NA,
     ];
 
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const HOSPITALIER = "Hospitalier";
     const SOCIETE_SAVANTE = "Société savante";
     const INDUSTRIEL = "Industriel";
@@ -96,6 +105,8 @@ class Essais
         'NA' => self::NA,
     ];
 
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const INTERNE = "Interne";
     const EXTERNE = "Externe";
 
@@ -105,6 +116,8 @@ class Essais
         'Autre' => self::AUTRE,
     ];
 
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const OUI = "Oui";
     const NON = "Non";
     const PARTIEL = "Partiel";
@@ -116,6 +129,8 @@ class Essais
         'NA' => self::NA,
     ];
 
+    // Ce qui sera sauver en base
+    // Attention ne jamais les changer
     const DIRECT = "Direct";
     const DOUBLE_AVEC_SURCOUT = "Double avec Surcout";
     const TRIPARTITE_AVEC_IP_OBSERVATEUR = "Tripartite avec IP observateur";
@@ -1194,7 +1209,7 @@ class Essais
 
     /**
      * Set arc
-     * @param Arc $arc
+     * @param Arc|null $arc
      * @return Essais
      */
     public function setArc(Arc $arc = null)
@@ -1215,7 +1230,7 @@ class Essais
 
     /**
      * Set medecin
-     * @param Medecin $medecin
+     * @param Medecin|null $medecin
      * @return Essais
      */
     public function setMedecin(Medecin $medecin = null)
@@ -1337,7 +1352,7 @@ class Essais
 
     /**
      * Set detail
-     * @param EssaiDetail $detail
+     * @param EssaiDetail|null $detail
      * @return Essais
      */
     public function setDetail(EssaiDetail $detail = null)
