@@ -1,4 +1,4 @@
-{% set anomalie = [] %}
+{% set anomalie = {} %}
 
         {% for type, tableau in erreurs %}
 
@@ -39,6 +39,10 @@
 
                     {% set  nom = factures[id].numero %}
 
+                {% elseif  type == 'arc' %}
+
+                    {% set  nom = arcs[id].nomArc~" "~arcs[id].prenomArc %}
+
                 {% endif %}
 
                 {% set erreurs = [] %}
@@ -55,19 +59,29 @@
 
                 {% endfor %}
 
-                {% set anomalie = anomalie|merge([{ "nom" :  type|replace({'essai': 'protocole' })|capitalize ~ " : " ~nom|default(""),
-                    "erreurs": erreurs,
-                    "path": path,
-                    "entityId": id,
-                }]) %}
+                {% set anomalie = anomalie|merge({(type~id):
+                    { "nom" :  type|replace({'essai': 'protocole' })|capitalize ~ " : " ~nom|default(""),
+                        "erreurs": erreurs,
+                        "path": path,
+                        "entityId": id,
+                    }}) %}
 
             {% endfor %}
 
         {% endfor %}
 
-   {% set ignored = [] %}
-
-        {% for  erreur in validationErreurs if (essais[erreur.entite] is defined or patients[erreur.entite] is defined or inclusions[erreur.entite] is defined or visites[erreur.entite] is defined or factures[erreur.entite] is defined ) and erreur.message != null %}
+   {% set ignored = {} %}
+        {% set  ids = {} %}
+        {% for  erreur in validationErreurs
+            if (
+            essais[erreur.entite] is defined
+            or patients[erreur.entite] is defined
+            or inclusions[erreur.entite] is defined
+            or visites[erreur.entite] is defined
+            or factures[erreur.entite] is defined
+            or arcs[erreur.entite] is defined
+            )
+            and erreur.message != null %}
 
             {% set  type = erreur.type %}
             {% set  id = erreur.entite %}
@@ -108,17 +122,43 @@
 
                 {% set  nom = factures[id].numero %}
 
+            {% elseif  type == 'arc' %}
+
+                {% set  nom = arcs[id].nomArc~" "~arcs[id].prenomArc %}
+
             {% endif %}
 
-            {% set ignored = ignored|merge([{ "nom" :  type|replace({'essai': 'protocole' })|capitalize ~ " : "~nom|default(""),
-                "path": path,
-                "entityId": id,
-                'message': erreur.message,
-                "id": idIgnored,
-                'erreur': erreurID,
-                "type": type
-            }]) %}
+            {% if type~id in ids %}
+                {% for  key, ignore in ignored %}
+                    {% if ignore.erreurs[0].type~ignore.entityId == type~id %}
+                        {% set ignored = ignored|merge({(key): ignored[key]|merge({"erreurs":ignored[key]["erreurs"]|merge([{
+                            "message": erreur.message,
+                            "ignoreLink": path("verificationSave", { 'type': type, 'entite': id, 'erreur': erreurID }),
+                            'type': type,
+                            'entite': id,
+                            'erreur': erreurID,
+                            'id': idIgnored,
+                        }])})}) %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% set erreurs = [{
+                    "message": erreur.message,
+                    "ignoreLink": path("verificationSave", { 'type': type, 'entite': id, 'erreur': erreurID }),
+                    'type': type,
+                    'entite': id,
+                    'erreur': erreurID,
+                    'id': idIgnored,
+                }] %}
 
+                {% set ignored = ignored|merge({(type~id):{
+                    "nom" :  type|replace({'essai': 'protocole' })|capitalize ~ " : "~nom|default(""),
+                    "path": path,
+                    "entityId": id,
+                    "erreurs": erreurs,
+                }}) %}
+                {% set ids = ids|merge({(type~id):(type~id)}) %}
+            {% endif %}
         {% endfor %}
 
     {% extends 'base.html.twig' %}
@@ -150,7 +190,6 @@
 
     {# Contenu #}
     {% block content %}
-
         {# Section Principale #}
         <section id="vueAnomalie" class="section-main" v-cloak>
 
@@ -164,14 +203,15 @@
                         <li class="nav-item">
 
                             <a class="nav-link active d-flex" data-toggle="tab" href="#liste-anomalies" role="tab"
-                               aria-controls="home" aria-selected="true">Liste des Anomalies</a>
+                               aria-controls="home" aria-selected="true">Liste des Anomalies ([[ nbErreurs ]])</a>
 
                         </li>
 
                         <li class="nav-item">
 
                             <a class="nav-link d-flex" data-toggle="tab" href="#anomalies-ignorees" role="tab"
-                               aria-controls="profile" aria-selected="false">Anomalies Ignorées</a>
+                               aria-controls="profile" aria-selected="false">Anomalies Ignorées ([[ nbErreursIgnored
+                                ]])</a>
 
                         </li>
 
@@ -192,19 +232,12 @@
                                 <table class="table table-sm table-striped table-hover table-responsive">
 
                                     <thead>
-
                                     <tr>
-
                                         <th>Type</th>
-
                                         <th>Nombre d'anomalie(s)</th>
-
                                         <th>Message</th>
-
                                         <th>Actions</th>
-
                                     </tr>
-
                                     </thead>
 
                                     <tbody>
@@ -268,40 +301,23 @@
 
                             <div class="col">
 
-                                <div class="arcoffice-count mt-2">[[ ignored.length ]] anomalie(s) ignorée(s)</div>
+                                <div class="arcoffice-count mt-2">[[ nbErreursIgnored ]] anomalie(s) ignorée(s)</div>
 
                                 {# Tableau #}
                                 <table class="table table-sm table-striped table-hover table-responsive">
 
                                     <thead>
-
                                     <tr>
-
-                                        <th>
-
-                                            Type
-
-                                        </th>
-
-                                        <th>
-
-                                            Message
-
-                                        </th>
-
-                                        <th>
-
-                                            Actions
-
-                                        </th>
-
+                                        <th>Type</th>
+                                        <th>Nombre d'anomalie(s) ignorée(s)</th>
+                                        <th>Message</th>
+                                        <th>Actions</th>
                                     </tr>
-
                                     </thead>
 
                                     <tbody>
 
-                                    <tr v-for="(ignore, index) in ignored">
+                                    <tr v-for="(ignore, indexIgnore) in ignored">
 
                                         <td>
 
@@ -315,18 +331,28 @@
 
                                         <td>
 
-                                            [[ ignore.message ]]
+                                            [[ ignore.erreurs.length ]] anomalie(s) ignorée(s)
 
                                         </td>
 
                                         <td>
 
-                                            <div class="arcoffice-anomalie-wrapper d-flex align-items-center">
+                                            <div v-for="(erreur, index) in ignore.erreurs" :data-nth='index'
+                                                 class="arcoffice-anomalie-wrapper d-flex align-items-center">[[
+                                                erreur.message ]]
+                                            </div>
 
-                                                <a @click.prevent='unignore(ignore, index)'
+                                        </td>
+
+                                        <td>
+
+                                            <div v-for="(erreur, index) in ignore.erreurs" :data-nth='index'
+                                                 class="arcoffice-anomalie-wrapper d-flex align-items-center">
+
+                                                <a @click.prevent='unignore(erreur, index, indexIgnore)'
                                                    class="verificationSave btn btn-sm btn-outline-success" href="#">
 
-                                                    <i class="fa fa-check"></i> Ne plus ignorer
+                                                    <i class="fa fa-check"></i> Ignorer
 
                                                 </a>
 
@@ -361,92 +387,117 @@
         <script>
 
             if ($("#liste-anomalies").length > 0) {
+                let ignored = {{ ignored|json_encode|raw }}
+                if (ignored.length == 0)
+                    ignored = {}
 
-                var verification = new Vue({
+                let anomalies = {{ anomalie|json_encode|raw }}
+                if (anomalies.length == 0)
+                    anomalies = {}
+
+                const verification = new Vue({
                     delimiters: ['[[', ']]'],
                     el: '#vueAnomalie',
                     data: {
-                        anomalies: {{ anomalie|json_encode|raw }},
-                        ignored: {{ ignored|json_encode|raw }}
+                        ignored: ignored,
+                        anomalies: anomalies,
+                        ignoreDisabled: false,
+                        unignoreDisabled: false,
                     },
 
                     methods: {
                         ignore: function (erreur, index, indexAnomalie) {
-
+                            if (this.ignoreDisabled)
+                                return
+                            this.ignoreDisabled = true;
                             toastr.options = {"positionClass": "toast-bottom-right"};
-                            var anomalie = verification.anomalies[indexAnomalie];
-
+                            let anomalie = Object.assign({}, this.anomalies[indexAnomalie]);
+                            erreur = Object.assign({}, erreur);
                             $.post(erreur.ignoreLink, {message: erreur.message}, function (data) {
                                 if (data.message) {
+                                    erreur.id = data.id;
                                     toastr.success('Cette anomalie a été ignorée. Vous pouvez la retrouver dans "anomalies ignorées"')
                                 }
 
-                                verification.ignored.push({
-                                    entityId: anomalie.entityId,
-                                    id: data.id,
-                                    message: erreur.message,
-                                    nom: anomalie.nom,
-                                    path: anomalie.path
-                                });
+                                anomalie.erreurs = [];
+                                anomalie.erreurs.push(erreur);
+                                console.log(erreur);
+                                let pushed = false;
+                                if (indexAnomalie in verification.ignored) {
+                                    verification.ignored[indexAnomalie].erreurs.push(erreur);
+                                    pushed = true;
+                                }
+                                if (!pushed)
+                                    verification.$set(verification.ignored, indexAnomalie, anomalie);
 
-                                anomalie.erreurs.splice(index, 1);
-                                if (anomalie.erreurs.length === 0) {
-                                    verification.anomalies.splice(indexAnomalie, 1);
+                                verification.anomalies[indexAnomalie].erreurs.splice(index, 1);
+                                if (verification.anomalies[indexAnomalie].erreurs.length === 0) {
+                                    delete verification.anomalies[indexAnomalie];
                                 }
                                 verification.$forceUpdate();
-
                             }).fail(function () {
                                 toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                            }).always(function () {
+                                verification.ignoreDisabled = false
                             });
                         },
-                        unignore: function (erreur, index) {
-
+                        unignore: function (erreur, index, indexIgnore) {
+                            if (this.unignoreDisabled)
+                                return
+                            this.unignoreDisabled = true;
                             toastr.options = {"positionClass": "toast-bottom-right"};
-
+                            let ignored = Object.assign({}, this.ignored[indexIgnore]);
+                            erreur = Object.assign({}, erreur);
                             $.post(Routing.generate("verificationUnsave", {erreurId: erreur.id}), function (data) {
                                 if (data.message) {
                                     toastr.success('Cette anomalie n\'est plus ignorée. Vous pouvez la retrouver dans "liste des anomalies"')
                                 }
 
-                                verification.anomalies.forEach(function (element) {
+                                ignored.erreurs = [];
+                                delete erreur.id;
+                                ignored.erreurs.push(erreur);
 
-                                    if (element.entityId === erreur.entityId) {
-                                        element.erreurs.push(
-                                            {
-                                                entite: erreur.entityId,
-                                                erreur: erreur.erreur,
-                                                ignoreLink: Routing.generate("verificationSave", {
-                                                    type: erreur.type,
-                                                    entite: erreur.entiyId,
-                                                    erreur: erreur.erreur
-                                                }),
-                                                message: erreur.message, type: erreur.type
-                                            })
-                                    }
-                                });
 
-                                verification.ignored.splice(index, 1);
+                                let pushed = false;
+                                if (indexIgnore in verification.anomalies) {
+                                    verification.anomalies[indexIgnore].erreurs.push(erreur);
+                                    pushed = true;
+                                }
+
+                                if (!pushed)
+                                    verification.$set(verification.anomalies, indexIgnore, ignored)
+
+                                verification.ignored[indexIgnore].erreurs.splice(index, 1);
+                                if (verification.ignored[indexIgnore].erreurs.length === 0) {
+                                    delete verification.ignored[indexIgnore];
+                                }
+                                verification.$forceUpdate();
                             }).fail(function () {
                                 toastr.error("Vous n'avez pas les droits nécessaires pour cette action.");
+                            }).always(function () {
+                                verification.unignoreDisabled = false;
                             });
 
                         }
                     },
                     computed: {
                         nbErreurs: function () {
-                            var nbErreurs = 0;
-                            this.anomalies.forEach(function (element) {
-                                    nbErreurs = nbErreurs + element.erreurs.length;
-                                }
-                            );
+                            let nbErreurs = 0;
+                            for (const anomalieId in this.anomalies) {
+                                nbErreurs = nbErreurs + this.anomalies[anomalieId].erreurs.length;
+                            }
+                            return nbErreurs;
+                        },
+                        nbErreursIgnored: function () {
+                            let nbErreurs = 0;
+                            for (const ignoredId in this.ignored) {
+                                nbErreurs = nbErreurs + this.ignored[ignoredId].erreurs.length;
+                            }
                             return nbErreurs;
                         }
-                    }
-
-                })
-
+                    },
+                });
             }
-
         </script>
 
     {% endblock %}

@@ -170,7 +170,9 @@
                             <th> PDF
 
                             </th>
+                            <th>
 
+                            </th>
                         </tr>
 
                         </thead>
@@ -188,7 +190,7 @@
 
                                     <a href="{{ path('editFacture', { id : facture.id }) }}">
 
-                                        {{ facture.numero }}
+                                        {{ facture.numero|default("Na") }}
 
                                     </a>
 
@@ -250,6 +252,14 @@
                                             <i class="fa fa-upload" aria-hidden="true"></i>
 
                                         {% endif %}
+
+                                    </button>
+                                </td>
+                                <td>
+                                    <button data-action="{{ path("deleteFacture",{id: facture.id}) }}"
+                                            class="btn btn-sm btn-outline-danger title-tooltip delete-facture">
+
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
 
                                     </button>
                                 </td>
@@ -360,3 +370,25 @@
         </section>
 
     {% endblock content %}
+
+    {% block javascripts %}
+
+        {{ parent() }}
+        <script>
+            $(".delete-facture").on("click", function (e) {
+                e.preventDefault();
+                let url = $(e.target).data("action");
+                swal({
+                    title: 'Etes vous sûr ?',
+                    text: "Vous allez supprimer une facture. Vous ne pourrez pas revenir en arrière !",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Supprimer',
+                    cancelButtonText: 'Annuler'
+                }).then(function () {
+                    window.location = url;
+                }).catch(swal.noop)
+            })
+        </script>
+
+    {% endblock javascripts %}

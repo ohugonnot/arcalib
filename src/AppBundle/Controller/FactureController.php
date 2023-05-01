@@ -53,13 +53,13 @@ class FactureController extends Controller
 
 // ------------------------------------------Edit FACTURE-----------------------------------------------------
 
-	/**
-	 * @Route("/facture/editer/{id}", name="editFacture")
-	 * @Security("has_role('ROLE_ARC')")
-	 * @param Request $request
-	 * @param Facture $facture
-	 * @return RedirectResponse|Response
-	 */
+    /**
+     * @Route("/facture/editer/{id}", name="editFacture")
+     * @Security("has_role('ROLE_ARC')")
+     * @param Request $request
+     * @param Facture $facture
+     * @return RedirectResponse|Response
+     */
     public function editFactureAction(Request $request, Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
@@ -82,12 +82,12 @@ class FactureController extends Controller
 
 // ------------------------------------------delete FACTURE-----------------------------------------------------
 
-	/**
-	 * @Route("/facture/supprimer/{id}", name="deleteFacture", options={"expose"=true})
-	 * @Security("has_role('ROLE_ADMIN')")
-	 * @param Facture $facture
-	 * @return RedirectResponse
-	 */
+    /**
+     * @Route("/facture/supprimer/{id}", name="deleteFacture", options={"expose"=true})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param Facture $facture
+     * @return RedirectResponse
+     */
     public function deleteFactureAction(Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
@@ -110,15 +110,10 @@ class FactureController extends Controller
     public function listeFacturesAction(Request $request)
     {
         $search = $request->query->get("recherche");
-        if ($search == null) {
-            $search = '%%';
-        }
-
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $emFacture = $em->getRepository(Facture::class);
         $query = $emFacture->getQuery($user, $search);
-
         $paginator = $this->get('knp_paginator');
         $factures = $paginator->paginate(
             $query, /* query NOT result */
@@ -148,13 +143,13 @@ class FactureController extends Controller
         return $export->exportCSV($factures, "factures");
     }
 
-	/**
-	 * @Route("/facture/upload/pdf/{id}", name="uploadFacturePDF", options={"expose"=true})
-	 * @Security("has_role('ROLE_ARC')")
-	 * @param Request $request
-	 * @param Facture $facture
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/facture/upload/pdf/{id}", name="uploadFacturePDF", options={"expose"=true})
+     * @Security("has_role('ROLE_ARC')")
+     * @param Request $request
+     * @param Facture $facture
+     * @return JsonResponse
+     */
     public function uploadFacturePDFAction(Request $request, Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
@@ -180,12 +175,12 @@ class FactureController extends Controller
         return new JsonResponse(["success" => true, "fileName" => $file_path]);
     }
 
-	/**
-	 * @Route("/facture/remove/pdf/{id}", name="removeFacturePDF", options={"expose"=true})
-	 * @Security("has_role('ROLE_ARC')")
-	 * @param Facture $facture
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/facture/remove/pdf/{id}", name="removeFacturePDF", options={"expose"=true})
+     * @Security("has_role('ROLE_ARC')")
+     * @param Facture $facture
+     * @return JsonResponse
+     */
     public function removeFacturePDFAction(Facture $facture)
     {
         $em = $this->getDoctrine()->getManager();
@@ -198,11 +193,11 @@ class FactureController extends Controller
         return new JsonResponse(["success" => true]);
     }
 
-	/**
-	 * @Route("/facture/get/pdf/{id}", name="getFacturePDF", options={"expose"=true})
-	 * @param Facture $facture
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/facture/get/pdf/{id}", name="getFacturePDF", options={"expose"=true})
+     * @param Facture $facture
+     * @return JsonResponse
+     */
     public function getFacturePDFAction(Facture $facture)
     {
         if ($facture->getFacture()) {
