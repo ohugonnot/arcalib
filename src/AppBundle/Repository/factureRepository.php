@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -32,9 +33,12 @@ class factureRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('f')
             ->addSelect('e')
             ->leftJoin('f.essai', 'e')
-            ->where("f.numero like :search or f.numInterne like :search or f.projet like :search or f.payeur like :search or f.receveur like :search or f.type like :search or f.statut like :search or f.note like :search or f.responsable like :search  or e.nom like :search or f.creditDebit like :search or f.type like :search")
-            ->groupBy('f.id')
-            ->setParameter('search', '%' . $search . '%');
+            ->groupBy('f.id');
+
+        if (!empty($search)) {
+            $queryBuilder->where("f.numero like :search or f.numInterne like :search or f.projet like :search or f.payeur like :search or f.receveur like :search or f.type like :search or f.statut like :search or f.note like :search or f.responsable like :search or e.nom like :search or f.creditDebit like :search or f.type like :search")
+                ->setParameter('search', '%' . $search . '%');
+        }
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 

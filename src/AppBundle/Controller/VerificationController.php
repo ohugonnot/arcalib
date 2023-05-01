@@ -75,18 +75,14 @@ class VerificationController extends Controller
         $validationErreurs = new ArrayCollection($em->getRepository(ValidationErreur::class)->findAll());
 
         foreach ($this->erreurs as $type => $array) {
-
             foreach ($array as $id => $array2) {
-
                 foreach ($array2 as $erreur => $message) {
                     $exist = $validationErreurs->filter(
                         function (ValidationErreur $validationErreur) use ($type, $id, $erreur, $message) {
                             if ($validationErreur->getType() == $type and $validationErreur->getEntite() == $id and $validationErreur->getErreur() == $erreur) {
                                 $validationErreur->setMessage($message);
-
                                 return true;
                             } else {
-
                                 return false;
                             }
                         });
