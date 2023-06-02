@@ -1321,7 +1321,8 @@
 
                                 <td @click='openModal(index)'>
 
-                                    <span v-if='inclusion.medecin != null'>[[ inclusion.medecin.nom ]] [[ Array.from(inclusion.medecin.prenom).shift() ]].</span>
+                                    <span :title="inclusion.medecin.nom+' '+inclusion.medecin.prenom"
+                                          v-if='inclusion.medecin != null'>[[ Array.from(inclusion.medecin.nom).shift() ]]-[[ Array.from(inclusion.medecin.prenom).shift() ]]</span>
 
                                 </td>
 
