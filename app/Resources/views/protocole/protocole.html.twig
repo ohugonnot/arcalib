@@ -95,7 +95,7 @@
                             <div class="ml-auto mr-1">
 
                                 {# Archivés #}
-                                <a id = "link-archive"
+                                <a id="link-archive"
                                    data-archive='{{ archive == true ? false : true }}'
                                    href='?archive={{ archive }}'
                                    class="btn btn-sm btn-outline-danger title-tooltip {% if not archive %}is-selected{% endif %}"
@@ -135,12 +135,14 @@
                     {# Colonne 2---: détail du protocole--------------------------------------------------------------------------------------------------------------------------------------------------------- #}
 
                     {# Colonne Détail du Protocole #}
-                    <div v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }' class="col-6 col-arcoffice col-detail-protocole pb-0">
+                    <div v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }'
+                         class="col-6 col-arcoffice col-detail-protocole pb-0">
 
                         {# Titre + Boutons #}
                         <div class="form-title d-flex align-items-center">
 
-                            Détails du protocole : [[ protocole.nom ]] <span v-if="protocole.id">- n°[[ protocole.id ]]</span>
+                            Détails du protocole : [[ protocole.nom ]] <span
+                                    v-if="protocole.id">- n°[[ protocole.id ]]</span>
 
                             <div class="ml-auto mr-1">
 
@@ -192,7 +194,8 @@
                         {# Le fichier est trop volumineux (6 Mb max.) #}
                         {# Une erreure est survenue. Veuillez réssayer plus tard. #}
 
-                        <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-protocole-pdf" tabindex="-1" role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+                        <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-protocole-pdf" tabindex="-1"
+                             role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
 
                             <div class="modal-dialog modal-md" role="document">
 
@@ -220,7 +223,8 @@
                                             {# Liste des 5 PDFs #}
 
                                             {# PDF N°1 #}
-                                            <div v-show="protocole.synopsis == null" id='synopsis-input'class="form-row form-group">
+                                            <div v-show="protocole.synopsis == null" id='synopsis-input'
+                                                 class="form-row form-group">
 
                                                 {# Input File #}
                                                 <label class="col-2 col-form-label">Synopsis</label>
@@ -230,12 +234,13 @@
                                                     <span id='synopsis-file' style='width:260px'
                                                           class="custom-file-control"></span>
                                                     <span id='synopsis-loader' class="loader ml-2"
-                                                         style='display:none'></span>
+                                                          style='display:none'></span>
                                                 </label>
 
                                             </div>
 
-                                            <div v-show="protocole.synopsis != null" id='synopsis-download'class="form-row form-group">
+                                            <div v-show="protocole.synopsis != null" id='synopsis-download'
+                                                 class="form-row form-group">
 
                                                 <label for="protocole-pdf-1"
                                                        class="col-2 col-form-label">Synopsis</label>
@@ -261,7 +266,8 @@
 
                                             </div>
 
-                                            <div v-show="protocole.protocole == null" id='protocole-input'class="form-row form-group">
+                                            <div v-show="protocole.protocole == null" id='protocole-input'
+                                                 class="form-row form-group">
 
                                                 {# Input File #}
                                                 <label class="col-2 col-form-label">Protocole</label>
@@ -271,12 +277,13 @@
                                                     <span id='protocole-file' style='width:260px'
                                                           class="custom-file-control"></span>
                                                     <span id='protocole-loader' class="loader ml-2"
-                                                         style='display:none'></span>
+                                                          style='display:none'></span>
                                                 </label>
 
                                             </div>
 
-                                            <div v-show="protocole.protocole != null" id='protocole-download' class="form-row form-group">
+                                            <div v-show="protocole.protocole != null" id='protocole-download'
+                                                 class="form-row form-group">
 
                                                 <label for="protocole-pdf-1"
                                                        class="col-2 col-form-label">Protocole</label>
@@ -302,7 +309,8 @@
 
                                             </div>
 
-                                            <div v-show="protocole.crf == null" id='crf-input' class="form-row form-group">
+                                            <div v-show="protocole.crf == null" id='crf-input'
+                                                 class="form-row form-group">
 
                                                 {# Input File #}
                                                 <label class="col-2 col-form-label">CRF</label>
@@ -311,12 +319,14 @@
 
                                                     <span id='crf-file' style='width:260px'
                                                           class="custom-file-control"></span>
-                                                    <span id='crf-loader' class="loader ml-2" style='display:none'></span>
+                                                    <span id='crf-loader' class="loader ml-2"
+                                                          style='display:none'></span>
                                                 </label>
 
                                             </div>
 
-                                            <div v-show="protocole.crf != null" id='crf-download' class="form-row form-group">
+                                            <div v-show="protocole.crf != null" id='crf-download'
+                                                 class="form-row form-group">
 
                                                 <label for="crf-pdf-1" class="col-2 col-form-label">CRF</label>
 
@@ -341,7 +351,8 @@
 
                                             </div>
 
-                                            <div v-show="protocole.nip == null" id='nip-input' class="form-row form-group">
+                                            <div v-show="protocole.nip == null" id='nip-input'
+                                                 class="form-row form-group">
 
                                                 {# Input File #}
                                                 <label class="col-2 col-form-label">NIP</label>
@@ -350,12 +361,14 @@
 
                                                     <span id='nip-file' style='width:260px'
                                                           class="custom-file-control"></span>
-                                                    <span id='nip-loader' class="loader ml-2" style='display:none'></span>
+                                                    <span id='nip-loader' class="loader ml-2"
+                                                          style='display:none'></span>
                                                 </label>
 
                                             </div>
 
-                                            <div v-show="protocole.nip != null" id='nip-download' class="form-row form-group">
+                                            <div v-show="protocole.nip != null" id='nip-download'
+                                                 class="form-row form-group">
 
                                                 <label for="nip-pdf-1" class="col-2 col-form-label">NIP</label>
 
@@ -380,7 +393,8 @@
 
                                             </div>
 
-                                            <div v-show="protocole.procedurePDF == null" id='procedure-input' class="form-row form-group">
+                                            <div v-show="protocole.procedurePDF == null" id='procedure-input'
+                                                 class="form-row form-group">
 
                                                 {# Input File #}
                                                 <label class="col-2 col-form-label">Procédure</label>
@@ -390,12 +404,13 @@
                                                     <span id='procedure-file' style='width:260px'
                                                           class="custom-file-control"></span>
                                                     <span id='procedure-loader' class="loader ml-2"
-                                                         style='display:none'></span>
+                                                          style='display:none'></span>
                                                 </label>
 
                                             </div>
 
-                                            <div v-show="protocole.procedurePDF != null" id='procedure-download' class="form-row form-group">
+                                            <div v-show="protocole.procedurePDF != null" id='procedure-download'
+                                                 class="form-row form-group">
 
                                                 <label for="procedure-pdf-1"
                                                        class="col-2 col-form-label">Procédure</label>
@@ -471,10 +486,12 @@
                                 </div>  #}
 
                                 <div class="col d-flex justify-content-end">
-                                
-                                    <a class="btn btn-sm btn-outline-primary justify-content-end title-tooltip" :href="linkDocument()" title="Documents de l'étude">
+
+                                    <a class="btn btn-sm btn-outline-primary justify-content-end title-tooltip"
+                                       :href="linkDocument()" title="Documents de l'étude">
                                         <i class="fa fa-file-text"></i>
-                                        Documents <span v-if='protocole.documents'>([[ protocole.documents.length ]])</span>
+                                        Documents <span
+                                                v-if='protocole.documents'>([[ protocole.documents.length ]])</span>
                                     </a>
 
                                 </div>
@@ -498,7 +515,9 @@
                             <div class="form-row form-group">
 
                                 {# Statut #}
-                                <label @click='openModalFil()' for="protocole-statut" class="col-2 col-form-label">Statut <i style='cursor:pointer;color:#1471d4;' title="Fil de l'étude" class='title-tooltip fa fa-history'></i></label>
+                                <label @click='openModalFil()' for="protocole-statut" class="col-2 col-form-label">Statut
+                                    <i style='cursor:pointer;color:#1471d4;' title="Fil de l'étude"
+                                       class='title-tooltip fa fa-history'></i></label>
 
                                 <div class="col">
 
@@ -535,11 +554,11 @@
 
                             </a>
 
-                            {# Synopsis & Critères - Collapse ---------------------------------------------------#}
+                            {# Synopsis & Critères - Collapse -------------------------------------------------- -#}
                             <div class="collapse" id="protocole-synopsis">
 
                                 <div class="form-row form-group">
-                                     {# N° Interne #}
+                                    {# N° Interne #}
                                     <label title='N° pour classification interne' for="protocole-numero-interne"
                                            class="col-2 col-form-label title-tooltip">N°Interne</label>
 
@@ -1037,7 +1056,8 @@
                                         <label for="protocole-date-signature-convention">Date Signature
                                             Convention</label>
 
-                                        <input v-model='protocole.dateSignConv' type="text" title="Date de la dernière signature"
+                                        <input v-model='protocole.dateSignConv' type="text"
+                                               title="Date de la dernière signature"
                                                class="form-control form-control-sm datepicker"
 
                                                id="protocole-date-signature-convention">
@@ -1045,7 +1065,7 @@
                                     </div>
 
                                 </div>
-                                {# 	-----------------------------------------------		#}
+                                {#    -----------------------------------------------        #}
                                 <div class="form-row form-group">
 
                                     {# N° Eudra CT #}
@@ -1104,7 +1124,7 @@
                                         </div>
 
                                     </div>
-                                    {# 	-----------------------------------------------		#}
+                                    {#    -----------------------------------------------        #}
                                 </div>
 
                             </div>
@@ -1117,7 +1137,8 @@
                     {# Colonne 3--: Liste des patients du protocoles--------------------------------------------------------------------------------------------------------------------------------------------------------- #}
 
                     {# Colonne Liste des patients #}
-                    <div class="col col-arcoffice col-liste-patient" v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }'>
+                    <div class="col col-arcoffice col-liste-patient"
+                         v-bind:class='{"is-loading" : loading, "is-disabled" : disabled }'>
 
                         {# Titre + Boutons #}
                         <div class="form-title d-flex align-items-center">
@@ -1127,7 +1148,8 @@
                             <div class="ml-auto mr-1">
 
                                 {# Nouvelle #}
-                                <button  :disabled="protocole.statut == '{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}' || protocole.statut == '{{ constant('AppBundle\\Entity\\Essais::REFUS') }}'" onclick='window.location.href = "{{ path("patient") }}"' v-if='protocole.id'
+                                <button :disabled="protocole.statut == '{{ constant('AppBundle\\Entity\\Essais::ARCHIVE') }}' || protocole.statut == '{{ constant('AppBundle\\Entity\\Essais::REFUS') }}'"
+                                        onclick='window.location.href = "{{ path("patient") }}"' v-if='protocole.id'
                                         type="button" class="btn btn-sm btn-outline-primary title-tooltip"
                                         data-html="true" title='Ajouter un patient <br>Retour page Patient' v-cloak>
 
@@ -1269,6 +1291,10 @@
                                             v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
                                             class="fa"></i></th>
 
+                                <th>Medecin <i
+                                            v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
                                 <th @click="orderBy('numInc')">N° <i
                                             v-bind:class='[order.numInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
                                             class="fa"></i></th>
@@ -1293,6 +1319,12 @@
 
                                 </td>
 
+                                <td @click='openModal(index)'>
+
+                                    <span v-if='inclusion.medecin != null'>[[ inclusion.medecin.nom ]] [[ Array.from(inclusion.medecin.prenom).shift() ]].</span>
+
+                                </td>
+
                                 <td data-placement="right" @click='openModal(index)'
                                     class="protocole-patient-statut title-tooltip"
                                     :data-original-title="inclusion.statut"
@@ -1314,7 +1346,7 @@
 
             </div>
 
-            {# Modal - Fil du projet#}
+            {# Modal - Fil du projet #}
             <div class="modal fade" id="arcoffice-protocole-fil" tabindex="-1" role="dialog"
                  aria-labelledby="Fil du projet" aria-hidden="true">
 
@@ -1360,7 +1392,8 @@
 
                                     <tbody>
 
-                                    <tr @click='selectFil(index)' v-for="(fil, index) in protocole.fils" v-if='protocole.fils' v-cloak>
+                                    <tr @click='selectFil(index)' v-for="(fil, index) in protocole.fils"
+                                        v-if='protocole.fils' v-cloak>
 
                                         <td>
 
@@ -1372,7 +1405,8 @@
 
                                         <td>
 
-                                            <select v-model='fil.type' class="form-control form-control-sm" id="fil-type">
+                                            <select v-model='fil.type' class="form-control form-control-sm"
+                                                    id="fil-type">
 
                                                 <option value='null' selected></option>
 
@@ -1387,7 +1421,8 @@
                                         </td>
 
                                         <td>
-                                                <textarea v-model='fil.texte' class="form-control form-control-sm"  id="fil-commentaire" rows="2"></textarea>
+                                            <textarea v-model='fil.texte' class="form-control form-control-sm"
+                                                      id="fil-commentaire" rows="2"></textarea>
                                         </td>
 
                                         <td>
@@ -1439,7 +1474,7 @@
 
     {% endblock content %}
 
-    {#  fin Modal - Fil du projet#}
+    {#  fin Modal - Fil du projet #}
 
 	{% block javascripts %}
 

@@ -201,6 +201,8 @@ class EssaisRepository extends EntityRepository
             ->addSelect('doc')
             ->leftJoin('i.patient', 'p')
             ->addSelect('p')
+            ->leftJoin('i.medecin', 'me')
+            ->addSelect('me')
             ->andWhere("e.id = :id")
             ->setParameter("id", $id);
 
