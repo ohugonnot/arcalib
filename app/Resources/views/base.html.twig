@@ -64,13 +64,13 @@
         const Patient_VIVANT = "{{ constant('AppBundle\\Entity\\Patient::VIVANT') }}";
         const Inclusion_OUI_SORTIE = "{{ constant('AppBundle\\Entity\\Inclusion::OUI_SORTIE') }}";
     </script>
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-    <script src="{{ asset('dist/js/global.min.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}?version={{ version }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}&version={{ version }}"></script>
+    <script src="{{ asset('dist/js/global.min.js') }}?version={{ version }}"></script>
 
     {% if app.environment != "dev" %}
-        <script type="text/javascript" charset="utf-8" src="{{ asset('/cometchat/js.php') }}" async></script>
-        <link type="text/css" rel="stylesheet" media="all" href="{{ asset('/cometchat/css.php') }}">
+    <script type="text/javascript" charset="utf-8" src="{{ asset('/cometchat/js.php') }}" async></script>
+<link type="text/css" rel="stylesheet" media="all" href="{{ asset('/cometchat/css.php') }}">
     {% endif %}
 
 {% endblock javascripts %}
