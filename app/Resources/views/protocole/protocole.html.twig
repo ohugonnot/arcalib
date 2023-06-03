@@ -758,7 +758,7 @@
                                 <div class="col">
 
                                     <label class='title-tooltip' title='Essai à promotion interne ou Externe?'
-                                           for="protocole-interne-externe">Int/Ext</label>
+                                           for="protocole-interne-externe">Prom. Int/Ext</label>
 
                                     <select v-model='protocole.autoProm' class="form-control form-control-sm"
                                             id="protocole-interne-externe">
@@ -778,7 +778,7 @@
                                 {# Promoteur texte #}
                                 <div class="col">
 
-                                    <label for="protocole-promoteur-texte">Nom Promoteur</label>
+                                    <label for="protocole-promoteur-texte">Promoteur</label>
 
                                     <input type="text" v-model='protocole.prom' class="form-control form-control-sm"
                                            id="protocole-promoteur-texte" placeholder="">
@@ -1291,8 +1291,8 @@
                                             v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
                                             class="fa"></i></th>
 
-                                <th>Medecin <i
-                                            v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                <th @click="orderBy('medecin')">Medecin <i
+                                            v-bind:class='[order.medecin == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
                                             class="fa"></i></th>
 
                                 <th @click="orderBy('numInc')">N° <i
