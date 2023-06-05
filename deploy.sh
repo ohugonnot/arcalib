@@ -10,3 +10,4 @@ gulp build
 cd ./..
 chown -R arcalib:arcalib /home/arcalib/
 chmod -R 777 ./var/
+chmod -R 777 ./app/Resources/pdf/
