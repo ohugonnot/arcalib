@@ -15,7 +15,7 @@ if ($("#patient").length > 0) {
         }
     });
 
-    const patient = new Vue({
+    window.patient = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#patient',
@@ -169,7 +169,7 @@ if ($("#patient").length > 0) {
         }
     });
 
-    const recherche = new Vue({
+    window.recherche = new Vue({
         delimiters: ['[[', ']]'],
         el: '#recherche',
         data: {
@@ -214,7 +214,7 @@ if ($("#patient").length > 0) {
     });
 
 
-    const inclusion = new Vue({
+    window.inclusion = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#inclusion',
@@ -426,7 +426,7 @@ if ($("#patient").length > 0) {
         }
     });
 
-    const visite = new Vue({
+    window.visite = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#visite',

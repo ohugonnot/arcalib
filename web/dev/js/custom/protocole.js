@@ -16,7 +16,7 @@ if ($("#protocole").length > 0) {
     };
 
 // L'entité patient en VueJS avec toute sa logique propre
-    const protocole = new Vue({
+    window.protocole = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#protocole',
