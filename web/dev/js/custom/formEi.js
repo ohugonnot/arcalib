@@ -1,8 +1,8 @@
 // selectionner un protocole
 
-if($("#formEi").length > 0) {
+if ($("#formEi").length > 0) {
 
-    var formEi = new Vue({
+    window.formEi = new Vue({
 
         delimiters: ['[[', ']]'],
         el: '#formEi',
@@ -15,7 +15,7 @@ if($("#formEi").length > 0) {
         },
 
         methods: {
-            termOptionsSelect: function() {
+            termOptionsSelect: function () {
 
                 if (this.soc === '') {
                     this.termOptions = [{value: '', text: "Choisir d'abord une Soc"}];
@@ -26,17 +26,17 @@ if($("#formEi").length > 0) {
                 $.ajax({
                     url: Routing.generate("getTerms", {id: this.soc}),
                     type: 'POST',
-                    data : {},
-                    success: function(response) {
+                    data: {},
+                    success: function (response) {
                         $that.termOptions = response;
                     }
                 });
                 return this;
             },
-            gradeOptionsSelect: function() {
+            gradeOptionsSelect: function () {
 
                 if (this.term === '') {
-                    this.gradeOptions =  [{value: '', text: "Choisir d'abord un Term"}];
+                    this.gradeOptions = [{value: '', text: "Choisir d'abord un Term"}];
                     return this;
                 }
                 var $that = this;
@@ -44,38 +44,32 @@ if($("#formEi").length > 0) {
                 $.ajax({
                     url: Routing.generate("getGrades", {id: this.term}),
                     type: 'POST',
-                    data : {},
-                    success: function(response) {
+                    data: {},
+                    success: function (response) {
                         $that.gradeOptions = response;
                     }
                 });
                 return this;
             },
-            changeSoc: function() {
+            changeSoc: function () {
                 this.grade = '';
                 this.term = '';
                 this.termOptionsSelect();
                 this.gradeOptionsSelect();
             },
-            changeTerm: function() {
+            changeTerm: function () {
                 this.grade = '';
                 this.gradeOptionsSelect();
             }
         },
 
-        computed: {
+        computed: {},
 
-        },
+        watch: {},
 
-        watch: {
+        filters: {},
 
-        },
-
-        filters: {
-
-        },
-
-        created: function() {
+        created: function () {
             var selects = JSON.parse($("#ctcae").val());
             this.soc = selects.soc;
             this.term = selects.term;
@@ -83,12 +77,12 @@ if($("#formEi").length > 0) {
             this.termOptionsSelect().gradeOptionsSelect();
         },
 
-        mounted: function() {
+        mounted: function () {
 
 
         },
 
-        updated: function() {
+        updated: function () {
 
         }
     });
