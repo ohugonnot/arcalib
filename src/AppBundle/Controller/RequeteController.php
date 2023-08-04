@@ -9,11 +9,12 @@ use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\Patient;
 use AppBundle\Entity\Service;
 use AppBundle\Entity\Visite;
+use AppBundle\Services\DeplaceVisiteNonFait;
+use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use \DateTime;
 
 /**
  * @Route("/arcalib")
@@ -26,8 +27,9 @@ class RequeteController extends Controller
      * @return Response
      * @throws Exception
      */
-    public function requetesAction()
+    public function requetesAction(DeplaceVisiteNonFait $deplaceVisiteNonFait)
     {
+        $deplaceVisiteNonFait->deplaceVisite();
         $em = $this->getDoctrine()->getManager();
         $emActualite = $em->getRepository(Actualite::class);
         $emService = $em->getRepository(Service::class);
@@ -43,7 +45,7 @@ class RequeteController extends Controller
         $inclusionsScreen = $emInclusion->findByStatutScreen($user);
 
         $visiteByDay = [];
-        foreach ($visiteForWeek as $key => $visite) {
+        foreach ($visiteForWeek as $visite) {
             $visiteByDay[$visite->getDate()->format("Y-m-d")][] = $visite;
         }
 

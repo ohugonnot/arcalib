@@ -95,7 +95,7 @@ class VisiteRepository extends EntityRepository
             ->andWhere('v.date <= :fin')
             ->setParameter('debut', $debut)
             ->setParameter('fin', $fin)
-            ->orderBy('v.date', "ASC");
+            ->orderBy('v.date, p.nom', "ASC");
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
@@ -170,6 +170,20 @@ class VisiteRepository extends EntityRepository
             ->leftJoin('i.patient', 'p')
             ->addSelect("e", "a", "p", "i");
         //->setMaxResults(10);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @return array []Visite
+     */
+    public function findVisiteNonFaiteLastWeek()
+    {
+        $queryBuilder = $this->createQueryBuilder('v')
+            ->andWhere('v.date BETWEEN :debut AND :fin or v.date_fin BETWEEN :debut AND :fin or (v.date <= :debut and v.date_fin >= :fin)')
+            ->setParameter('debut', (new DateTime())->modify("-1 week"))
+            ->setParameter('fin', new DateTime('today midnight'))
+            ->andWhere("v.fait = false");
 
         return $queryBuilder->getQuery()->getResult();
     }
