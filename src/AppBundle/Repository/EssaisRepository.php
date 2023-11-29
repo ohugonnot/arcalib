@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Essais;
+use AppBundle\Entity\Inclusion;
 use AppBundle\Entity\User;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
@@ -189,8 +190,6 @@ class EssaisRepository extends EntityRepository
             ->addSelect('t')
             ->leftJoin('e.arc', 'a')
             ->addSelect('a')
-            ->leftJoin('e.inclusions', 'i')
-            ->addSelect('i')
             ->leftJoin('e.fils', 'fil')
             ->addSelect('fil')
             ->leftJoin('e.factures', 'f')
@@ -198,17 +197,24 @@ class EssaisRepository extends EntityRepository
             ->leftJoin('e.detail', 'd')
             ->addSelect('d')
             ->leftJoin('e.documents', 'doc')
-            ->addSelect('doc')
-            ->leftJoin('i.patient', 'p')
-            ->addSelect('p')
-            ->leftJoin('i.medecin', 'me')
-            ->addSelect('me')
             ->andWhere("e.id = :id")
             ->setParameter("id", $id);
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
+        $qb2 = $this->_em->createQueryBuilder()
+            ->select("i, p, me")
+            ->from(Inclusion::class, 'i')
+            ->leftJoin('i.patient', 'p')
+            ->leftJoin('i.medecin', 'me')
+            ->andWhere('i.essai = :id')
+            ->setParameter("id", $id);
+        $qb2 = $this->joinUserWhereUser($qb2, $user);
+
         $results = $queryBuilder->getQuery()->getArrayResult();
+        $inclusions = $qb2->getQuery()->getArrayResult();
+
+        $results[0]['inclusions'] = $inclusions ?? [];
 
         if (empty($results))
             return $results;
@@ -283,25 +289,45 @@ class EssaisRepository extends EntityRepository
         $queryBuilder
             ->leftJoin('e.arc', 'a')
             ->leftJoin('e.medecin', 'm')
-            ->leftJoin('e.inclusions', 'i')
             ->leftJoin('e.factures', 'f')
             ->leftJoin('e.detail', 'd')
             ->leftJoin('e.documents', 'doc')
-            ->leftJoin('i.patient', 'p')
             ->addSelect('m')
             ->addSelect('t')
             ->addSelect('a')
-            ->addSelect('i')
             ->addSelect('f')
             ->addSelect('d')
-            ->addSelect('p')
             ->addSelect('doc')
             ->andwhere("e.id IN(:essaiIds)")
+            ->orderBy('e.id', 'ASC')
             ->setParameter('essaiIds', $essaiIds);
 
         $queryBuilder = $this->joinUserWhereUser($queryBuilder, $user);
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        $qb2 = $this->_em->createQueryBuilder()
+            ->select("i, p, e")
+            ->from(Inclusion::class, 'i')
+            ->leftJoin('i.essai', 'e')
+            ->leftJoin('i.patient', 'p')
+            ->andwhere("e.id IN(:essaiIds)")
+            ->orderBy('e.id', 'ASC')
+            ->setParameter("essaiIds", $essaiIds);
+        $qb2 = $this->joinUserWhereUser($qb2, $user);
+
+        $results = $queryBuilder->getQuery()->getArrayResult();
+        $inclusions = $qb2->getQuery()->getArrayResult();
+
+        foreach ($results as $k => $essai) {
+            $essai['inclusions'] = [];
+            foreach ($inclusions as $k2 => $inclusion) {
+                if ($essai['id'] == $inclusion['essai']['id']) {
+                    $essai['inclusions'][] = $inclusion;
+                }
+            }
+            $results[$k] = $essai;
+        }
+
+        return $results;
     }
 
     public function findAllProtcoleJoinInclusion()

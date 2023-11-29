@@ -123,4 +123,17 @@ class LogController extends Controller
             'logs' => $logs
         ]);
     }
+
+    /**
+     * @Route("/logs/clean", name="cleanlog")
+     */
+    public function cleanLog()
+    {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+        $em = $this->getDoctrine()->getManager();
+        $emLog = $em->getRepository(Log::class);
+        $logs = $emLog->removeBadLog();
+        return $this->redirectToRoute("listeLogs");
+    }
 }
