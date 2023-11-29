@@ -137,11 +137,14 @@ class DoctrineEventListener implements EventSubscriber
         $entity = $args->getObject();
         if ($entity instanceof Log || isset($this->changeSet["lastLogin"]))
             return;
-        
+
         $request = $this->requestStack->getCurrentRequest();
         $route = $request->get("_route");
         if ($route === "updateDuree")
             return;
+        if (empty($this->changeSet)) {
+            return;
+        }
 
         $reflection = new \ReflectionClass($entity);
         $type = $reflection->getShortName();
