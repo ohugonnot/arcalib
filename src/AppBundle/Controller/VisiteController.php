@@ -805,4 +805,33 @@ class VisiteController extends Controller
         dump($protocole_matched);
         return new Response();
     }
+
+    /**
+     * @Route("/visite/updateDate", name="updateDate", options={"expose"=true})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function updateDate(Request $request)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        $em = $this->getDoctrine()->getManager();
+        $emVisite = $em->getRepository(Visite::class);
+        /** @var Visite[] $visites */
+        $visites = $emVisite->findAll();
+        dump($visites[0]);
+        foreach ($visites as $visite) {
+            $date = clone $visite->getDate();
+            $date->setDate(2024, $date->format('m'), $date->format('d'));
+            $visite->setDate($date);
+            if ($visite->getDateFin()) {
+                $dateFin = clone $visite->getDateFin();
+                $dateFin->setDate(2024, $dateFin->format('m'), $dateFin->format('d'));
+                $visite->setDateFin($dateFin);
+            }
+            $em->persist($visite);
+        }
+        $em->flush();
+        dump($visites[0]);
+        die();
+    }
 }

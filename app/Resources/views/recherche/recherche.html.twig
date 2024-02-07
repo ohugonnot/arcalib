@@ -1236,7 +1236,7 @@
                                                                                 class="fa fa-search"></span></button>
                                                                 </label>
 
-                                                                <input style="line-height: 1.75em;"
+                                                                <input style="line-height: 1.75em; width: 350px"
                                                                        id="search-{{ index }}" class="search-pop-up"
                                                                        type="text" onkeyup="search(event)" value=""
                                                                        placeholder=""
@@ -1400,23 +1400,60 @@
             // Moteur de recherche popup
             function search(el) {
                 let input = $(el.target);
-                let filter, table, tr, td, i, j, txtValue, tds;
-                filter = input.val().toUpperCase().trim();
+                let filter, table, tr, i, j, txtValue, filters, isAnd, isOr, trshow;
+
+                // je récupère la value dans la recherch et je la passe en minuscule et j'enleve les espace a droite et a gauche
+                filter = input.val().toLowerCase().trim();
+                filters = [filter];
+
+                // si il existe un ou plusieurs ET, je prends toutes les partie entre les ET
+                isAnd = filter.includes('&&');
+                if (isAnd) {
+                    filters = filter.split("&&");
+                    filters = filters.map(f => f.trim());
+                }
+                // si il existe un ou plusieurs OU, je prends toutes les parties entre les ou
+                isOr = filter.includes('||');
+                if (isOr) {
+                    filters = filter.split("||");
+                    filters = filters.map(f => f.trim());
+                }
+
+                // Je selectionne toutes les ligne de mon tableau
+                // je regarde s'il existe les differents mots de la recherche
+                // et je rempli un tableau de true ou false pour chaque ligne et chaque mot
+                // exemple ligne 1 et mot1, mot2, mot3,  [1] = [true, true, false] dans la ligne 1 il a le mot 1, 2 mais ps 3
                 table = input.closest(".table-pop-up");
                 tr = table[0].getElementsByTagName("tr");
-
-                for (i = 0; i < tr.length; i++) {
-                    tds = tr[i].getElementsByTagName("td");
-                    for (j = 0; j < tds.length; j++) {
-                        td = tds[j];
-                        if (td) {
-                            txtValue = td.textContent || td.innerText;
-                            if (txtValue.toUpperCase().trim().indexOf(filter) > -1) {
-                                tr[i].style.display = "";
-                                break;
-                            } else {
-                                tr[i].style.display = "none";
-                            }
+                trshow = [];
+                for (j = 0; j < filters.length; j++) {
+                    for (i = 2; i < tr.length; i++) {
+                        txtValue = tr[i].textContent || tr[i].innerText;
+                        trshow[i] = trshow[i] || [];
+                        if (txtValue.toLowerCase().trim().indexOf(filters[j]) > -1) {
+                            trshow[i].push(true);
+                        } else {
+                            trshow[i].push(false);
+                        }
+                    }
+                }
+                console.log(trshow, filters)
+                for (i = 2; i < tr.length; i++) {
+                    if (isOr) {
+                        // S'il existe au moins un true dans ma ligne je l'affiche
+                        let show = trshow[i].some(Boolean);
+                        if (show) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    } else {
+                        // Si tout les recherches sont vrai dans ma ligne je l'affiche
+                        let show = trshow[i].every(Boolean);
+                        if (show) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
                         }
                     }
                 }
