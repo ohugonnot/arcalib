@@ -223,7 +223,7 @@
                                             {# Liste des 5 PDFs #}
 
                                             {# PDF N°1 #}
-                                            <div v-show="protocole.synopsis == null" id='synopsis-input'
+                                            <div v-if="protocole.synopsis == null" id='synopsis-input'
                                                  class="form-row form-group">
 
                                                 {# Input File #}
@@ -239,11 +239,11 @@
 
                                             </div>
 
-                                            <div v-show="protocole.synopsis != null" id='synopsis-download'
+                                            <div v-if="protocole.synopsis != null" id='synopsis-download'
                                                  class="form-row form-group">
 
-                                                <label for="protocole-pdf-1"
-                                                       class="col-2 col-form-label">Synopsis</label>
+                                                <label
+                                                        class="col-2 col-form-label">Synopsis</label>
 
                                                 <div class="col d-flex align-items-center">
 
@@ -266,7 +266,7 @@
 
                                             </div>
 
-                                            <div v-show="protocole.protocole == null" id='protocole-input'
+                                            <div v-if="protocole.protocole == null" id='protocole-input'
                                                  class="form-row form-group">
 
                                                 {# Input File #}
@@ -282,11 +282,11 @@
 
                                             </div>
 
-                                            <div v-show="protocole.protocole != null" id='protocole-download'
+                                            <div v-if="protocole.protocole != null" id='protocole-download'
                                                  class="form-row form-group">
 
-                                                <label for="protocole-pdf-1"
-                                                       class="col-2 col-form-label">Protocole</label>
+                                                <label
+                                                        class="col-2 col-form-label">Protocole</label>
 
                                                 <div class="col d-flex align-items-center">
 
@@ -309,7 +309,7 @@
 
                                             </div>
 
-                                            <div v-show="protocole.crf == null" id='crf-input'
+                                            <div v-if="protocole.crf == null" id='crf-input'
                                                  class="form-row form-group">
 
                                                 {# Input File #}
@@ -325,10 +325,10 @@
 
                                             </div>
 
-                                            <div v-show="protocole.crf != null" id='crf-download'
+                                            <div v-if="protocole.crf != null" id='crf-download'
                                                  class="form-row form-group">
 
-                                                <label for="crf-pdf-1" class="col-2 col-form-label">CRF</label>
+                                                <label class="col-2 col-form-label">CRF</label>
 
                                                 <div class="col d-flex align-items-center">
 
@@ -351,7 +351,7 @@
 
                                             </div>
 
-                                            <div v-show="protocole.nip == null" id='nip-input'
+                                            <div v-if="protocole.nip == null" id='nip-input'
                                                  class="form-row form-group">
 
                                                 {# Input File #}
@@ -367,10 +367,10 @@
 
                                             </div>
 
-                                            <div v-show="protocole.nip != null" id='nip-download'
+                                            <div v-if="protocole.nip != null" id='nip-download'
                                                  class="form-row form-group">
 
-                                                <label for="nip-pdf-1" class="col-2 col-form-label">NIP</label>
+                                                <label class="col-2 col-form-label">NIP</label>
 
                                                 <div class="col d-flex align-items-center">
 
@@ -393,7 +393,7 @@
 
                                             </div>
 
-                                            <div v-show="protocole.procedurePDF == null" id='procedure-input'
+                                            <div v-if="protocole.procedurePDF == null" id='procedure-input'
                                                  class="form-row form-group">
 
                                                 {# Input File #}
@@ -409,11 +409,11 @@
 
                                             </div>
 
-                                            <div v-show="protocole.procedurePDF != null" id='procedure-download'
+                                            <div v-if="protocole.procedurePDF != null" id='procedure-download'
                                                  class="form-row form-group">
 
-                                                <label for="procedure-pdf-1"
-                                                       class="col-2 col-form-label">Procédure</label>
+                                                <label
+                                                        class="col-2 col-form-label">Procédure</label>
 
                                                 <div class="col d-flex align-items-center">
 
@@ -521,7 +521,8 @@
 
                                 <div class="col">
 
-                                    <select v-model='protocole.statut' class="form-control form-control-sm" id="statut">
+                                    <select v-model='protocole.statut' class="form-control form-control-sm"
+                                            id="protocole-statut">
 
                                         <option value='null' selected></option>
 
@@ -617,13 +618,13 @@
                                 {# Objectifs du protocole #}
                                 <div class="form-row form-group">
 
-                                    <label for="protocole-objectif" class="col-2 col-form-label">Objectifs du
+                                    <label for="protocole-detail-objectif" class="col-2 col-form-label">Objectifs du
                                         protocole</label>
 
                                     <div class="col">
 
                                         <textarea v-model='protocole.detail.objectif'
-                                                  class="form-control form-control-sm" id="protocole-objectif"
+                                                  class="form-control form-control-sm" id="protocole-detail-objectif"
                                                   rows="3"></textarea>
 
                                     </div>
@@ -658,7 +659,7 @@
                                 <div class="col">
 
                                     <select v-model='protocole.typeEssai' class="form-control form-control-sm"
-                                            id="type-etude">
+                                            id="protocole-type-etude">
 
                                         <option value='null' selected></option>
 
@@ -673,12 +674,12 @@
                                 </div>
 
                                 {# Phase #}
-                                <label for="protocole-phase" class="col-2 col-form-label">Phase</label>
+                                <label for="protocole-stadeEss" class="col-2 col-form-label">Phase</label>
 
                                 <div class="col">
 
                                     <select v-model='protocole.stadeEss' class="form-control form-control-sm"
-                                            id="stadeEss">
+                                            id="protocole-stadeEss">
 
                                         <option value='null' selected></option>
 
@@ -899,7 +900,7 @@
                                         <label for="protocole-arc-ref">Arc Ref</label>
 
                                         <select v-model='protocole.arc.id' class="form-control form-control-sm"
-                                                id="arc">
+                                                id="protocole-arc-ref">
 
                                             <option value='null' selected></option>
 
@@ -919,7 +920,7 @@
                                         <label for="protocole-med-ref">Med. Ref</label>
 
                                         <select v-model='protocole.medecin.id' class="form-control form-control-sm"
-                                                id="medecin-referent">
+                                                id="protocole-med-ref">
 
                                             <option value='null' selected></option>
 
@@ -1161,6 +1162,99 @@
 
                         </div>
 
+                        <div class="d-flex">
+                            <button class="btn btn-violet btn-sm">
+
+                                <i class="fa fa-search" aria-hidden="true"></i>
+
+                            </button>
+                            <input class="protocole-recherche form-control form-control-sm ml-2 tt-input"
+                                   autocomplete="off"
+                                   type="text"
+                                   v-model="searchInclusion"
+                                   id="input-recherche-inclusion" name="recherche-inclusion"
+                                   spellcheck="false" dir="auto"
+                                   style="position: relative; vertical-align: top; background-color: transparent;">
+
+                        </div>
+
+                        <table class="table table-sm table-striped mb-0" v-cloak>
+
+                            {# Header #}
+                            <thead>
+
+                            <tr>
+
+                                <th @click="orderBy('nom')">Nom <i
+                                            v-bind:class='[order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                                <th @click="orderBy('datInc')">Date Incl. <i
+                                            v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                                <th @click="orderBy('medecin')">Medecin <i
+                                            v-bind:class='[order.medecin == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                                <th @click="orderBy('numInc')">N° <i
+                                            v-bind:class='[order.numInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+                                <th class="text-center" @click="orderBy('statut')"><i
+                                            v-bind:class='[order.statut == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
+                                            class="fa"></i></th>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr v-for="(inclusion, index) in inclusionsFiltered" v-if='inclusion.patient' v-cloak>
+                                <td>
+
+                                    <a v-bind:href="linkInclusion(inclusion)">[[ inclusion.patient.nom ]] [[
+                                        inclusion.patient.prenom ]]</a>
+
+                                </td>
+
+                                <td @click='openModal(index)'>
+
+                                    <span v-if='inclusion.datInc != null'>[[ inclusion.datInc ]]</span>
+
+                                </td>
+
+                                <td @click='openModal(index)'>
+
+                                    <span :title="inclusion.medecin.nom+' '+inclusion.medecin.prenom"
+                                          v-if='inclusion.medecin != null'>[[ Array.from(inclusion.medecin.nom).shift() ]]-[[ Array.from(inclusion.medecin.prenom).shift() ]]</span>
+
+                                </td>
+
+                                <td data-placement="right" @click='openModal(index)'
+                                    class="">
+                                    [[ inclusion.numInc ]]
+
+                                </td>
+
+                                <td data-placement="right" @click='openModal(index)'
+                                    class="protocole-patient-statut title-tooltip"
+                                    :data-original-title="inclusion.statut"
+                                    v-bind:class="[
+                                    (inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::SCREEN") }}') ? 'arcoffice-bleu' : '',
+                                    (inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::OUI_EN_COURS") }}') ? 'arcoffice-vert' : '',
+                                    (inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::OUI_SORTIE") }}') ? 'arcoffice-vert-fonce' : '',
+                                    (inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::NON_FALSE_SCREENING") }}') ? 'arcoffice-rouge' : '',
+                                    (inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::NON_REFUS") }}') ? 'arcoffice-noir' : '',
+                                    (inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::AUTRE") }}') ? 'arcoffice-bleu' : '']">
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
                         {# Modal - Modifier un patient à un protocole #}
                         <div class="modal fade" id="arcoffice-protocole-patient" tabindex="-1" role="dialog"
                              aria-labelledby="Modifier un patient" aria-hidden="true">
@@ -1223,7 +1317,7 @@
                                             <div class="form-row form-group">
 
                                                 {# Statut #}
-                                                <label for="protocole-patient-Statut" class="col-4 col-form-label">Statut</label>
+                                                <label for="protocole-patient-statut" class="col-4 col-form-label">Statut</label>
 
                                                 <div class="col">
 
@@ -1275,71 +1369,6 @@
                             </div>
 
                         </div>
-
-                        <table class="table table-sm table-striped mb-0" v-cloak>
-
-                            {# Header #}
-                            <thead>
-
-                            <tr>
-
-                                <th @click="orderBy('nom')">Nom <i
-                                            v-bind:class='[order.nom == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                            class="fa"></i></th>
-
-                                <th @click="orderBy('datInc')">Date Incl. <i
-                                            v-bind:class='[order.datInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                            class="fa"></i></th>
-
-                                <th @click="orderBy('medecin')">Medecin <i
-                                            v-bind:class='[order.medecin == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                            class="fa"></i></th>
-
-                                <th @click="orderBy('numInc')">N° <i
-                                            v-bind:class='[order.numInc == "asc" ? "fa-caret-down" : "fa-caret-up" ]'
-                                            class="fa"></i></th>
-
-                            </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                            <tr v-for="(inclusion, index) in inclusionsFiltered" v-if='inclusion.patient' v-cloak>
-                                <td>
-
-                                    <a v-bind:href="linkInclusion(inclusion)">[[ inclusion.patient.nom ]] [[
-                                        inclusion.patient.prenom ]]</a>
-
-                                </td>
-
-                                <td @click='openModal(index)'>
-
-                                    <span v-if='inclusion.datInc != null'>[[ inclusion.datInc ]]</span>
-
-                                </td>
-
-                                <td @click='openModal(index)'>
-
-                                    <span :title="inclusion.medecin.nom+' '+inclusion.medecin.prenom"
-                                          v-if='inclusion.medecin != null'>[[ Array.from(inclusion.medecin.nom).shift() ]]-[[ Array.from(inclusion.medecin.prenom).shift() ]]</span>
-
-                                </td>
-
-                                <td data-placement="right" @click='openModal(index)'
-                                    class="protocole-patient-statut title-tooltip"
-                                    :data-original-title="inclusion.statut"
-                                    v-bind:class="[(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::SCREEN") }}') ? 'arcoffice-bleu' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::OUI_EN_COURS") }}') ? 'arcoffice-vert' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::OUI_SORTIE") }}') ? 'arcoffice-vert-fonce' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::NON_FALSE_SCREENING") }}') ? 'arcoffice-rouge' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::NON_REFUS") }}') ? 'arcoffice-noir' : '',(inclusion.statut == '{{ constant("AppBundle\\Entity\\Inclusion::AUTRE") }}') ? 'arcoffice-bleu' : '']">
-
-                                    [[ inclusion.numInc ]]
-
-                                </td>
-
-                            </tr>
-
-                            </tbody>
-
-                        </table>
 
                     </div>
 
@@ -1400,14 +1429,14 @@
 
                                             <input v-model='fil.date'
                                                    type="text" class="form-control form-control-sm datepicker fil-date"
-                                                   id="fil-date">
+                                                   :id="'fil-date-'+index">
 
                                         </td>
 
                                         <td>
 
                                             <select v-model='fil.type' class="form-control form-control-sm"
-                                                    id="fil-type">
+                                                    :id="'fil-type-'+index">
 
                                                 <option value='null' selected></option>
 
@@ -1423,11 +1452,11 @@
 
                                         <td>
                                             <textarea v-model='fil.texte' class="form-control form-control-sm"
-                                                      id="fil-commentaire" rows="2"></textarea>
+                                                      :id="'fil-commentaire-'+index" rows="2"></textarea>
                                         </td>
 
                                         <td>
-                                            <button type="button" id='file-delete' @click.prevent='deleteFil(index)'
+                                            <button type="button" @click.prevent='deleteFil(index)'
                                                     class="btn btn-sm btn-outline-danger title-tooltip" v-cloak>
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>

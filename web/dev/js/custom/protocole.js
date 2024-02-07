@@ -37,11 +37,18 @@ if ($("#protocole").length > 0) {
                 detail: {}
             },
             disabled: true,
+            searchInclusion: null,
             loading: false,
             patientSelected: {id: 0},
             filSelected: {id: 0},
             orderKey: 'numInc',
-            order: {"numInc": 'asc', "datInc": "asc", "nom": "asc", "medecin": "asc"}
+            order: {
+                "numInc": 'asc',
+                "datInc": "asc",
+                "nom": "asc",
+                "medecin": "asc",
+                'statut': "asc",
+            }
         },
 
 
@@ -131,7 +138,7 @@ if ($("#protocole").length > 0) {
                 if (!url) {
                     return true;
                 }
-                const re = /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+                const re = /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)_\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
                 return re.test(url);
             },
             deleteEssai: function () {
@@ -261,9 +268,20 @@ if ($("#protocole").length > 0) {
                 return this.protocole.id;
             },
             inclusionsFiltered: function () {
+                let inclusions = this.protocole.inclusions;
+                if (this.searchInclusion) {
+                    let search = this.searchInclusion.toLowerCase().trim();
+                    inclusions = _.filter(this.protocole.inclusions, (inc) => {
+                        return (inc.datInc && inc.datInc.includes(search))
+                            || (inc.numInc && inc.numInc.toLowerCase().includes(search))
+                            || (inc.statut && inc.statut.toLowerCase().includes(search))
+                            || (inc.patient && (inc.patient.nom.toLowerCase().includes(search) || inc.patient.prenom.toLowerCase().includes(search)))
+                            || (inc.medecin && (inc.medecin.nom.toLowerCase().includes(search) || inc.medecin.prenom.toLowerCase().includes(search)))
+                    });
+                }
                 if (this.orderKey === "datInc") {
-                    let dates = _.sortBy(this.protocole.inclusions, [function (o) {
-                        if (o.datInc != null) {
+                    let dates = _.sortBy(inclusions, [function (o) {
+                        if (o.datInc) {
                             return moment(o.datInc, 'DD/MM/YYYY', true);
                         }
                     }]);
@@ -273,8 +291,9 @@ if ($("#protocole").length > 0) {
                         return dates.reverse();
                     }
                 } else if (this.orderKey === "nom") {
-                    let patients = _.sortBy(this.protocole.inclusions, [function (o) {
-                        return o.patient.nom;
+                    let patients = _.sortBy(inclusions, [function (o) {
+                        if (o.patient)
+                            return o.patient.nom;
                     }]);
                     if (this.order[this.orderKey] === "asc") {
                         return patients;
@@ -282,8 +301,9 @@ if ($("#protocole").length > 0) {
                         return patients.reverse();
                     }
                 } else if (this.orderKey === "medecin") {
-                    let medecin = _.sortBy(this.protocole.inclusions, [function (o) {
-                        return o.medecin.nom + o.medecin.prenom;
+                    let medecin = _.sortBy(inclusions, [function (o) {
+                        if (o.medecin)
+                            return o.medecin.nom || '' + o.medecin.prenom || '';
                     }]);
                     if (this.order[this.orderKey] === "asc") {
                         return medecin;
@@ -291,7 +311,7 @@ if ($("#protocole").length > 0) {
                         return medecin.reverse();
                     }
                 } else {
-                    return _.orderBy(this.protocole.inclusions, [this.orderKey], [this.order[this.orderKey]]);
+                    return _.orderBy(inclusions, [this.orderKey], [this.order[this.orderKey]]);
                 }
             },
             eudraCtNdDisabled: function () {
@@ -379,10 +399,10 @@ if ($("#protocole").length > 0) {
                 $(element).datepicker({format: 'dd/mm/yyyy', language: 'fr', todayHighlight: true})
                     .off('changeDate.update-datepicker')
                     .on("changeDate.update-datepicker", function (e) {
-                        protocole.filSelected.date = $(element).val()
+                        protocole.filSelected.date = $(element).val();
                     });
             });
-            $('.datepicker').datepicker()
+            $('.datepicker')
                 .on('changeDate.update-datepicker', function (e) {
                     $(this).datepicker("hide")
                 });
