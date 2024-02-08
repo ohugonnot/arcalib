@@ -45,7 +45,7 @@
 
                     <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
 
-                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <em class="fa fa-search" aria-hidden="true"></em>
 
                     </button>
 
@@ -85,7 +85,7 @@
                                         type="button" title='Supprimer un patient'
                                         class="btn btn-sm btn-outline-danger title-tooltip" v-cloak>
 
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <em class="fa fa-trash" aria-hidden="true"></em>
 
                                 </button>
 
@@ -94,7 +94,7 @@
                                         title='Enregistrer un patient'
                                         class="btn btn-sm btn-outline-success title-tooltip">
 
-                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    <em class="fa fa-check" aria-hidden="true"></em>
 
                                 </button>
 
@@ -102,7 +102,7 @@
                                 <button @click='newPatient' type="button" title='Créer un patient'
                                         class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <em class="fa fa-plus" aria-hidden="true"></em>
 
                                 </button>
 
@@ -237,7 +237,7 @@
 
                                                 [[ inclusion.numInc | default("N/A") ]]
 
-                                                <i class="fa fa-arrow-right ml-1"></i>
+                                                <em class="fa fa-arrow-right ml-1"></em>
 
                                             </a>
 
@@ -289,7 +289,7 @@
                                     <a target='_blank' href="{{ path('listeMedecins') }}"
                                        class="patient-add-medecin btn btn-sm btn-outline-secondary">
 
-                                        <i aria-hidden="true" class="fa fa-plus"></i>
+                                        <em aria-hidden="true" class="fa fa-plus"></em>
 
                                     </a>
 
@@ -339,6 +339,7 @@
                                 {# CIM10 #}
                                 <div class="col">
 
+                                    <label for="lib-cim10"></label>
                                     <select v-model='patient.libCim10.id' class="form-control form-control-sm"
                                             id="lib-cim10">
 
@@ -360,7 +361,7 @@
                                     <a target='_blank' href="{{ path('listeLibCim10s') }}"
                                        class="patient-add-cim10 btn btn-sm btn-outline-secondary">
 
-                                        <i aria-hidden="true" class="fa fa-plus"></i>
+                                        <em aria-hidden="true" class="fa fa-plus"></em>
 
                                     </a>
 
@@ -409,6 +410,7 @@
                                 {# État (vivant, décédé, NSP) #}
                                 <div class="col">
 
+                                    <label for="etat"></label>
                                     <select v-model='patient.deces' class="form-control form-control-sm" id="etat">
 
                                         {% for value in constant('AppBundle\\Entity\\Patient::DECES') %}
@@ -424,6 +426,7 @@
                                 {# Date du décès #}
                                 <div class="col">
 
+                                    <label for="date-deces"></label>
                                     <input :disabled='patient.deces != "{{ constant('AppBundle\\Entity\\Patient::DECEDE') }}"'
                                            v-model="patient.datDeces" type="text"
                                            class="form-control form-control-sm js-datepicker" id="date-deces"
@@ -470,7 +473,7 @@
                                         type="button" title='supprimer une inclusion'
                                         class="btn btn-sm btn-outline-danger title-tooltip" v-cloak>
 
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <em class="fa fa-trash" aria-hidden="true"></em>
 
                                 </button>
 
@@ -479,7 +482,7 @@
                                         title='Sauvegarder une inclusion' @click='saveInclusion'
                                         class="btn btn-sm btn-outline-success title-tooltip">
 
-                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    <em class="fa fa-check" aria-hidden="true"></em>
 
                                 </button>
 
@@ -488,7 +491,7 @@
                                         title='Ajouter une inclusion'
                                         class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <em class="fa fa-plus" aria-hidden="true"></em>
 
                                 </button>
 
@@ -518,7 +521,7 @@
                                     <a :href='firstDocument'
                                        title='Liste des documents' class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]] </i>
+                                        <em class="fa fa-eye" aria-hidden="true"> [[ inclusion.documents.length ]] </em>
 
                                     </a>
 
@@ -541,9 +544,9 @@
                                        title='Liste des traitements'
                                        class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-medkit" aria-hidden="true">
+                                        <em class="fa fa-medkit" aria-hidden="true">
                                             [[ inclusion.traitements.length ]]
-                                        </i>
+                                        </em>
 
                                     </a>
 
@@ -558,7 +561,7 @@
                                     <a :href='firstEi'
                                        title='Liste des EI/EIG' class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-ambulance" aria-hidden="true"> [[ inclusion.eis.length ]] </i>
+                                        <em class="fa fa-ambulance" aria-hidden="true"> [[ inclusion.eis.length ]] </em>
 
                                     </a>
 
@@ -574,7 +577,8 @@
                                        title='Liste des Evenements'
                                        class="btn btn-sm btn-outline-primary title-tooltip">
 
-                                        <i class="fa fa-calendar" aria-hidden="true"> [[ inclusion.events.length ]] </i>
+                                        <em class="fa fa-calendar" aria-hidden="true"> [[ inclusion.events.length
+                                            ]] </em>
 
                                     </a>
 
@@ -608,19 +612,21 @@
 
                                 <div class="col">
 
-                                    <select v-model="inclusion.essai.id" class="form-control form-control-sm">
+                                    <label>
+                                        <select v-model="inclusion.essai.id" class="form-control form-control-sm">
 
-                                        <option value='null' selected></option>
+                                            <option value='null' selected></option>
 
-                                        {% for essai in essais %}
+                                            {% for essai in essais %}
 
-                                            <option {% if essai.statut in [constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION'), constant('AppBundle\\Entity\\Essais::ARCHIVE'), constant('AppBundle\\Entity\\Essais::REFUS')] %}disabled='disabled'
-                                                    style='display:none;'
-                                                    {% endif %}value="{{ essai.id }}">{{ essai.nom }}</option>
+                                                <option {% if essai.statut in [constant('AppBundle\\Entity\\Essais::QUERIES_ET_FINALISATION'), constant('AppBundle\\Entity\\Essais::ARCHIVE'), constant('AppBundle\\Entity\\Essais::REFUS')] %}disabled='disabled'
+                                                        style='display:none;'
+                                                        {% endif %}value="{{ essai.id }}">{{ essai.nom }}</option>
 
-                                        {% endfor %}
+                                            {% endfor %}
 
-                                    </select>
+                                        </select>
+                                    </label>
 
                                 </div>
 
@@ -662,6 +668,7 @@
 
                                 <div class="col">
 
+                                    <label for="date-inclusion"></label>
                                     <input v-model='inclusion.datInc' type="text"
                                            class="form-control form-control-sm js-datepicker" id="date-inclusion">
 
@@ -849,11 +856,13 @@
                             {# Arc #}
                             <div class="form-row form-group">
 
-                                <label for="arc" class="col-4 col-form-label">Arc</label>
+                                <label class="col-4 col-form-label">Arc</label>
 
                                 <div class="col">
 
-                                    <select v-model='inclusion.arc.id' class="form-control form-control-sm" id="arc">
+                                    <label for="arc"></label>
+                                    <select v-model='inclusion.arc.id' class="form-control form-control-sm arc"
+                                            id="arc">
 
                                         <option value='null' selected></option>
 
@@ -915,7 +924,7 @@
                                         class="btn btn-sm btn-outline-primary title-tooltip" data-toggle="modal"
                                         data-target="#arcoffice-add-visite" v-cloak>
 
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <em class="fa fa-plus" aria-hidden="true"></em>
 
                                 </button>
 
@@ -1088,13 +1097,13 @@
                                             {# Arc Référent #}
                                             <div class="form-row form-group">
 
-                                                <label for="arc-referent-visite"
-                                                       class="col-4 col-form-label">Arc</label>
+                                                <label class="col-4 col-form-label">Arc</label>
 
                                                 <div class="col">
 
-                                                    <select v-model='visiteSelected.arc.id'
-                                                            class="form-control form-control-sm" id="arc">
+                                                    <label for="arc-visite"></label>
+                                                    <select v-model='visiteSelected.arc.id' id="arc-visite"
+                                                            class="form-control form-control-sm arc">
 
                                                         <option value='null' selected>Choisir un arc</option>
 
@@ -1160,13 +1169,13 @@
 
                                             <button @click='prevVisite'
                                                     v-show='visiteSelected.index != 0 && visiteSelected.id != 0'
-                                                    type="button" class="btn btn-sm pull-left btn-outline-secondary"><i
-                                                        class="fa fa-chevron-left"></i>Précédent
+                                                    type="button" class="btn btn-sm pull-left btn-outline-secondary"><em
+                                                        class="fa fa-chevron-left"></em>Précédent
                                             </button>
                                             <button @click='nextVisite'
                                                     v-show='visiteSelected.index != visites.length -1 && visiteSelected.id != 0'
                                                     type="button" class="btn btn-sm pull-right btn-outline-secondary">
-                                                Suivant<i class="fa fa-chevron-right"></i></button>
+                                                Suivant<em class="fa fa-chevron-right"></em></button>
 
                                         </div>
 
@@ -1175,7 +1184,7 @@
                                     <div class="modal-footer">
 
                                         <button id="deleteVisite" @click="deleteVisite" type="button"
-                                                class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                                class="btn btn-sm btn-danger"><em class="fa fa-trash"></em></button>
 
                                         <div class="ml-auto">
 
@@ -1185,7 +1194,7 @@
                                             </button>
 
                                             <button id='saveVisite' @click='saveVisite' type="button"
-                                                    class="btn btn-sm btn-success"><i class="fa fa-check"></i>
+                                                    class="btn btn-sm btn-success"><em class="fa fa-check"></em>
                                                 Enregistrer
                                             </button>
 

@@ -409,6 +409,14 @@ if ($("#patient").length > 0) {
                 .on("changeDate", function () {
                     inclusion.inclusion.datOut = $('#sortie').val();
                 });
+
+            $('#arc').select2({
+                width: '100%',
+                language: "fr"
+            }).on('select2:select', function () {
+                inclusion.inclusion.arc.id = $(this).val();
+            });
+
         },
         updated: function () {
             $('.title-tooltip').tooltip({
@@ -417,6 +425,7 @@ if ($("#patient").length > 0) {
                     return $(this).attr('title');
                 }
             });
+            $('#arc').trigger("change");
             $('#consentement').datepicker('update');
             $('#screen').datepicker('update');
             $('#date-inclusion').datepicker('update');
@@ -575,7 +584,7 @@ if ($("#patient").length > 0) {
                 return !inclusion.inclusion.id;
             }
             // modalText: function() {
-            //   if(!this.visiteSelected.id) {
+            //   if(!this.visiteSelected.id){
             //      return "Vous allez ajouter une nouvelle visite à "+patient.patient.nom+" "+patient.patient.prenom;
             //   } else {
             //      return "Vous allez éditer la visite N°"+ this.visiteSelected.id+" du patient "+patient.patient.nom+" "+patient.patient.prenom;
@@ -587,6 +596,13 @@ if ($("#patient").length > 0) {
                 .on("changeDate", function () {
                     visite.visiteSelected.date = $('#date-visite').val();
                 });
+            $('#arc-visite').select2({
+                width: '100%',
+                language: "fr"
+            }).on('select2:select', function () {
+                visite.visiteSelected.arc.id = $(this).val();
+            });
+
         },
         updated: function () {
             $('.title-tooltip').tooltip({
@@ -595,6 +611,7 @@ if ($("#patient").length > 0) {
                     return $(this).attr('title');
                 }
             });
+            $('#arc-visite').trigger("change");
             $('#date-visite').datepicker('update');
         }
     });

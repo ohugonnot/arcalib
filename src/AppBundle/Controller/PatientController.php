@@ -41,7 +41,7 @@ class PatientController extends Controller
         $libCim10 = $this->getDoctrine()->getManager()->getRepository(LibCim10::class)->findBy(["utile" => true], ["libCourt" => 'asc']);
         $essais = $this->getDoctrine()->getManager()->getRepository(Essais::class)->findBy([], ["nom" => 'asc']);
         $services = $this->getDoctrine()->getManager()->getRepository(Service::class)->findBy([], ["nom" => 'asc']);
-        $arcs = $this->getDoctrine()->getManager()->getRepository(Arc::class)->findBy([], ["nomArc" => 'asc']);
+        $arcs = $this->getDoctrine()->getManager()->getRepository(Arc::class)->findBy(['datOut' => null], ["nomArc" => 'asc']);
 
         return $this->render('patient/patient.html.twig', [
             'medecins' => $medecins,
@@ -54,12 +54,12 @@ class PatientController extends Controller
 
     // ------------------------------------------Delete Patient-----------------------------------------------------
 
-	/**
-	 * @Route("/patient/supprimer/{id}", name="deletePatient", options={"expose"=true})
-	 * @Security("has_role('ROLE_ARC')")
-	 * @param Patient $patient
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/patient/supprimer/{id}", name="deletePatient", options={"expose"=true})
+     * @Security("has_role('ROLE_ARC')")
+     * @param Patient $patient
+     * @return JsonResponse
+     */
     public function deletePatientAction(Patient $patient)
     {
         $em = $this->getDoctrine()->getManager();
@@ -119,14 +119,14 @@ class PatientController extends Controller
         return new JsonResponse($patient);
     }
 
-	/**
-	 * @Route("/patient/save/{id}", name="savePatient", options={"expose"=true})
-	 * @Security("has_role('ROLE_ARC')")
-	 * @param Request $request
-	 * @param null $id
-	 * @param PatientFactory $patientFactory
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/patient/save/{id}", name="savePatient", options={"expose"=true})
+     * @Security("has_role('ROLE_ARC')")
+     * @param Request $request
+     * @param null $id
+     * @param PatientFactory $patientFactory
+     * @return JsonResponse
+     */
     public function savePatientAction(Request $request, PatientFactory $patientFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -137,7 +137,7 @@ class PatientController extends Controller
             $new = true;
         }
 
-	    $patient = $patientFactory->hydrate($patient, $request->request->get("appbundle_patient"));
+        $patient = $patientFactory->hydrate($patient, $request->request->get("appbundle_patient"));
 
         if (isset($patient->errorsMessage) && $patient->errorsMessage)
             return new JsonResponse(["success" => false, "message" => $patient->errorsMessage]);
