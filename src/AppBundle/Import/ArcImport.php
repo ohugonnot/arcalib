@@ -9,75 +9,80 @@ use DateTime;
 class ArcImport implements ImportInterface
 {
 
-	use Import;
+    use Import;
 
-	/**
-	 * @param bool $checkIfExist
-	 * @param bool $truncate
-	 */
-	public function import($checkIfExist = true, $truncate = true): void
-	{
-		if ($truncate) {
-			$this->entityManager->createQuery('DELETE AppBundle:Arc a')->execute();
-		}
+    /**
+     * @param bool $checkIfExist
+     * @param bool $truncate
+     */
+    public function import($checkIfExist = true, $truncate = false): void
+    {
+        if ($truncate) {
+            $this->entityManager->createQuery('DELETE AppBundle:Arc a')->execute();
+        }
 
-		$file = $this->kernel->getRootDir() . '/../bdd/arc.csv';
-		$arcs = $this->csvToArray->convert($file, ";");
+        $file = $this->kernel->getRootDir() . '/../bdd/arc.csv';
+        if (!file_exists($file)) {
+            echo "Pas d'arc a importé<br>";
+            return;
+        }
 
-		$bulkSize = 500;
-		$i = 0;
-		foreach ($arcs as $a) {
-			$i++;
-			$arc = false;
+        $arcs = $this->csvToArray->convert($file, ";");
 
-			foreach ($a as $k => $v) {
-				$a[$k] = trim($v);
-			}
+        $bulkSize = 500;
+        $i = 0;
+        foreach ($arcs as $a) {
+            $i++;
+            $arc = false;
 
-			if ($checkIfExist) {
-				$exist = $this->entityManager->getRepository(Arc::class)->findOneBy(["nomArc" => $a["Nom ARC"],"prenomArc" => $a["Prénom ARC"]]);
-				if ($exist) {
-					$arc = $exist;
-				}
-			}
+            foreach ($a as $k => $v) {
+                $a[$k] = trim($v);
+            }
 
-			if (!$arc) {
-				$arc = new Arc();
-			}
+            if ($checkIfExist) {
+                $exist = $this->entityManager->getRepository(Arc::class)->findOneBy(["nomArc" => $a["Nom ARC"], "prenomArc" => $a["Prénom ARC"]]);
+                if ($exist) {
+                    $arc = $exist;
+                }
+            }
 
-			$datIn = DateTime::createFromFormat('d/m/Y', $a["Date d'entrée"]);
-			$datOut = DateTime::createFromFormat('d/m/Y', $a["Date de sortie"]);
+            if (!$arc) {
+                $arc = new Arc();
+            }
 
-			if (!$datIn) {
-				$datIn = null;
-			}
+            $datIn = DateTime::createFromFormat('d/m/Y', $a["Date d'entrée"]);
+            $datOut = DateTime::createFromFormat('d/m/Y', $a["Date de sortie"]);
 
-			if (!$datOut) {
-				$datOut = null;
-			}
+            if (!$datIn) {
+                $datIn = null;
+            }
 
-			$arc->setNomArc($a["Nom ARC"]);
-            $arc->setPrenomArc(($a["Prénom ARC"])??null);
-			$arc->setDatIn($datIn);
-			$arc->setDatOut($datOut);
-			$arc->setIniArc($a["Initiales"]);
-			$arc->setDect($a["n° Poste"]);
-			$arc->setTel($a["Teléphone"]);
-			$arc->setMail($a["Mail"]);
+            if (!$datOut) {
+                $datOut = null;
+            }
 
-			if ($service = $this->entityManager->getRepository(Service::class)->findOneBy(["nom" => $a["SERVICE"]])) {
-				$arc->setService($service);
-			}
+            $arc->setNomArc($a["Nom ARC"]);
+            $arc->setPrenomArc(($a["Prénom ARC"]) ?? null);
+            $arc->setDatIn($datIn);
+            $arc->setDatOut($datOut);
+            $arc->setIniArc($a["Initiales"]);
+            $arc->setDect($a["n° Poste"]);
+            $arc->setTel($a["Teléphone"]);
+            $arc->setMail($a["Mail"]);
 
-			$this->entityManager->persist($arc);
+            if ($service = $this->entityManager->getRepository(Service::class)->findOneBy(["nom" => $a["SERVICE"]])) {
+                $arc->setService($service);
+            }
 
-			if ($i % $bulkSize == 0) {
-				$this->entityManager->flush();
-				$this->entityManager->clear();
-			}
-		}
+            $this->entityManager->persist($arc);
 
-		$this->entityManager->flush();
-		$this->entityManager->clear();
-	}
+            if ($i % $bulkSize == 0) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+            }
+        }
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+    }
 }

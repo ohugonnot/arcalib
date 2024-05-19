@@ -10,105 +10,116 @@ use Doctrine\ORM\NonUniqueResultException;
 
 class PatientImport implements ImportInterface
 {
-	use Import;
+    use Import;
 
-	/**
-	 * @param bool $checkIfExist
-	 * @param bool $truncate
-	 * @throws NonUniqueResultException
-	 */
-	public function import(bool $checkIfExist = true, bool $truncate = true): void
-	{
-		$emPatient = $this->entityManager->getRepository(Patient::class);
+    /**
+     * @param bool $checkIfExist
+     * @param bool $truncate
+     * @throws NonUniqueResultException
+     */
+    public function import(bool $checkIfExist = true, bool $truncate = false): void
+    {
+        $emPatient = $this->entityManager->getRepository(Patient::class);
 
-		if ($truncate) {
-			$this->entityManager->createQuery('DELETE AppBundle:Patient p')->execute();
-		}
+        if ($truncate) {
+            $this->entityManager->createQuery('DELETE AppBundle:Patient p')->execute();
+        }
 
-		$file = $this->kernel->getRootDir() . '/../bdd/patient.csv';
-		$patients = $this->csvToArray->convert($file, ";");
+        $file = $this->kernel->getRootDir() . '/../bdd/patient.csv';
+        if (!file_exists($file)) {
+            $file = $this->kernel->getRootDir() . '/../bdd/import.csv';
+        }
+        if (!file_exists($file)) {
+            echo "Pas de patient a importé<br>";
+            return;
+        }
+        $patients = $this->csvToArray->convert($file, ";");
 
-		$bulkSize = 500;
-		$i = 0;
-		foreach ($patients as $p) {
-			$i++;
-			$patient = false;
+        $bulkSize = 500;
+        $i = 0;
 
-			// Si le patient n'a pas un nom et un prénom on l'ignore
-			if (empty($p["NOM Patient"]) || empty($p["Prénom Patient"])) {
-				continue;
-			}
+        $patientsFinal = [];
+        foreach ($patients as $p) {
+            $i++;
+            $patient = false;
+            // Si le patient n'a pas un nom et un prénom on l'ignore
+            if (empty($p["NOM Patient"]) || empty($p["Prénom Patient"])) {
+                continue;
+            }
 
-			foreach ($p as $k => $v) {
-				$p[$k] = trim($v);
-			}
+            foreach ($p as $k => $v) {
+                $p[$k] = trim($v);
+            }
 
-			$datNai = DateTime::createFromFormat('d/m/Y', $p["Date de naissance"]);
-			$datDiag = DateTime::createFromFormat('d/m/Y', $p["Date du diagnostic"]);
-			$datLast = DateTime::createFromFormat('d/m/Y', $p["Date dernières nouvelles"]);
-			$datDeces = DateTime::createFromFormat('d/m/Y', $p["Date  Décès"]);
-			$cancer = (strtolower($p["Cancer O/N"]) == "vrai") ? true : false;;
+            $datNai = DateTime::createFromFormat('d/m/Y', $p["Date de naissance"] ?? null);
+            $datDiag = DateTime::createFromFormat('d/m/Y', $p["Date du diagnostic"] ?? null);
+            $datLast = DateTime::createFromFormat('d/m/Y', $p["Date dernières nouvelles"] ?? null);
+            $datDeces = DateTime::createFromFormat('d/m/Y', $p["Date  Décès"] ?? null);
+            $cancer = (strtolower($p["Cancer O/N"] ?? null) == "vrai") ? true : false;;
 
-			if (!$datNai) {
-				$datNai = null;
-			}
+            if (!$datNai) {
+                $datNai = null;
+            }
 
-			if (!$datDiag) {
-				$datDiag = null;
-			}
+            if (!$datDiag) {
+                $datDiag = null;
+            }
 
-			if (!$datLast) {
-				$datLast = null;
-			}
+            if (!$datLast) {
+                $datLast = null;
+            }
 
-			if (!$datDeces) {
-				$datDeces = null;
-			}
+            if (!$datDeces) {
+                $datDeces = null;
+            }
 
-			if ($checkIfExist) {
-				$exist = $emPatient->findOneBy(["nom" => $p["NOM Patient"], "prenom" => $p["Prénom Patient"], "datNai" => $datNai]);
-				if ($exist) {
-					$patient = $exist;
-				}
-			}
+            if ($checkIfExist) {
+                $exist = $emPatient->findOneBy(["nom" => $p["NOM Patient"], "prenom" => $p["Prénom Patient"], "datNai" => $datNai]);
+                if ($exist) {
+                    $patient = $exist;
+                }
+            }
 
-			if (!$patient) {
-				$patient = new Patient();
-			}
+            if (!$patient) {
+                $patient = new Patient();
+            }
+            $idInterne = $p["Id Interne Patient"] ?? null;
+            $idInterne = ($idInterne == "") ? null : $idInterne;
+            $patient->setIdInterne($idInterne);
+            $patient->setNom($p["NOM Patient"]);
+            $patient->setPrenom($p["Prénom Patient"]);
+            $patient->setDatNai($datNai);
+            $patient->setDatDiag($datDiag);
+            $patient->setDatLast($datLast);
+            $patient->setDatDeces($datDeces);
+            $patient->setNomNaissance($p["NOM JF"] ?? null);
+            $patient->setIpp($p["IPP"] ?? null);
+            $patient->setSexe($p["Sexe"] ?? null);
+            $patient->setMemo($p["Notes Patient"] ?? null);
+            $patient->setTxtDiag($p["Diagnostic"] ?? null);
+            $patient->setCancer($cancer);
+            $patient->setEvolution($p["Evolution"] ?? null);
+            $patient->setDeces($p["Vivant ou décédé"] ?? null);
 
-			$patient->setIdInterne($p["Id Patient"]);
-			$patient->setNom($p["NOM Patient"]);
-			$patient->setPrenom($p["Prénom Patient"]);
-			$patient->setDatNai($datNai);
-			$patient->setDatDiag($datDiag);
-			$patient->setDatLast($datLast);
-			$patient->setDatDeces($datDeces);
-			$patient->setNomNaissance($p["NOM JF"]);
-			$patient->setIpp($p["IPP"]);
-			$patient->setSexe($p["Sexe"]);
-			$patient->setMemo($p["Notes Patient"]);
-			$patient->setTxtDiag($p["Diagnostic"]);
-			$patient->setCancer($cancer);
-			$patient->setEvolution($p["Evolution"]);
-			$patient->setDeces($p["Vivant ou décédé"]);
+            if (!empty($p["Médecin référent"]) && $medecin = $this->entityManager->getRepository(Medecin::class)->findByNomPrenomConcat($p["Médecin référent"])) {
+                $patient->setMedecin($medecin);
+            }
 
-			if ($medecin = $this->entityManager->getRepository(Medecin::class)->findByNomPrenomConcat($p["Médecin référent"])) {
-				$patient->setMedecin($medecin);
-			}
+            if (!empty($p["Diagnostic CIM10"]) && $libCim10 = $this->entityManager->getRepository(LibCim10::class)->findOneBy(["cim10code" => $p["Diagnostic CIM10"]])) {
+                $patient->setLibCim10($libCim10);
+            }
 
-			if ($libCim10 = $this->entityManager->getRepository(LibCim10::class)->findOneBy(["cim10code" => $p["Diagnostic CIM10"]])) {
-				$patient->setLibCim10($libCim10);
-			}
+            $this->entityManager->persist($patient);
 
-			$this->entityManager->persist($patient);;
+            if ($i % $bulkSize == 0) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+            }
+            $patientsFinal[] = $patient;
+        }
 
-			if ($i % $bulkSize == 0) {
-				$this->entityManager->flush();
-				$this->entityManager->clear();
-			}
-		}
-
-		$this->entityManager->flush();
-		$this->entityManager->clear();
-	}
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        dump($patientsFinal);
+    }
 }

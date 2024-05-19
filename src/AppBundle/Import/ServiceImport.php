@@ -6,54 +6,58 @@ use AppBundle\Entity\Service;
 
 class ServiceImport implements ImportInterface
 {
-	use Import;
+    use Import;
 
-	public function import(bool $checkIfExist = true, bool $truncate = true): void
-	{
-		$emService = $this->entityManager->getRepository(Service::class);
+    public function import(bool $checkIfExist = true, bool $truncate = false): void
+    {
+        $emService = $this->entityManager->getRepository(Service::class);
 
-		if ($truncate) {
-			$this->entityManager->createQuery('DELETE AppBundle:Service s')->execute();
-		}
+        if ($truncate) {
+            $this->entityManager->createQuery('DELETE AppBundle:Service s')->execute();
+        }
 
-		$file = $this->kernel->getRootDir() . '/../bdd/service.csv';
-		$services = $this->csvToArray->convert($file, ";");
+        $file = $this->kernel->getRootDir() . '/../bdd/service.csv';
+        if (!file_exists($file)) {
+            echo "Pas de service a importé<br>";
+            return;
+        }
+        $services = $this->csvToArray->convert($file, ";");
 
-		$bulkSize = 500;
-		$i = 0;
-		foreach ($services as $s) {
-			$i++;
-			$service = false;
+        $bulkSize = 500;
+        $i = 0;
+        foreach ($services as $s) {
+            $i++;
+            $service = false;
 
-			if (empty($s["SERVICE"])) {
-				continue;
-			}
+            if (empty($s["SERVICE"])) {
+                continue;
+            }
 
-			foreach ($s as $k => $v) {
-				$s[$k] = trim($v);
-			}
+            foreach ($s as $k => $v) {
+                $s[$k] = trim($v);
+            }
 
-			if ($checkIfExist) {
-				$exist = $emService->findOneBy(["nom" => $s["SERVICE"]]);
-				if ($exist) {
-					$service = $exist;
-				}
-			}
+            if ($checkIfExist) {
+                $exist = $emService->findOneBy(["nom" => $s["SERVICE"]]);
+                if ($exist) {
+                    $service = $exist;
+                }
+            }
 
-			if (!$service) {
-				$service = new Service();
-			}
+            if (!$service) {
+                $service = new Service();
+            }
 
-			$service->setNom($s["SERVICE"]);
-			$this->entityManager->persist($service);
+            $service->setNom($s["SERVICE"]);
+            $this->entityManager->persist($service);
 
-			if ($i % $bulkSize == 0) {
-				$this->entityManager->flush();
-				$this->entityManager->clear();
-			}
-		}
+            if ($i % $bulkSize == 0) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+            }
+        }
 
-		$this->entityManager->flush();
-		$this->entityManager->clear();
-	}
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+    }
 }
