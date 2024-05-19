@@ -51,42 +51,45 @@ class DefaultController extends Controller
         return new JsonResponse(["Message" => $message]);
     }
 
-	/**
-	 * @Route("/vider/cache", name="viderCache")
-	 * @param ViderCache $viderCache
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/vider/cache", name="viderCache")
+     * @param ViderCache $viderCache
+     * @return JsonResponse
+     */
     public function viderCache(ViderCache $viderCache)
     {
-		$message = $viderCache->viderCache();
+        $message = $viderCache->viderCache();
 
         return new JsonResponse(["Message" => $message]);
     }
 
-	/**
-	 * @param ArcImport $arcImport
-	 * @param ServiceImport $serviceImport
-	 * @param MedecinImport $medecinImport
-	 * @param InclusionImport $inclusionImport
-	 * @param PatientImport $patientImport
-	 * @param VisiteImport $visiteImport
-	 * @param EssaiImport $essaiImport
-	 * @throws NonUniqueResultException
-	 */
-	public function importAll(ArcImport $arcImport,
-	                          ServiceImport $serviceImport,
-	                          MedecinImport $medecinImport,
-	                          InclusionImport $inclusionImport,
-	                          PatientImport $patientImport,
-	                          VisiteImport $visiteImport,
-	                          EssaiImport $essaiImport)
+    /**
+     * @Route("/import/all", name="import_all")
+     * @param ArcImport $arcImport
+     * @param ServiceImport $serviceImport
+     * @param MedecinImport $medecinImport
+     * @param InclusionImport $inclusionImport
+     * @param PatientImport $patientImport
+     * @param VisiteImport $visiteImport
+     * @param EssaiImport $essaiImport
+     * @throws NonUniqueResultException
+     */
+    public function importAll(ArcImport       $arcImport,
+                              ServiceImport   $serviceImport,
+                              MedecinImport   $medecinImport,
+                              InclusionImport $inclusionImport,
+                              PatientImport   $patientImport,
+                              VisiteImport    $visiteImport,
+                              EssaiImport     $essaiImport)
     {
-    	$serviceImport->import();
-    	$arcImport->import();
-    	$medecinImport->import();
-    	$essaiImport->import();
-    	$patientImport->import();
-    	$inclusionImport->import();
-    	$visiteImport->import();
+        $serviceImport->import();
+        $arcImport->import();
+        $medecinImport->import();
+        $essaiImport->import();
+        $patientImport->import();
+        $inclusionImport->import();
+        $visiteImport->import();
+
+        return new Response();
     }
 }
