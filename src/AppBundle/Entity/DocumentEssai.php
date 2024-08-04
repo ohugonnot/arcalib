@@ -17,28 +17,30 @@ class DocumentEssai
     // Ce qui sera sauver en base
     // Attention ne jamais les changer
     const ADMIN = "Admin";
-    const SCREEN = 'Screen';
-    const DOC = 'Doc';
-    const STAT = 'STATUS';
-    const VERSIONS = 'Versions';
+    const CONV = "conv";
     const COURRIERS = 'Courriers';
+    const DOC = 'Doc';
     const NEWSLETTER = 'Newsletter';
-    const CLOTURE = 'Cloture';
-    const SUSAR = 'Susar';
     const PROC = 'Procedures';
+    const SCREEN = 'Screen';
+    const STAT = 'STATUS';
+    const VERSIONS = 'Versions';    
+    const CLOTURE = 'Cloture';
+    const SUSAR = 'Susar';    
     const AUTRE = 'Autre';
 
     const TYPE = [
         'Administratif' => self::ADMIN,
+        'Convention' => self::CONV,
+        'Courriers' => self::COURRIERS,
+        'Documents' => self::DOC,
+        'Newsletter' => self::NEWSLETTER,
+        'Procédures' => self::PROC,
         'Screen' => self::SCREEN,
         'STATUS' => self::STAT,
-        'Documents' => self::DOC,
         'Versions' => self::VERSIONS,
-        'Courriers' => self::COURRIERS,
-        'Newsletter' => self::NEWSLETTER,
-        'Cloture' => self::CLOTURE,
-        'Susar' => self::SUSAR,
-        'Procedures' => self::PROC,
+        'Clôture' => self::CLOTURE,
+        'SUSAR' => self::SUSAR,
         'Autre' => self::AUTRE,
     ];
 
