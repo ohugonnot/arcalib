@@ -190,6 +190,8 @@ class EssaisRepository extends EntityRepository
             ->addSelect('t')
             ->leftJoin('e.arc', 'a')
             ->addSelect('a')
+            ->leftJoin('e.arcBackup', 'ab')
+            ->addSelect('ab')
             ->leftJoin('e.fils', 'fil')
             ->addSelect('fil')
             ->leftJoin('e.factures', 'f')
@@ -230,6 +232,8 @@ class EssaisRepository extends EntityRepository
                 $results[$key]["dateSignConv"] = $value["dateSignConv"]->format('d/m/Y');
             if ($results[$key]["arc"] == null)
                 $results[$key]["arc"] = ["id" => null];
+            if ($results[$key]["arcBackup"] == null)
+                $results[$key]["arcBackup"] = ["id" => null];
             if ($results[$key]["medecin"] == null)
                 $results[$key]["medecin"] = ["id" => null];
             foreach ($results[$key]["inclusions"] as $k2 => $v2) {
