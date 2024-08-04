@@ -24,8 +24,9 @@ class DocumentEssai
     const PROC = 'Procedures';
     const SCREEN = 'Screen';
     const STAT = 'STATUS';
-    const VERSIONS = 'Versions';    
-    const CLOTURE = 'Cloture';
+    const VERSIONS = 'Versions';
+     const MAT = 'Materiel';   
+    const CLOTURE = 'Clôture';
     const SUSAR = 'Susar';    
     const AUTRE = 'Autre';
 
@@ -37,8 +38,9 @@ class DocumentEssai
         'Newsletter' => self::NEWSLETTER,
         'Procédures' => self::PROC,
         'Screen' => self::SCREEN,
-        'STATUS' => self::STAT,
+        'Statut' => self::STAT,
         'Versions' => self::VERSIONS,
+        'Matériel' => self::MAT,
         'Clôture' => self::CLOTURE,
         'SUSAR' => self::SUSAR,
         'Autre' => self::AUTRE,

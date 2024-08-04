@@ -95,6 +95,11 @@ class Arc
     private $essais; // un arc est lié a plusieurs essias
 
     /**
+     * @ORM\OneToMany(targetEntity="Essais", mappedBy="arcBackup")
+     */
+    private $essaisBackups; // un arc est lié a plusieurs essias
+
+    /**
      * @ORM\OneToMany(targetEntity="Visite", mappedBy="arc")
      */
     private $visites; // un arc est lié a plusieurs visites
@@ -120,6 +125,7 @@ class Arc
     {
         $this->inclusions = new ArrayCollection();
         $this->essais = new ArrayCollection();
+        $this->essaisBackups = new ArrayCollection();
         $this->visites = new ArrayCollection();
     }
 
@@ -411,6 +417,39 @@ class Arc
         return $this->essais;
     }
 
+
+    /**
+     * Add essai
+     * @param Essais $essai
+     * @return Arc
+     */
+    public function addEssaisBackup(Essais $essai)
+    {
+        $this->essaisBackups[] = $essai;
+        $essai->setArcBackup($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove essai
+     * @param Essais $essai
+     */
+    public function removeEssaisBackup(Essais $essai)
+    {
+        $this->essaisBackups->removeElement($essai);
+        $essai->setArcBackup(null);
+    }
+
+    /**
+     * Get essais
+     * @return Collection
+     */
+    public function getEssaisBackups()
+    {
+        return $this->essaisBackups;
+    }
+
 //------------------
 
     /**
@@ -485,7 +524,7 @@ class Arc
         return $this;
     }
 
-    public function getNomPrenom() : string
+    public function getNomPrenom(): string
     {
         return $this->getNomArc() . ' ' . $this->getPrenomArc();
     }

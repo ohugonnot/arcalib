@@ -34,6 +34,7 @@ if ($("#protocole").length > 0) {
                 services: [],
                 medecin: {id: null},
                 arc: {id: null},
+                arcBackup: {id: null},
                 detail: {}
             },
             disabled: true,

@@ -30,7 +30,7 @@ class LogoutListener implements LogoutHandlerInterface
      */
     public function logout(Request $Request, Response $Response, TokenInterface $tokenStorage)
     {
-        $this->log->save("User", null, "déconnexion", "L'utilisateur " . $tokenStorage->getUser()->getUsername() . " s'est déconnecté");
+        $this->log->save("User", null, "déconnexion", "" . $tokenStorage->getUser()->getUsername() . " est déconnecté (Code DECONX)");
         setcookie('cc_loggedin', null, -1, '/');
         setcookie('cc_an', null, -1, '/');
         setcookie('cc_data', null, -1, '/');

@@ -14,7 +14,7 @@ class CsvToArray
 {
     protected $cols = [];
     protected $name;
-    protected $titles;
+    protected $titles = [];
     protected $em;
 
     /**
@@ -47,17 +47,33 @@ class CsvToArray
         return $data;
     }
 
-    public function exportCSV($listes, $name)
+    public function exportCSV($listes, $name, $columns = [])
     {
         $this->name = $name;
         $this->titles = $this->getEntityColumn($listes[0]);
+        if (!empty($columns)) {
+            foreach ($this->titles as $k => $v) {
+                $columns = array_map("strtolower", $columns);
+                if (!in_array(strtolower($k), $columns)) {
+                    unset($this->titles[$k]);
+                }
+            }
+        }
 
         $response = new StreamedResponse();
-        $response->setCallback(function () use ($listes) {
+        $response->setCallback(function () use ($listes, $columns) {
             $handle = fopen('php://output', 'w+');
             fputcsv($handle, $this->titles, ';');
             foreach ($listes as $liste) {
                 $liste = $this->getEntityColumnValues($liste);
+                if (!empty($columns)) {
+                    foreach ($liste as $k => $v) {
+                        $columns = array_map("strtolower", $columns);
+                        if (!in_array(strtolower($k), $columns)) {
+                            unset($liste[$k]);
+                        }
+                    }
+                }
                 fputcsv(
                     $handle,
                     $liste,
@@ -66,7 +82,6 @@ class CsvToArray
             }
             fclose($handle);
         });
-
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
         $response->headers->set('Content-Disposition', 'attachment; filename="export-' . $name . '-' . date('m-d-Y_hia') . '.csv"');
@@ -81,7 +96,7 @@ class CsvToArray
         foreach ($this->cols as $col) {
             if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
                 continue;
-            $values[] = $col;
+            $values[$col] = $col;
         }
 
         $fonction = $this->name . 'Titles';
@@ -96,7 +111,9 @@ class CsvToArray
 
     function getEntityColumnValues($entity, $name = null)
     {
-        $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
+        if (empty($this->cols)) {
+            $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
+        }
         foreach ($this->cols as $col) {
             $getter = 'get' . ucfirst($col);
             if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
@@ -107,11 +124,11 @@ class CsvToArray
             if (!method_exists($entity, $getter))
                 continue;
             if (is_a($entity->$getter(), 'DateTime'))
-                $values[] = $entity->$getter()->format('d/m/Y');
+                $values[$col] = $entity->$getter()->format('d/m/Y');
             elseif ($col == 'NumInc')
-                $values[] = '="' . $entity->$getter() . '"';
+                $values[$col] = '="' . $entity->$getter() . '"';
             else
-                $values[] = $entity->$getter();
+                $values[$col] = $entity->$getter();
         }
 
         $fonction = $this->name;
@@ -173,13 +190,14 @@ class CsvToArray
     {
         /** @var $entity Essais */
         $medecinRef = ($entity->getMedecin() != null) ? $entity->getMedecin()->getNom() . ' ' . $entity->getMedecin()->getPrenom() : "";
-
-        return array_merge($values, [$medecinRef]);
+        $arc = ($entity->getArc() != null) ? $entity->getArc()->getNomArc() . ' ' . $entity->getArc()->getPrenomArc() : "";
+        $arcBackup = ($entity->getArcBackup() != null) ? $entity->getArcBackup()->getNomArc() . ' ' . $entity->getArcBackup()->getPrenomArc() : "";
+        return array_merge($values, ["medecin" => $medecinRef, "arc" => $arc, "arcBackup" => $arcBackup]);
     }
 
     public function essaistitles($values)
     {
-        return array_merge($values, ["Medecin référent"]);
+        return array_merge($values, ["medecin" => "Medecin référent", "arc" => "Arc", "arcBackup" => "Arc Backup"]);
     }
 
     //extractions  des factures

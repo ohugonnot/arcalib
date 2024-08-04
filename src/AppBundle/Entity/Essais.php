@@ -24,6 +24,7 @@ class Essais
     // Ce qui sera sauver en base
     // Attention ne jamais les changer
     const FAISABILITE_EN_ATTENTE = "Faisabilité en attente";
+    const ACC_CONV = "Accepté, attente convention";
     const CONVENTION_SIGNATURE = "Convention signature";
     const ATTENTE_DE_MEP = "Attente de MEP";
     const INCLUSIONS_OUVERTES = "Inclusions ouvertes";
@@ -31,6 +32,7 @@ class Essais
     const INCLUSIONS_CLOSES_SUIVI = "Inclusions closes, suivi";
     const QUERIES_ET_FINALISATION = "Queries et finalisation";
     const CLOSE_EN_ATTENTE_PAYEMENT = "Clos, en attente payement";
+    const ATT_CLOTARD = "Attente clôture et Archivage";
     const ARCHIVE = "Archivé";
     const AUTRE = "Autre";
     const REFUS = "Refus";
@@ -38,13 +40,15 @@ class Essais
     // Ce qu'on pourra lire dans les selecteurs sur l'outil
     const STATUT = [
         'Faisabilité en attente' => self::FAISABILITE_EN_ATTENTE,
-        'Convention signature' => self::CONVENTION_SIGNATURE,
+        'Accepté, attente convention' => self::ACC_CONV,
+         'Convention signature' => self::CONVENTION_SIGNATURE,
         'Attente de MEP' => self::ATTENTE_DE_MEP,
         'Inclusions ouvertes' => self::INCLUSIONS_OUVERTES,
         'Inclusions gelées' => self::INCLUSIONS_GELEES,
         'Inclusions closes, suivi' => self::INCLUSIONS_CLOSES_SUIVI,
         'Queries et finalisation' => self::QUERIES_ET_FINALISATION,
         'Clos, en attente payement' => self::CLOSE_EN_ATTENTE_PAYEMENT,
+        'Attente clôture et Archivage' => self::ATT_CLOTARD,
         'Archivé' => self::ARCHIVE,
         'Autre' => self::AUTRE,
         'Refus' => self::REFUS,
@@ -427,6 +431,13 @@ class Essais
      * @Serializer\Exclude
      */
     private $arc;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Arc", inversedBy="essaisBackups" , cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Serializer\Exclude
+     */
+    private $arcBackup;
 
 // Ici la relation  1 Essai, 1 Medecin mais 1 Medecin  N Essais
     /**
@@ -1215,6 +1226,27 @@ class Essais
     public function setArc(Arc $arc = null)
     {
         $this->arc = $arc;
+
+        return $this;
+    }
+
+    /**
+     * Get arcBackup
+     * @return Arc
+     */
+    public function getArcBackup()
+    {
+        return $this->arcBackup;
+    }
+
+    /**
+     * Set arcBackup
+     * @param Arc|null $arcBackup
+     * @return Essais
+     */
+    public function setArcBackup(Arc $arcBackup = null)
+    {
+        $this->arcBackup = $arcBackup;
 
         return $this;
     }

@@ -27,6 +27,7 @@ class Document
     const RADIO = 'Radio';
     const ECG = 'ECG';
     const BILAN_BIO = 'Bilan Bio';
+    const FEP = 'FEP';
     const CHIMIO = 'Chimio';
     const ORDONNANCE = 'Ordonnance';
     const RANDO = 'Rando';
@@ -54,6 +55,7 @@ class Document
         'Radio' => self::RADIO,
         'ECG' => self::ECG,
         'Bilan Biologique' => self::BILAN_BIO,
+        'Fiche envoi prélèvement' => self::FEP,
         'Chimiothérapie' => self::CHIMIO,
         'Ordonnance' => self::ORDONNANCE,
         'Randomisation' => self::RANDO,
