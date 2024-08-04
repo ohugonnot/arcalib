@@ -31,7 +31,7 @@ class LoginListener
     {
         $user = $event->getAuthenticationToken()->getUser();
         $this->session->set("modalNewVisites", true);
-        $this->log->save("User", null, "connexion", "L'utilisateur " . $user->getUsername() . " s'est connecté");
+        $this->log->save("User", null, "connexion", "" . $user->getUsername() . " est connecté (Code CONX) ");
     }
 
 }

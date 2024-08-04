@@ -43,6 +43,12 @@
 
                         </a>
 
+                        <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('exportEssaisArc') }}">
+
+                            Exporter Arc<i class="fa fa-file-excel-o ml-1"></i>
+
+                        </a>
+
                     {% endif %}
                     {# Ajouter un essai #}
                     <a class="btn btn-sm btn-outline-primary mr-3" href="{{ path('protocole') }}">
@@ -150,7 +156,7 @@
 
                         <tbody class="list">
 
-                        {% for result in essais%}
+                        {% for result in essais %}
                             {% set essai = result[0] %}
 
                             <tr>

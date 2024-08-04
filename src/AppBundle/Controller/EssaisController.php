@@ -53,7 +53,7 @@ class EssaisController extends Controller
 
         if ($id) {
             $essai = $emEssai->find($id);
-            return $this->redirectToRoute("protocole", ["id" => $id, "archive" => in_array($essai->getStatut(),[Essais::ARCHIVE, Essais::REFUS])]);
+            return $this->redirectToRoute("protocole", ["id" => $id, "archive" => in_array($essai->getStatut(), [Essais::ARCHIVE, Essais::REFUS])]);
         }
 
         $user = $this->getUser();
@@ -157,22 +157,21 @@ class EssaisController extends Controller
         $essai = $em->getRepository(Essais::class)->find($id);
         $fils = $request->request->get("appbundle_fils") ?? [];
         $ids = [];
-        foreach ($fils as $k=>$fil)
-        {
-           $filEntity = $filFactorty->hydrate(null, $fil, $k);
+        foreach ($fils as $k => $fil) {
+            $filEntity = $filFactorty->hydrate(null, $fil, $k);
 
-           if (isset($filEntity->errorsMessage) && $filEntity->errorsMessage)
+            if (isset($filEntity->errorsMessage) && $filEntity->errorsMessage)
                 return new JsonResponse(["success" => false, "message" => $filEntity->errorsMessage]);
 
-           if (!$filEntity->getId()) {
-               $em->persist($filEntity);
-               $essai->addFil($filEntity);
-               $em->flush();
-           }
-           $ids[] = $filEntity->getId();
+            if (!$filEntity->getId()) {
+                $em->persist($filEntity);
+                $essai->addFil($filEntity);
+                $em->flush();
+            }
+            $ids[] = $filEntity->getId();
         }
-        foreach($essai->getFils() as $fil) {
-             if (!in_array($fil->getId(),$ids))
+        foreach ($essai->getFils() as $fil) {
+            if (!in_array($fil->getId(), $ids))
                 $em->remove($fil);
         }
         $em->flush();
@@ -215,14 +214,14 @@ class EssaisController extends Controller
         return new JsonResponse($essais);
     }
 
-	/**
-	 * @Route("/essai/save/{id}", name="saveEssai", options={"expose"=true})
-	 * @Security("has_role('ROLE_ARC')")
-	 * @param Request $request
-	 * @param null $id
-	 * @param EssaiFactory $essaiFactory
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/essai/save/{id}", name="saveEssai", options={"expose"=true}, methods={"POST"})
+     * @Security("has_role('ROLE_ARC')")
+     * @param Request $request
+     * @param null $id
+     * @param EssaiFactory $essaiFactory
+     * @return JsonResponse
+     */
     public function saveEssaiAction(Request $request, EssaiFactory $essaiFactory, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -260,6 +259,22 @@ class EssaisController extends Controller
         $essais = $emEssai->findAllByUser($user);
 
         return $export->exportCSV($essais, "essais");
+    }
+
+    /**
+     * @Route("/essais/export/arc", name="exportEssaisArc", options={"expose"=true})
+     * @Security("has_role('ROLE_ARC')")
+     * @param CsvToArray $export
+     * @return StreamedResponse
+     */
+    public function exportEssaisArcAction(CsvToArray $export)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $emEssai = $em->getRepository(Essais::class);
+        $essais = $emEssai->findAllByUser($user);
+
+        return $export->exportCSV($essais, "essais", ['nom', 'statut', 'medecin', 'arc', 'arcBackup']);
     }
 
     /**
@@ -341,12 +356,12 @@ class EssaisController extends Controller
         return new BinaryFileResponse($file_path);
     }
 
-	/**
-	 * @param Essais $a
-	 * @param Essais $b
-	 * @return bool|int
-	 */
-	private function orderByStatut(Essais $a, Essais $b)
+    /**
+     * @param Essais $a
+     * @param Essais $b
+     * @return bool|int
+     */
+    private function orderByStatut(Essais $a, Essais $b)
     {
         $statuts = array_keys(Essais::STATUT);
         $statutA = array_search($a->getStatut(), $statuts);

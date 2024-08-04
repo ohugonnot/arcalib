@@ -55,6 +55,31 @@
 
             {% endblock %}
 
+            {% block fil_ariane_more %}
+
+                <div class="ml-auto d-flex">
+
+                    {# Barre de recherche #}
+                    <form id="recherche" class="form-inline ml-auto"
+                          action="{{ path('inclusion_list_documents', {id: form.vars.value.inclusion.id }) }}">
+
+                        <input class="search liste-documents-recherche form-control form-control-sm mr-2"
+                               autocomplete="off" type="text" id='input-recherche'
+                               value='{{ app.request.get("recherche") }}' name="recherche"
+                               placeholder="Rechercher un document / Filtrer"
+                               aria-label="Rechercher un document / Filtrer">
+
+                        <button class="btn btn-violet btn-sm" @click.prevent="search" type="submit">
+
+                            <i class="fa fa-search" aria-hidden="true"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+            {% endblock %}
+
         {% endembed %}
 
     {% endblock fil_ariane %}
@@ -80,7 +105,7 @@
 
                             {% if app.request.get("_route") == 'addDocument' %}
 
-                               Ajouter un nouveau document
+                                Ajouter un nouveau document
 
                             {% elseif app.request.get("_route") == 'editDocument' %}
 
@@ -137,7 +162,7 @@
 
                         {# J/M/A #}
                         <div class="form-row form-group">
-                            
+
                             <div class="col">
 
                                 {{ form_label(form.jma) }}
@@ -153,7 +178,7 @@
                             </div>
 
                         </div>
-                        
+
                         {# Type #}
                         <div class="form-row form-group">
 
@@ -241,20 +266,24 @@
 
                         <div class="col-6 col-arcoffice col-arcoffice-document p-0 {% if url == null %}col-arcoffice-document-add{% endif %}">
 
-                            <div data-id='{{ form.vars.value.id }}' id="viewer" class="{% if url != null or form.vars.value.signer %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
+                            <div data-id='{{ form.vars.value.id }}' id="viewer"
+                                 class="{% if url != null or form.vars.value.signer %}d-none {% else %}d-flex {% endif %} justify-content-center align-items-center col-arcoffice-document-add-sub">
 
                                 <div id="viewer-content">
 
-                                    <h5>Glisser/déposer ou cliquer pour télécharger un PDF <i class="fa fa-file-pdf-o"></i></h5>
+                                    <h5>Glisser/déposer ou cliquer pour télécharger un PDF <i
+                                                class="fa fa-file-pdf-o"></i></h5>
 
-                                    <p class="text-center"><small>(le fichier doit être au format PDF et ne pas dépasser 5 Mo.)</small></p>
+                                    <p class="text-center"><small>(le fichier doit être au format PDF et ne pas dépasser
+                                            5 Mo.)</small></p>
 
                                 </div>
 
                             </div>
 
-                            <object {% if url == null %}class="d-none"{% endif %} data="{% if url != null %}{{ url }}{% endif %}" type="application/pdf">
-                                
+                            <object {% if url == null %}class="d-none"{% endif %}
+                                    data="{% if url != null %}{{ url }}{% endif %}" type="application/pdf">
+
                                 <embed src="{% if url != null %}{{ url }}{% endif %}" type="application/pdf"/>
 
                             </object>
@@ -270,14 +299,16 @@
 
                             {# Barre de titre et boutons #}
                             <div class="form-title d-flex align-items-center">Liste : n° {{ index + 1 }}/{{ count }}
-                                
+
                                 <div class="ml-auto">
 
                                     <div style='text-align: right' class="col">
                                         {# Prec #}
                                         {% if prev == null %}{% set prev = {id: allDocuments.last.id} %}{% endif %}
                                         {% if prev.id|default(false) %}
-                                            <a title="Précédent" class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip" href="{{ path_context('editDocument', { id: prev.id }) }}">
+                                            <a title="Précédent"
+                                               class="arcoffice-document-left btn btn-sm btn-outline-primary title-tooltip"
+                                               href="{{ path_context('editDocument', { id: prev.id }) }}">
                                                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
                                             </a>
                                         {% endif %}
@@ -285,44 +316,56 @@
                                         {# Suiv #}
                                         {% if next == null %}{% set next = {id: allDocuments.first.id} %}{% endif %}
                                         {% if next.id|default(false) %}
-                                            <a title='Suivant' class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip' href="{{ path_context('editDocument', { id: next.id }) }}">
+                                            <a title='Suivant'
+                                               class='arcoffice-document-right btn btn-sm btn-outline-primary title-tooltip'
+                                               href="{{ path_context('editDocument', { id: next.id }) }}">
                                                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                                             </a>
                                         {% endif %}
 
                                         {# Add #}
-                                        <a title='Ajouter un document' class='btn btn-sm btn-outline-success title-tooltip' href="{{ path("addDocument", { id: form.vars.value.inclusion.id }) }}">
-                                           <i class="fa fa-plus" aria-hidden="true"></i>
+                                        <a title='Ajouter un document'
+                                           class='btn btn-sm btn-outline-success title-tooltip'
+                                           href="{{ path("addDocument", { id: form.vars.value.inclusion.id }) }}">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
                                         </a>
 
                                         {# Supprimer le PDF en cours #}
                                         {% if not form.vars.value.signer %}
-                                        <a id='remove-pdf-button' data-id="{{ form.vars.value.id }}" class="btn btn-sm btn-outline-danger title-tooltip arcoffice-buttons_delete-doc remove-document-button" href="#" title="Supprimer le PDF">
-                                           <i class="fa fa-trash" aria-hidden="true"></i>
-                                        </a>
+                                            <a id='remove-pdf-button' data-id="{{ form.vars.value.id }}"
+                                               class="btn btn-sm btn-outline-danger title-tooltip arcoffice-buttons_delete-doc remove-document-button"
+                                               href="#" title="Supprimer le PDF">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </a>
                                         {% else %}
-                                            <i class="btn btn-sm btn-outline-danger title-tooltip fa fa-ban" title="Impossible de supprimer le document" aria-hidden="true"></i>
+                                            <i class="btn btn-sm btn-outline-danger title-tooltip fa fa-ban"
+                                               title="Impossible de supprimer le document" aria-hidden="true"></i>
                                         {% endif %}
 
                                         {# Liste des documents de l'inclusion #}
-                                        <a class="btn btn-sm btn-outline-secondary title-tooltip" href="{{ path('inclusion_list_documents', { id: form.vars.value.inclusion.id }) }}" title="Tous les documents">
+                                        <a class="btn btn-sm btn-outline-secondary title-tooltip"
+                                           href="{{ path('inclusion_list_documents', { id: form.vars.value.inclusion.id }) }}"
+                                           title="Tous les documents">
                                             <i class="fa fa-list ml-1"></i>
                                         </a>
                                     </div>
 
                                     <div style='text-align: right' class="col">
-                                        {% if (app.user.medecin == inclusion.medecin or is_granted('ROLE_ADMIN')) and not form.vars.value.signer  %}
-                                            <a class="mt-2 btn btn-sm btn-outline-danger title-tooltip" href="{{ path("signerDocument", {id: form.vars.value.id}) }}" >
+                                        {% if (app.user.medecin == inclusion.medecin or is_granted('ROLE_ADMIN')) and not form.vars.value.signer %}
+                                            <a class="mt-2 btn btn-sm btn-outline-danger title-tooltip"
+                                               href="{{ path("signerDocument", {id: form.vars.value.id}) }}">
                                                 <i class="fa fa-check-square-o"></i> <span>Signer le document</span>
                                             </a>
                                         {% endif %}
 
-                                        {# Retour Fiche patient#}
+                                        {# Retour Fiche patient #}
                                         {% if form.vars.value.inclusion.patient.id is defined %}
 
                                             {% set patient = form.vars.value.inclusion.patient %}
 
-                                            <a class="mt-2 btn btn-sm btn-outline-info title-tooltip" href="{{ path("patient", { id: patient.id }) }}" title="Retour fiche du patient">
+                                            <a class="mt-2 btn btn-sm btn-outline-info title-tooltip"
+                                               href="{{ path("patient", { id: patient.id }) }}"
+                                               title="Retour fiche du patient">
                                                 <i class="fa fa-user"></i> <span> {{ patient.nomPrenom }}</span>
                                             </a>
                                         {% endif %}
@@ -337,36 +380,44 @@
 
                                 <table class="table table-sm table-striped mb-0">
                                     <thead>
-                                        <tr>
-                                            {% if order == 'ASC' %}{% set order_inverse = 'DESC' %}{% else %}{% set order_inverse = 'ASC' %}{% endif %}
-                                            <th><a href="{{ path_context('editDocument', {id: form.vars.value.id, order:order_inverse}) }}">Date <i class="fa {% if order_inverse == 'ASC' %}fa-caret-down {% else %}fa-caret-up {% endif %}"></i></a></th>
-                                            <th>JMA</th>
-                                            <th>Type</th>
-                                            <th class="text-center">Signé</th>
-                                        </tr>
+                                    <tr>
+                                        {% if order == 'ASC' %}{% set order_inverse = 'DESC' %}{% else %}{% set order_inverse = 'ASC' %}{% endif %}
+                                        <th>
+                                            <a href="{{ path_context('editDocument', {id: form.vars.value.id, order:order_inverse}) }}">Date
+                                                <i class="fa {% if order_inverse == 'ASC' %}fa-caret-down {% else %}fa-caret-up {% endif %}"></i></a>
+                                        </th>
+                                        <th>JMA</th>
+                                        <th>Type</th>
+                                        <th class="text-center">Signé</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {% for document in allDocuments %}
-                                            <tr class="{% if document.id == form.vars.value.id %}is-active {% endif %}{% if document.archive %}text-danger{% endif %}">
-                                                <td>
-                                                    <a href="{{ path_context("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}</a>
-                                                </td>
-                                                <td>{{ document.jma }}</td>
-                                                <td>
-                                                    {% if document.file == null %}<i class='fa fa-ban mr-1 text-danger title-tooltip' data-placement="top" title="Aucun PDF"></i>{% endif %} {{ document.type }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {% if document.signer %}<i class='fa fa-check-square-o title-tooltip' {% if document.dateSignature %}title="Signé le {{ document.dateSignature|date("d/m/Y") }} par {{ document.signerBy.username|default('') }}"{% endif %}></i>{% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
+                                    {% for document in allDocuments %}
+                                        <tr class="{% if document.id == form.vars.value.id %}is-active {% endif %}{% if document.archive %}text-danger{% endif %}">
+                                            <td>
+                                                <a href="{{ path_context("editDocument", {id: document.id}) }}">{{ document.date|date("d/m/Y") }}</a>
+                                            </td>
+                                            <td>{{ document.jma }}</td>
+                                            <td>
+                                                {% if document.file == null %}<i
+                                                        class='fa fa-ban mr-1 text-danger title-tooltip'
+                                                        data-placement="top"
+                                                        title="Aucun PDF"></i>{% endif %} {{ document.type }}
+                                            </td>
+                                            <td class="text-center">
+                                                {% if document.signer %}<i class='fa fa-check-square-o title-tooltip'
+                                                                           {% if document.dateSignature %}title="Signé le {{ document.dateSignature|date("d/m/Y") }} par {{ document.signerBy.username|default('') }}"{% endif %}></i>{% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             {% endif %}
                         </div>
 
                         {# Modal - Ajouter/Éditer une document PDF #}
-                        <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1" role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
+                        <div class="modal fade arcoffice-protocole-pdf" id="arcoffice-document-pdf" tabindex="-1"
+                             role="dialog" aria-labelledby="Ajouter/Consulter les PDFs du protocole" aria-hidden="true">
 
                             <div class="modal-dialog modal-md" role="document">
 
@@ -399,8 +450,10 @@
 
                                                 <label class="custom-file">
 
-                                                    <span id='document-file' style='width:260px' class="custom-file-control"></span>
-                                                    <span id='document-loader' class="loader ml-2" style='display:none'></span>
+                                                    <span id='document-file' style='width:260px'
+                                                          class="custom-file-control"></span>
+                                                    <span id='document-loader' class="loader ml-2"
+                                                          style='display:none'></span>
 
                                                 </label>
 
@@ -434,12 +487,13 @@
 
                                     </div>
 
-                                    {# Pied de page  modal#}
+                                    {# Pied de page  modal #}
                                     <div class="modal-footer">
 
                                         <div class="ml-auto">
 
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Fermer
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-dismiss="modal">Fermer
                                             </button>
 
                                         </div>

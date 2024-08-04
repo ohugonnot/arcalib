@@ -78,6 +78,12 @@ class Visite
 
     /**
      * @var DateTime
+     * @ORM\Column(name="date_original", type="datetime", nullable=true)
+     */
+    private $date_original;
+
+    /**
+     * @var DateTime
      * @ORM\Column(name="date_fin", type="datetime", nullable=true)
      */
     private $date_fin;
@@ -179,6 +185,27 @@ class Visite
     public function setDate($date)
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     * @return DateTime
+     */
+    public function getDateOriginal()
+    {
+        return $this->date_original;
+    }
+
+    /**
+     * Set date
+     * @param DateTime $date
+     * @return Visite
+     */
+    public function setDateOriginal($date)
+    {
+        $this->date_original = $date;
 
         return $this;
     }
@@ -433,6 +460,27 @@ class Visite
     {
         $this->duree = $duree;
         return $this;
+    }
+
+    /**
+     * Get the delay in days between date_original and date
+     * @return int|null
+     */
+    public function getRetard(): ?int
+    {
+        if ($this->date_original === null || $this->date === null) {
+            return null; // Or 0 if you prefer to return 0 in case of missing dates
+        }
+
+        // Create DateTime objects if they are not already
+        $dateOriginal = $this->date_original;
+        $date = $this->date;
+
+        // Calculate the difference between the dates
+        $interval = $dateOriginal->diff($date);
+
+        // Return the number of days
+        return $interval->days;
     }
 
 }
