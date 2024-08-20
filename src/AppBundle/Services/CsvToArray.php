@@ -96,6 +96,10 @@ class CsvToArray
         foreach ($this->cols as $col) {
             if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
                 continue;
+            
+            if ($col == "id") {
+                $col = "id_" . strtolower((new \ReflectionClass($entity))->getShortName());
+            }
             $values[$col] = $col;
         }
 
@@ -113,9 +117,13 @@ class CsvToArray
     {
         $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
         foreach ($this->cols as $col) {
-            $getter = 'get' . ucfirst($col);
             if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
                 continue;
+
+            $getter = 'get' . ucfirst($col);
+            if ($col == "id") {
+                $col = "id_" . strtolower((new \ReflectionClass($entity))->getShortName());
+            }
             if (!method_exists($entity, $getter)) {
                 $getter = $this->camelize($getter);
             }
