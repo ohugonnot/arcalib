@@ -111,9 +111,7 @@ class CsvToArray
 
     function getEntityColumnValues($entity, $name = null)
     {
-        if (empty($this->cols)) {
-            $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
-        }
+        $this->cols = $this->em->getClassMetadata(get_class($entity))->getColumnNames();
         foreach ($this->cols as $col) {
             $getter = 'get' . ucfirst($col);
             if (in_array($col, ["synopsis", "protocole", "crf", "nip", "procedure"]))
@@ -163,12 +161,12 @@ class CsvToArray
         $patientInitial = ($entity->getPatient() != null) ? $entity->getPatient()->initial() : "";
         $essaiNom = ($entity->getEssai() != null) ? $entity->getEssai()->getNom() : "";
 
-        return array_merge([$patientNomPrenom, $patientInitial, $essaiNom, $medecinRef, $service], $values);
+        return array_merge(["patient" => $patientNomPrenom, "initial" => $patientInitial, "protocole" => $essaiNom, "medecin" => $medecinRef, "service" => $service], $values);
     }
 
     public function inclusionsTitles($values)
     {
-        return array_merge(["Patient", "Initiales", "Protocole", "Médecin référent", "Service"], $values);
+        return array_merge(["patient" => "Patient", "initial" => "Initiales", "protocole" => "Protocole Nom", "medecin" => "Médecin référent", "service" => "Service"], $values);
     }
 
     //extractions  de la page patient
@@ -177,12 +175,12 @@ class CsvToArray
         /** @var $entity Patient */
         $libCim10 = ($entity->getLibCim10() != null) ? $entity->getLibCim10()->getcim10code() : "";
 
-        return array_merge($values, [$libCim10]);
+        return array_merge($values, ["libCim10" => $libCim10]);
     }
 
     public function patientsTitles($values)
     {
-        return array_merge($values, ["Code CIM10"]);
+        return array_merge($values, ["libCim10" => "Code CIM10"]);
     }
 
     //extractions  de la page Essais
@@ -206,12 +204,12 @@ class CsvToArray
         /** @var $entity Facture */
         $essaiNom = ($entity->getEssai() != null) ? $entity->getEssai()->getNom() : "";
 
-        return array_merge($values, [$essaiNom]);
+        return array_merge($values, ["protocole" => $essaiNom]);
     }
 
     public function facturestitles($values)
     {
-        return array_merge($values, ["Protocole"]);
+        return array_merge($values, ["protocole" => "Protocole"]);
     }
 
     //extractions  des factures
@@ -229,14 +227,19 @@ class CsvToArray
         $service = ($entity->getService() != null) ? $entity->getService()->getNom() : "";
         $patientNomPrenom = ($entity->getPatient() != null) ? $entity->getPatient()->getNom() . ' ' . $entity->getPatient()->getPrenom() : "";
         $patientInitial = ($entity->getPatient() != null) ? $entity->getPatient()->initial() : "";
-
-        return array_merge([$patientNomPrenom, $patientInitial, $medecinRef, $service], $values, $this->getEntityColumnValues($entity->getEssai(), "essais"));
+        if ($entity->getEssai() == null) {
+            $entity->setEssai(new Essais());
+        }
+        return array_merge(["patient" => $patientNomPrenom, "initial" => $patientInitial, "medecin" => $medecinRef, "service" => $service], $values, $this->getEntityColumnValues($entity->getEssai(), "essais"));
     }
 
     public function inclusionsProtocoleTitles($values, $entity)
     {
         /** @var $entity Inclusion */
-        return array_merge(["Patient", "Initiales", "Médecin référent de l'inclusion", "Service"], $values, $this->getEntityColumn($entity->getEssai(), "essais"));
+        if ($entity->getEssai() == null) {
+            $entity->setEssai(new Essais());
+        }
+        return array_merge(["patient" => "Patient", "initial" => "Initiales", "medecin" => "Médecin référent de l'inclusion", "service" => "Service"], $values, $this->getEntityColumn($entity->getEssai(), "essais"));
     }
 
     //extractions  des factures
@@ -250,12 +253,12 @@ class CsvToArray
         $arc = $entity->getArc();
         $nomPrenomArc = $arc ? $arc->getNomPrenom() : null;
 
-        return array_merge($values, [$essaiNom, $nomPrenomArc]);
+        return array_merge($values, ["protocole" => $essaiNom, "arc" => $nomPrenomArc]);
     }
 
     public function visitesTitles($values)
     {
-        return array_merge($values, ["Protocole", "ARC"]);
+        return array_merge($values, ["protocole" => "Protocole", "arc" => "ARC"]);
     }
 
 }
