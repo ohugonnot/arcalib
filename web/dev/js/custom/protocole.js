@@ -80,6 +80,7 @@ if ($("#protocole").length > 0) {
                     services: [],
                     medecin: {id: null},
                     arc: {id: null},
+                    arcBackup: {id: null},
                     detail: {}
                 };
                 this.disabled = false;
@@ -394,6 +395,13 @@ if ($("#protocole").length > 0) {
                 .on("changeDate", function (e) {
                     protocole.patientSelected.datInc = $('#protocole-patient-date-inclusion').val()
                 });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            if (action === 'new') {
+                this.newProtocole();
+                removeUrlParam("action");
+            }
         },
         updated: function () {
             $('.fil-date').each(function (index, element) {
