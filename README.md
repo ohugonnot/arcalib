@@ -1,17 +1,36 @@
-ArcOffice - Arcalib 
-========================
+# Arcalib — Logiciel de gestion d'unité de recherche clinique
 
+Application web métier développée pour **ArcOffice**, permettant la gestion complète d'une unité de recherche clinique : suivi des patients, des protocoles d'essais, des intervenants et des documents réglementaires.
 
-LOGICIEL DE GESTION D’UNITÉ DE RECHERCHE CLINIQUE
---------------
+## Stack
 
-Symfony Standard Edition 3.4
+- **Symfony 3.4** (LTS)
+- **Doctrine ORM** — modélisation des entités cliniques
+- **Twig** — templates
+- **Swiftmailer** — notifications email
+- **MySQL**
 
-  * Twig
-  * Doctrine ORM/DBAL;
-  * Swiftmailer;
+## Fonctionnalités principales
 
-## DEMO
-https://www.arcoffice.fr/          
-login : guest        
-mdp : guest       
+- Gestion des protocoles d'essais cliniques et de leurs étapes
+- Suivi des patients inclus par protocole
+- Gestion des rôles (investigateur principal, ARC, coordinateur)
+- Workflow de validation documentaire
+- Tableau de bord par unité
+
+## Installation
+
+```bash
+composer install
+# Configurer parameters.yml (BDD, mailer)
+php bin/console doctrine:migrations:migrate
+php bin/console assets:install --symlink
+```
+
+## Déploiement
+
+```bash
+bash deploy.sh
+```
+
+Le script exécute les migrations, vide le cache et rebuild les assets.
